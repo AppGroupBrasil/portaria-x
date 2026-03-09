@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-server/
+
+# Environment files (secrets)
+.env
+.env.production
+.env.capacitor
+.env.local
+
+# Firebase service account key (NEVER commit)
+server/firebase-service-account.json
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+backups/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Capacitor local
+android/app/build/
+android/.gradle/
+
+# Android release signing (NEVER commit)
+android/keystore.properties
+android/app/*.keystore
+android/app/*.jks
+
+# Dev certs (self-signed)
+certs/
+
+# Logs
+*.log
+npm-debug.log*

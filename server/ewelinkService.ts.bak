@@ -1,0 +1,328 @@
+/**
+ * eWeLink Cloud API Service
+ * Controls smart switches via eWeLink Cloud (CoolKit Open Platform v2)
+ * 
+ * No hardware local needed — works from any cloud server.
+ * Docs: https://coolkit-technologies.github.io/eWeLink-API/
+ */
+import crypto from "crypto";
+
+// ─── Region base URLs ─────────────────────────────────────
+const REGION_URLS: Record<string, string> = {
+  us: "https://us-apia.coolkit.cc",
+  sa: "https://us-apia.coolkit.cc", // South America → Americas endpoint
+  eu: "https://eu-apia.coolkit.cc",
+  cn: "https://cn-apia.coolkit.cc",
+  as: "https://as-apia.coolkit.cc",
+};
+
+interface EwelinkCredentials {
+  appId: string;
+  appSecret: string;
+  email?: string;
+  password?: string;
+  region: string;
+}
+
+interface TokenCache {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: number; // timestamp ms
+}
+
+// Token cache per condominio
+const tokenCache = new Map<number, TokenCache>();
+
+// ─── Helpers ──────────────────────────────────────────────
+
+function makeSign(appSecret: string, body: string): string {
+  return crypto
+    .createHmac("sha256", appSecret)
+    .update(body)
+    .digest("base64");
+}
+
+function getBaseUrl(region: string): string {
+  return REGION_URLS[region] || REGION_URLS.us;
+}
+
+// ─── Authentication ───────────────────────────────────────
+
+async function login(creds: EwelinkCredentials): Promise<{
+  accessToken: string;
+  refreshToken: string;
+  atExpiredTime: number;
+}> {
+  const baseUrl = getBaseUrl(creds.region);
+  const body = JSON.stringify({
+    email: creds.email,
+    password: creds.password,
+    countryCode: "+55",
+  });
+
+  const sign = makeSign(creds.appSecret, body);
+
+  const res = await fetch(`${baseUrl}/v2/user/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CK-Appid": creds.appId,
+      Authorization: `Sign ${sign}`,
+    },
+    body,
+  });
+
+  const data = await res.json() as any;
+
+  if (data.error !== 0) {
+    throw new Error(`eWeLink login failed: ${data.msg || JSON.stringify(data)}`);
+  }
+
+  return {
+    accessToken: data.data.at,
+    refreshToken: data.data.rt,
+    atExpiredTime: data.data.user?.atExpiredTime || (Date.now() + 30 * 24 * 3600 * 1000),
+  };
+}
+
+// ─── Token management ─────────────────────────────────────
+
+async function getAccessToken(
+  condominioId: number,
+  creds: EwelinkCredentials
+): Promise<string> {
+  const cached = tokenCache.get(condominioId);
+
+  // Token still valid (with 5min buffer)
+  if (cached && cached.expiresAt > Date.now() + 5 * 60 * 1000) {
+    return cached.accessToken;
+  }
+
+  // Need fresh login
+  const result = await login(creds);
+  tokenCache.set(condominioId, {
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+    expiresAt: result.atExpiredTime,
+  });
+
+  return result.accessToken;
+}
+
+// ─── Device Control ───────────────────────────────────────
+
+export async function toggleDevice(
+  condominioId: number,
+  creds: EwelinkCredentials,
+  deviceId: string,
+  state: "on" | "off"
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const token = await getAccessToken(condominioId, creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const body = JSON.stringify({
+      type: 1,
+      id: deviceId,
+      params: { switch: state },
+    });
+
+    const res = await fetch(`${baseUrl}/v2/device/thing/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      // Token might be expired, clear cache and retry once
+      if (data.error === 401 || data.error === 406) {
+        tokenCache.delete(condominioId);
+        const newToken = await getAccessToken(condominioId, creds);
+        const retryRes = await fetch(`${baseUrl}/v2/device/thing/status`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CK-Appid": creds.appId,
+            Authorization: `Bearer ${newToken}`,
+          },
+          body,
+        });
+        const retryData = await retryRes.json() as any;
+        if (retryData.error !== 0) {
+          return { success: false, error: retryData.msg || `Error: ${retryData.error}` };
+        }
+        return { success: true };
+      }
+      return { success: false, error: data.msg || `Error: ${data.error}` };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Pulse: Turn on for X ms, then turn off (simulates button press)
+ */
+export async function pulseDevice(
+  condominioId: number,
+  creds: EwelinkCredentials,
+  deviceId: string,
+  durationMs: number = 1000
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const token = await getAccessToken(condominioId, creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    // First, configure inching/pulse mode on the device
+    const pulseBody = JSON.stringify({
+      type: 1,
+      id: deviceId,
+      params: {
+        pulse: "on",
+        pulseWidth: Math.max(500, Math.min(durationMs, 36000000)), // 500ms to 36000s
+      },
+    });
+
+    await fetch(`${baseUrl}/v2/device/thing/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body: pulseBody,
+    });
+
+    // Then turn on — it will auto-turn-off after pulseWidth
+    const onBody = JSON.stringify({
+      type: 1,
+      id: deviceId,
+      params: { switch: "on" },
+    });
+
+    const res = await fetch(`${baseUrl}/v2/device/thing/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body: onBody,
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      return { success: false, error: data.msg || `Error: ${data.error}` };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Get device status
+ */
+export async function getDeviceStatus(
+  condominioId: number,
+  creds: EwelinkCredentials,
+  deviceId: string
+): Promise<{ online: boolean; switch?: string; error?: string }> {
+  try {
+    const token = await getAccessToken(condominioId, creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const res = await fetch(`${baseUrl}/v2/device/thing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        thingList: [{ itemType: 1, id: deviceId }],
+      }),
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      return { online: false, error: data.msg || `Error: ${data.error}` };
+    }
+
+    const thing = data.data?.thingList?.[0]?.itemData;
+    if (!thing) {
+      return { online: false, error: "Dispositivo não encontrado" };
+    }
+
+    return {
+      online: thing.online || false,
+      switch: thing.params?.switch,
+    };
+  } catch (err: any) {
+    return { online: false, error: err.message };
+  }
+}
+
+/**
+ * List all devices in the eWeLink account
+ */
+export async function listDevices(
+  condominioId: number,
+  creds: EwelinkCredentials
+): Promise<{ devices: any[]; error?: string }> {
+  try {
+    const token = await getAccessToken(condominioId, creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const res = await fetch(`${baseUrl}/v2/device/thing`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      return { devices: [], error: data.msg || `Error: ${data.error}` };
+    }
+
+    const devices = (data.data?.thingList || []).map((t: any) => ({
+      deviceId: t.itemData?.deviceid,
+      name: t.itemData?.name,
+      brandName: t.itemData?.brandName,
+      productModel: t.itemData?.productModel,
+      online: t.itemData?.online,
+      switchState: t.itemData?.params?.switch,
+    }));
+
+    return { devices };
+  } catch (err: any) {
+    return { devices: [], error: err.message };
+  }
+}
+
+/**
+ * Clear token cache (e.g., when credentials change)
+ * Pass 0 to clear ALL cached tokens (used when global creds change)
+ */
+export function clearTokenCache(condominioId: number): void {
+  if (condominioId === 0) {
+    tokenCache.clear();
+  } else {
+    tokenCache.delete(condominioId);
+  }
+}

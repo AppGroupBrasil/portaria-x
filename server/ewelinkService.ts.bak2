@@ -1,0 +1,479 @@
+/**
+ * eWeLink Cloud API Service — OAuth2.0 Flow
+ * Controls smart switches via eWeLink Cloud (CoolKit Open Platform v2)
+ * 
+ * Uses OAuth2.0 authorization code flow:
+ *   1. Generate auth URL → user authorizes in browser
+ *   2. Callback receives code → exchange for access token
+ *   3. Use access token to control devices
+ * 
+ * Docs: https://coolkit-technologies.github.io/eWeLink-API/
+ */
+import crypto from "crypto";
+import db from "./db.js";
+
+// ─── Region base URLs ─────────────────────────────────────
+const REGION_URLS: Record<string, string> = {
+  us: "https://us-apia.coolkit.cc",
+  sa: "https://us-apia.coolkit.cc", // South America → Americas endpoint
+  eu: "https://eu-apia.coolkit.cc",
+  cn: "https://cn-apia.coolkit.cc",
+  as: "https://as-apia.coolkit.cc",
+};
+
+// ─── Auth page URLs (for OAuth redirect) ──────────────────
+const AUTH_URLS: Record<string, string> = {
+  us: "https://c2ccdn.coolkit.cc/oauth/index.html",
+  sa: "https://c2ccdn.coolkit.cc/oauth/index.html",
+  eu: "https://c2ccdn.coolkit.cc/oauth/index.html",
+  cn: "https://c2ccdn.coolkit.cn/oauth/index.html",
+  as: "https://c2ccdn.coolkit.cc/oauth/index.html",
+};
+
+export interface EwelinkCredentials {
+  appId: string;
+  appSecret: string;
+  email?: string;
+  password?: string;
+  region: string;
+}
+
+interface TokenData {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: number; // timestamp ms
+}
+
+// In-memory token cache
+let cachedToken: TokenData | null = null;
+
+// ─── Helpers ──────────────────────────────────────────────
+
+function makeSign(appSecret: string, data: string): string {
+  return crypto
+    .createHmac("sha256", appSecret)
+    .update(data)
+    .digest("base64");
+}
+
+function getBaseUrl(region: string): string {
+  return REGION_URLS[region] || REGION_URLS.us;
+}
+
+function getAuthPageUrl(region: string): string {
+  return AUTH_URLS[region] || AUTH_URLS.us;
+}
+
+// ─── Persistent token storage ─────────────────────────────
+
+function saveTokenToDB(token: TokenData): void {
+  const upsert = db.prepare(`
+    INSERT INTO system_config (key, value, updated_at)
+    VALUES (?, ?, datetime('now'))
+    ON CONFLICT(key)
+    DO UPDATE SET value = excluded.value, updated_at = datetime('now')
+  `);
+  
+  const tx = db.transaction(() => {
+    upsert.run("gate_ewelink_access_token", token.accessToken);
+    upsert.run("gate_ewelink_refresh_token", token.refreshToken);
+    upsert.run("gate_ewelink_token_expires", token.expiresAt.toString());
+  });
+  tx();
+}
+
+function loadTokenFromDB(): TokenData | null {
+  try {
+    const rows = db
+      .prepare(`SELECT key, value FROM system_config WHERE key IN ('gate_ewelink_access_token', 'gate_ewelink_refresh_token', 'gate_ewelink_token_expires')`)
+      .all() as { key: string; value: string }[];
+    
+    const map: Record<string, string> = {};
+    for (const row of rows) map[row.key] = row.value;
+    
+    if (map.gate_ewelink_access_token && map.gate_ewelink_refresh_token) {
+      return {
+        accessToken: map.gate_ewelink_access_token,
+        refreshToken: map.gate_ewelink_refresh_token,
+        expiresAt: parseInt(map.gate_ewelink_token_expires || "0"),
+      };
+    }
+  } catch (err) {
+    console.error("Error loading eWeLink token from DB:", err);
+  }
+  return null;
+}
+
+// ─── OAuth2.0: Generate Authorization URL ─────────────────
+
+export function generateOAuthUrl(
+  creds: EwelinkCredentials,
+  redirectUrl: string,
+  state: string = "ewelink_auth"
+): string {
+  const seq = Date.now().toString();
+  // nonce must be exactly 8 alphanumeric characters per CoolKit docs
+  const nonce = [...Array(8)].map(() => (Math.random() * 36 | 0).toString(36)).join("");
+  
+  // Sign = HMAC-SHA256(appSecret, appId + "_" + seq)
+  const sign = makeSign(creds.appSecret, `${creds.appId}_${seq}`);
+  
+  const authBase = getAuthPageUrl(creds.region);
+  const params = new URLSearchParams({
+    clientId: creds.appId,
+    seq,
+    authorization: sign,
+    redirectUrl,
+    nonce,
+    state,
+    grantType: "authorization_code",
+  });
+  
+  return `${authBase}?${params.toString()}`;
+}
+
+// ─── OAuth2.0: Exchange Code for Token ────────────────────
+
+export async function exchangeCodeForToken(
+  creds: EwelinkCredentials,
+  code: string,
+  redirectUrl: string
+): Promise<{ success: boolean; error?: string }> {
+  const baseUrl = getBaseUrl(creds.region);
+  
+  const body = JSON.stringify({
+    code,
+    redirectUrl,
+    grantType: "authorization_code",
+  });
+  
+  const sign = makeSign(creds.appSecret, body);
+  
+  const res = await fetch(`${baseUrl}/v2/user/oauth/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CK-Appid": creds.appId,
+      Authorization: `Sign ${sign}`,
+    },
+    body,
+  });
+  
+  const data = await res.json() as any;
+  
+  if (data.error !== 0) {
+    return { success: false, error: `eWeLink OAuth failed: ${data.msg || JSON.stringify(data)}` };
+  }
+  
+  const token: TokenData = {
+    accessToken: data.data.at,
+    refreshToken: data.data.rt,
+    expiresAt: data.data.user?.atExpiredTime || (Date.now() + 30 * 24 * 3600 * 1000),
+  };
+  
+  // Save to memory and DB
+  cachedToken = token;
+  saveTokenToDB(token);
+  
+  return { success: true };
+}
+
+// ─── OAuth2.0: Refresh Token ──────────────────────────────
+
+async function refreshAccessToken(creds: EwelinkCredentials): Promise<boolean> {
+  const token = cachedToken || loadTokenFromDB();
+  if (!token?.refreshToken) return false;
+  
+  const baseUrl = getBaseUrl(creds.region);
+  
+  const body = JSON.stringify({
+    rt: token.refreshToken,
+  });
+  
+  const sign = makeSign(creds.appSecret, body);
+  
+  try {
+    const res = await fetch(`${baseUrl}/v2/user/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Sign ${sign}`,
+      },
+      body,
+    });
+    
+    const data = await res.json() as any;
+    
+    if (data.error !== 0) {
+      console.error("Token refresh failed:", data.msg);
+      return false;
+    }
+    
+    const newToken: TokenData = {
+      accessToken: data.data.at,
+      refreshToken: data.data.rt,
+      expiresAt: data.data.user?.atExpiredTime || (Date.now() + 30 * 24 * 3600 * 1000),
+    };
+    
+    cachedToken = newToken;
+    saveTokenToDB(newToken);
+    return true;
+  } catch (err) {
+    console.error("Token refresh error:", err);
+    return false;
+  }
+}
+
+// ─── Token management ─────────────────────────────────────
+
+async function getAccessToken(
+  creds: EwelinkCredentials
+): Promise<string> {
+  // 1. Check in-memory cache
+  if (cachedToken && cachedToken.expiresAt > Date.now() + 5 * 60 * 1000) {
+    return cachedToken.accessToken;
+  }
+  
+  // 2. Check DB
+  const dbToken = loadTokenFromDB();
+  if (dbToken && dbToken.expiresAt > Date.now() + 5 * 60 * 1000) {
+    cachedToken = dbToken;
+    return dbToken.accessToken;
+  }
+  
+  // 3. Try refresh
+  if (dbToken?.refreshToken) {
+    const refreshed = await refreshAccessToken(creds);
+    if (refreshed && cachedToken) {
+      return cachedToken.accessToken;
+    }
+  }
+  
+  throw new Error("Token eWeLink expirado. Refaça a autorização OAuth na aba Credenciais.");
+}
+
+// ─── Check if authorized ─────────────────────────────────
+
+export function isOAuthAuthorized(): boolean {
+  if (cachedToken && cachedToken.expiresAt > Date.now()) return true;
+  const dbToken = loadTokenFromDB();
+  if (dbToken && dbToken.expiresAt > Date.now()) {
+    cachedToken = dbToken;
+    return true;
+  }
+  return false;
+}
+
+// ─── Device Control ───────────────────────────────────────
+
+export async function toggleDevice(
+  condominioId: number,
+  creds: EwelinkCredentials,
+  deviceId: string,
+  state: "on" | "off"
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const token = await getAccessToken(creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const body = JSON.stringify({
+      type: 1,
+      id: deviceId,
+      params: { switch: state },
+    });
+
+    const res = await fetch(`${baseUrl}/v2/device/thing/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      // Token might be expired, try refresh
+      if (data.error === 401 || data.error === 406) {
+        const refreshed = await refreshAccessToken(creds);
+        if (refreshed && cachedToken) {
+          const retryRes = await fetch(`${baseUrl}/v2/device/thing/status`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CK-Appid": creds.appId,
+              Authorization: `Bearer ${cachedToken.accessToken}`,
+            },
+            body,
+          });
+          const retryData = await retryRes.json() as any;
+          if (retryData.error !== 0) {
+            return { success: false, error: retryData.msg || `Error: ${retryData.error}` };
+          }
+          return { success: true };
+        }
+        return { success: false, error: "Token expirado. Refaça a autorização OAuth." };
+      }
+      return { success: false, error: data.msg || `Error: ${data.error}` };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Pulse: Turn on for X ms, then turn off (simulates button press)
+ */
+export async function pulseDevice(
+  condominioId: number,
+  creds: EwelinkCredentials,
+  deviceId: string,
+  durationMs: number = 1000
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const token = await getAccessToken(creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const pulseBody = JSON.stringify({
+      type: 1,
+      id: deviceId,
+      params: {
+        pulse: "on",
+        pulseWidth: Math.max(500, Math.min(durationMs, 36000000)),
+      },
+    });
+
+    await fetch(`${baseUrl}/v2/device/thing/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body: pulseBody,
+    });
+
+    const onBody = JSON.stringify({
+      type: 1,
+      id: deviceId,
+      params: { switch: "on" },
+    });
+
+    const res = await fetch(`${baseUrl}/v2/device/thing/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body: onBody,
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      return { success: false, error: data.msg || `Error: ${data.error}` };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Get device status
+ */
+export async function getDeviceStatus(
+  condominioId: number,
+  creds: EwelinkCredentials,
+  deviceId: string
+): Promise<{ online: boolean; switch?: string; error?: string }> {
+  try {
+    const token = await getAccessToken(creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const res = await fetch(`${baseUrl}/v2/device/thing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        thingList: [{ itemType: 1, id: deviceId }],
+      }),
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      return { online: false, error: data.msg || `Error: ${data.error}` };
+    }
+
+    const thing = data.data?.thingList?.[0]?.itemData;
+    if (!thing) {
+      return { online: false, error: "Dispositivo não encontrado" };
+    }
+
+    return {
+      online: thing.online || false,
+      switch: thing.params?.switch,
+    };
+  } catch (err: any) {
+    return { online: false, error: err.message };
+  }
+}
+
+/**
+ * List all devices in the eWeLink account
+ */
+export async function listDevices(
+  condominioId: number,
+  creds: EwelinkCredentials
+): Promise<{ devices: any[]; error?: string }> {
+  try {
+    const token = await getAccessToken(creds);
+    const baseUrl = getBaseUrl(creds.region);
+
+    const res = await fetch(`${baseUrl}/v2/device/thing`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CK-Appid": creds.appId,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json() as any;
+
+    if (data.error !== 0) {
+      return { devices: [], error: data.msg || `Error: ${data.error}` };
+    }
+
+    const devices = (data.data?.thingList || []).map((t: any) => ({
+      deviceId: t.itemData?.deviceid,
+      name: t.itemData?.name,
+      brandName: t.itemData?.brandName,
+      productModel: t.itemData?.productModel,
+      online: t.itemData?.online,
+      switchState: t.itemData?.params?.switch,
+    }));
+
+    return { devices };
+  } catch (err: any) {
+    return { devices: [], error: err.message };
+  }
+}
+
+/**
+ * Clear token cache
+ */
+export function clearTokenCache(condominioId: number): void {
+  cachedToken = null;
+}

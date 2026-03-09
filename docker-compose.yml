@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  portariax:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portariax
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - JWT_SECRET=${JWT_SECRET}
+      # AWS SES (Email)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SES_REGION=${AWS_SES_REGION:-sa-east-1}
+      - SES_FROM_EMAIL=${SES_FROM_EMAIL:-naoresponda@portariax.com.br}
+      - SES_FROM_NAME=${SES_FROM_NAME:-Portaria X}
+      - APP_URL=${APP_URL:-https://portariax.com.br}
+    volumes:
+      # Persist SQLite database
+      - portariax_data:/app/data
+    networks:
+      - coolify
+    labels:
+      # Traefik labels for Coolify
+      - "traefik.enable=true"
+      - "traefik.http.routers.portariax.rule=Host(`portariax.com.br`) || Host(`www.portariax.com.br`)"
+      - "traefik.http.routers.portariax.entrypoints=https"
+      - "traefik.http.routers.portariax.tls=true"
+      - "traefik.http.routers.portariax.tls.certresolver=letsencrypt"
+      - "traefik.http.services.portariax.loadbalancer.server.port=3001"
+      # HTTP → HTTPS redirect
+      - "traefik.http.routers.portariax-http.rule=Host(`portariax.com.br`) || Host(`www.portariax.com.br`)"
+      - "traefik.http.routers.portariax-http.entrypoints=http"
+      - "traefik.http.routers.portariax-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # www → non-www redirect
+      - "traefik.http.routers.portariax-www.rule=Host(`www.portariax.com.br`)"
+      - "traefik.http.routers.portariax-www.entrypoints=https"
+      - "traefik.http.routers.portariax-www.tls=true"
+      - "traefik.http.routers.portariax-www.middlewares=redirect-www-to-root"
+      - "traefik.http.middlewares.redirect-www-to-root.redirectregex.regex=^https://www\\.portariax\\.com\\.br/(.*)"
+      - "traefik.http.middlewares.redirect-www-to-root.redirectregex.replacement=https://portariax.com.br/$${1}"
+      - "traefik.http.middlewares.redirect-www-to-root.redirectregex.permanent=true"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+networks:
+  coolify:
+    external: true
+
+volumes:
+  portariax_data:
+    driver: local

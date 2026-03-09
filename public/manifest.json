@@ -1,0 +1,20 @@
+{
+  "name": "Portaria X — Gestão de Portaria Inteligente",
+  "short_name": "Portaria X",
+  "description": "Sistema completo de gestão de portaria para condomínios: visitantes, veículos, correspondências, delivery, interfone digital, câmeras e rondas.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#003580",
+  "theme_color": "#003580",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"]
+}

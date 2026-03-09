@@ -1,0 +1,10 @@
+═══════════════════════════════════════════════════════════
+API GUPSHUP WHATSAPP — PortariaX
+═══════════════════════════════════════════════════════════
+
+API Key:         sk_2d93c5f0568f4f13b028e9578207b78a
+App ID:          bcbe0a84-befc-4580-a230-d88a80c3e20a
+App Name:        PortariaX
+Customer ID:     4000337180
+Número Telefone: 15557952901
+ID WABA:         1120267846891489

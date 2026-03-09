@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "936349657885",
+    "project_id": "portariax-app",
+    "storage_bucket": "portariax-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936349657885:android:7c0e5a13d367e3ed3b0ff4",
+        "android_client_info": {
+          "package_name": "com.portariax.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCsbrPedWMVmSfutcjVL44nsB-eQhDDTI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

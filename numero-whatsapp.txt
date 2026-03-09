@@ -1,0 +1,25 @@
+═══════════════════════════════════════════════════════════
+WHATSAPP BUSINESS — GUPSHUP (PortariaX)
+═══════════════════════════════════════════════════════════
+
+Provedor:        Gupshup (gupshup.io)
+App Name:        PortariaX
+Customer ID:     4000337180
+Número Telefone: 15557952901
+ID WABA:         1120267846891489
+Status:          Ao vivo
+Data Criação:    08/03/2026
+
+Limite:          250 clientes / 24 horas (nível BM inicial)
+
+API Key:         sk_2d93c5f0568f4f13b028e9578207b78a
+App ID:          bcbe0a84-befc-4580-a230-d88a80c3e20a
+
+═══════════════════════════════════════════════════════════
+CONFIGURAÇÃO NO SISTEMA
+═══════════════════════════════════════════════════════════
+
+URL Config:      https://localhost:5173/sindico/whatsapp
+API Key:         sk_2d93c5f0568f4f13b028e9578207b78a
+Número Origem:   15557952901
+Nome do App:     PortariaX
