@@ -1062,7 +1062,10 @@ export default function DeliveryPorteiro() {
               <div>
                 <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Morador *</label>
                 <SearchableSelect
-                  options={formMoradores.map((m) => ({ value: String(m.id), label: `${m.name}${m.unit ? ` - Apto ${m.unit}` : ""}` }))}
+                  options={formMoradores.map((m) => {
+                    const label = `${m.name}${m.unit ? ` - Apto ${m.unit}` : ""}`;
+                    return { value: String(m.id), label, searchText: label.toLowerCase() };
+                  })}
                   value={formMoradorId}
                   onChange={handleSelectFormMorador}
                   placeholder="Buscar morador..."
