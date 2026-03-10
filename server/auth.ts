@@ -465,13 +465,97 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ error: "E-mail e senha são obrigatórios." });
+      res.status(400).json({ error: "E-mail/login e senha são obrigatórios." });
       return;
     }
 
+    const credential = email.toLowerCase().trim();
+    const isEmail = credential.includes("@");
+
+    // ─── FUNCIONÁRIO LOGIN (sem @) ─────────────────────────
+    if (!isEmail) {
+      const func = db.prepare("SELECT * FROM funcionarios WHERE login = ?").get(credential) as any;
+      if (!func) {
+        res.status(401).json({ error: "Login ou senha incorretos." });
+        return;
+      }
+
+      const valid = await bcrypt.compare(password, func.password);
+      if (!valid) {
+        res.status(401).json({ error: "Login ou senha incorretos." });
+        return;
+      }
+
+      // Check if condomínio is blocked
+      if (func.condominio_id) {
+        const condo = db.prepare("SELECT bloqueado, bloqueado_motivo, name FROM condominios WHERE id = ?")
+          .get(func.condominio_id) as { bloqueado: number; bloqueado_motivo: string | null; name: string } | undefined;
+        if (condo && condo.bloqueado === 1) {
+          res.status(403).json({
+            error: "Usuário bloqueado! Entre em contato com seu síndico ou administradora.",
+            blocked: true,
+          });
+          return;
+        }
+      }
+
+      // Update last login
+      db.prepare("UPDATE funcionarios SET updated_at = datetime('now') WHERE id = ?").run(func.id);
+
+      // Track condomínio access metrics
+      if (func.condominio_id) {
+        db.prepare(`
+          UPDATE condominios 
+          SET last_access_at = datetime('now'), 
+              access_count = COALESCE(access_count, 0) + 1 
+          WHERE id = ?
+        `).run(func.condominio_id);
+      }
+
+      // Sign token with funcId flag so middleware knows it's a funcionário
+      const token = jwt.sign({ funcId: func.id }, JWT_SECRET, { expiresIn: "7d" });
+
+      // Fetch condominio name
+      let condominioNome: string | null = null;
+      if (func.condominio_id) {
+        const condo = db.prepare("SELECT name FROM condominios WHERE id = ?").get(func.condominio_id) as { name: string } | undefined;
+        condominioNome = condo?.name || null;
+      }
+
+      res.cookie(COOKIE_NAME, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: COOKIE_MAX_AGE,
+        path: "/",
+      });
+
+      res.json({
+        user: {
+          id: func.id,
+          name: `${func.nome} ${func.sobrenome}`,
+          email: func.login,
+          phone: null,
+          cpf: null,
+          role: "funcionario",
+          perfil: func.cargo,
+          unit: null,
+          block: null,
+          condominioId: func.condominio_id,
+          condominio_nome: condominioNome,
+          parent_administradora_id: null,
+          avatarUrl: null,
+          aprovado: 1,
+        },
+        token,
+      });
+      return;
+    }
+
+    // ─── USER LOGIN (com @) ────────────────────────────────
     const user = db
       .prepare("SELECT * FROM users WHERE email = ?")
-      .get(email.toLowerCase().trim()) as DbUser | undefined;
+      .get(credential) as DbUser | undefined;
 
     if (!user) {
       res.status(401).json({ error: "E-mail ou senha incorretos." });

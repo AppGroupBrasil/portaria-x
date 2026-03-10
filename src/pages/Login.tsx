@@ -38,9 +38,7 @@ export default function Login() {
     e.preventDefault();
     setError("");
 
-    if (!email) return setError("Informe seu e-mail.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-      return setError("E-mail inválido.");
+    if (!email) return setError("Informe seu e-mail ou login.");
     if (!password) return setError("Informe sua senha.");
     if (!/^\d{4}$/.test(password))
       return setError("Senha deve ter 4 dígitos numéricos.");
@@ -107,15 +105,15 @@ export default function Login() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
+            {/* Email ou Login */}
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-sm font-semibold" style={{ color: "#fff" }}>
-                Email
+                Email ou Login
               </Label>
               <Input
                 id="email"
-                type="email"
-                placeholder="seu@email.com"
+                type="text"
+                placeholder="seu@email.com ou seulogin"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"

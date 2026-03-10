@@ -45,7 +45,39 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
       return;
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId?: number; funcId?: number };
+
+    // ─── FUNCIONÁRIO TOKEN ──────────────────────────────────
+    if (decoded.funcId) {
+      const func = db.prepare("SELECT * FROM funcionarios WHERE id = ?").get(decoded.funcId) as any;
+      if (!func) {
+        res.clearCookie(COOKIE_NAME);
+        res.status(401).json({ error: "Funcionário não encontrado." });
+        return;
+      }
+      // Map funcionário to DbUser-like shape for downstream compatibility
+      req.user = {
+        id: func.id,
+        name: `${func.nome} ${func.sobrenome}`,
+        email: func.login,
+        phone: null,
+        cpf: null,
+        password: func.password,
+        role: "funcionario",
+        perfil: func.cargo,
+        unit: null,
+        block: null,
+        condominio_id: func.condominio_id,
+        parent_administradora_id: null,
+        avatar_url: null,
+        created_at: func.created_at,
+        updated_at: func.updated_at,
+      } as DbUser;
+      next();
+      return;
+    }
+
+    // ─── REGULAR USER TOKEN ────────────────────────────────
     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(decoded.userId) as DbUser | undefined;
 
     if (!user) {
