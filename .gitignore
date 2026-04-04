@@ -43,3 +43,9 @@ certs/
 # Logs
 *.log
 npm-debug.log*
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Local backup files
+*.bak
