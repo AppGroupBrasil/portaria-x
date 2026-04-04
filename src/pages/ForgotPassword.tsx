@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,7 +23,7 @@ type Step = "request" | "verify" | "reset" | "success";
 type ResetType = "email" | "phone";
 
 export default function ForgotPassword() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<Step>("request");
@@ -43,7 +43,7 @@ export default function ForgotPassword() {
 
   /* ── Helpers ── */
   const formatPhone = (v: string) => {
-    const n = v.replace(/\D/g, "");
+    const n = v.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -68,10 +68,10 @@ export default function ForgotPassword() {
   };
 
   /* ── Handlers ── */
-  const handleRequest = async (e: React.FormEvent) => {
+  const handleRequest = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
-    const clean = type === "phone" ? identifier.replace(/\D/g, "") : identifier.trim();
+    const clean = type === "phone" ? identifier.replaceAll(/\D/g, "") : identifier.trim();
     if (!clean) return setError(`Informe seu ${type === "email" ? "e-mail" : "telefone"}.`);
     if (type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) return setError("E-mail inválido.");
     if (type === "phone" && clean.length < 10) return setError("Telefone inválido.");
@@ -87,7 +87,7 @@ export default function ForgotPassword() {
     }
   };
 
-  const handleVerify = async (e: React.FormEvent) => {
+  const handleVerify = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
     if (code.length !== 6) return setError("O código deve ter 6 dígitos.");
@@ -103,10 +103,10 @@ export default function ForgotPassword() {
     }
   };
 
-  const handleReset = async (e: React.FormEvent) => {
+  const handleReset = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!/^\d{4}$/.test(newPassword)) return setError("A senha deve ter 4 dígitos numéricos.");
+    if (!/^\d{6}$/.test(newPassword)) return setError("A senha deve ter 6 dígitos numéricos.");
     if (newPassword !== confirmPassword) return setError("As senhas não coincidem.");
 
     setIsLoading(true);
@@ -243,7 +243,7 @@ export default function ForgotPassword() {
           <p style={{ fontSize: "14px", color: "#6b7280" }}>
             {step === "request" && "Informe seu e-mail ou telefone cadastrado"}
             {step === "verify" && "Digite o código de 6 dígitos que foi enviado"}
-            {step === "reset" && "Escolha sua nova senha de 4 dígitos"}
+            {step === "reset" && "Escolha sua nova senha de 6 dígitos"}
             {step === "success" && "Sua senha foi redefinida com sucesso"}
           </p>
         </div>
@@ -347,7 +347,7 @@ export default function ForgotPassword() {
                 placeholder="000000"
                 maxLength={6}
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                onChange={(e) => setCode(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                 className="h-14 rounded-xl bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-[#2d3354] focus:ring-[#2d3354]"
                 style={{ textAlign: "center", fontSize: "24px", letterSpacing: "0.3em", marginTop: "8px" }}
               />
@@ -386,17 +386,17 @@ export default function ForgotPassword() {
         {step === "reset" && (
           <form onSubmit={handleReset}>
             <div style={{ marginBottom: "16px" }}>
-              <Label htmlFor="fp-new" className="text-sm font-semibold text-gray-700">Nova senha (4 dígitos)</Label>
+              <Label htmlFor="fp-new" className="text-sm font-semibold text-gray-700">Nova senha (6 dígitos)</Label>
               <div style={{ position: "relative", marginTop: "6px" }}>
                 <Lock style={iconLeft} />
                 <Input
                   id="fp-new"
                   type={showPassword ? "text" : "password"}
                   inputMode="numeric"
-                  maxLength={4}
-                  placeholder="••••"
+                  maxLength={6}
+                  placeholder="••••••"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  onChange={(e) => setNewPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                   className="h-12 rounded-xl bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-[#2d3354] focus:ring-[#2d3354]"
                   style={{ paddingLeft: "42px", paddingRight: "42px" }}
                 />
@@ -418,10 +418,10 @@ export default function ForgotPassword() {
                   id="fp-confirm"
                   type={showConfirm ? "text" : "password"}
                   inputMode="numeric"
-                  maxLength={4}
-                  placeholder="••••"
+                  maxLength={6}
+                  placeholder="••••••"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  onChange={(e) => setConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                   className="h-12 rounded-xl bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-[#2d3354] focus:ring-[#2d3354]"
                   style={{ paddingLeft: "42px", paddingRight: "42px" }}
                 />

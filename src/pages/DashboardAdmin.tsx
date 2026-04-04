@@ -117,7 +117,7 @@ export default function DashboardAdmin() {
             { label: "Funcionários", value: mockStats.funcionarios, color: "stat-num-teal", route: "/cadastros/funcionarios" },
             { label: "Moradores", value: mockStats.moradores, color: "stat-num-green", route: "/cadastros/moradores" },
           ].map((s) => (
-            <div key={s.label} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, ...gradientBorder }}>
+            <div key={s.label} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => navigate(s.route))(); } }} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, ...gradientBorder }}>
               <span className="text-2xl sm:text-3xl font-extrabold text-white">{s.value}</span>
               <span className="font-medium uppercase tracking-wider text-center text-white" style={{ fontSize: "11px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word" }}>{s.label}</span>
             </div>
@@ -258,7 +258,7 @@ export default function DashboardAdmin() {
               { icon: FileTextIcon, label: "Logs", description: "Histórico de atividades", route: "/master/logs" },
               ...(user?.role === "master" ? [{ icon: DoorOpen, label: "Portão", description: "Configurar portões IoT", route: "/master/portao" }] : []),
             ].map((item) => (
-              <div key={item.label} onClick={() => navigate(item.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "1.25rem 0.75rem", minHeight: "120px", ...gradientBorder, textAlign: "center" }}>
+              <div key={item.label} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => navigate(item.route))(); } }} onClick={() => navigate(item.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "1.25rem 0.75rem", minHeight: "120px", ...gradientBorder, textAlign: "center" }}>
                 <item.icon className="w-7 h-7 mb-2" style={{ color: "#fff" }} />
                 <p className="font-bold text-sm text-white">{item.label}</p>
                 <p className="text-[11px] mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>{item.description}</p>

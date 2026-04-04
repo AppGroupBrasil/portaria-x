@@ -456,7 +456,7 @@ export default function LivroProtocolo() {
 
             {/* Tipo selector */}
             <div>
-              <label style={labelStyle}>Tipo de Registro *</label>
+              <span style={labelStyle}>Tipo de Registro *</span>
               <div style={{ display: "flex", gap: "8px" }}>
                 {[
                   { v: "encomenda", l: "Encomenda", icon: "📦" },
@@ -489,12 +489,12 @@ export default function LivroProtocolo() {
             {tipoForm === "encomenda" && (
               <>
                 <div>
-                  <label style={labelStyle}>Deixada por *</label>
+                  <span style={labelStyle}>Deixada por *</span>
                   <input type="text" value={deixadaPor} onChange={(e) => setDeixadaPor(e.target.value)}
                     placeholder="Ex: Correios, Mercado Livre, iFood..." style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Para (destinatario) *</label>
+                  <span style={labelStyle}>Para (destinatario) *</span>
                   <input type="text" value={para} onChange={(e) => setPara(e.target.value)}
                     placeholder="Ex: Joao Silva - Apto 101 Bloco A" style={inputStyle} />
                 </div>
@@ -505,17 +505,17 @@ export default function LivroProtocolo() {
             {tipoForm === "entrega" && (
               <>
                 <div>
-                  <label style={labelStyle}>O que e *</label>
+                  <span style={labelStyle}>O que e *</span>
                   <input type="text" value={oQueE} onChange={(e) => setOQueE(e.target.value)}
                     placeholder="Descricao do item entregue" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Entregue para *</label>
+                  <span style={labelStyle}>Entregue para *</span>
                   <input type="text" value={entreguePara} onChange={(e) => setEntreguePara(e.target.value)}
                     placeholder="Nome de quem recebeu" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Porteiro que entregou</label>
+                  <span style={labelStyle}>Porteiro que entregou</span>
                   <input type="text" value={user?.name || ""} readOnly
                     style={{ ...inputStyle, background: "#f1f5f9", color: "#64748b", cursor: "default" }} />
                 </div>
@@ -526,12 +526,12 @@ export default function LivroProtocolo() {
             {tipoForm === "retirada" && (
               <>
                 <div>
-                  <label style={labelStyle}>Retirada por *</label>
+                  <span style={labelStyle}>Retirada por *</span>
                   <input type="text" value={retiradaPor} onChange={(e) => setRetiradaPor(e.target.value)}
                     placeholder="Nome de quem retirou" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Porteiro</label>
+                  <span style={labelStyle}>Porteiro</span>
                   <input type="text" value={user?.name || ""} readOnly
                     style={{ ...inputStyle, background: "#f1f5f9", color: "#64748b", cursor: "default" }} />
                 </div>
@@ -542,25 +542,25 @@ export default function LivroProtocolo() {
             {tipoForm === "ocorrencia" && (
               <>
                 <div>
-                  <label style={labelStyle}>Título da Ocorrência *</label>
+                  <span style={labelStyle}>Título da Ocorrência *</span>
                   <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)}
                     placeholder="Ex: Portão danificado, Barulho excessivo..." style={inputStyle} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Descrição *</label>
+                  <span style={labelStyle}>Descrição *</span>
                   <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)}
                     placeholder="Descreva a ocorrência com detalhes..."
                     rows={4}
                     style={{ ...inputStyle, resize: "vertical", minHeight: "100px" }} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Porteiro</label>
+                  <span style={labelStyle}>Porteiro</span>
                   <input type="text" value={user?.name || ""} readOnly
                     style={{ ...inputStyle, background: "#f1f5f9", color: "#64748b", cursor: "default" }} />
                 </div>
                 {/* Audio recorder */}
                 <div>
-                  <label style={labelStyle}>Áudio (opcional)</label>
+                  <span style={labelStyle}>Áudio (opcional)</span>
                   {audioData ? (
                     <div style={{
                       display: "flex", alignItems: "center", gap: "10px",
@@ -619,7 +619,7 @@ export default function LivroProtocolo() {
 
             {/* ── Foto ── */}
             <div>
-              <label style={labelStyle}>Foto</label>
+              <span style={labelStyle}>Foto</span>
               {foto ? (
                 <div style={{ position: "relative" }}>
                   <img src={foto} alt="Foto" style={{ width: "100%", borderRadius: "12px", maxHeight: "400px", objectFit: "contain", background: "#f1f5f9" }} />

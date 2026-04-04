@@ -244,7 +244,7 @@ export default function CadastrarVisitante() {
 
   // Máscara de telefone (XX) XXXXX-XXXX
   const formatPhone = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
+    const digits = value.replaceAll(/\D/g, "").slice(0, 11);
     if (digits.length <= 2) return digits.length ? `(${digits}` : "";
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
@@ -389,8 +389,8 @@ export default function CadastrarVisitante() {
             `Entrada confirmada pela portaria.`,
           ].filter(Boolean);
           const message = encodeURIComponent(msgLines.join("\n"));
-          const phone = auth.morador_phone.replace(/\D/g, "");
-          window.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
+          const phone = auth.morador_phone.replaceAll(/\D/g, "");
+          globalThis.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
         }
         fetchPreAuths();
       }
@@ -679,7 +679,7 @@ export default function CadastrarVisitante() {
       ];
       const message = encodeURIComponent(msgLines.join("\n"));
 
-      const whatsappNumber = form.morador_whatsapp.replace(/\D/g, "");
+      const whatsappNumber = form.morador_whatsapp.replaceAll(/\D/g, "");
       const whatsappUrl = `https://wa.me/55${whatsappNumber}?text=${message}`;
 
       // Reset form
@@ -693,7 +693,7 @@ export default function CadastrarVisitante() {
 
       // Abrir WhatsApp
       if (whatsappNumber) {
-        window.open(whatsappUrl, "_blank");
+        globalThis.open(whatsappUrl, "_blank");
       }
     } catch (err) {
       setError("Erro de conexão.");
@@ -715,8 +715,8 @@ export default function CadastrarVisitante() {
     // Prompt for WhatsApp number
     const phone = prompt("Digite o WhatsApp do visitante (com DDD):");
     if (phone) {
-      const num = phone.replace(/\D/g, "");
-      window.open(`https://wa.me/55${num}?text=${message}`, "_blank");
+      const num = phone.replaceAll(/\D/g, "");
+      globalThis.open(`https://wa.me/55${num}?text=${message}`, "_blank");
     }
   };
 
@@ -935,7 +935,7 @@ export default function CadastrarVisitante() {
 
       {/* Camera Embed — toggle + live feed */}
       <div style={{ padding: "0 24px 8px" }}>
-        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 500, color: "#64748b" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 500, color: "#64748b" }}>
           <input
             type="checkbox"
             checked={showCameraEmbed}
@@ -943,7 +943,7 @@ export default function CadastrarVisitante() {
             style={{ width: "16px", height: "16px", accentColor: "#3b82f6", cursor: "pointer" }}
           />
           Exibir cameras ao vivo
-        </label>
+        </span>
       </div>
       {showCameraEmbed && (
         <div style={{ padding: "0 24px 12px" }}>
@@ -1180,7 +1180,7 @@ export default function CadastrarVisitante() {
               {/* Foto */}
               {isFieldVisible("foto") && (
               <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">Foto do Visitante</label>
+                <span className="text-sm font-medium text-foreground mb-2 block">Foto do Visitante</span>
                 {form.foto ? (
                   <div className="relative w-24 h-24 rounded-xl overflow-hidden">
                     <img src={form.foto} alt="Foto" className="w-full h-full object-cover" />
@@ -1206,7 +1206,7 @@ export default function CadastrarVisitante() {
 
               {/* Nome - sempre visível (obrigatório) */}
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Nome *</label>
+                <span className="text-sm font-medium text-foreground mb-1 block">Nome *</span>
                 <input
                   value={form.nome}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
@@ -1219,7 +1219,7 @@ export default function CadastrarVisitante() {
               {/* Documento */}
               {isFieldVisible("documento") && (
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Documento</label>
+                <span className="text-sm font-medium text-foreground mb-1 block">Documento</span>
                 <input
                   value={form.documento}
                   onChange={(e) => setForm({ ...form, documento: e.target.value })}
@@ -1233,7 +1233,7 @@ export default function CadastrarVisitante() {
               {/* Telefone */}
               {isFieldVisible("telefone") && (
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Telefone do Visitante</label>
+                <span className="text-sm font-medium text-foreground mb-1 block">Telefone do Visitante</span>
                 <input
                   type="tel"
                   value={form.telefone}
@@ -1248,7 +1248,7 @@ export default function CadastrarVisitante() {
               {/* Bloco */}
               {isFieldVisible("bloco") && (
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Bloco</label>
+                <span className="text-sm font-medium text-foreground mb-1 block">Bloco</span>
                 <div className="relative">
                   <select
                     value={form.bloco}
@@ -1275,7 +1275,7 @@ export default function CadastrarVisitante() {
               {/* Apartamento / Morador (com busca) */}
               {isFieldVisible("apartamento") && form.bloco && (
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1 block">Apartamento / Morador</label>
+                  <span className="text-sm font-medium text-foreground mb-1 block">Apartamento / Morador</span>
                   <SearchableSelect
                     value={selectedMoradorId}
                     onChange={(val) => handleSelectMorador(val)}
@@ -1293,7 +1293,7 @@ export default function CadastrarVisitante() {
               {/* WhatsApp do morador (preenchido automaticamente) */}
               {isFieldVisible("morador_whatsapp") && (
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">WhatsApp do Morador</label>
+                <span className="text-sm font-medium text-foreground mb-1 block">WhatsApp do Morador</span>
                 <input
                   type="tel"
                   value={form.morador_whatsapp}
@@ -1308,7 +1308,7 @@ export default function CadastrarVisitante() {
               {/* Autorizado por interfone */}
               {isFieldVisible("autorizado_interfone") && (
               <div style={{ marginTop: 20 }}>
-                <label className="text-sm font-medium text-foreground mb-2 block">Autorizado por interfone?</label>
+                <span className="text-sm font-medium text-foreground mb-2 block">Autorizado por interfone?</span>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setForm({ ...form, autorizado_interfone: "sim" })}
@@ -1339,7 +1339,7 @@ export default function CadastrarVisitante() {
               {/* Quem autorizou */}
               {isFieldVisible("quem_autorizou") && (
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1 block">Quem autorizou?</label>
+                  <span className="text-sm font-medium text-foreground mb-1 block">Quem autorizou?</span>
                   <input
                     value={form.quem_autorizou}
                     onChange={(e) => setForm({ ...form, quem_autorizou: e.target.value })}
@@ -1352,7 +1352,7 @@ export default function CadastrarVisitante() {
                       cursor: "text",
                     }}
                   />
-                  <label
+                  <span
                     className="flex items-center gap-2 mt-2 cursor-pointer"
                     onClick={() => {
                       const next = !manualAutorizou;
@@ -1380,14 +1380,14 @@ export default function CadastrarVisitante() {
                       )}
                     </div>
                     <span className="text-xs text-muted-foreground">Pessoa não cadastrada no sistema</span>
-                  </label>
+                  </span>
                 </div>
               )}
 
               {/* Anexar documento */}
               {isFieldVisible("documento_foto") && (
               <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">Anexar Documento</label>
+                <span className="text-sm font-medium text-foreground mb-2 block">Anexar Documento</span>
                 {form.documento_foto ? (
                   <div className="relative w-full h-32 rounded-xl overflow-hidden">
                     <img src={form.documento_foto} alt="Documento" className="w-full h-full object-cover" />

@@ -47,17 +47,24 @@ const mockBlocos = [
 
 export default function DashboardSindico() {
   const { user, logout } = useAuth();
-  const { toggleTheme, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
+  const [featureConfig, setFeatureConfig] = useState<Record<string, string>>({});
 
   useEffect(() => {
     apiFetch("/api/moradores/pendentes/count")
       .then((r) => r.ok ? r.json() : { count: 0 })
       .then((d) => setPendingCount(d.count))
       .catch(() => {});
+    apiFetch("/api/condominio-config")
+      .then((r) => r.ok ? r.json() : {})
+      .then(setFeatureConfig)
+      .catch(() => {});
   }, []);
+
+  const isSindicoFeatureEnabled = (key: string) => featureConfig[key] !== "false";
 
   const handleLogout = async () => {
     await logout();
@@ -191,10 +198,14 @@ export default function DashboardSindico() {
                   const pct = Math.max((bar.value / maxVal) * 100, 6);
                   const isLiberacoes = bar.label === "Liberações";
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={bar.label}
                       className="flex items-center"
                       style={{
+                        width: "100%",
+                        background: "transparent",
+                        border: "none",
                         padding: "14px 18px",
                         gap: 12,
                         cursor: isLiberacoes ? "pointer" : "default",
@@ -215,7 +226,7 @@ export default function DashboardSindico() {
                         </div>
                       </div>
                       <span style={{ fontSize: 20, fontWeight: 800, color: bar.color, minWidth: 32, textAlign: "right" }}>{bar.value}</span>
-                    </div>
+                    </button>
                   );
                 });
               })()}
@@ -230,16 +241,19 @@ export default function DashboardSindico() {
             </div>
             <div style={{ borderRadius: 20, background: p.surfaceBg, border: p.featureBorder, overflow: "hidden" }}>
               {mockBlocos.map((bloco, index) => (
-                <div
+                <button
+                  type="button"
                   key={bloco.nome}
                   className="flex items-center"
                   style={{
+                    width: "100%",
+                    background: index === activeModule ? "rgba(255,255,255,0.08)" : "transparent",
+                    border: "none",
                     padding: "14px 18px",
                     gap: 12,
                     cursor: "pointer",
                     borderBottom: index < mockBlocos.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
                     transition: "background 0.15s",
-                    background: index === activeModule ? "rgba(255,255,255,0.08)" : "transparent",
                   }}
                   onClick={() => setActiveModule(index)}
                   onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
@@ -253,7 +267,7 @@ export default function DashboardSindico() {
                     <p style={{ fontSize: 11, color: p.textDim }}>{bloco.andares} andares · {bloco.moradores} moradores</p>
                   </div>
                   <span style={{ fontSize: 18, fontWeight: 800, color: "#34d399" }}>{bloco.moradores}</span>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -262,9 +276,8 @@ export default function DashboardSindico() {
         {/* ═══════════ ROW 3: Liberação Cadastros (if pending) ═══════════ */}
         {pendingCount > 0 && (
           <div
-            className="animate-fade-in cursor-pointer"
+            className="animate-fade-in"
             style={{ animationDelay: "0.3s" }}
-            onClick={() => navigate("/liberacao-cadastros")}
           >
             <button
               className="w-full flex items-center"
@@ -279,6 +292,7 @@ export default function DashboardSindico() {
                 transition: "all 0.2s ease",
                 boxShadow: "0 4px 16px rgba(239,68,68,0.15)",
               }}
+              onClick={() => navigate("/liberacao-cadastros")}
               onMouseEnter={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(239,68,68,0.25), rgba(220,38,38,0.15))"; e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(239,68,68,0.15), rgba(220,38,38,0.08))"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
@@ -287,7 +301,7 @@ export default function DashboardSindico() {
               </div>
               <div className="flex-1 text-left min-w-0">
                 <p style={{ fontWeight: 700, fontSize: 15 }}>Cadastros Pendentes</p>
-                <p style={{ color: p.textDim, fontSize: 13 }}>{pendingCount} morador{pendingCount !== 1 ? "es" : ""} aguardando liberação</p>
+                <p style={{ color: p.textDim, fontSize: 13 }}>{pendingCount} morador{pendingCount === 1 ? "" : "es"} aguardando liberação</p>
               </div>
               <span style={{ fontSize: 24, fontWeight: 800, color: "#f87171", flexShrink: 0 }}>{pendingCount}</span>
             </button>
@@ -299,20 +313,21 @@ export default function DashboardSindico() {
           <p style={{ fontSize: 14, fontWeight: 700, color: p.accentBright, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.08em" }}>Funções</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }} className="sindico-features-grid">
             {[
-              { icon: UserPlus, label: "Cadastro", description: "Gerenciar moradores e funcionários", route: "/cadastros", delay: "0.15s" },
-              { icon: Camera, label: "Câmeras", description: "Monitorar câmeras do condomínio", route: "/sindico/cameras", delay: "0.25s" },
-              { icon: MapPin, label: "Rondas", description: "Controlar rondas de segurança", route: "/sindico/rondas", delay: "0.35s" },
-              { icon: Phone, label: "Interfone", description: "Configurar interfone digital", route: "/sindico/interfone-config", delay: "0.45s" },
-              { icon: Navigation, label: "Estou Chegando", description: "Configurar notificações de chegada", route: "/sindico/estou-chegando", delay: "0.55s" },
-              { icon: DoorOpen, label: "Acessos", description: "Gerenciar pontos de acesso", route: "/sindico/acessos", delay: "0.65s" },
-              { icon: DoorOpen, label: "Portaria Virtual", description: "Abrir portas e portões remotamente", route: "/morador/portaria-virtual", delay: "0.70s" },
-              { icon: Cpu, label: "Dispositivos", description: "Biblioteca de dispositivos IoT", route: "/biblioteca-dispositivos", delay: "0.75s" },
-              { icon: QrCode, label: "Config QR", description: "Configurar QR Code para visitantes", route: "/sindico/qr-config", delay: "0.85s" },
-              { icon: Zap, label: "Portão", description: "Configurar portões e dispositivos IoT", route: "/sindico/portao", delay: "0.90s" },
-              { icon: BookOpen, label: "Livro Protocolo", description: "Livro de ocorrências da portaria", route: "/portaria/livro-protocolo", delay: "0.95s" },
-              { icon: MessageCircle, label: "WhatsApp", description: "Configurar notificações WhatsApp", route: "/sindico/whatsapp", delay: "1.00s" },
-            ].map((item) => (
-              <div key={item.label} className="animate-fade-in" style={{ animationDelay: item.delay }}>
+              { icon: UserPlus, label: "Cadastro", description: "Gerenciar moradores e funcionários", route: "/cadastros", configKey: "feature_sindico_cadastros" },
+              { icon: Camera, label: "Câmeras", description: "Monitorar câmeras do condomínio", route: "/sindico/cameras", configKey: "feature_sindico_cameras" },
+              { icon: MapPin, label: "Rondas", description: "Controlar rondas de segurança", route: "/sindico/rondas", configKey: "feature_sindico_rondas" },
+              { icon: Phone, label: "Interfone", description: "Configurar interfone digital", route: "/sindico/interfone-config", configKey: "feature_sindico_interfone" },
+              { icon: Navigation, label: "Estou Chegando", description: "Configurar notificações de chegada", route: "/sindico/estou-chegando", configKey: "feature_sindico_estou_chegando" },
+              { icon: DoorOpen, label: "Acessos", description: "Gerenciar pontos de acesso", route: "/sindico/acessos", configKey: "feature_sindico_acessos" },
+              { icon: DoorOpen, label: "Portaria Virtual", description: "Abrir portas e portões remotamente", route: "/morador/portaria-virtual", configKey: "feature_sindico_portao" },
+              { icon: Cpu, label: "Dispositivos", description: "Biblioteca de dispositivos IoT", route: "/biblioteca-dispositivos", configKey: "feature_sindico_dispositivos" },
+              { icon: QrCode, label: "Config QR", description: "Configurar QR Code para visitantes", route: "/sindico/qr-config", configKey: "feature_sindico_qr_config" },
+              { icon: Zap, label: "Portão", description: "Configurar portões e dispositivos IoT", route: "/sindico/portao", configKey: "feature_sindico_portao" },
+              { icon: BookOpen, label: "Livro Protocolo", description: "Livro de ocorrências da portaria", route: "/portaria/livro-protocolo", configKey: "" },
+              { icon: MessageCircle, label: "WhatsApp", description: "Configurar notificações WhatsApp", route: "/sindico/whatsapp", configKey: "feature_sindico_whatsapp" },
+              { icon: Settings, label: "Config Funções", description: "Ativar/desativar funções por perfil", route: "/sindico/features-config", configKey: "" },
+            ].filter((item) => !item.configKey || isSindicoFeatureEnabled(item.configKey)).map((item, idx) => (
+              <div key={item.label} className="animate-fade-in" style={{ animationDelay: `${0.15 + idx * 0.08}s` }}>
                 <button
                   onClick={() => navigate(item.route)}
                   className="w-full flex flex-col items-center justify-center cursor-pointer"

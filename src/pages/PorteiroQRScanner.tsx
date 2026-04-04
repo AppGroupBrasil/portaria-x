@@ -169,7 +169,7 @@ export default function PorteiroQRScanner() {
       if (isValid && parsed.morador.telefone) {
         const url = buildWhatsAppUrl(parsed, parsed.morador.telefone);
         if (url) {
-          setTimeout(() => { window.open(url, "_blank"); }, 500);
+          setTimeout(() => { globalThis.open(url, "_blank"); }, 500);
         }
       }
     } catch {
@@ -187,7 +187,7 @@ export default function PorteiroQRScanner() {
 
   const buildWhatsAppUrl = (v: VisitorPayload, phone?: string) => {
     const msg = `*AVISO DE CHEGADA - PORTARIA*\n\nSeu visitante chegou!\n\nVisitante: ${v.visitante.nome}\n${v.visitante.documento ? `Documento: ${v.visitante.documento}\n` : ""}${v.visitante.parentesco ? `Parentesco: ${v.visitante.parentesco}\n` : ""}\nPortaria do ${v.morador.condominio}\n${new Date().toLocaleString("pt-BR")}`;
-    const num = (phone || "").replace(/\D/g, "");
+    const num = (phone || "").replaceAll(/\D/g, "");
     if (!num) return null;
     const fullNum = num.startsWith("55") ? num : `55${num}`;
     return `https://wa.me/${fullNum}?text=${encodeURIComponent(msg)}`;
@@ -197,7 +197,7 @@ export default function PorteiroQRScanner() {
     if (!visitor) return;
     const phone = whatsappNumber.trim() || visitor.morador.telefone || "";
     const url = buildWhatsAppUrl(visitor, phone);
-    if (url) window.open(url, "_blank");
+    if (url) globalThis.open(url, "_blank");
     setShowWhatsAppModal(false);
     setWhatsappNumber("");
   };
@@ -566,10 +566,10 @@ export default function PorteiroQRScanner() {
             </p>
 
             <div>
-              <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: "#374151", marginBottom: "6px" }}>
+              <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: "#374151", marginBottom: "6px" }}>
                 <Phone className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                 Número do Morador
-              </label>
+              </span>
               <input
                 type="tel"
                 value={whatsappNumber}

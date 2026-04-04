@@ -132,7 +132,7 @@ export default function SindicoInterfoneConfig() {
 
   // Regenerate
   const handleRegenerate = async (token: InterfoneToken) => {
-    if (!window.confirm(`Regenerar QR Code do bloco ${token.bloco_nome}? O QR antigo será invalidado.`)) return;
+    if (!globalThis.confirm(`Regenerar QR Code do bloco ${token.bloco_nome}? O QR antigo será invalidado.`)) return;
     try {
       await apiFetch(`${API}/interfone/tokens/${token.id}/regenerate`, { method: "PUT" });
       setSuccess(`QR Code do ${token.bloco_nome} regenerado!`);
@@ -143,7 +143,7 @@ export default function SindicoInterfoneConfig() {
 
   // Delete
   const handleDelete = async (token: InterfoneToken) => {
-    if (!window.confirm(`Remover QR Code do bloco ${token.bloco_nome}?`)) return;
+    if (!globalThis.confirm(`Remover QR Code do bloco ${token.bloco_nome}?`)) return;
     await apiFetch(`${API}/interfone/tokens/${token.id}`, { method: "DELETE" });
     fetchData();
   };
@@ -158,7 +158,7 @@ export default function SindicoInterfoneConfig() {
   // Print single QR
   const handlePrint = (token: InterfoneToken) => {
     const url = getInterfoneUrl(token.token);
-    const win = window.open("", "_blank", "width=600,height=700");
+    const win = globalThis.open("", "_blank", "width=600,height=700");
     if (!win) return;
     win.document.write(`
       <!DOCTYPE html>
@@ -188,7 +188,7 @@ export default function SindicoInterfoneConfig() {
           Escaneie o QR Code com a câmera do celular para ligar diretamente para o morador.
         </div>
         <div class="footer">Portaria X — Interfone Digital — www.portariax.com.br</div>
-        <script>setTimeout(() => { window.print(); }, 500);</script>
+        <script>setTimeout(() => { globalThis.print(); }, 500);</script>
       </body>
       </html>
     `);
@@ -198,7 +198,7 @@ export default function SindicoInterfoneConfig() {
   // Print all
   const handlePrintAll = () => {
     if (tokens.length === 0) return;
-    const win = window.open("", "_blank", "width=800,height=600");
+    const win = globalThis.open("", "_blank", "width=800,height=600");
     if (!win) return;
     win.document.write(`
       <!DOCTYPE html>
@@ -227,7 +227,7 @@ export default function SindicoInterfoneConfig() {
             </div>
           `).join("")}
         </div>
-        <script>setTimeout(() => { window.print(); }, 800);</script>
+        <script>setTimeout(() => { globalThis.print(); }, 800);</script>
       </body>
       </html>
     `);
@@ -243,7 +243,7 @@ export default function SindicoInterfoneConfig() {
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = `interfone-bloco-${token.bloco_nome.replace(/\s+/g, "-").toLowerCase()}.png`;
+      a.download = `interfone-bloco-${token.bloco_nome.replaceAll(/\s+/g, "-").toLowerCase()}.png`;
       a.click();
       URL.revokeObjectURL(blobUrl);
     } catch {}
@@ -275,7 +275,7 @@ export default function SindicoInterfoneConfig() {
 
   // Regenerate condominium token
   const handleRegenerateCondoToken = async () => {
-    if (!window.confirm("Regenerar QR Code da Entrada Principal? O QR antigo será invalidado.")) return;
+    if (!globalThis.confirm("Regenerar QR Code da Entrada Principal? O QR antigo será invalidado.")) return;
     try {
       await apiFetch(`${API}/interfone/tokens/condominio/regenerate`, { method: "PUT" });
       setSuccess("QR Code geral regenerado!");
@@ -287,7 +287,7 @@ export default function SindicoInterfoneConfig() {
   // Delete condominium token
   const handleDeleteCondoToken = async () => {
     if (!condoToken) return;
-    if (!window.confirm("Remover QR Code da Entrada Principal?")) return;
+    if (!globalThis.confirm("Remover QR Code da Entrada Principal?")) return;
     await apiFetch(`${API}/interfone/tokens/${condoToken.id}`, { method: "DELETE" });
     fetchData();
   };
@@ -296,7 +296,7 @@ export default function SindicoInterfoneConfig() {
   const handlePrintCondoToken = () => {
     if (!condoToken) return;
     const url = getInterfoneUrl(condoToken.token);
-    const win = window.open("", "_blank", "width=600,height=700");
+    const win = globalThis.open("", "_blank", "width=600,height=700");
     if (!win) return;
     win.document.write(`
       <!DOCTYPE html>
@@ -329,7 +329,7 @@ export default function SindicoInterfoneConfig() {
           Escolha o bloco e apartamento para ligar diretamente para o morador.
         </div>
         <div class="footer">Portaria X — Interfone Digital — www.portariax.com.br</div>
-        <script>setTimeout(() => { window.print(); }, 500);</script>
+        <script>setTimeout(() => { globalThis.print(); }, 500);</script>
       </body>
       </html>
     `);

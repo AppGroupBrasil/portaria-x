@@ -143,7 +143,7 @@ export default function MoradorAutorizacoes() {
   }, []);
 
   const formatPhone = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
+    const digits = value.replaceAll(/\D/g, "").slice(0, 11);
     if (digits.length <= 2) return digits.length ? `(${digits}` : "";
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
@@ -249,11 +249,11 @@ export default function MoradorAutorizacoes() {
             await navigator.share({ title: "Autorização de Entrada", text });
           } catch {
             // Usuário cancelou o share, fallback pro WhatsApp
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+            globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
           }
         } else {
           // Desktop fallback: abre WhatsApp Web sem número (usuário escolhe o contato)
-          window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+          globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
         }
       }
 
@@ -646,7 +646,7 @@ export default function MoradorAutorizacoes() {
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5cm" }}>
               {/* Nome */}
               <div>
-                <label className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Nome do Visitante</label>
+                <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Nome do Visitante</span>
                 <input
                   value={form.visitante_nome}
                   onChange={(e) => setForm({ ...form, visitante_nome: e.target.value })}
@@ -659,7 +659,7 @@ export default function MoradorAutorizacoes() {
               {/* Datas */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>De</label>
+                  <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>De</span>
                   <input
                     type="date"
                     value={form.data_inicio}
@@ -670,7 +670,7 @@ export default function MoradorAutorizacoes() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Até</label>
+                  <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Até</span>
                   <input
                     type="date"
                     value={form.data_fim}
@@ -685,7 +685,7 @@ export default function MoradorAutorizacoes() {
               {/* Horários */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Hora início</label>
+                  <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Hora início</span>
                   <input
                     type="time"
                     value={form.hora_inicio}
@@ -696,7 +696,7 @@ export default function MoradorAutorizacoes() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Hora fim</label>
+                  <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Hora fim</span>
                   <input
                     type="time"
                     value={form.hora_fim}
@@ -710,7 +710,7 @@ export default function MoradorAutorizacoes() {
 
               {/* Observação */}
               <div>
-                <label className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Observação</label>
+                <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Observação</span>
                 <textarea
                   value={form.observacao}
                   onChange={(e) => setForm({ ...form, observacao: e.target.value })}

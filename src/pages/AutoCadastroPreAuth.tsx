@@ -96,7 +96,7 @@ export default function AutoCadastroPreAuth() {
   };
 
   const formatPhone = (val: string) => {
-    const digits = val.replace(/\D/g, "").slice(0, 11);
+    const digits = val.replaceAll(/\D/g, "").slice(0, 11);
     if (digits.length <= 2) return digits.length ? `(${digits}` : "";
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
@@ -344,10 +344,10 @@ export default function AutoCadastroPreAuth() {
       <div style={{ padding: "24px 24px 100px" }}>
         {/* ── Biometria Facial ── */}
         <div style={{ marginBottom: "32px" }}>
-          <label className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "#1e293b" }}>
+          <span className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "#1e293b" }}>
             <ScanFace className="w-5 h-5" style={{ color: "#6366f1" }} />
             Biometria Facial
-          </label>
+          </span>
 
           {foto && faceStatus === "captured" ? (
             <div className="relative text-center">
@@ -442,10 +442,10 @@ export default function AutoCadastroPreAuth() {
 
         {/* ── Foto do Documento ── */}
         <div style={{ marginBottom: "32px" }}>
-          <label className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "#1e293b" }}>
+          <span className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "#1e293b" }}>
             <Image className="w-5 h-5" style={{ color: "#f59e0b" }} />
             Foto do Documento
-          </label>
+          </span>
 
           {documentoFoto ? (
             <div className="relative">
@@ -513,9 +513,9 @@ export default function AutoCadastroPreAuth() {
 
         {/* ── Nome ── */}
         <div style={{ marginBottom: "20px" }}>
-          <label className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
+          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
             <User className="w-4 h-4" style={{ color: "#6366f1" }} /> Nome Completo *
-          </label>
+          </span>
           <input
             type="text"
             value={nome}
@@ -528,9 +528,9 @@ export default function AutoCadastroPreAuth() {
 
         {/* ── Documento ── */}
         <div style={{ marginBottom: "20px" }}>
-          <label className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
+          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
             <FileText className="w-4 h-4" style={{ color: "#6366f1" }} /> Documento (CPF / RG)
-          </label>
+          </span>
           <input
             type="text"
             value={documento}
@@ -543,9 +543,9 @@ export default function AutoCadastroPreAuth() {
 
         {/* ── Telefone ── */}
         <div style={{ marginBottom: "32px" }}>
-          <label className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
+          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
             <Phone className="w-4 h-4" style={{ color: "#6366f1" }} /> Telefone
-          </label>
+          </span>
           <input
             type="tel"
             value={telefone}

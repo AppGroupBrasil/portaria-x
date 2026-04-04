@@ -41,12 +41,12 @@ const PLATE_REGEX = /[A-Z]{3}[\s\-]?\d[A-Z0-9]\d{2}/gi;
 function extractPlate(text: string): string | null {
   const cleaned = text
     .toUpperCase()
-    .replace(/[ÀÁÂ]/g, "A").replace(/[ÉÊ]/g, "E").replace(/[ÍÎ]/g, "I")
-    .replace(/[ÓÔÕ]/g, "O").replace(/[ÚÛ]/g, "U")
-    .replace(/[\n\r]/g, " ").replace(/[^A-Z0-9\s\-]/g, "");
+    .replaceAll(/[ÀÁÂ]/g, "A").replaceAll(/[ÉÊ]/g, "E").replaceAll(/[ÍÎ]/g, "I")
+    .replaceAll(/[ÓÔÕ]/g, "O").replaceAll(/[ÚÛ]/g, "U")
+    .replaceAll(/[\n\r]/g, " ").replaceAll(/[^A-Z0-9\s\-]/g, "");
   const matches = cleaned.match(PLATE_REGEX);
   if (!matches || matches.length === 0) return null;
-  return matches[0].replace(/[\s\-]/g, "").slice(0, 7);
+  return matches[0].replaceAll(/[\s\-]/g, "").slice(0, 7);
 }
 
 interface CameraData {

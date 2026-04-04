@@ -29,9 +29,9 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       return;
     }
 
-    // Validar senha: 4 dígitos
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    // Validar senha: 6 dígitos
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
 
@@ -138,7 +138,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
     if (dup) { res.status(409).json({ error: "Este login já está em uso." }); return; }
 
     if (password) {
-      if (!/^\d{4}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos." }); return; }
+      if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
       const hashed = await bcrypt.hash(password, 10);
       db.prepare("UPDATE funcionarios SET nome = ?, sobrenome = ?, cargo = ?, login = ?, password = ? WHERE id = ?").run(nome.trim(), sobrenome.trim(), cargo, login, hashed, parseInt(id));
     } else {

@@ -296,8 +296,8 @@ export default function AutorizacoesPrevias() {
           ].filter(Boolean);
 
           const message = encodeURIComponent(msgLines.join("\n"));
-          const phone = auth.morador_phone.replace(/\D/g, "");
-          window.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
+          const phone = auth.morador_phone.replaceAll(/\D/g, "");
+          globalThis.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
         }
 
         fetchAuths();

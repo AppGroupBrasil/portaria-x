@@ -871,9 +871,9 @@ export default function RegistroRonda() {
 
             {/* Observações input - multiple fields with audio */}
             <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "12px" }}>
-              <label style={{ fontSize: "12px", fontWeight: 600, color: p.text, marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: p.text, marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
                 <MessageSquare style={{ width: 12, height: 12, color: p.text }} /> Observações (opcional)
-              </label>
+              </span>
 
               {observacoes.length === 0 && (
                 <p style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "8px" }}>

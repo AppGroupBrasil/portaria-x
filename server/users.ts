@@ -16,8 +16,8 @@ router.post("/administradora", authorize("master"), async (req, res) => {
       res.status(400).json({ error: "Nome, e-mail e senha são obrigatórios." });
       return;
     }
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -68,7 +68,7 @@ router.get("/administradoras", authorize("master"), (_req, res) => {
 // ─── LIST SUB-USERS OF AN ADMINISTRADORA (MASTER ONLY) ──
 router.get("/administradora/:id/sub-usuarios", authorize("master"), (req, res) => {
   try {
-    const parentId = parseInt(req.params.id);
+    const parentId = parseInt(req.params.id as string);
     const parent = db.prepare("SELECT id FROM users WHERE id = ? AND role = 'administradora' AND parent_administradora_id IS NULL").get(parentId);
     if (!parent) {
       res.status(404).json({ error: "Administradora principal não encontrada." });
@@ -87,7 +87,7 @@ router.get("/administradora/:id/sub-usuarios", authorize("master"), (req, res) =
 // ─── CREATE SUB-USER FOR ADMINISTRADORA (MASTER ONLY) ───
 router.post("/administradora/:id/sub-usuario", authorize("master"), async (req, res) => {
   try {
-    const parentId = parseInt(req.params.id);
+    const parentId = parseInt(req.params.id as string);
     const parent = db.prepare("SELECT id, name FROM users WHERE id = ? AND role = 'administradora' AND parent_administradora_id IS NULL").get(parentId) as DbUser | undefined;
     if (!parent) {
       res.status(404).json({ error: "Administradora principal não encontrada." });
@@ -100,8 +100,8 @@ router.post("/administradora/:id/sub-usuario", authorize("master"), async (req, 
       res.status(400).json({ error: "Nome, e-mail e senha são obrigatórios." });
       return;
     }
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -151,7 +151,7 @@ router.put("/administradora/:id", authorize("master"), async (req, res) => {
     if (dup) { res.status(409).json({ error: "Este e-mail já está cadastrado." }); return; }
 
     if (password) {
-      if (!/^\d{4}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos." }); return; }
+      if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
       const hashed = await bcrypt.hash(password, 10);
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, password = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), phone || null, hashed, parseInt(id));
     } else {
@@ -202,8 +202,8 @@ router.post("/sindico", authorize("master", "administradora"), async (req, res) 
       res.status(400).json({ error: "Nome, e-mail e senha são obrigatórios." });
       return;
     }
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -345,7 +345,7 @@ router.put("/sindico/:id", authorize("master", "administradora"), async (req, re
     }
 
     if (password) {
-      if (!/^\d{4}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos." }); return; }
+      if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
       const hashed = await bcrypt.hash(password, 10);
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, password = ?, condominio_id = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), phone || null, hashed, condominioId || null, parseInt(id));
     } else {

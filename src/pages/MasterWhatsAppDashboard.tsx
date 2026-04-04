@@ -268,10 +268,10 @@ export default function MasterWhatsAppDashboard() {
 
               {/* API Key */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
                   <Key size={12} style={{ display: "inline", marginRight: 4, verticalAlign: "middle" }} />
                   API Key (Gupshup)
-                </label>
+                </span>
                 <input
                   type="password"
                   value={globalApiKey}
@@ -283,10 +283,10 @@ export default function MasterWhatsAppDashboard() {
 
               {/* Source Number */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
                   <Phone size={12} style={{ display: "inline", marginRight: 4, verticalAlign: "middle" }} />
                   Número de Origem (com DDI)
-                </label>
+                </span>
                 <input
                   type="tel"
                   value={globalSource}
@@ -301,10 +301,10 @@ export default function MasterWhatsAppDashboard() {
 
               {/* App Name */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
                   <MessageCircle size={12} style={{ display: "inline", marginRight: 4, verticalAlign: "middle" }} />
                   Nome do App (Gupshup)
-                </label>
+                </span>
                 <input
                   type="text"
                   value={globalAppName}
@@ -346,10 +346,10 @@ export default function MasterWhatsAppDashboard() {
                 background: isDark ? "rgba(255,255,255,0.03)" : "#f8fafc",
                 border: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid #e2e8f0",
               }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 8 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 8 }}>
                   <Send size={12} style={{ display: "inline", marginRight: 4, verticalAlign: "middle" }} />
                   Testar Conexão
-                </label>
+                </span>
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
                     type="tel"
@@ -467,7 +467,7 @@ export default function MasterWhatsAppDashboard() {
                   </button>
 
                   {/* Name + stats summary */}
-                  <div style={{ flex: 1, minWidth: 0 }} onClick={() => setExpandedId(isExpanded ? null : condo.id)}>
+                  <div style={{ flex: 1, minWidth: 0 }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => setExpandedId(isExpanded ? null : condo.id))(); } }} onClick={() => setExpandedId(isExpanded ? null : condo.id)}>
                     <div style={{ fontWeight: 700, fontSize: 14, color: p.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {condo.name}
                     </div>
@@ -550,9 +550,9 @@ export default function MasterWhatsAppDashboard() {
                     {/* Limit + cost config */}
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                       <div>
-                        <label style={{ fontSize: 11, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
                           Limite mensal (0 = ilimitado)
-                        </label>
+                        </span>
                         <input
                           type="number"
                           min="0"
@@ -562,9 +562,9 @@ export default function MasterWhatsAppDashboard() {
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: 11, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: p.textMuted, display: "block", marginBottom: 4 }}>
                           Custo/msg (R$)
-                        </label>
+                        </span>
                         <input
                           type="number"
                           min="0"

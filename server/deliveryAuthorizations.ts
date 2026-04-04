@@ -78,7 +78,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
     );
 
     // 📱 WhatsApp: notificar portaria sobre delivery autorizado
-    notifyPortariaWhatsApp(user.condominio_id, "whatsapp_notify_delivery",
+    notifyPortariaWhatsApp(user.condominio_id!, "whatsapp_notify_delivery",
       `📦 *Portaria X* — Delivery Autorizado\n\n👤 ${user.name} (${user.block || "-"}/${user.unit || "-"})\n🛵 ${servico}${numero_pedido ? ` — Pedido: ${numero_pedido}` : ""}\n\nAguardando chegada.`);
 
     res.status(201).json({
@@ -142,14 +142,14 @@ router.post("/portaria", authenticate, (req: Request, res: Response) => {
 
     // WhatsApp: notify morador about delivery arrival
     if (morador_id) {
-      notifyUserWhatsApp(user.condominio_id, "whatsapp_notify_delivery", morador_id,
+      notifyUserWhatsApp(user.condominio_id!, "whatsapp_notify_delivery", morador_id,
         `*Portaria X* — Delivery na Portaria\n\n${servico_custom || servico}${numero_pedido ? ` — Pedido: ${numero_pedido}` : ""}\nBloco ${bloco || "-"}, Apto ${apartamento || "-"}\n\nSua entrega chegou e esta na portaria. Por favor, venha retirar.`);
     }
 
     // Email: notify morador
     if (morador_id) {
       emailDeliveryRecebido({
-        condominioId: user.condominio_id,
+        condominioId: user.condominio_id!,
         moradorId: morador_id,
         moradorName: morador_name,
         servico: servico_custom || servico,

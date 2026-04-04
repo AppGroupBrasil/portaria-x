@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ export default function RegisterCondominio() {
 
   // Formatações
   const formatCnpj = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 5) return `${n.slice(0, 2)}.${n.slice(2)}`;
     if (n.length <= 8) return `${n.slice(0, 2)}.${n.slice(2, 5)}.${n.slice(5)}`;
@@ -66,7 +66,7 @@ export default function RegisterCondominio() {
 
   // Buscar dados do CNPJ na BrasilAPI
   const lookupCnpj = async (rawCnpj: string) => {
-    const digits = rawCnpj.replace(/\D/g, "");
+    const digits = rawCnpj.replaceAll(/\D/g, "");
     if (digits.length !== 14) return;
 
     setCnpjLoading(true);
@@ -99,7 +99,7 @@ export default function RegisterCondominio() {
   };
 
   const formatPhone = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -115,7 +115,7 @@ export default function RegisterCondominio() {
     if (!adminName.trim()) return "Informe o nome do responsável.";
     if (!email) return "Informe o e-mail.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "E-mail inválido.";
-    if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
+    if (!/^\d{6}$/.test(password)) return "Senha deve ter exatamente 6 dígitos numéricos.";
     if (password !== confirmPassword) return "As senhas não coincidem.";
     return null;
   };
@@ -127,7 +127,7 @@ export default function RegisterCondominio() {
     setStep(2);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
     const err = validateStep2();
@@ -377,7 +377,7 @@ export default function RegisterCondominio() {
                         setCnpj(formatted);
                         setCnpjFound(false);
                         setCnpjNotFound(false);
-                        const digits = formatted.replace(/\D/g, "");
+                        const digits = formatted.replaceAll(/\D/g, "");
                         if (digits.length === 14) lookupCnpj(formatted);
                       }}
                     />
@@ -501,18 +501,18 @@ export default function RegisterCondominio() {
                   />
                 </div>
 
-                {/* Senha 4 dígitos */}
+                {/* Senha 6 dígitos */}
                 <div className="space-y-2">
-                  <Label htmlFor="password">Senha (4 dígitos) *</Label>
+                  <Label htmlFor="password">Senha (6 dígitos) *</Label>
                   <div className="relative">
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
+                      maxLength={6}
+                      placeholder="••••••"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      onChange={(e) => setPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                       className="pr-10"
                       autoComplete="new-password"
                     />
@@ -533,10 +533,10 @@ export default function RegisterCondominio() {
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     inputMode="numeric"
-                    maxLength={4}
-                    placeholder="••••"
+                    maxLength={6}
+                    placeholder="••••••"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                    onChange={(e) => setConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                     autoComplete="new-password"
                   />
                 </div>
@@ -546,7 +546,7 @@ export default function RegisterCondominio() {
             {/* Error */}
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}

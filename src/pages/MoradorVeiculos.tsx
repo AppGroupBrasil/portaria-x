@@ -94,7 +94,7 @@ export default function MoradorVeiculos() {
 
   // Placa mask: ABC-1234 or ABC1D23 (Mercosul)
   const handlePlacaChange = (val: string) => {
-    let v = val.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    let v = val.toUpperCase().replaceAll(/[^A-Z0-9]/g, "");
     if (v.length > 7) v = v.slice(0, 7);
     if (v.length > 3) {
       v = v.slice(0, 3) + "-" + v.slice(3);
@@ -105,7 +105,7 @@ export default function MoradorVeiculos() {
   const handleEdit = (v: VehicleAuth) => {
     setEditingId(v.id);
     // Format placa with dash for display
-    let p = v.placa.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    let p = v.placa.toUpperCase().replaceAll(/[^A-Z0-9]/g, "");
     if (p.length > 3) p = p.slice(0, 3) + "-" + p.slice(3);
     setPlaca(p);
     setModelo(v.modelo || "");
@@ -298,9 +298,9 @@ export default function MoradorVeiculos() {
 
             {/* PLACA — em destaque */}
             <div>
-              <label style={{ fontWeight: 700, fontSize: '14px', color: isDark ? '#fff' : "#1e293b", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 700, fontSize: '14px', color: isDark ? '#fff' : "#1e293b", marginBottom: '8px', display: 'block' }}>
                 Placa do Veículo *
-              </label>
+              </span>
               <input
                 type="text"
                 value={placa}
@@ -320,12 +320,12 @@ export default function MoradorVeiculos() {
             {/* Modelo + Cor */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Modelo</label>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Modelo</span>
                 <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ex: Civic, Onix..."
                   style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }} />
               </div>
               <div>
-                <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Cor</label>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Cor</span>
                 <select value={cor} onChange={(e) => setCor(e.target.value)}
                   style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }}>
                   <option value="">Selecione</option>
@@ -336,7 +336,7 @@ export default function MoradorVeiculos() {
 
             {/* Motorista */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Nome do Motorista</label>
+              <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Nome do Motorista</span>
               <input type="text" value={motorista} onChange={(e) => setMotorista(e.target.value)} placeholder="Nome completo do motorista"
                 style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }} />
             </div>
@@ -344,13 +344,13 @@ export default function MoradorVeiculos() {
             {/* data início + fim */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Liberado de *</label>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Liberado de *</span>
                 <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
                   style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
               </div>
               <div>
-                <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até *</label>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até *</span>
                 <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
                   style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
@@ -360,13 +360,13 @@ export default function MoradorVeiculos() {
             {/* hora início + fim */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Horário de</label>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Horário de</span>
                 <input type="time" value={horaInicio} onChange={(e) => setHoraInicio(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
                   style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
               </div>
               <div>
-                <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até</label>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até</span>
                 <input type="time" value={horaFim} onChange={(e) => setHoraFim(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
                   style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
@@ -386,12 +386,14 @@ export default function MoradorVeiculos() {
             >
               <div style={{
                 width: '24px', height: '24px', borderRadius: '6px',
-                border: requerSaida ? '2px solid #3b82f6' : '2px solid rgba(255,255,255,0.2)',
-                background: requerSaida ? '#3b82f6' : 'transparent',
+                border: requerSaida
+                  ? '2px solid #3b82f6'
+                  : (isDark ? '2px solid rgba(255,255,255,0.22)' : '2px solid #94a3b8'),
+                background: requerSaida ? '#3b82f6' : (isDark ? 'transparent' : '#ffffff'),
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s', flexShrink: 0,
               }}>
-                {requerSaida && <CheckCircle2 className="w-4 h-4" style={{ color: isDark ? '#fff' : "#1e293b" }} />}
+                {requerSaida && <CheckCircle2 className="w-4 h-4" style={{ color: '#ffffff' }} />}
               </div>
               <div>
                 <p style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#fff' : "#1e293b" }}>
@@ -405,7 +407,7 @@ export default function MoradorVeiculos() {
 
             {/* Observação */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Observação</label>
+              <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Observação</span>
               <textarea value={observacao} onChange={(e) => setObservacao(e.target.value)} placeholder="Ex: Prestador de serviço, entrega de mudança..."
                 rows={2} style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', color: isDark ? '#fff' : "#1e293b", outline: 'none', resize: 'none', boxSizing: 'border-box' }} />
             </div>
@@ -489,10 +491,10 @@ export default function MoradorVeiculos() {
 
                   {/* Observation input */}
                   <div>
-                    <label style={{ fontWeight: 600, fontSize: '12px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '4px', display: 'block' }}>
+                    <span style={{ fontWeight: 600, fontSize: '12px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '4px', display: 'block' }}>
                       <MessageSquare className="w-3 h-3" style={{ display: "inline", verticalAlign: "middle", marginRight: "4px" }} />
                       Observação para portaria (opcional)
-                    </label>
+                    </span>
                     <input
                       type="text"
                       placeholder="Ex: Encaminhar para vaga de visitantes, Minha vaga G-12..."

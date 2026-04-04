@@ -160,7 +160,7 @@ export default function MasterUsuarios() {
     setError("");
     try {
       const body: any = { ...form };
-      if (selectedCondominioId) body.condominio_id = parseInt(selectedCondominioId);
+      if (selectedCondominioId) body.condominio_id = Number.parseInt(selectedCondominioId);
       if (!body.password) delete body.password;
 
       const res = await apiFetch(`${API}/master/users/${editingId}`, {

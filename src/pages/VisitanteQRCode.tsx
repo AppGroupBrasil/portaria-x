@@ -55,7 +55,7 @@ export default function VisitanteQRCode() {
   const selfRegisterUrl = `${APP_ORIGIN}/visitante/auto-cadastro`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selfRegisterUrl)}`;
 
-  const handlePrint = () => window.print();
+  const handlePrint = () => globalThis.print();
 
   /* ═══ RENDERERS POR LAYOUT ═══ */
 
@@ -645,7 +645,7 @@ export default function VisitanteQRCode() {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5cm" }}>
           {/* Condo name */}
           <div>
-            <label className="text-sm font-medium mb-1 block" style={{ color: p.text }}>Nome do Condomínio</label>
+            <span className="text-sm font-medium mb-1 block" style={{ color: p.text }}>Nome do Condomínio</span>
             <input
               value={condominioNome}
               onChange={(e) => setCondominioNome(e.target.value)}
@@ -656,9 +656,9 @@ export default function VisitanteQRCode() {
 
           {/* Layout selector */}
           <div>
-            <label className="text-sm font-medium mb-2 flex items-center gap-1.5" style={{ color: p.text }}>
+            <span className="text-sm font-medium mb-2 flex items-center gap-1.5" style={{ color: p.text }}>
               <Layout className="w-4 h-4" style={{ color: p.text }} /> Modelo de Layout
-            </label>
+            </span>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", maxHeight: "340px", overflowY: "auto", paddingRight: "4px" }}>
               {LAYOUTS.map((l) => (
                 <button

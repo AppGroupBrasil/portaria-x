@@ -320,7 +320,7 @@ export default function LiberacaoCadastros() {
             </div>
             {emailEnabled && (
               <div className="mt-3 pt-3 border-t border-border">
-                <label className="text-sm font-medium mb-1.5 block" style={{ color: "#003580" }}>E-mail para notificação</label>
+                <span className="text-sm font-medium mb-1.5 block" style={{ color: "#003580" }}>E-mail para notificação</span>
                 <div className="flex gap-2">
                   <input
                     type="email"
@@ -375,7 +375,7 @@ export default function LiberacaoCadastros() {
             </div>
             {whatsappEnabled && (
               <div className="mt-3 pt-3 border-t border-border">
-                <label className="text-sm font-medium mb-1.5 block" style={{ color: "#003580" }}>Telefone WhatsApp do síndico/administradora</label>
+                <span className="text-sm font-medium mb-1.5 block" style={{ color: "#003580" }}>Telefone WhatsApp do síndico/administradora</span>
                 <div className="flex gap-2">
                   <input
                     type="tel"

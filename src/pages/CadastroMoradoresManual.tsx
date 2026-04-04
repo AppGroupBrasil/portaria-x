@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,6 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  CheckCircle2,
   UserCheck,
   X,
 } from "lucide-react";
@@ -56,7 +55,6 @@ export default function CadastroMoradoresManual() {
   const [formCondominioId, setFormCondominioId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [modalData, setModalData] = useState<{ nome: string; bloco: string; unidade: string; perfil: string; email: string } | null>(null);
 
   // Carregar blocos cadastrados
@@ -75,7 +73,7 @@ export default function CadastroMoradoresManual() {
   }, []);
 
   const formatPhone = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -90,15 +88,14 @@ export default function CadastroMoradoresManual() {
     if (!email.trim()) return "Informe o e-mail.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "E-mail inválido.";
     if (email.toLowerCase() !== confirmEmail.toLowerCase()) return "Os e-mails não coincidem.";
-    if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
+    if (!/^\d{6}$/.test(password)) return "Senha deve ter exatamente 6 dígitos numéricos.";
     if (password !== confirmPassword) return "As senhas não coincidem.";
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     const err = validate();
     if (err) return setError(err);
@@ -116,7 +113,7 @@ export default function CadastroMoradoresManual() {
           whatsapp: whatsapp || undefined,
           email: email.trim().toLowerCase(),
           password,
-          condominioId: formCondominioId ? parseInt(formCondominioId) : undefined,
+          condominioId: formCondominioId ? Number.parseInt(formCondominioId) : undefined,
         }),
       });
 
@@ -124,7 +121,7 @@ export default function CadastroMoradoresManual() {
       if (!res.ok) throw new Error(data.error || "Erro ao cadastrar.");
 
       setModalData({ nome: nome.trim(), bloco, unidade: unidade.trim(), perfil, email: email.trim().toLowerCase() });
-      setSuccess("ok");
+
       setNome("");
       setBloco("");
       setUnidade("");
@@ -162,7 +159,7 @@ export default function CadastroMoradoresManual() {
                 <TStep n={4}>Selecione o <strong>perfil</strong>: Proprietário, Locatário, Familiar ou Morador</TStep>
                 <TStep n={5}>Informe o <strong>WhatsApp</strong> com DDD (ex: 11999998888) — usado para notificações automáticas</TStep>
                 <TStep n={6}>Informe o <strong>e-mail</strong> — será o login do morador no app</TStep>
-                <TStep n={7}>Defina uma <strong>senha de 4 dígitos</strong> — o morador usará para entrar no app</TStep>
+                <TStep n={7}>Defina uma <strong>senha de 6 dígitos</strong> — o morador usará para entrar no app</TStep>
                 <TStep n={8}>Clique em <strong>"Cadastrar"</strong> para finalizar</TStep>
                 <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 Após o cadastro, o morador já pode acessar o app com e-mail + senha.</p>
               </TSection>
@@ -173,7 +170,7 @@ export default function CadastroMoradoresManual() {
                 <TBullet><strong>Perfil *</strong> — Proprietário, Locatário, Familiar ou Morador</TBullet>
                 <TBullet><strong>WhatsApp *</strong> — Número com DDD para notificações de delivery, correspondência, visitante</TBullet>
                 <TBullet><strong>E-mail *</strong> — Login do morador no app (deve ser único)</TBullet>
-                <TBullet><strong>Senha *</strong> — 4 dígitos numéricos</TBullet>
+                <TBullet><strong>Senha *</strong> — 6 dígitos numéricos</TBullet>
               </TSection>
               <TSection icon={<span>⭐</span>} title="DICAS IMPORTANTES">
                 <TBullet>Campos com <strong>*</strong> são obrigatórios — não é possível cadastrar sem preenchê-los</TBullet>
@@ -329,17 +326,17 @@ export default function CadastroMoradoresManual() {
               {/* Senha + Confirmar Senha */}
               <div style={{ display: "flex", gap: "12px", marginBottom: "19px" }}>
                 <div style={{ flex: 1 }}>
-                  <Label htmlFor="password" style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Senha (4 dígitos) *</Label>
+                  <Label htmlFor="password" style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Senha (6 dígitos) *</Label>
                   <div className="relative">
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
+                      maxLength={6}
+                      placeholder="••••••"
                       value={password}
                       onChange={(e) =>
-                        setPassword(e.target.value.replace(/\D/g, "").slice(0, 4))
+                        setPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))
                       }
                       className="pr-10"
                       style={{ paddingLeft: "19px" }}
@@ -347,7 +344,7 @@ export default function CadastroMoradoresManual() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors hover:[color:#003580]"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors hover:text-[#003580]"
                       style={{ color: "#64748b" }}
                     >
                       {showPassword ? (
@@ -364,11 +361,11 @@ export default function CadastroMoradoresManual() {
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     inputMode="numeric"
-                    maxLength={4}
-                    placeholder="••••"
+                    maxLength={6}
+                    placeholder="••••••"
                     value={confirmPassword}
                     onChange={(e) =>
-                      setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))
+                      setConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))
                     }
                     style={{ paddingLeft: "19px" }}
                   />
@@ -377,9 +374,9 @@ export default function CadastroMoradoresManual() {
 
               {/* Error Modal */}
               {error && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
-                  <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
-                  <div onClick={(e) => e.stopPropagation()} className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
+                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+                  <button type="button" onClick={() => setError("")} style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", border: "none", cursor: "pointer", width: "100%" }} aria-label="Fechar modal" />
+                  <dialog open className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
                     <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                       <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />
@@ -387,7 +384,7 @@ export default function CadastroMoradoresManual() {
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Atenção</h2>
                     <p style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", marginBottom: 28, lineHeight: 1.5 }}>{error}</p>
                     <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "#ffffff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
-                  </div>
+                  </dialog>
                 </div>
               )}
 
@@ -415,14 +412,12 @@ export default function CadastroMoradoresManual() {
       {modalData && (
         <div
           style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
-          onClick={() => setModalData(null)}
         >
           {/* Backdrop */}
-          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
+          <button type="button" onClick={() => setModalData(null)} style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", border: "none", cursor: "pointer", width: "100%" }} aria-label="Fechar modal" />
 
           {/* Card */}
           <div
-            onClick={(e) => e.stopPropagation()}
             className="animate-fade-in"
             style={{
               position: "relative",

@@ -29,7 +29,6 @@ import AutorizarVisitante from "@/pages/AutorizarVisitante";
 import AutoCadastroVisitante from "@/pages/AutoCadastroVisitante";
 import VisitanteQRCode from "@/pages/VisitanteQRCode";
 import MoradorAutorizacoes from "@/pages/MoradorAutorizacoes";
-import AutorizacoesPrevias from "@/pages/AutorizacoesPrevias";
 import AutoCadastroPreAuth from "@/pages/AutoCadastroPreAuth";
 import QRVisitantePublic from "@/pages/QRVisitantePublic";
 import MoradorDelivery from "@/pages/MoradorDelivery";
@@ -43,7 +42,6 @@ import MinhaConta from "@/pages/MinhaConta";
 import CorrespondenciasPorteiro from "@/pages/CorrespondenciasPorteiro";
 import MoradorCorrespondencias from "@/pages/MoradorCorrespondencias";
 import LivroProtocolo from "@/pages/LivroProtocolo";
-import PortariaVirtual from "@/pages/PortariaVirtual";
 import PortariaVirtualTutorial from "@/pages/PortariaVirtualTutorial";
 import MoradorQRVisitante from "@/pages/MoradorQRVisitante";
 import PorteiroQRScanner from "@/pages/PorteiroQRScanner";
@@ -109,7 +107,7 @@ class ErrorBoundary extends React.Component<
               Ocorreu um erro inesperado. Tente recarregar a página.
             </p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => globalThis.location.reload()}
               className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
             >
               Recarregar
@@ -124,7 +122,7 @@ class ErrorBoundary extends React.Component<
 
 // ─── Route Guards ────────────────────────────────────────
 
-function ProtectedRoute({ children, minRole }: { children: React.ReactNode; minRole?: UserRole }) {
+function ProtectedRoute({ children, minRole }: Readonly<{ children: React.ReactNode; minRole?: UserRole }>) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -140,7 +138,7 @@ function ProtectedRoute({ children, minRole }: { children: React.ReactNode; minR
   return <>{children}</>;
 }
 
-function PublicRoute({ children }: { children: React.ReactNode }) {
+function PublicRoute({ children }: Readonly<{ children: React.ReactNode }>) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {

@@ -61,10 +61,10 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
 
         {/* Date from */}
         <div>
-          <label style={labelStyle}>
+          <span style={labelStyle}>
             <Calendar className="w-4 h-4 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
             Data Inicial
-          </label>
+          </span>
           <input
             type="date"
             value={dateFrom}
@@ -76,10 +76,10 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
 
         {/* Date to */}
         <div>
-          <label style={labelStyle}>
+          <span style={labelStyle}>
             <Calendar className="w-4 h-4 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
             Data Final
-          </label>
+          </span>
           <input
             type="date"
             value={dateTo}

@@ -274,10 +274,10 @@ export default function AutoCadastroVisitante() {
         <div className="space-y-4">
           {/* Foto */}
           <div>
-            <label className="text-sm font-medium text-gray-800 mb-2 block">
+            <span className="text-sm font-medium text-gray-800 mb-2 block">
               Sua Foto{requiredFields.photo ? " *" : ""}
               {!requiredFields.photo && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
-            </label>
+            </span>
             {form.foto ? (
               <div className="relative w-24 h-24 rounded-xl overflow-hidden">
                 <img src={form.foto} alt="Foto" className="w-full h-full object-cover" />
@@ -302,7 +302,7 @@ export default function AutoCadastroVisitante() {
 
           {/* Nome */}
           <div>
-            <label className="text-sm font-medium text-gray-800 mb-1 block">Nome completo *</label>
+            <span className="text-sm font-medium text-gray-800 mb-1 block">Nome completo *</span>
             <input
               value={form.nome}
               onChange={(e) => setForm({ ...form, nome: e.target.value })}
@@ -313,10 +313,10 @@ export default function AutoCadastroVisitante() {
 
           {/* Documento */}
           <div>
-            <label className="text-sm font-medium text-gray-800 mb-1 block">
+            <span className="text-sm font-medium text-gray-800 mb-1 block">
               Documento (RG/CPF){requiredFields.document ? " *" : ""}
               {!requiredFields.document && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
-            </label>
+            </span>
             <input
               value={form.documento}
               onChange={(e) => setForm({ ...form, documento: e.target.value })}
@@ -327,10 +327,10 @@ export default function AutoCadastroVisitante() {
 
           {/* Telefone */}
           <div>
-            <label className="text-sm font-medium text-gray-800 mb-1 block">
+            <span className="text-sm font-medium text-gray-800 mb-1 block">
               Seu Telefone{requiredFields.phone ? " *" : ""}
               {!requiredFields.phone && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
-            </label>
+            </span>
             <input
               value={form.telefone}
               onChange={(e) => setForm({ ...form, telefone: e.target.value })}
@@ -368,7 +368,7 @@ export default function AutoCadastroVisitante() {
           {/* Bloco - Dropdown */}
           {!naoSeiBloco && (
             <div className="mt-4">
-              <label className="text-sm font-medium text-gray-800 mb-1 block">Bloco que vai visitar</label>
+              <span className="text-sm font-medium text-gray-800 mb-1 block">Bloco que vai visitar</span>
               {loadingBlocos ? (
                 <div className="flex items-center gap-2 h-10 px-3 text-sm text-gray-400">
                   <Loader2 className="w-4 h-4 animate-spin" /> Carregando blocos...
@@ -403,7 +403,7 @@ export default function AutoCadastroVisitante() {
           {/* Apartamento - Dropdown */}
           {!naoSeiBloco && (
             <div className="mt-4">
-              <label className="text-sm font-medium text-gray-800 mb-1 block">Apartamento</label>
+              <span className="text-sm font-medium text-gray-800 mb-1 block">Apartamento</span>
               {form.bloco && unidadesDoBloco.length > 0 ? (
                 <div className="relative">
                   <select
@@ -434,10 +434,10 @@ export default function AutoCadastroVisitante() {
 
           {/* Observações */}
           <div>
-            <label className="text-sm font-medium text-gray-800 mb-1 block">
+            <span className="text-sm font-medium text-gray-800 mb-1 block">
               Observações{requiredFields.reason ? " *" : ""}
               {!requiredFields.reason && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
-            </label>
+            </span>
             <textarea
               value={form.observacoes}
               onChange={(e) => setForm({ ...form, observacoes: e.target.value })}
@@ -449,10 +449,10 @@ export default function AutoCadastroVisitante() {
 
           {/* Anexar documento */}
           <div>
-            <label className="text-sm font-medium text-gray-800 mb-2 block">
+            <span className="text-sm font-medium text-gray-800 mb-2 block">
               Foto do Documento{requiredFields.docPhoto ? " *" : ""}
               {!requiredFields.docPhoto && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
-            </label>
+            </span>
             {form.documento_foto ? (
               <div className="relative w-full h-32 rounded-xl overflow-hidden">
                 <img src={form.documento_foto} alt="Documento" className="w-full h-full object-cover" />

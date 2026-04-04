@@ -4,9 +4,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
-import path from "path";
-import http from "http";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import http from "node:http";
+import { fileURLToPath } from "node:url";
 import { initSignalingServer } from "./websocket.js";
 import { initArrivalWebSocket } from "./wsEstouChegando.js";
 import authRouter from "./auth.js";
@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const app = express();
-const PORT = parseInt(process.env.PORT || "3001");
+const PORT = Number.parseInt(process.env.PORT || "3001");
 
 // Middleware
 
@@ -58,10 +58,10 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:", "http:"],
       connectSrc: ["'self'", "wss:", "ws:", "https:", "http:"],
-      fontSrc: ["'self'", "data:"],
+      fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
       mediaSrc: ["'self'", "blob:", "data:"],
       objectSrc: ["'none'"],
       frameAncestors: ["'none'"],
@@ -73,7 +73,7 @@ app.use(helmet({
 }));
 
 // CORS — restrito a origens conhecidas
-const ALLOWED_ORIGINS = [
+const ALLOWED_ORIGINS = new Set([
   "http://localhost:5173",
   "https://localhost:5173",
   "http://localhost:3001",
@@ -81,7 +81,7 @@ const ALLOWED_ORIGINS = [
   "https://www.portariax.com.br",
   "capacitor://localhost",
   "http://localhost",
-];
+]);
 
 // Aceitar qualquer origem da rede local (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
 const isLocalNetworkOrigin = (origin: string): boolean => {
@@ -94,7 +94,7 @@ const isLocalNetworkOrigin = (origin: string): boolean => {
 app.use(cors({
   origin: (origin, callback) => {
     // Permitir requests sem origin (mobile apps, curl, etc)
-    if (!origin || ALLOWED_ORIGINS.includes(origin) || isLocalNetworkOrigin(origin || "")) {
+    if (!origin || ALLOWED_ORIGINS.has(origin) || isLocalNetworkOrigin(origin || "")) {
       callback(null, true);
     } else {
       callback(null, false);
@@ -126,10 +126,10 @@ const authLimiter = rateLimit({
   keyGenerator: (req) => {
     // Limita por IP + email para evitar lockout coletivo
     const email = req.body?.email?.toLowerCase?.() || "";
-    const ip = ipKeyGenerator(req);
+    const ip = ipKeyGenerator(req.ip || req.socket.remoteAddress || "unknown");
     return `${ip}:${email}`;
   },
-  validate: { xForwardedForHeader: false, ip: false },
+  validate: { xForwardedForHeader: false },
 });
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
@@ -183,10 +183,9 @@ app.use("/api/whatsapp", whatsappRouter);
 
 // Test routes — only available in development
 if (process.env.NODE_ENV !== "production") {
-  import("./testRoutes.js").then((m) => {
-    app.use("/api/test", m.default);
-    console.log("  🧪 Test routes enabled (dev only)");
-  });
+  const m = await import("./testRoutes.js");
+  app.use("/api/test", m.default);
+  console.log("  🧪 Test routes enabled (dev only)");
 }
 
 // Health check

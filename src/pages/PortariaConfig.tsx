@@ -258,7 +258,7 @@ export default function PortariaConfig() {
                       onClick={(e) => e.stopPropagation()}
                       style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}
                     >
-                      <label style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>Limite:</label>
+                      <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>Limite:</span>
                       <input
                         type="number"
                         min="1"
@@ -332,7 +332,7 @@ export default function PortariaConfig() {
                       onClick={(e) => e.stopPropagation()}
                       style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}
                     >
-                      <label style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>Prazo:</label>
+                      <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>Prazo:</span>
                       <input
                         type="number"
                         min="1"

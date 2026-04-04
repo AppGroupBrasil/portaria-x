@@ -1,8 +1,6 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   UserPlus,
@@ -17,7 +15,6 @@ import {
   EyeOff,
   AlertCircle,
   CheckCircle2,
-  X,
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
@@ -126,7 +123,7 @@ export default function CadastroMoradores() {
   useEffect(() => { fetchLista(); fetchBlocos(); }, []);
 
   const formatPhone = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -150,7 +147,7 @@ export default function CadastroMoradores() {
     setEditingId(null); setError(""); setSuccess("");
   };
 
-  const handleSaveEdit = async (e: React.FormEvent) => {
+  const handleSaveEdit = async (e: FormEvent) => {
     e.preventDefault();
     setError(""); setSuccess("");
 
@@ -158,7 +155,7 @@ export default function CadastroMoradores() {
       return setError("Preencha todos os campos obrigatórios.");
     }
     if (editPassword) {
-      if (!/^\d{4}$/.test(editPassword)) return setError("Senha deve ter 4 dígitos.");
+      if (!/^\d{6}$/.test(editPassword)) return setError("Senha deve ter 6 dígitos.");
       if (editPassword !== editConfirmPassword) return setError("As senhas não coincidem.");
     }
 
@@ -230,7 +227,7 @@ export default function CadastroMoradores() {
                 <TBullet><strong>Perfis</strong> — Proprietário, Locatário, Familiar, etc. Define o tipo de vínculo com o imóvel</TBullet>
               </TSection>
               <TSection icon={<span>⭐</span>} title="DICAS IMPORTANTES">
-                <TBullet>O morador usa <strong>e-mail + senha</strong> (4 dígitos) para logar no app</TBullet>
+                <TBullet>O morador usa <strong>e-mail + senha</strong> (6 dígitos) para logar no app</TBullet>
                 <TBullet>O <strong>WhatsApp</strong> é usado para enviar notificações automáticas (delivery, correspondência, visitantes)</TBullet>
                 <TBullet>Antes de cadastrar moradores, <strong>cadastre os blocos</strong> primeiro (menu Blocos)</TBullet>
                 <TBullet>Moradores cadastrados já podem usar <strong>todas as funções do app</strong> imediatamente</TBullet>
@@ -272,12 +269,12 @@ export default function CadastroMoradores() {
               <h3 className="text-sm font-semibold mb-6" style={{ color: isDark ? "#ffffff" : "#003580" }}>Editar Morador</h3>
               <form onSubmit={handleSaveEdit}>
                 <div style={{ marginBottom: 19 }}>
-                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Nome completo *</label>
+                  <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Nome completo *</span>
                   <Input value={editNome} onChange={(e) => setEditNome(e.target.value)} style={{ paddingLeft: 19 }} />
                 </div>
                 <div style={{ display: "flex", gap: 12, marginBottom: 19 }}>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Bloco / Torre *</label>
+                    <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Bloco / Torre *</span>
                     {blocos.length > 0 ? (
                       <select value={editBloco} onChange={(e) => setEditBloco(e.target.value)}
                         className="w-full h-10 rounded-md border text-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -290,13 +287,13 @@ export default function CadastroMoradores() {
                     )}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Unidade / Apto *</label>
+                    <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Unidade / Apto *</span>
                     <Input value={editUnidade} onChange={(e) => setEditUnidade(e.target.value)} style={{ paddingLeft: 19 }} />
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 12, marginBottom: 19 }}>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Perfil *</label>
+                    <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Perfil *</span>
                     <select value={editPerfil} onChange={(e) => setEditPerfil(e.target.value)}
                       className="w-full h-10 rounded-md border text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                       style={{ paddingLeft: 19, backgroundColor: "#ffffff", color: "#000000", borderColor: isDark ? "rgba(255,255,255,0.2)" : undefined }}>
@@ -305,20 +302,20 @@ export default function CadastroMoradores() {
                     </select>
                   </div>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>WhatsApp</label>
+                    <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>WhatsApp</span>
                     <Input type="tel" value={editWhatsapp} onChange={(e) => setEditWhatsapp(formatPhone(e.target.value))} style={{ paddingLeft: 19 }} />
                   </div>
                 </div>
                 <div style={{ marginBottom: 19 }}>
-                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>E-mail *</label>
+                  <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>E-mail *</span>
                   <Input type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} style={{ paddingLeft: 19 }} />
                 </div>
                 <div style={{ marginBottom: 19 }}>
-                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Nova senha (4 dígitos)</label>
+                  <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Nova senha (6 dígitos)</span>
                   <p style={{ fontSize: 11, color: isDark ? "rgba(255,255,255,0.5)" : "#64748b", marginBottom: 4 }}>Deixe em branco para manter a senha atual.</p>
                   <div className="relative">
-                    <Input type={showPassword ? "text" : "password"} inputMode="numeric" maxLength={4} placeholder="••••"
-                      value={editPassword} onChange={(e) => setEditPassword(e.target.value.replace(/\D/g, "").slice(0, 4))} className="pr-10" style={{ paddingLeft: 19 }} />
+                    <Input type={showPassword ? "text" : "password"} inputMode="numeric" maxLength={6} placeholder="••••••"
+                      value={editPassword} onChange={(e) => setEditPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))} className="pr-10" style={{ paddingLeft: 19 }} />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
                       style={{ color: isDark ? "rgba(255,255,255,0.5)" : "#64748b" }}>
@@ -328,9 +325,9 @@ export default function CadastroMoradores() {
                 </div>
                 {editPassword && (
                   <div style={{ marginBottom: 19 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Confirmar senha</label>
-                    <Input type={showPassword ? "text" : "password"} inputMode="numeric" maxLength={4} placeholder="••••"
-                      value={editConfirmPassword} onChange={(e) => setEditConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))} style={{ paddingLeft: 19 }} />
+                    <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: isDark ? "#ffffff" : "#003580", marginBottom: 4 }}>Confirmar senha</span>
+                    <Input type={showPassword ? "text" : "password"} inputMode="numeric" maxLength={6} placeholder="••••••"
+                      value={editConfirmPassword} onChange={(e) => setEditConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))} style={{ paddingLeft: 19 }} />
                   </div>
                 )}
                 <div style={{ display: "flex", gap: 16, marginTop: 32 }}>

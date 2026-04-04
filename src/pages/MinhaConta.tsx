@@ -241,16 +241,16 @@ export default function MinhaConta() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
-                <label style={labelStyle}>
+                <span style={labelStyle}>
                   <Building2 className="w-3.5 h-3.5" /> Bloco
-                </label>
+                </span>
                 <input type="text" value={block} onChange={(e) => setBlock(e.target.value)}
                   placeholder="Ex: A" style={inputStyle} />
               </div>
               <div>
-                <label style={labelStyle}>
+                <span style={labelStyle}>
                   <DoorOpen className="w-3.5 h-3.5" /> Apartamento
-                </label>
+                </span>
                 <input type="text" value={unit} onChange={(e) => setUnit(e.target.value)}
                   placeholder="Ex: 101" style={inputStyle} />
               </div>
@@ -274,18 +274,18 @@ export default function MinhaConta() {
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             {/* Nome */}
             <div>
-              <label style={labelStyle}>
+              <span style={labelStyle}>
                 <User className="w-3.5 h-3.5" /> Nome
-              </label>
+              </span>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)}
                 placeholder="Seu nome completo" style={inputStyle} />
             </div>
 
             {/* WhatsApp */}
             <div>
-              <label style={labelStyle}>
+              <span style={labelStyle}>
                 <Phone className="w-3.5 h-3.5" /> WhatsApp
-              </label>
+              </span>
               <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
                 placeholder="(11) 99999-9999" style={inputStyle} />
             </div>
@@ -293,9 +293,9 @@ export default function MinhaConta() {
             {/* E-mail — todos exceto portaria */}
             {!isFuncionario && (
               <div>
-                <label style={labelStyle}>
+                <span style={labelStyle}>
                   <Mail className="w-3.5 h-3.5" /> E-mail
-                </label>
+                </span>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com" style={inputStyle} />
               </div>
@@ -510,7 +510,7 @@ export default function MinhaConta() {
             <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "16px" }}>
               {/* Senha atual */}
               <div>
-                <label style={labelStyle}>Senha Atual</label>
+                <span style={labelStyle}>Senha Atual</span>
                 <div style={{ position: "relative" }}>
                   <input
                     type={showCurrentPw ? "text" : "password"}
@@ -534,7 +534,7 @@ export default function MinhaConta() {
 
               {/* Nova senha */}
               <div>
-                <label style={labelStyle}>Nova Senha</label>
+                <span style={labelStyle}>Nova Senha</span>
                 <div style={{ position: "relative" }}>
                   <input
                     type={showNewPw ? "text" : "password"}
@@ -558,7 +558,7 @@ export default function MinhaConta() {
 
               {/* Confirmar nova senha */}
               <div>
-                <label style={labelStyle}>Confirmar Nova Senha</label>
+                <span style={labelStyle}>Confirmar Nova Senha</span>
                 <input
                   type="password"
                   value={confirmPassword}
@@ -631,9 +631,9 @@ export default function MinhaConta() {
                 </div>
 
                 <div>
-                  <label style={{ ...labelStyle, color: "#dc2626" }}>
+                  <span style={{ ...labelStyle, color: "#dc2626" }}>
                     Digite <strong>EXCLUIR</strong> para confirmar
-                  </label>
+                  </span>
                   <input
                     type="text"
                     value={deleteConfirmText}

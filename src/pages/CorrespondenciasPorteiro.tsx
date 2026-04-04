@@ -226,7 +226,7 @@ export default function CorrespondenciasPorteiro() {
       // Build WhatsApp message with correspondence info
       const moradorObj = moradores.find((x) => String(x.id) === selectedMoradorId);
       const moradorPhone = moradorObj?.phone || "";
-      const cleanPhone = moradorPhone.replace(/\D/g, "");
+      const cleanPhone = moradorPhone.replaceAll(/\D/g, "");
       const fullPhone = cleanPhone && !cleanPhone.startsWith("55") ? `55${cleanPhone}` : cleanPhone;
 
       const tipoLabelMap: Record<string, string> = {
@@ -267,7 +267,7 @@ export default function CorrespondenciasPorteiro() {
         : `https://wa.me/?text=${encodeURIComponent(msg)}`;
 
       // Auto-open WhatsApp
-      window.open(waUrl, "_blank");
+      globalThis.open(waUrl, "_blank");
 
       resetForm();
       setShowForm(false);
@@ -432,7 +432,7 @@ export default function CorrespondenciasPorteiro() {
 
             {/* Tipo */}
             <div>
-              <label style={labelStyle}>Tipo de Correspondência *</label>
+              <span style={labelStyle}>Tipo de Correspondência *</span>
               <select value={tipo} onChange={(e) => setTipo(e.target.value)}
                 style={{ ...inputStyle, cursor: "pointer" }}>
                 <option value="encomenda">📦 Encomenda</option>
@@ -446,7 +446,7 @@ export default function CorrespondenciasPorteiro() {
 
             {/* Bloco */}
             <div>
-              <label style={labelStyle}>Bloco *</label>
+              <span style={labelStyle}>Bloco *</span>
               <select
                 value={bloco}
                 onChange={(e) => {
@@ -467,7 +467,7 @@ export default function CorrespondenciasPorteiro() {
             {/* Morador */}
             {bloco && moradores.length > 0 && (
               <div>
-                <label style={labelStyle}>Morador</label>
+                <span style={labelStyle}>Morador</span>
                 <SearchableSelect
                   value={selectedMoradorId}
                   onChange={(val) => handleSelectMorador(val)}
@@ -485,7 +485,7 @@ export default function CorrespondenciasPorteiro() {
             {/* Apartamento (fallback) */}
             {!selectedMoradorId && (
               <div>
-                <label style={labelStyle}>Apartamento *</label>
+                <span style={labelStyle}>Apartamento *</span>
                 <input type="text" value={apartamento} onChange={(e) => setApartamento(e.target.value)}
                   placeholder="Ex: 101" style={inputStyle} />
               </div>
@@ -493,14 +493,14 @@ export default function CorrespondenciasPorteiro() {
 
             {/* Remetente */}
             <div>
-              <label style={labelStyle}>Remetente</label>
+              <span style={labelStyle}>Remetente</span>
               <input type="text" value={remetente} onChange={(e) => setRemetente(e.target.value)}
                 placeholder="Ex: Amazon, Mercado Livre..." style={inputStyle} />
             </div>
 
             {/* Descrição */}
             <div>
-              <label style={labelStyle}>Descrição</label>
+              <span style={labelStyle}>Descrição</span>
               <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Informações sobre a correspondência..."
                 rows={3}
@@ -509,7 +509,7 @@ export default function CorrespondenciasPorteiro() {
 
             {/* Foto */}
             <div>
-              <label style={labelStyle}>Foto da Correspondência</label>
+              <span style={labelStyle}>Foto da Correspondência</span>
               {foto ? (
                 <div style={{ position: "relative" }}>
                   <img src={foto} alt="Foto" style={{ width: "100%", borderRadius: "12px", maxHeight: "400px", objectFit: "contain", background: "#f1f5f9" }} />
@@ -830,7 +830,7 @@ export default function CorrespondenciasPorteiro() {
             {/* Buttons */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <button
-                onClick={() => { window.open(whatsappModal.waUrl, "_blank"); }}
+                onClick={() => { globalThis.open(whatsappModal.waUrl, "_blank"); }}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
                   padding: "14px", borderRadius: "14px", background: "#25d366",

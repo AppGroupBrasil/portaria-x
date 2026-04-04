@@ -661,9 +661,9 @@ export default function MasterPainelCondominios() {
             </div>
 
             <div>
-              <label style={{ fontSize: "12px", fontWeight: 600, color: "#475569", marginBottom: "6px", display: "block" }}>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "#475569", marginBottom: "6px", display: "block" }}>
                 Motivo do bloqueio
-              </label>
+              </span>
               <input
                 type="text"
                 placeholder="Ex: Inadimplência, Contrato encerrado..."

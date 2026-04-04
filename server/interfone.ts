@@ -439,7 +439,7 @@ router.put("/calls/:id", (req: Request, res: Response) => {
 
     sql += " WHERE id = ?";
     // Support both integer DB id and string call_id (WS signaling id)
-    const idParam = req.params.id;
+    const idParam = req.params.id as string;
     const numId = parseInt(idParam);
     if (!isNaN(numId) && String(numId) === idParam) {
       params.push(numId);

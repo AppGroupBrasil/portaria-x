@@ -1,11 +1,9 @@
 ﻿import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   ChevronLeft,
   FileSpreadsheet,
-  Download,
   Upload,
   AlertCircle,
   CheckCircle2,
@@ -56,27 +54,6 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
     navigator.clipboard.writeText(aiPrompt);
     setPromptCopied(true);
     setTimeout(() => setPromptCopied(false), 2500);
-  };
-
-  // Baixar template CSV
-  const downloadTemplate = () => {
-    const headers = "Nome Completo;Bloco;Unidade;Perfil;WhatsApp;E-mail";
-    const example1 = "João da Silva;Bloco A;101;Proprietário;(11) 99999-0001;joao@email.com";
-    const example2 = "Maria Santos;Bloco B;202;Locatário;(11) 99999-0002;maria@email.com";
-    const example3 = "Carlos Oliveira;Bloco A;303;Dependente;;carlos@email.com";
-
-    const csvContent = [headers, example1, example2, example3].join("\n");
-
-    // BOM para Excel reconhecer UTF-8
-    const bom = "\uFEFF";
-    const blob = new Blob([bom + csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "template_moradores.csv";
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   // Parse do CSV
@@ -169,6 +146,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
       setFile(null);
       if (fileRef.current) fileRef.current.value = "";
     } catch (err: any) {
+      console.warn("Upload failed, using demo fallback:", err?.message);
       // Fallback para demonstração
       setSuccess(`${parsedData.length} morador(es) importado(s) com sucesso! (simulação)`);
       setParsedData([]);
@@ -209,7 +187,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                 <TBullet><strong>Unidade</strong> — Número do apartamento/casa</TBullet>
                 <TBullet><strong>WhatsApp</strong> — Número com DDD (ex: 11999998888)</TBullet>
                 <TBullet><strong>E-mail</strong> — Será o login do morador (deve ser único)</TBullet>
-                <TBullet><strong>Senha</strong> — 4 dígitos numéricos</TBullet>
+                <TBullet><strong>Senha</strong> — 6 dígitos numéricos</TBullet>
               </TSection>
               <TSection icon={<span>⭐</span>} title="DICAS IMPORTANTES">
                 <TBullet><strong>Use SEMPRE o modelo fornecido</strong> — planilhas com colunas diferentes não serão aceitas</TBullet>
@@ -274,9 +252,9 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                     { col: "Perfil", ex: "Proprietário", obrig: "Sim" },
                     { col: "WhatsApp", ex: "(11) 99999-0001", obrig: "Sim" },
                     { col: "E-mail", ex: "joao@email.com", obrig: "Sim" },
-                  ].map((item, i) => (
-                    <tr key={i} style={{ borderTop: "1px solid " + p.divider }}>
-                      <td className="px-4 py-2 font-bold" style={{ color: p.accent }}>{i + 1}</td>
+                  ].map((item) => (
+                    <tr key={item.col} style={{ borderTop: "1px solid " + p.divider }}>
+                      <td className="px-4 py-2 font-bold" style={{ color: p.accent }}>{["Nome Completo","Bloco","Unidade","Perfil","WhatsApp","E-mail"].indexOf(item.col) + 1}</td>
                       <td className="px-4 py-2 font-medium" style={{ color: p.text }}>{item.col}</td>
                       <td className="px-4 py-2" style={{ color: p.textDim }}>{item.ex}</td>
                       <td className="px-4 py-2" style={{ color: item.obrig === "Sim" ? "#4ade80" : p.textMuted }}>{item.obrig}</td>
@@ -336,7 +314,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
               <span className="text-base font-medium" style={{ color: p.textAccent }}>Enviar planilha</span>
             </div>
 
-            {!file ? (
+            {!file && (
               <div>
                 <input
                   ref={fileRef}
@@ -354,7 +332,8 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                   <span className="text-sm">Clique para selecionar o arquivo .csv</span>
                 </button>
               </div>
-            ) : (
+            )}
+            {file && (
               <div className="space-y-4 animate-fade-in">
                 {/* File info */}
                 <div className="flex items-center gap-3 p-3 rounded-lg" style={{ backgroundColor: p.surfaceBg }}>
@@ -389,7 +368,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                       </thead>
                       <tbody>
                         {parsedData.slice(0, 10).map((row, i) => (
-                          <tr key={i} className="border-t border-border/50">
+                          <tr key={`${row.nome}-${row.bloco}-${row.unidade}`} className="border-t border-border/50">
                             <td className="px-2 py-1.5" style={{ color: p.textDim }}>{i + 1}</td>
                             <td className="px-2 py-1.5" style={{ color: p.textAccent }}>{row.nome}</td>
                             <td className="px-2 py-1.5" style={{ color: p.textSecondary }}>{row.bloco}</td>

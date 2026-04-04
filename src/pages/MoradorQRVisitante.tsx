@@ -255,10 +255,10 @@ export default function MoradorQRVisitante() {
 
     if (navigator.share) {
       navigator.share({ title: "Autorização de Entrada", text }).catch(() => {
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+        globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
       });
     } else {
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+      globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
     }
   };
 
@@ -563,9 +563,9 @@ export default function MoradorQRVisitante() {
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               {/* Foto */}
               <div>
-                <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Foto do Visitante {config.fotoObrigatoria ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
-                </label>
+                </span>
                 <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} style={{ display: "none" }} />
                 {foto ? (
                   <div style={{ position: "relative", width: "80px", height: "80px" }}>
@@ -593,9 +593,9 @@ export default function MoradorQRVisitante() {
 
               {/* Nome */}
               <div>
-                <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Nome do Visitante <span style={{ color: "#dc2626" }}>*</span>
-                </label>
+                </span>
                 <input
                   type="text"
                   value={nome}
@@ -610,9 +610,9 @@ export default function MoradorQRVisitante() {
 
               {/* Documento */}
               <div>
-                <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Documento (RG/CPF) {config.documentoObrigatorio ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
-                </label>
+                </span>
                 <input
                   type="text"
                   value={documento}
@@ -627,9 +627,9 @@ export default function MoradorQRVisitante() {
 
               {/* Parentesco */}
               <div>
-                <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Parentesco / Relação {config.parentescoObrigatorio ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
-                </label>
+                </span>
                 <input
                   type="text"
                   value={parentesco}
@@ -645,10 +645,10 @@ export default function MoradorQRVisitante() {
               {/* Data/Hora Início */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Calendar className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Data Início <span style={{ color: "#dc2626" }}>*</span>
-                  </label>
+                  </span>
                   <input
                     type="date"
                     value={dataInicio}
@@ -657,10 +657,10 @@ export default function MoradorQRVisitante() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Clock className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Hora Início <span style={{ color: "#dc2626" }}>*</span>
-                  </label>
+                  </span>
                   <input
                     type="time"
                     value={horaInicio}
@@ -673,10 +673,10 @@ export default function MoradorQRVisitante() {
               {/* Data/Hora Fim */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Calendar className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Data Fim <span style={{ color: "#dc2626" }}>*</span>
-                  </label>
+                  </span>
                   <input
                     type="date"
                     value={dataFim}
@@ -685,10 +685,10 @@ export default function MoradorQRVisitante() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Clock className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Hora Fim <span style={{ color: "#dc2626" }}>*</span>
-                  </label>
+                  </span>
                   <input
                     type="time"
                     value={horaFim}
@@ -700,9 +700,9 @@ export default function MoradorQRVisitante() {
 
               {/* Observações */}
               <div>
-                <label style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Observações {config.observacoesObrigatorio ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
-                </label>
+                </span>
                 <textarea
                   value={observacoes}
                   onChange={(e) => setObservacoes(e.target.value)}

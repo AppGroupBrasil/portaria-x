@@ -6,12 +6,46 @@ const router = Router();
 
 // Chaves permitidas na configuração do condomínio
 const ALLOWED_KEYS = new Set([
+  // ── Morador features ──
   "feature_autorizacoes",
   "feature_delivery",
   "feature_veiculos",
   "feature_qr_visitante",
   "feature_correspondencias",
   "feature_auto_cadastro",
+  "feature_interfone",
+  "feature_estou_chegando",
+  "feature_portaria_virtual",
+  // ── Porteiro/Funcionário features ──
+  "feature_porteiro_pedestres",
+  "feature_porteiro_veiculos",
+  "feature_porteiro_delivery",
+  "feature_porteiro_correspondencias",
+  "feature_porteiro_monitoramento",
+  "feature_porteiro_rondas",
+  "feature_porteiro_interfone",
+  "feature_porteiro_estou_chegando",
+  "feature_porteiro_portaria_virtual",
+  "feature_porteiro_centro_comando",
+  "feature_porteiro_qr_scanner",
+  "feature_porteiro_livro_protocolo",
+  "feature_porteiro_espelho",
+  "feature_porteiro_acesso_auto",
+  // ── Síndico features ──
+  "feature_sindico_cadastros",
+  "feature_sindico_blocos",
+  "feature_sindico_moradores",
+  "feature_sindico_funcionarios",
+  "feature_sindico_cameras",
+  "feature_sindico_rondas",
+  "feature_sindico_interfone",
+  "feature_sindico_estou_chegando",
+  "feature_sindico_acessos",
+  "feature_sindico_portao",
+  "feature_sindico_qr_config",
+  "feature_sindico_dispositivos",
+  "feature_sindico_liberacao",
+  "feature_sindico_whatsapp",
   "vehicle_unique_access",
   "vehicle_auto_cancel_time",
   "vehicle_limit_per_apt",
@@ -46,6 +80,37 @@ const ALLOWED_KEYS = new Set([
   "whatsapp_notify_ronda",
   "whatsapp_notify_livro_protocolo",
 ]);
+
+// ─── DEFAULT CONFIG (copied from Condomínio Exemplo id=1) ──
+// Applied automatically to new condominiums
+const DEFAULT_CONDOMINIO_ID = 1;
+
+export function applyDefaultConfig(targetCondominioId: number): void {
+  try {
+    const sourceRows = db
+      .prepare("SELECT key, value FROM condominio_config WHERE condominio_id = ?")
+      .all(DEFAULT_CONDOMINIO_ID) as { key: string; value: string }[];
+
+    if (sourceRows.length === 0) return;
+
+    const upsert = db.prepare(`
+      INSERT INTO condominio_config (condominio_id, key, value, updated_at)
+      VALUES (?, ?, ?, datetime('now'))
+      ON CONFLICT(condominio_id, key)
+      DO UPDATE SET value = excluded.value, updated_at = datetime('now')
+    `);
+
+    const tx = db.transaction(() => {
+      for (const row of sourceRows) {
+        if (!ALLOWED_KEYS.has(row.key)) continue;
+        upsert.run(targetCondominioId, row.key, row.value);
+      }
+    });
+    tx();
+  } catch (err) {
+    console.error(`[CONFIG] Erro ao aplicar config padrão ao condomínio ${targetCondominioId}:`, err);
+  }
+}
 
 // ─── PUBLIC config for auto-cadastro (no auth) ──────────
 router.get("/public", (req: Request, res: Response) => {
@@ -90,7 +155,7 @@ function getUserCondominioIds(user: any): number[] {
 // ─── GET all config for current condominio ───────────────
 router.get("/", authenticate, (req: Request, res: Response) => {
   try {
-    const condominioIds = getUserCondominioIds(req.user!);
+    const condominioIds = getUserCondominioIds(req.user);
     if (condominioIds.length === 0) {
       return res.json({});
     }
@@ -125,7 +190,7 @@ router.put(
   authorize("master", "administradora", "sindico", "funcionario"),
   (req: Request, res: Response) => {
     try {
-      const condominioIds = getUserCondominioIds(req.user!);
+      const condominioIds = getUserCondominioIds(req.user);
       if (condominioIds.length === 0) {
         return res.status(400).json({ error: "Nenhum condomínio associado" });
       }

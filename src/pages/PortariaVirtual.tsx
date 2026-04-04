@@ -1175,9 +1175,9 @@ export default function PortariaVirtual() {
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                 {/* Device Type Selector */}
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
                     Tipo do Dispositivo
-                  </label>
+                  </span>
                   <div style={{ display: "flex", gap: "8px" }}>
                     <button
                       type="button"
@@ -1223,9 +1223,9 @@ export default function PortariaVirtual() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
                     Nome do Portao
-                  </label>
+                  </span>
                   <input
                     type="text"
                     value={editName}
@@ -1245,9 +1245,9 @@ export default function PortariaVirtual() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
                     Endereco IP do Dispositivo
-                  </label>
+                  </span>
                   <input
                     type="text"
                     value={editIp}
@@ -1272,9 +1272,9 @@ export default function PortariaVirtual() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
                     Token de Seguranca
-                  </label>
+                  </span>
                   <input
                     type="text"
                     value={editToken}

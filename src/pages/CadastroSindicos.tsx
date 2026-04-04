@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -74,7 +74,7 @@ export default function CadastroSindicos() {
   }, []);
 
   const formatPhone = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -101,16 +101,17 @@ export default function CadastroSindicos() {
     if (!email.trim()) return "Informe o e-mail.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "E-mail inválido.";
     if (!editingId) {
-      if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
+      if (!/^\d{6}$/.test(password)) return "Senha deve ter exatamente 6 dígitos numéricos.";
       if (password !== confirmPassword) return "As senhas não coincidem.";
-    } else if (password) {
-      if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
-      if (password !== confirmPassword) return "As senhas não coincidem.";
+    } else if (password && !/^\d{6}$/.test(password)) {
+      return "Senha deve ter exatamente 6 dígitos numéricos.";
+    } else if (password && password !== confirmPassword) {
+      return "As senhas não coincidem.";
     }
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(""); setSuccess("");
     const err = validate();
@@ -129,22 +130,22 @@ export default function CadastroSindicos() {
           email: email.trim().toLowerCase(),
           phone: whatsapp || undefined,
           password: password || undefined,
-          condominioId: condominioId ? parseInt(condominioId) : undefined,
+          condominioId: condominioId ? Number.parseInt(condominioId) : undefined,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erro ao salvar.");
 
-      if (!editingId) {
-        const condNome = condominios.find(c => c.id === parseInt(condominioId))?.name || "N/A";
+      if (editingId) {
+        setSuccess("Síndico atualizado!");
+        resetForm();
+        setShowForm(false);
+      } else {
+        const condNome = condominios.find(c => c.id === Number.parseInt(condominioId))?.name || "N/A";
         const savedData = { nome: nome.trim(), email: email.trim().toLowerCase(), condominio: condNome };
         resetForm();
         setShowForm(false);
         setModalData(savedData);
-      } else {
-        setSuccess("Síndico atualizado!");
-        resetForm();
-        setShowForm(false);
       }
       fetchLista();
     } catch (err: any) {
@@ -183,7 +184,7 @@ export default function CadastroSindicos() {
                 <TStep n={1}>Clique em <strong>"+"</strong> ou <strong>"Novo Síndico"</strong></TStep>
                 <TStep n={2}>Preencha o <strong>nome completo</strong> do síndico</TStep>
                 <TStep n={3}>Informe o <strong>e-mail</strong> (será o login de acesso)</TStep>
-                <TStep n={4}>Defina uma <strong>senha de 4 dígitos</strong></TStep>
+                <TStep n={4}>Defina uma <strong>senha de 6 dígitos</strong></TStep>
                 <TStep n={5}><strong>Vincule ao condomínio</strong> que ele irá administrar</TStep>
                 <TStep n={6}>Clique em <strong>"Cadastrar"</strong> para finalizar</TStep>
                 <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 O síndico já pode acessar o sistema e começar a configurar o condomínio.</p>
@@ -226,17 +227,7 @@ export default function CadastroSindicos() {
           </div>
 
           {/* Toggle Form */}
-          {!showForm ? (
-            <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
-              <Button
-                onClick={() => { resetForm(); setShowForm(true); }}
-                className="w-full h-12 font-semibold"
-                style={isDark ? { border: "2px solid #ffffff" } : undefined}
-              >
-                + Novo Síndico
-              </Button>
-            </div>
-          ) : (
+          {showForm ? (
             <div className="rounded-2xl p-8 animate-fade-in">
               <form onSubmit={handleSubmit}>
                 {/* Nome completo */}
@@ -286,16 +277,16 @@ export default function CadastroSindicos() {
                 )}
                 <div style={{ display: "flex", gap: "12px", marginBottom: "19px" }}>
                   <div style={{ flex: 1 }}>
-                    <Label htmlFor="password" style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Senha (4 dígitos){editingId ? '' : ' *'}</Label>
+                    <Label htmlFor="password" style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Senha (6 dígitos){editingId ? '' : ' *'}</Label>
                     <div className="relative">
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
                         inputMode="numeric"
-                        maxLength={4}
-                        placeholder="••••"
+                        maxLength={6}
+                        placeholder="••••••"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                        onChange={(e) => setPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                         className="pr-10"
                         style={{ paddingLeft: "19px" }}
                       />
@@ -310,10 +301,10 @@ export default function CadastroSindicos() {
                       id="confirmPassword"
                       type={showPassword ? "text" : "password"}
                       inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
+                      maxLength={6}
+                      placeholder="••••••"
                       value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      onChange={(e) => setConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                       style={{ paddingLeft: "19px" }}
                     />
                   </div>
@@ -321,9 +312,9 @@ export default function CadastroSindicos() {
 
                 {/* Error Modal */}
                 {error && (
-                  <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
+                  <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => setError(""))(); } }} onClick={() => setError("")}>
                     <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
-                    <div onClick={(e) => e.stopPropagation()} className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
+                    <div role="dialog" className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
                       <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
                       <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                         <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />
@@ -347,10 +338,20 @@ export default function CadastroSindicos() {
                     Cancelar
                   </Button>
                   <Button type="submit" className="flex-1 h-12 font-semibold" disabled={isLoading} style={isDark ? { backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : undefined}>
-                    {isLoading ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : editingId ? "Salvar" : "Cadastrar"}
+                    {isLoading ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : (editingId ? "Salvar" : "Cadastrar")}
                   </Button>
                 </div>
               </form>
+            </div>
+          ) : (
+            <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+              <Button
+                onClick={() => { resetForm(); setShowForm(true); }}
+                className="w-full h-12 font-semibold"
+                style={isDark ? { border: "2px solid #ffffff" } : undefined}
+              >
+                + Novo Síndico
+              </Button>
             </div>
           )}
 
@@ -393,12 +394,15 @@ export default function CadastroSindicos() {
       {/* Modal Premium de Confirmação */}
       {modalData && (
         <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setModalData(null); }}
           style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
           onClick={() => setModalData(null)}
         >
           <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
           <div
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
             className="animate-fade-in"
             style={{
               position: "relative", width: "100%", maxWidth: 420, borderRadius: 20,

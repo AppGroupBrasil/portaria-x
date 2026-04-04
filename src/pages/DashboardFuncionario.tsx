@@ -6,25 +6,14 @@ import CameraWidget from "@/components/CameraWidget";
 import ThemePicker from "@/components/ThemePicker";
 import FuncoesIndex from "@/components/FuncoesIndex";
 import { loadLayout, getItemById, getIconComponent } from "@/pages/PersonalizarDashboard";
+import { apiFetch } from "@/lib/api";
 import {
-  Home,
   LogOut,
   Settings,
   Shield,
   Bell,
-  UserPlus,
-  Car,
-  Package,
-  Camera,
   ShieldCheck,
-  Truck,
   UserCircle,
-  BookOpen,
-  DoorOpen,
-  Scan,
-  MapPin,
-  Phone,
-  LayoutDashboard,
   EyeOff,
 } from "lucide-react";
 
@@ -32,17 +21,26 @@ import {
 
 export default function DashboardFuncionario() {
   const { user, logout } = useAuth();
-  const { isDark, toggleTheme, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
 
   // Load layout from localStorage
   const [layout, setLayout] = useState(() => loadLayout());
+  const [featureConfig, setFeatureConfig] = useState<Record<string, string>>({});
+
+  // Fetch condominio feature config
+  useEffect(() => {
+    apiFetch("/api/condominio-config")
+      .then((res) => res.ok ? res.json() : {})
+      .then(setFeatureConfig)
+      .catch(() => {});
+  }, []);
 
   // Re-read layout when navigating back to this page
   useEffect(() => {
     const onFocus = () => setLayout(loadLayout());
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
+    globalThis.addEventListener("focus", onFocus);
+    return () => globalThis.removeEventListener("focus", onFocus);
   }, []);
 
   // Also re-read on visibility change (for tab/app switching)
@@ -54,8 +52,31 @@ export default function DashboardFuncionario() {
     return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
-  const dashboardItems = layout.dashboard.map(getItemById).filter(Boolean);
-  const bottomBarItems = layout.bottomBar.map(getItemById).filter(Boolean);
+  // Map dashboard item IDs to feature config keys
+  const PORTEIRO_CONFIG_MAP: Record<string, string> = {
+    "visitantes": "feature_porteiro_pedestres",
+    "veiculos": "feature_porteiro_veiculos",
+    "deliveries": "feature_porteiro_delivery",
+    "correspondencias": "feature_porteiro_correspondencias",
+    "monitoramento": "feature_porteiro_monitoramento",
+    "rondas": "feature_porteiro_rondas",
+    "interfone": "feature_porteiro_interfone",
+    "estou-chegando": "feature_porteiro_estou_chegando",
+    "portaria-virtual": "feature_porteiro_portaria_virtual",
+    "centro-comando": "feature_porteiro_centro_comando",
+    "qr-scanner": "feature_porteiro_qr_scanner",
+    "livro-protocolo": "feature_porteiro_livro_protocolo",
+    "acesso-auto": "feature_porteiro_acesso_auto",
+  };
+
+  const isPorteiroFeatureEnabled = (itemId: string) => {
+    const configKey = PORTEIRO_CONFIG_MAP[itemId];
+    if (!configKey) return true; // no config key = always enabled
+    return featureConfig[configKey] !== "false";
+  };
+
+  const dashboardItems = layout.dashboard.map(getItemById).filter(Boolean).filter((item) => isPorteiroFeatureEnabled(item!.id));
+  const bottomBarItems = layout.bottomBar.map(getItemById).filter(Boolean).filter((item) => isPorteiroFeatureEnabled(item!.id));
   const hasHidden = (layout.hidden?.length || 0) > 0;
 
   const handleLogout = async () => {
@@ -101,7 +122,7 @@ export default function DashboardFuncionario() {
                   >
                     <EyeOff style={{ width: 14, height: 14, color: "#fbbf24" }} />
                     <span style={{ fontSize: 11, fontWeight: 600, color: "#fbbf24" }}>
-                      {layout.hidden?.length || 0} oculto{(layout.hidden?.length || 0) !== 1 ? "s" : ""}
+                      {layout.hidden?.length || 0} oculto{(layout.hidden?.length || 0) === 1 ? "" : "s"}
                     </span>
                   </button>
                 )}

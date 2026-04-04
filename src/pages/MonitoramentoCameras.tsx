@@ -457,7 +457,7 @@ export default function MonitoramentoCameras() {
               {/* Interval picker */}
               <select
                 value={rondaInterval}
-                onChange={(e) => setRondaInterval(parseInt(e.target.value))}
+                onChange={(e) => setRondaInterval(Number.parseInt(e.target.value))}
                 style={{
                   padding: "5px 8px", borderRadius: "8px", fontSize: "12px",
                   background: "rgba(255,255,255,0.06)", color: "#e2e8f0",

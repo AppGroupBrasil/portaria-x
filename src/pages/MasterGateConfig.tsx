@@ -132,7 +132,7 @@ export default function MasterGateConfig() {
       if (res.ok) {
         const data = await res.json();
         // Open eWeLink auth page in the same window (will redirect back)
-        window.location.href = data.url;
+        globalThis.window.location.href = data.url;
       } else {
         const data = await res.json();
         setTestResult({ success: false, error: data.error || "Erro ao gerar URL de autorização." });
@@ -233,7 +233,7 @@ export default function MasterGateConfig() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          condominio_id: parseInt(assignModal.condominioId),
+          condominio_id: Number.parseInt(assignModal.condominioId),
           device_id: assignModal.device.deviceId,
           device_name: assignModal.device.name || assignModal.device.deviceId,
         }),
@@ -332,9 +332,9 @@ export default function MasterGateConfig() {
 
             <div className="space-y-6">
               <div>
-                <label className="block text-base font-medium text-muted-foreground mb-2">
+                <span className="block text-base font-medium text-muted-foreground mb-2">
                   App ID (CoolKit)
-                </label>
+                </span>
                 <input
                   type="text"
                   value={creds.gate_ewelink_appid}
@@ -349,9 +349,9 @@ export default function MasterGateConfig() {
               </div>
 
               <div>
-                <label className="block text-base font-medium text-muted-foreground mb-2">
+                <span className="block text-base font-medium text-muted-foreground mb-2">
                   App Secret
-                </label>
+                </span>
                 <div className="relative">
                   <input
                     type={showSecrets ? "text" : "password"}
@@ -379,9 +379,9 @@ export default function MasterGateConfig() {
               </div>
 
               <div>
-                <label className="block text-base font-medium text-muted-foreground mb-2">
+                <span className="block text-base font-medium text-muted-foreground mb-2">
                   E-mail da Conta
-                </label>
+                </span>
                 <input
                   type="email"
                   value={creds.gate_ewelink_email}
@@ -396,9 +396,9 @@ export default function MasterGateConfig() {
               </div>
 
               <div>
-                <label className="block text-base font-medium text-muted-foreground mb-2">
+                <span className="block text-base font-medium text-muted-foreground mb-2">
                   Região do Servidor
-                </label>
+                </span>
                 <select
                   value={creds.gate_ewelink_region}
                   onChange={(e) =>
@@ -694,7 +694,7 @@ export default function MasterGateConfig() {
                           {a.enabled === "true" ? "Ativo" : "Inativo"}
                         </span>
                         <span className="text-sm text-muted-foreground">
-                          {(parseInt(a.pulse_duration || "1000") / 1000).toFixed(1)}s
+                          {(Number.parseInt(a.pulse_duration || "1000") / 1000).toFixed(1)}s
                         </span>
                       </div>
                     </div>
@@ -721,9 +721,9 @@ export default function MasterGateConfig() {
             </p>
 
             <div>
-              <label className="block text-base font-medium text-muted-foreground mb-2">
+              <span className="block text-base font-medium text-muted-foreground mb-2">
                 Condomínio
-              </label>
+              </span>
               <select
                 value={assignModal.condominioId}
                 onChange={(e) =>

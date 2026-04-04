@@ -120,7 +120,7 @@ export default function SindicoGateConfig() {
     }
   };
 
-  const pulseSec = (parseInt(config.gate_pulse_duration) || 1000) / 1000;
+  const pulseSec = (Number.parseInt(config.gate_pulse_duration) || 1000) / 1000;
 
   if (loading) {
     return (
@@ -219,9 +219,9 @@ export default function SindicoGateConfig() {
 
         {/* Device Name Card */}
         <div style={{ background: p.cardBg, border: p.cardBorder, borderRadius: 16, padding: "1rem 1.25rem" }}>
-          <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: p.textSecondary, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <span style={{ display: "block", fontSize: 11, fontWeight: 700, color: p.textSecondary, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
             Nome do portão
-          </label>
+          </span>
           <p style={{ fontSize: 12, color: p.textMuted, marginBottom: 8, marginTop: 0 }}>
             Nome exibido para os funcionários ao abrir o portão
           </p>
@@ -243,9 +243,9 @@ export default function SindicoGateConfig() {
 
         {/* Pulse Duration Card */}
         <div style={{ background: p.cardBg, border: p.cardBorder, borderRadius: 16, padding: "1rem 1.25rem" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: p.textSecondary, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: p.textSecondary, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>
             <Clock className="w-3.5 h-3.5" /> Tempo de acionamento
-          </label>
+          </span>
           <p style={{ fontSize: 12, color: p.textMuted, marginBottom: 10, marginTop: 0 }}>
             Duração do pulso ao abrir o portão:{" "}
             <strong style={{ color: p.text }}>{pulseSec}s</strong>

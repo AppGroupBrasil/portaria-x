@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
@@ -15,55 +15,98 @@ import {
   Settings,
   Building2,
   ChevronDown,
+  Phone,
+  Navigation,
+  DoorOpen,
+  UserPlus,
+  Camera,
+  MapPin,
+  BookOpen,
+  LayoutDashboard,
+  Scan,
+  Package,
+  Layers,
+  Users2,
+  Wrench,
+  Zap,
+  Cpu,
+  Star,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 
-// ─── Feature definitions ─────────────────────────────────
+// ─── Feature definitions per profile ─────────────────────
 interface FeatureDef {
   key: string;
   label: string;
   description: string;
   icon: LucideIcon;
   gradient: string;
+  isDefault: boolean; // true = included by default for all condos
 }
 
-const FEATURES: FeatureDef[] = [
-  {
-    key: "feature_autorizacoes",
-    label: "Autorizar Visitante",
-    description: "Morador pode criar autorizações prévias de entrada para visitantes",
-    icon: ShieldCheck,
-    gradient: "#003580",
-  },
-  {
-    key: "feature_delivery",
-    label: "Entregas e Delivery",
-    description: "Morador pode autorizar recebimento de pedidos na portaria",
-    icon: Truck,
-    gradient: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
-  },
-  {
-    key: "feature_veiculos",
-    label: "Autorizar Veículo",
-    description: "Morador pode autorizar acesso de veículos ao condomínio",
-    icon: Car,
-    gradient: "#003580",
-  },
-  {
-    key: "feature_qr_visitante",
-    label: "QR Code de Visitante",
-    description: "Morador pode gerar QR Code de autorização para visitantes",
-    icon: QrCode,
-    gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-  },
-  {
-    key: "feature_correspondencias",
-    label: "Correspondências",
-    description: "Morador pode visualizar avisos de correspondência na portaria",
-    icon: Mail,
-    gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-  },
+// ── Morador ──────────────────────────────────────────────
+const MORADOR_FEATURES: FeatureDef[] = [
+  // Padrão
+  { key: "feature_autorizacoes", label: "Autorizar Visitante", description: "Criar autorizações prévias de entrada para visitantes", icon: ShieldCheck, gradient: "#003580", isDefault: true },
+  { key: "feature_delivery", label: "Entregas e Delivery", description: "Autorizar recebimento de pedidos na portaria", icon: Truck, gradient: "#003580", isDefault: true },
+  { key: "feature_veiculos", label: "Autorizar Veículo", description: "Autorizar acesso de veículos ao condomínio", icon: Car, gradient: "#003580", isDefault: true },
+  { key: "feature_qr_visitante", label: "QR Code Visitante", description: "Gerar QR Code de autorização para visitantes", icon: QrCode, gradient: "#003580", isDefault: true },
+  { key: "feature_correspondencias", label: "Correspondências", description: "Visualizar avisos de correspondência na portaria", icon: Mail, gradient: "#003580", isDefault: true },
+  { key: "feature_estou_chegando", label: "Estou Chegando", description: "Avisar a portaria que está chegando", icon: Navigation, gradient: "#003580", isDefault: true },
+  // Extras
+  { key: "feature_interfone", label: "Interfone Digital", description: "Receber chamadas de visitantes com vídeo", icon: Phone, gradient: "#003580", isDefault: false },
+  { key: "feature_portaria_virtual", label: "Portaria Virtual", description: "Abrir portões e portas remotamente", icon: DoorOpen, gradient: "#003580", isDefault: false },
+  { key: "feature_auto_cadastro", label: "Auto Cadastro", description: "Visitantes se cadastram sozinhos via link", icon: UserPlus, gradient: "#003580", isDefault: false },
+];
+
+// ── Porteiro ─────────────────────────────────────────────
+const PORTEIRO_FEATURES: FeatureDef[] = [
+  // Padrão
+  { key: "feature_porteiro_pedestres", label: "Controle de Pedestres", description: "Visitantes e autorizações prévias", icon: UserPlus, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_veiculos", label: "Acesso Veículos", description: "Controlar entrada e saída de veículos", icon: Car, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_delivery", label: "Delivery Porteiro", description: "Gerenciar entregas recebidas", icon: Package, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_correspondencias", label: "Correspondências", description: "Registrar correspondências recebidas", icon: Mail, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_rondas", label: "Rondas de Segurança", description: "Registrar rondas e escanear QR Codes", icon: MapPin, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_estou_chegando", label: "Estou Chegando", description: "Ver moradores a caminho", icon: Navigation, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_centro_comando", label: "Centro de Comando", description: "Painel unificado da portaria", icon: LayoutDashboard, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_qr_scanner", label: "Scanner QR", description: "Escanear QR de visitantes", icon: Scan, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_livro_protocolo", label: "Livro Protocolo", description: "Livro de ocorrências da portaria", icon: BookOpen, gradient: "#d97706", isDefault: true },
+  { key: "feature_porteiro_espelho", label: "Espelho Portaria", description: "Visão geral do espelho da portaria", icon: ShieldCheck, gradient: "#d97706", isDefault: true },
+  // Extras
+  { key: "feature_porteiro_monitoramento", label: "Monitoramento", description: "Visualizar câmeras do condomínio", icon: Camera, gradient: "#d97706", isDefault: false },
+  { key: "feature_porteiro_interfone", label: "Interfone", description: "Atender chamadas de visitantes", icon: Phone, gradient: "#d97706", isDefault: false },
+  { key: "feature_porteiro_portaria_virtual", label: "Portaria Virtual", description: "Controle remoto de portões", icon: DoorOpen, gradient: "#d97706", isDefault: false },
+  { key: "feature_porteiro_acesso_auto", label: "Acesso Automático", description: "Liberação automática de veículos", icon: Scan, gradient: "#d97706", isDefault: false },
+];
+
+// ── Síndico ──────────────────────────────────────────────
+const SINDICO_FEATURES: FeatureDef[] = [
+  // Padrão
+  { key: "feature_sindico_cadastros", label: "Cadastros", description: "Gerenciar moradores e funcionários", icon: UserPlus, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_blocos", label: "Blocos", description: "Cadastrar e gerenciar blocos", icon: Layers, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_moradores", label: "Moradores", description: "Cadastrar e gerenciar moradores", icon: Users2, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_funcionarios", label: "Funcionários", description: "Cadastrar e gerenciar funcionários", icon: Wrench, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_rondas", label: "Rondas", description: "Controlar rondas de segurança", icon: MapPin, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_estou_chegando", label: "Estou Chegando Config", description: "Configurar notificações de chegada", icon: Navigation, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_qr_config", label: "Config QR", description: "Configurar QR Code para visitantes", icon: QrCode, gradient: "#16a34a", isDefault: true },
+  { key: "feature_sindico_liberacao", label: "Liberação Cadastros", description: "Aprovar cadastros pendentes", icon: ShieldCheck, gradient: "#16a34a", isDefault: true },
+  // Extras
+  { key: "feature_sindico_cameras", label: "Câmeras", description: "Configurar câmeras do condomínio", icon: Camera, gradient: "#16a34a", isDefault: false },
+  { key: "feature_sindico_interfone", label: "Interfone Config", description: "Configurar sistema de interfone", icon: Phone, gradient: "#16a34a", isDefault: false },
+  { key: "feature_sindico_acessos", label: "Acessos", description: "Gerenciar pontos de acesso", icon: DoorOpen, gradient: "#16a34a", isDefault: false },
+  { key: "feature_sindico_portao", label: "Portão IoT", description: "Configurar portões e dispositivos IoT", icon: Zap, gradient: "#16a34a", isDefault: false },
+  { key: "feature_sindico_dispositivos", label: "Dispositivos", description: "Biblioteca de dispositivos IoT", icon: Cpu, gradient: "#16a34a", isDefault: false },
+  { key: "feature_sindico_whatsapp", label: "WhatsApp Config", description: "Configurar integração WhatsApp", icon: Phone, gradient: "#16a34a", isDefault: false },
+];
+
+type TabId = "morador" | "porteiro" | "sindico";
+
+const TABS: { id: TabId; label: string; color: string; features: FeatureDef[] }[] = [
+  { id: "morador", label: "Morador", color: "#003580", features: MORADOR_FEATURES },
+  { id: "porteiro", label: "Portaria", color: "#d97706", features: PORTEIRO_FEATURES },
+  { id: "sindico", label: "Síndico", color: "#16a34a", features: SINDICO_FEATURES },
 ];
 
 interface Condominio {
@@ -71,10 +114,77 @@ interface Condominio {
   name: string;
 }
 
+function renderFeatureToggle(
+  feature: FeatureDef,
+  tabColor: string,
+  isDark: boolean,
+  p: any,
+  isFeatureEnabled: (key: string) => boolean,
+  toggleFeature: (key: string) => void
+) {
+  const enabled = isFeatureEnabled(feature.key);
+  const Icon = feature.icon;
+  let iconBg: string;
+  let iconColor: string;
+  let toggleBg: string;
+  if (enabled) { iconBg = tabColor; iconColor = "#fff"; toggleBg = tabColor; }
+  else if (isDark) { iconBg = "rgba(255,255,255,0.06)"; iconColor = "#64748b"; toggleBg = "rgba(255,255,255,0.1)"; }
+  else { iconBg = "#e2e8f0"; iconColor = "#94a3b8"; toggleBg = "#cbd5e1"; }
+  return (
+    <button
+      type="button"
+      key={feature.key}
+      onClick={() => toggleFeature(feature.key)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "14px",
+        padding: "16px 18px",
+        borderRadius: "16px",
+        cursor: "pointer",
+        background: "transparent",
+        border: "none",
+        textAlign: "left",
+        width: "100%",
+        fontFamily: "inherit",
+        opacity: enabled ? 1 : 0.5,
+        transition: "all 0.2s ease",
+      }}
+    >
+      <div
+        style={{
+          width: 44, height: 44, borderRadius: 12,
+          background: iconBg,
+          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+          transition: "all 0.2s ease",
+        }}
+      >
+        <Icon className="w-5 h-5" style={{ color: iconColor }} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontSize: 14, fontWeight: 600, color: p.textHeading, marginBottom: 2 }}>{feature.label}</p>
+        <p style={{ fontSize: 11, color: p.textSecondary, lineHeight: 1.4 }}>{feature.description}</p>
+      </div>
+      <div style={{
+        width: 48, height: 28, borderRadius: 14, padding: 3, flexShrink: 0,
+        background: toggleBg,
+        transition: "all 0.2s ease",
+      }}>
+        <div style={{
+          width: 22, height: 22, borderRadius: "50%", background: "#fff",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "all 0.2s ease",
+          transform: enabled ? "translateX(20px)" : "translateX(0)",
+        }} />
+      </div>
+    </button>
+  );
+}
+
 export default function AdminFeaturesConfig() {
-  const { user } = useAuth();
+  useAuth();
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [condominios, setCondominios] = useState<Condominio[]>([]);
   const [selectedCondoId, setSelectedCondoId] = useState<number | null>(null);
@@ -84,6 +194,7 @@ export default function AdminFeaturesConfig() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [selectorOpen, setSelectorOpen] = useState(false);
+  const [tab, setTab] = useState<TabId>("morador");
 
   // Fetch condominios
   useEffect(() => {
@@ -91,7 +202,15 @@ export default function AdminFeaturesConfig() {
       .then((res) => (res.ok ? res.json() : []))
       .then((data: Condominio[]) => {
         setCondominios(data);
-        if (data.length > 0) {
+        const urlCondo = searchParams.get("condo");
+        if (urlCondo) {
+          const id = Number(urlCondo);
+          if (data.some((c) => c.id === id)) {
+            setSelectedCondoId(id);
+          } else if (data.length > 0) {
+            setSelectedCondoId(data[0].id);
+          }
+        } else if (data.length > 0) {
           setSelectedCondoId(data[0].id);
         }
         setLoading(false);
@@ -140,7 +259,34 @@ export default function AdminFeaturesConfig() {
     setSaving(false);
   };
 
-  const enabledCount = FEATURES.filter((f) => isFeatureEnabled(f.key)).length;
+  const toggleAll = async (features: FeatureDef[], enable: boolean) => {
+    if (!selectedCondoId) return;
+    const updates: Record<string, string> = {};
+    features.forEach((f) => { updates[f.key] = enable ? "true" : "false"; });
+    const newConfig = { ...config, ...updates };
+    setConfig(newConfig);
+    setSaving(true);
+    setSaved(false);
+    try {
+      const res = await apiFetch(`/api/condominio-config?condominio_id=${selectedCondoId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setConfig(data);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch {}
+    setSaving(false);
+  };
+
+  const currentTab = TABS.find((t) => t.id === tab)!;
+  const defaultFeatures = currentTab.features.filter((f) => f.isDefault);
+  const extraFeatures = currentTab.features.filter((f) => !f.isDefault);
+  const enabledCount = currentTab.features.filter((f) => isFeatureEnabled(f.key)).length;
   const selectedCondo = condominios.find((c) => c.id === selectedCondoId);
 
   if (loading) {
@@ -150,6 +296,10 @@ export default function AdminFeaturesConfig() {
       </div>
     );
   }
+
+  let statusIndicator: React.ReactNode = null;
+  if (saving) { statusIndicator = <Loader2 className="w-5 h-5 animate-spin text-white/60" />; }
+  else if (saved) { statusIndicator = <div className="flex items-center gap-1 text-emerald-300 text-sm font-medium"><Check className="w-4 h-4" /> Salvo</div>; }
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
@@ -187,13 +337,7 @@ export default function AdminFeaturesConfig() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {saving ? (
-              <Loader2 className="w-5 h-5 animate-spin text-white/60" />
-            ) : saved ? (
-              <div className="flex items-center gap-1 text-emerald-300 text-sm font-medium">
-                <Check className="w-4 h-4" /> Salvo
-              </div>
-            ) : null}
+            {statusIndicator}
             <TutorialButton title="Configurações do Condomínio">
               <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
                 <p>
@@ -353,20 +497,92 @@ export default function AdminFeaturesConfig() {
               Configuração de Funções
             </p>
             <p style={{ fontSize: "12px", color: "#dc2626", lineHeight: 1.5 }}>
-              Habilite ou desabilite as funções que aparecem para os moradores do condomínio selecionado.
-              Funções desabilitadas ficam invisíveis no painel do morador.
+              Habilite ou desabilite as funções para cada perfil do condomínio selecionado.
+              Funções desabilitadas ficam invisíveis no painel do respectivo perfil.
             </p>
           </div>
         </div>
 
-        {/* Summary */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 4px" }}>
-          <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
-            Funções Disponíveis
-          </span>
-          <span style={{ fontSize: "12px", color: p.textSecondary }}>
-            {enabledCount} de {FEATURES.length} ativas
-          </span>
+        {/* Tab switcher */}
+        <div style={{ display: "flex", borderRadius: "12px", overflow: "hidden", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "#e5e7eb"}` }}>
+          {TABS.map((t) => {
+            const count = t.features.filter((f) => isFeatureEnabled(f.key)).length;
+            let tabBg: string;
+            let tabColor2: string;
+            let badgeBg: string;
+            if (tab === t.id) {
+              tabBg = isDark ? "rgba(255,255,255,0.05)" : "#f0f9ff";
+              tabColor2 = t.color;
+              badgeBg = `${t.color}20`;
+            } else if (isDark) {
+              tabBg = "transparent"; tabColor2 = "#94a3b8"; badgeBg = "rgba(255,255,255,0.06)";
+            } else {
+              tabBg = "#fff"; tabColor2 = "#6b7280"; badgeBg = "#f1f5f9";
+            }
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                style={{
+                  flex: 1,
+                  padding: "12px 8px",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  border: "none",
+                  background: tabBg,
+                  color: tabColor2,
+                  borderBottom: tab === t.id ? `3px solid ${t.color}` : "3px solid transparent",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                }}
+              >
+                {t.label}
+                <span style={{
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  padding: "1px 6px",
+                  borderRadius: "6px",
+                  background: badgeBg,
+                  color: tab === t.id ? t.color : "#94a3b8",
+                }}>
+                  {count}/{t.features.length}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Summary + bulk actions */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Settings className="w-4 h-4" style={{ color: currentTab.color }} />
+            <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
+              {enabledCount} de {currentTab.features.length} ativas
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: "6px" }}>
+            <button
+              onClick={() => toggleAll(currentTab.features, true)}
+              style={{
+                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                border: "none", background: `${currentTab.color}15`, color: currentTab.color, cursor: "pointer",
+              }}
+            >
+              Ativar Todas
+            </button>
+            <button
+              onClick={() => toggleAll(currentTab.features, false)}
+              style={{
+                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "#e5e7eb"}`, background: isDark ? "rgba(255,255,255,0.04)" : "#fff", color: "#dc2626", cursor: "pointer",
+              }}
+            >
+              Desativar Todas
+            </button>
+          </div>
         </div>
 
         {/* Feature toggles */}
@@ -375,96 +591,46 @@ export default function AdminFeaturesConfig() {
             <Loader2 className="w-6 h-6 animate-spin" style={{ color: p.textAccent }} />
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
-            {FEATURES.map((feature) => {
-              const enabled = isFeatureEnabled(feature.key);
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={feature.key}
-                  onClick={() => toggleFeature(feature.key)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    padding: "16px 18px",
-                    borderRadius: "16px",
-                    cursor: "pointer",
-                    background: "transparent",
-                    border: "none",
-                    opacity: enabled ? 1 : 0.6,
-                    transition: "all 0.2s ease",
-                    boxShadow: "none",
-                  }}
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      width: "44px",
-                      height: "44px",
-                      borderRadius: "12px",
-                      background: enabled ? feature.gradient : p.surfaceBg,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <Icon className="w-5 h-5" style={{ color: enabled ? "#fff" : p.textMuted }} />
-                  </div>
+          <>
+            {/* ══ SECTION: Funções Padrão ══ */}
+            <div style={{ marginBottom: "0.5rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", padding: "0 4px" }}>
+                <Star className="w-4 h-4" style={{ color: currentTab.color }} />
+                <span style={{ fontSize: "13px", fontWeight: 700, color: currentTab.color, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  Funções Padrão
+                </span>
+                <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: `${currentTab.color}15`, color: currentTab.color }}>
+                  Incluídas para todos
+                </span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                {defaultFeatures.map((feature) => renderFeatureToggle(feature, currentTab.color, isDark, p, isFeatureEnabled, toggleFeature))}
+              </div>
+            </div>
 
-                  {/* Text */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        color: p.textHeading,
-                        marginBottom: "2px",
-                      }}
-                    >
-                      {feature.label}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "11px",
-                        color: p.textSecondary,
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      {feature.description}
-                    </p>
-                  </div>
-
-                  {/* Toggle */}
-                  <div
-                    style={{
-                      width: "48px",
-                      height: "28px",
-                      borderRadius: "14px",
-                      background: enabled ? p.accent : p.btnBg,
-                      padding: "3px",
-                      transition: "all 0.2s ease",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "22px",
-                        height: "22px",
-                        borderRadius: "50%",
-                        background: "#fff",
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                        transition: "all 0.2s ease",
-                        transform: enabled ? "translateX(20px)" : "translateX(0)",
-                      }}
-                    />
-                  </div>
+            {/* ══ SECTION: Funções Extras ══ */}
+            {extraFeatures.length > 0 && (
+              <div style={{ marginTop: "1rem" }}>
+                <div style={{
+                  display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", padding: "10px 14px",
+                  borderRadius: "12px",
+                  background: isDark ? "rgba(139,92,246,0.08)" : "rgba(139,92,246,0.05)",
+                  border: `1px dashed ${isDark ? "rgba(139,92,246,0.3)" : "rgba(139,92,246,0.25)"}`,
+                }}>
+                  <Sparkles className="w-4 h-4" style={{ color: "#8b5cf6" }} />
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    Funções Extras
+                  </span>
+                  <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: "rgba(139,92,246,0.12)", color: "#8b5cf6" }}>
+                    Desabilitadas por padrão
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  {extraFeatures.map((feature) => renderFeatureToggle(feature, currentTab.color, isDark, p, isFeatureEnabled, toggleFeature))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>

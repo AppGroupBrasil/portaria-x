@@ -4,8 +4,11 @@
 
 /** True when running inside a Capacitor native shell (Android/iOS) */
 export const isNative: boolean =
-  typeof window !== "undefined" &&
-  !!(window as any).Capacitor?.isNativePlatform?.();
+  globalThis.window !== undefined &&
+  !!(globalThis.window as any).Capacitor?.isNativePlatform?.();
+
+const envApiBaseRaw = ((import.meta as any).env?.VITE_API_URL ?? "") as string;
+const envApiBase = envApiBaseRaw.trim();
 
 /**
  * Base URL for all API calls.
@@ -14,7 +17,9 @@ export const isNative: boolean =
  * - Capacitor:  uses VITE_API_URL env var (e.g. https://portariax.com.br)
  */
 export const API_BASE: string =
-  (import.meta as any).env?.VITE_API_URL ?? "";
+  // Web always uses same-origin to avoid CORS/env drift between www and apex.
+  // Native needs an absolute host; fallback guarantees API reachability.
+  isNative ? (envApiBase || "https://www.portariax.com.br") : "";
 
 /**
  * Public-facing origin used to build shareable links (QR codes, WhatsApp, etc.).
@@ -22,7 +27,7 @@ export const API_BASE: string =
  */
 export const APP_ORIGIN: string =
   (import.meta as any).env?.VITE_APP_ORIGIN ??
-  (isNative ? "https://www.portariax.com.br" : window.location.origin);
+  (isNative ? "https://www.portariax.com.br" : globalThis.window.location.origin);
 
 /**
  * Build a WebSocket URL from the current API base.
@@ -42,9 +47,9 @@ export function buildWsUrl(path: string): string {
     return API_BASE.replace(/^http/, "ws") + path;
   }
 
-  const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-  const hostname = window.location.hostname;
-  const port = window.location.port;
+  const proto = globalThis.window.location.protocol === "https:" ? "wss:" : "ws:";
+  const hostname = globalThis.window.location.hostname;
+  const port = globalThis.window.location.port;
 
   // Dev: Vite runs on 5173, route to dedicated WS ports
   if (port && port !== "80" && port !== "443" && port !== "3001") {
@@ -53,5 +58,5 @@ export function buildWsUrl(path: string): string {
   }
 
   // Prod: same-origin
-  return `${proto}//${window.location.host}${path}`;
+  return `${proto}//${globalThis.window.location.host}${path}`;
 }

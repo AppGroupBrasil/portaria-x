@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -29,14 +29,9 @@ export default function RegisterMorador() {
   const { registerMorador } = useAuth();
 
   const state = location.state as LocationState | null;
-
-  // Redirect if no condominio data
-  if (!state?.condominioId) {
-    navigate("/register/morador/search", { replace: true });
-    return null;
-  }
-
-  const { condominioId, condominioName, blocks: condoBlocks } = state;
+  const condominioId = state?.condominioId ?? 0;
+  const condominioName = state?.condominioName ?? "";
+  const condoBlocks = state?.blocks ?? [];
 
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
@@ -56,6 +51,13 @@ export default function RegisterMorador() {
   const [showWhatsappPrompt, setShowWhatsappPrompt] = useState(false);
   const [whatsappPhone, setWhatsappPhone] = useState("");
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
+
+  // Redirect if no condominio data
+  useEffect(() => {
+    if (!state?.condominioId) {
+      navigate("/register/morador/search", { replace: true });
+    }
+  }, [state, navigate]);
 
   // Fetch WhatsApp config on mount
   useEffect(() => {
@@ -78,7 +80,7 @@ export default function RegisterMorador() {
 
   // Formatações
   const formatPhone = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -87,7 +89,7 @@ export default function RegisterMorador() {
 
   const validateStep1 = () => {
     if (!name.trim()) return "Informe seu nome.";
-    if (phone && phone.replace(/\D/g, "").length < 10) return "WhatsApp inválido.";
+    if (phone && phone.replaceAll(/\D/g, "").length < 10) return "WhatsApp inválido.";
     return null;
   };
 
@@ -95,7 +97,7 @@ export default function RegisterMorador() {
     if (!email) return "Informe seu e-mail.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "E-mail inválido.";
     if (email !== confirmEmail) return "Os e-mails não coincidem.";
-    if (!/^\d{4}$/.test(password)) return "A senha deve ter exatamente 4 números.";
+    if (!/^\d{6}$/.test(password)) return "A senha deve ter exatamente 6 números.";
     if (password !== confirmPassword) return "As senhas não coincidem.";
     return null;
   };
@@ -107,7 +109,7 @@ export default function RegisterMorador() {
     setStep(2);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
     const err = validateStep2();
@@ -147,18 +149,23 @@ export default function RegisterMorador() {
   // Build WhatsApp message and open link
   const handleWhatsappSolicitacao = () => {
     // Clean phone to digits only
-    const cleanPhone = whatsappPhone.replace(/\D/g, "");
+    const cleanPhone = whatsappPhone.replaceAll(/\D/g, "");
     // Build country code if needed (Brazil default)
     const phoneWithCountry = cleanPhone.startsWith("55") ? cleanPhone : `55${cleanPhone}`;
     
-    const message = `Olá! Sou *${name.trim()}*${block ? `, Bloco ${block}` : ""}${unit ? `, Unidade ${unit}` : ""} do condomínio *${condominioName}*.\n\nAcabei de realizar meu cadastro no sistema e gostaria de solicitar a *liberação do meu acesso*.\n\nE-mail cadastrado: ${email}\n\nAguardo a aprovação. Obrigado!`;
+    const blockPart = block ? ", Bloco " + block : "";
+    const unitPart = unit ? ", Unidade " + unit : "";
+    const message = "Olá! Sou *" + name.trim() + "*" + blockPart + unitPart + " do condomínio *" + condominioName + "*.\n\nAcabei de realizar meu cadastro no sistema e gostaria de solicitar a *liberação do meu acesso*.\n\nE-mail cadastrado: " + email + "\n\nAguardo a aprovação. Obrigado!";
     
     const encodedMsg = encodeURIComponent(message);
-    window.open(`https://wa.me/${phoneWithCountry}?text=${encodedMsg}`, "_blank");
+    globalThis.open(`https://wa.me/${phoneWithCountry}?text=${encodedMsg}`, "_blank");
     
     // Navigate to login after opening WhatsApp
     setTimeout(() => navigate("/login"), 1000);
   };
+
+  // No state — redirect is in progress
+  if (!condominioId) return null;
 
   // WhatsApp prompt screen
   if (showWhatsappPrompt) {
@@ -377,19 +384,19 @@ export default function RegisterMorador() {
 
                 {/* Senha */}
                 <div className="space-y-2">
-                  <Label htmlFor="password">Senha (4 dígitos) *</Label>
+                  <Label htmlFor="password">Senha (6 dígitos) *</Label>
                   <div className="relative">
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="0000"
+                      placeholder="000000"
                       value={password}
                       onChange={(e) => {
-                        const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                        const v = e.target.value.replaceAll(/\D/g, "").slice(0, 6);
                         setPassword(v);
                       }}
                       inputMode="numeric"
-                      maxLength={4}
+                      maxLength={6}
                       className="pr-10"
                       autoComplete="new-password"
                     />
@@ -409,14 +416,14 @@ export default function RegisterMorador() {
                   <Input
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Repita os 4 dígitos"
+                    placeholder="Repita os 6 dígitos"
                     value={confirmPassword}
                     onChange={(e) => {
-                      const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                      const v = e.target.value.replaceAll(/\D/g, "").slice(0, 6);
                       setConfirmPassword(v);
                     }}
                     inputMode="numeric"
-                    maxLength={4}
+                    maxLength={6}
                     autoComplete="new-password"
                   />
                 </div>
@@ -426,7 +433,7 @@ export default function RegisterMorador() {
             {/* Error */}
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}

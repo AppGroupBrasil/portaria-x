@@ -291,20 +291,25 @@ export default function MoradorDelivery() {
 
             {/* Serviço Selection */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '10px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '10px', display: 'block' }}>
                 Serviço de Delivery *
-              </label>
+              </span>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '10px' }}>
                 {SERVICOS.map((sv) => (
                   <button
                     key={sv.id}
                     type="button"
                     onClick={() => setServico(sv.id)}
+                    aria-pressed={servico === sv.id}
                     style={{
                       padding: '12px 8px',
                       borderRadius: '12px',
                       border: servico === sv.id ? `2px solid ${sv.color}` : isDark ? '2px solid rgba(255,255,255,0.1)' : '2px solid #cbd5e1',
-                      background: servico === sv.id ? `${sv.color}25` : isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
+                      background: servico === sv.id
+                        ? (isDark ? `${sv.color}30` : `${sv.color}1A`)
+                        : isDark
+                          ? 'rgba(255,255,255,0.04)'
+                          : 'rgba(0,0,0,0.02)',
                       cursor: 'pointer',
                       display: 'flex',
                       flexDirection: 'column',
@@ -312,6 +317,7 @@ export default function MoradorDelivery() {
                       gap: '6px',
                       transition: 'all 0.2s',
                       position: 'relative',
+                      opacity: 1,
                     }}
                   >
                     {servico === sv.id && (
@@ -319,7 +325,23 @@ export default function MoradorDelivery() {
                         <CheckCircle2 style={{ width: 16, height: 16, color: '#4ade80' }} />
                       </div>
                     )}
-                    <span style={{ fontWeight: 700, fontSize: '20px' }}>
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        fontSize: '20px',
+                        lineHeight: 1,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 34,
+                        height: 34,
+                        borderRadius: 10,
+                        background: servico === sv.id
+                          ? (isDark ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.85)')
+                          : 'transparent',
+                        filter: 'none',
+                      }}
+                    >
                       {sv.id === 'ifood' ? '🍔' :
                        sv.id === 'rappi' ? '🛵' :
                        sv.id === 'uber_eats' ? '🥡' :
@@ -337,9 +359,9 @@ export default function MoradorDelivery() {
             {/* Custom service name */}
             {servico === 'outro' && (
               <div>
-                <label style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+                <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                   Nome do Serviço
-                </label>
+                </span>
                 <input
                   type="text"
                   value={servicoCustom}
@@ -362,9 +384,9 @@ export default function MoradorDelivery() {
 
             {/* Order Number */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                 Número / Código do Pedido
-              </label>
+              </span>
               <input
                 type="text"
                 value={numeroPedido}
@@ -386,9 +408,9 @@ export default function MoradorDelivery() {
 
             {/* Print do Pedido (screenshot) */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                 Print / Foto do Pedido
-              </label>
+              </span>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -448,9 +470,9 @@ export default function MoradorDelivery() {
 
             {/* Observação */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                 Observação
-              </label>
+              </span>
               <textarea
                 value={observacao}
                 onChange={(e) => setObservacao(e.target.value)}

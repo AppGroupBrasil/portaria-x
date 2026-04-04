@@ -31,7 +31,7 @@ export default function EwelinkCallback() {
   async function exchangeCode(code: string, region: string | null) {
     try {
       // Build the redirect URL that was used to generate the OAuth URL
-      const redirectUrl = `${window.location.origin}/callback`;
+      const redirectUrl = `${globalThis.window.location.origin}/callback`;
       
       const res = await apiFetch("/api/gate/oauth-exchange", {
         method: "POST",
@@ -45,7 +45,7 @@ export default function EwelinkCallback() {
         setStatus("success");
         setMessage("Autorização eWeLink realizada com sucesso! Redirecionando...");
         setTimeout(() => {
-          window.location.href = "/master/portao?oauth=success";
+          globalThis.window.location.href = "/master/portao?oauth=success";
         }, 1500);
       } else {
         setStatus("error");
@@ -72,7 +72,7 @@ export default function EwelinkCallback() {
         <p className="text-lg text-foreground">{message}</p>
         {status === "error" && (
           <button
-            onClick={() => window.location.href = "/master/portao?oauth=error&msg=" + encodeURIComponent(message)}
+            onClick={() => globalThis.window.location.href = "/master/portao?oauth=error&msg=" + encodeURIComponent(message)}
             className="px-6 py-3 rounded-xl bg-[#003580] text-white text-base font-semibold mt-4"
           >
             Voltar à Configuração

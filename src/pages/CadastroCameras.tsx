@@ -412,7 +412,7 @@ export default function CadastroCameras() {
             <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
               {/* Nome */}
               <div>
-                <label style={labelStyle}>Nome da Câmera *</label>
+                <span style={labelStyle}>Nome da Câmera *</span>
                 <input
                   style={inputStyle}
                   placeholder="Ex: Câmera Portaria Principal"
@@ -424,7 +424,7 @@ export default function CadastroCameras() {
               {/* Setor + Localização */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <label style={labelStyle}>Setor</label>
+                  <span style={labelStyle}>Setor</span>
                   <select
                     style={selectStyle}
                     value={form.setor}
@@ -436,7 +436,7 @@ export default function CadastroCameras() {
                   </select>
                 </div>
                 <div>
-                  <label style={labelStyle}>Localização</label>
+                  <span style={labelStyle}>Localização</span>
                   <input
                     style={inputStyle}
                     placeholder="Ex: Bloco A - Térreo"
@@ -448,7 +448,7 @@ export default function CadastroCameras() {
 
               {/* Tipo de Stream */}
               <div>
-                <label style={labelStyle}>Tipo de Stream</label>
+                <span style={labelStyle}>Tipo de Stream</span>
                 <select
                   style={selectStyle}
                   value={form.tipo_stream}
@@ -462,7 +462,7 @@ export default function CadastroCameras() {
 
               {/* URL do Stream */}
               <div>
-                <label style={labelStyle}>URL do Stream</label>
+                <span style={labelStyle}>URL do Stream</span>
                 <input
                   style={inputStyle}
                   placeholder="Ex: http://192.168.1.100:8080/video"
@@ -477,7 +477,7 @@ export default function CadastroCameras() {
               {/* IP + Porta */}
               <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "10px" }}>
                 <div>
-                  <label style={labelStyle}>IP da Câmera</label>
+                  <span style={labelStyle}>IP da Câmera</span>
                   <input
                     style={inputStyle}
                     placeholder="192.168.1.100"
@@ -486,13 +486,13 @@ export default function CadastroCameras() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Porta</label>
+                  <span style={labelStyle}>Porta</span>
                   <input
                     style={inputStyle}
                     type="number"
                     placeholder="8080"
                     value={form.porta || ""}
-                    onChange={(e) => setForm({ ...form, porta: e.target.value ? parseInt(e.target.value) : null })}
+                    onChange={(e) => setForm({ ...form, porta: e.target.value ? Number.parseInt(e.target.value) : null })}
                   />
                 </div>
               </div>
@@ -500,7 +500,7 @@ export default function CadastroCameras() {
               {/* Usuário + Senha */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <label style={labelStyle}>Usuário</label>
+                  <span style={labelStyle}>Usuário</span>
                   <input
                     style={inputStyle}
                     placeholder="admin"
@@ -509,7 +509,7 @@ export default function CadastroCameras() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Senha</label>
+                  <span style={labelStyle}>Senha</span>
                   <input
                     style={inputStyle}
                     type="password"
@@ -522,13 +522,13 @@ export default function CadastroCameras() {
 
               {/* Ordem */}
               <div>
-                <label style={labelStyle}>Ordem de exibição</label>
+                <span style={labelStyle}>Ordem de exibição</span>
                 <input
                   style={inputStyle}
                   type="number"
                   min="0"
                   value={form.ordem}
-                  onChange={(e) => setForm({ ...form, ordem: parseInt(e.target.value) || 0 })}
+                  onChange={(e) => setForm({ ...form, ordem: Number.parseInt(e.target.value) || 0 })}
                 />
               </div>
 

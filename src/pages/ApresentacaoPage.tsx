@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import {
   Shield, UserPlus, Car, Package, Truck, BookOpen, DoorOpen, Camera,
   ShieldCheck, Users, Building2, Check, Star,
-  ArrowLeft, Phone, Eye, Fingerprint,
-  QrCode, Printer, Copy, MessageCircle, Share2,
+  ArrowLeft, ArrowRight, Phone, Eye, Fingerprint, Lock, Bell,
+  Printer, Copy, MessageCircle, Share2,
   Monitor, Route, ScanLine, BarChart3, Cog, Navigation,
   Cpu, Globe, Wifi, Signal, Wrench,
 } from "lucide-react";
@@ -22,25 +22,28 @@ const PROFILES = {
 type ProfileKey = keyof typeof PROFILES;
 
 /* ─── Feature data ─── */
-const allFeatures = [
+const standardFeatures = [
   { icon: UserPlus, title: "Cadastro de Visitantes", desc: "Registre visitantes com foto, documento e reconhecimento facial. QR Code de acesso enviado por WhatsApp.", profiles: ["portaria"] as ProfileKey[] },
   { icon: ShieldCheck, title: "Autorizações Prévias", desc: "Moradores pré-autorizam visitantes pelo app. Porteiro já sabe quem pode entrar antes de chegar.", profiles: ["portaria", "morador"] as ProfileKey[] },
   { icon: Car, title: "Controle de Veículos", desc: "Cadastro com leitura automática de placas (OCR). Entrada e saída registradas. Morador acompanha pelo app.", profiles: ["portaria", "morador"] as ProfileKey[] },
   { icon: Package, title: "Correspondências", desc: "Registro de encomendas com foto. Morador recebe aviso no WhatsApp na hora. Controle de retirada.", profiles: ["portaria", "morador"] as ProfileKey[] },
   { icon: Truck, title: "Delivery", desc: "Morador avisa que espera delivery. Porteiro já tem o código. Notificação automática quando chegar.", profiles: ["portaria", "morador"] as ProfileKey[] },
-  { icon: Phone, title: "Interfone Digital", desc: "QR Code por bloco. Visitante escaneia e liga direto pro morador com vídeo. 3 níveis de segurança configuráveis.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[] },
   { icon: Navigation, title: "Estou Chegando", desc: "Morador avisa que está chegando via GPS. Porteiro recebe alerta sonoro em tempo real com mapa, veículo e distância.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[] },
-  { icon: DoorOpen, title: "Portaria Virtual (IoT)", desc: "Abra portões e portas dos blocos pelo app com ESP32 + relé. Multi-portão. Sem fio. Instalação simples.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[], badge: "+R$200/mês" },
   { icon: BookOpen, title: "Livro de Protocolo", desc: "Registro digital com assinatura na tela. Gera PDF oficial. Síndico e administradora acompanham em tempo real.", profiles: ["portaria"] as ProfileKey[] },
   { icon: Camera, title: "Espelho de Portaria", desc: "Monitore tudo que acontece na portaria em tempo real, de qualquer lugar. Visão completa para o síndico.", profiles: ["portaria", "sindico"] as ProfileKey[] },
-  { icon: Monitor, title: "Monitoramento de Câmeras", desc: "Câmeras RTSP em tempo real. Grade multi-câmera com snapshot automático. Configure pelo painel do síndico.", profiles: ["portaria", "sindico"] as ProfileKey[] },
   { icon: Route, title: "Controle de Rondas", desc: "Rondas com checkpoints QR Code, registro fotográfico e geolocalização. Relatório automático para o síndico.", profiles: ["portaria", "sindico"] as ProfileKey[] },
   { icon: ScanLine, title: "QR Scanner de Visitantes", desc: "Leia o QR Code do visitante e valide a autorização instantaneamente. Rápido, seguro e sem papel.", profiles: ["portaria"] as ProfileKey[] },
   { icon: Building2, title: "Gestão de Condomínio", desc: "Cadastre blocos, moradores e funcionários. Multi-perfil e multi-condomínio. Tudo centralizado.", profiles: ["sindico"] as ProfileKey[] },
   { icon: BarChart3, title: "Relatórios e Dashboards", desc: "Relatórios em PDF + dashboards visuais com gráficos de visitantes, veículos, rondas e correspondências.", profiles: ["sindico"] as ProfileKey[] },
   { icon: Cog, title: "Configuração de Features", desc: "Ative ou desative funcionalidades por condomínio. Personalize o sistema conforme a necessidade.", profiles: ["sindico"] as ProfileKey[] },
-  { icon: Eye, title: "Leitura de Placa Veicular por Câmera IP", desc: "Câmera IP lê a placa automaticamente na entrada e saída. Identifica veículos cadastrados e libera acesso sem interação manual. Pelo celular já incluso no plano.", profiles: ["portaria", "sindico"] as ProfileKey[], badge: "+R$200/mês" },
-  { icon: Fingerprint, title: "Biometria Facial por Câmera IP", desc: "Reconhecimento facial via câmera IP na entrada do condomínio. Identificação automática sem contato. Pelo celular já incluso no plano.", profiles: ["portaria", "sindico"] as ProfileKey[], badge: "+R$200/mês" },
+];
+
+const extraFeatures = [
+  { icon: Phone, title: "Interfone Digital", desc: "QR Code por bloco. Visitante escaneia e liga direto pro morador com vídeo. 3 níveis de segurança configuráveis.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[] },
+  { icon: Monitor, title: "Monitoramento de Câmeras", desc: "Câmeras RTSP em tempo real. Grade multi-câmera com snapshot automático. Configure pelo painel do síndico.", profiles: ["portaria", "sindico"] as ProfileKey[] },
+  { icon: DoorOpen, title: "Portaria Virtual (IoT)", desc: "Abra portões e portas dos blocos pelo app com ESP32 + relé. Multi-portão. Sem fio. Instalação simples.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[] },
+  { icon: Eye, title: "Leitura de Placa Veicular por Câmera IP", desc: "Câmera IP lê a placa automaticamente na entrada e saída. Identifica veículos cadastrados e libera acesso sem interação manual. Pelo celular já incluso no plano.", profiles: ["portaria", "sindico"] as ProfileKey[] },
+  { icon: Fingerprint, title: "Biometria Facial por Câmera IP", desc: "Reconhecimento facial via câmera IP na entrada do condomínio. Identificação automática sem contato. Pelo celular já incluso no plano.", profiles: ["portaria", "sindico"] as ProfileKey[] },
 ];
 
 const planFeatures = [
@@ -53,15 +56,8 @@ const planFeatures = [
 ];
 
 const plans = [
-  { name: "Plano", subtitle: "Até 199 unidades", price: "199" },
-  { name: "Plano", subtitle: "200 a 300 unidades", price: "249" },
-  { name: "Plano", subtitle: "Acima de 300 unidades", price: "299" },
-];
-
-const addons = [
-  { icon: DoorOpen, title: "Portaria Virtual (IoT)", price: "R$200" },
-  { icon: Eye, title: "Leitura de Placa por Câmera IP", price: "R$200" },
-  { icon: Fingerprint, title: "Biometria Facial por Câmera IP", price: "R$200" },
+  { name: "Plano", price: "199" },
+  { name: "Plano", price: "299" },
 ];
 
 const faqs = [
@@ -84,7 +80,7 @@ export default function ApresentacaoPage() {
 
   const handleWhatsApp = () => {
     const text = encodeURIComponent(`Conheça o Portaria X — Portaria Inteligente para Condomínios!\n\n${SITE_URL}`);
-    window.open(`https://wa.me/?text=${text}`, "_blank");
+    globalThis.open(`https://wa.me/?text=${text}`, "_blank");
   };
 
   // Shared styles
@@ -120,7 +116,7 @@ export default function ApresentacaoPage() {
           <ArrowLeft style={{ width: "18px", height: "18px" }} /> Voltar
         </button>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          <button onClick={() => window.print()} style={{
+          <button onClick={() => globalThis.print()} style={{
             display: "flex", alignItems: "center", gap: "6px",
             padding: "10px 20px", borderRadius: "10px",
             background: "linear-gradient(135deg, #0062d1, #003580)", border: "none",
@@ -151,33 +147,94 @@ export default function ApresentacaoPage() {
           CAPA / HEADER
       ═══════════════════════════════════ */}
       <section style={{
+        minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center",
+        alignItems: "center", textAlign: "center", padding: "120px 24px 80px",
         background: "linear-gradient(135deg, #001533 0%, #002a66 40%, #003580 70%, #004aad 100%)",
-        padding: "80px 32px", textAlign: "center", color: "#ffffff",
+        position: "relative", overflow: "hidden", color: "#ffffff",
       }}>
-        <img src="/logo.png" alt="Portaria X" style={{ width: "100px", height: "100px", borderRadius: "20px", marginBottom: "24px", objectFit: "cover", border: "3px solid #ffffff" }} />
-        <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 900, lineHeight: 1.15, marginBottom: "16px" }}>
+        {/* Decorative orbs */}
+        <div style={{ position: "absolute", top: "-120px", left: "-80px", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,98,209,0.2), transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "-120px", right: "-80px", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%)", pointerEvents: "none" }} />
+
+        <img src="/logo.png" alt="Portaria X" style={{ width: "120px", height: "120px", borderRadius: "24px", marginBottom: "28px", objectFit: "cover", border: "3px solid #ffffff" }} />
+
+        <h1 style={{
+          fontSize: "clamp(2.2rem, 5vw, 4rem)", fontWeight: 900, lineHeight: 1.1,
+          maxWidth: "800px", marginBottom: "24px",
+          background: "linear-gradient(135deg, #fff 0%, #c7d2fe 50%, #818cf8 100%)",
+          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+        }}>
           Portaria X<br />Portaria Inteligente para o seu Condomínio
         </h1>
-        <p style={{ fontSize: "17px", color: "rgba(255,255,255,0.8)", maxWidth: "600px", margin: "0 auto 32px", lineHeight: 1.7 }}>
-          Visitantes, veículos, correspondências, delivery, protocolo digital e portaria virtual — tudo em um só sistema.
-          <strong style={{ color: "#ffffff" }}> Funciona no celular, tablet e computador.</strong>
+
+        <p style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)", color: "rgba(255,255,255,0.7)", maxWidth: "600px", lineHeight: 1.7, marginBottom: "40px" }}>
+          Visitantes, veículos, correspondências, delivery, protocolo digital e portaria virtual — tudo em um só sistema.{" "}
+          <strong style={{ color: "#ffffff" }}>Funciona no celular, tablet e computador.</strong>
         </p>
-        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-          {[
-            { icon: Fingerprint, label: "Biometria Facial" },
-            { icon: DoorOpen, label: "Portaria Virtual (IoT)" },
-            { icon: MessageCircle, label: "Integrado ao WhatsApp" },
-          ].map((b) => (
-            <div key={b.label} style={{
+
+        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Olá! Gostaria de testar o Portaria X gratuitamente.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: "16px 32px", borderRadius: "14px",
+              border: "2px solid #003580", background: "#ffffff",
+              color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
               display: "flex", alignItems: "center", gap: "8px",
-              border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: "10px",
-              padding: "10px 20px", fontSize: "14px", fontWeight: 600, color: "#ffffff",
+              textDecoration: "none",
+            }}
+          >
+            Testar Grátis por 7 Dias <ArrowRight style={{ width: "18px", height: "18px", color: "#003580" }} />
+          </a>
+          <a
+            href={SITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: "16px 32px", borderRadius: "14px",
+              border: "2px solid #ffffff", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
+              color: "#ffffff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
+              display: "flex", alignItems: "center", gap: "8px",
+              textDecoration: "none",
+            }}
+          >
+            <Lock style={{ width: "18px", height: "18px", color: "#ffffff" }} /> Acessar Plataforma
+          </a>
+        </div>
+
+        {/* Highlight features */}
+        <div style={{ marginTop: "48px", display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
+          {[
+            { icon: Fingerprint, text: "Biometria Facial", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
+            { icon: DoorOpen, text: "Portaria Virtual (IoT)", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+            { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+          ].map((b) => (
+            <div key={b.text} style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              background: b.bg, border: `2px solid ${b.border}`,
+              borderRadius: "14px", padding: "12px 28px",
+              fontSize: "15px", fontWeight: 600, color: b.textColor,
+              minWidth: "220px", justifyContent: "center",
             }}>
-              <b.icon style={{ width: "18px", height: "18px" }} /> {b.label}
+              <b.icon style={{ width: "20px", height: "20px", color: b.iconColor }} /> {b.text}
             </div>
           ))}
         </div>
-        <p style={{ marginTop: "24px", fontSize: "14px", color: "rgba(255,255,255,0.5)" }}>www.portariax.com.br</p>
+
+        {/* Trust badges */}
+        <div style={{ marginTop: "32px", display: "flex", gap: "32px", flexWrap: "wrap", justifyContent: "center", opacity: 0.6 }}>
+          {[
+            { icon: Lock, text: "Dados criptografados" },
+            { icon: Wifi, text: "100% na nuvem" },
+            { icon: Eye, text: "Monitoramento em tempo real" },
+            { icon: Bell, text: "Notificações automáticas" },
+          ].map((b) => (
+            <div key={b.text} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>
+              <b.icon style={{ width: "16px", height: "16px" }} /> {b.text}
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ═══════════════════════════════════
@@ -200,23 +257,76 @@ export default function ApresentacaoPage() {
           </div>
         </div>
 
+        {/* ── Funções Padrão ── */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px",
+          padding: "14px 20px", borderRadius: "14px",
+          background: "linear-gradient(135deg, rgba(0,53,128,0.06), rgba(0,53,128,0.02))",
+          border: "1.5px solid rgba(0,53,128,0.12)",
+        }}>
+          <Star style={{ width: "20px", height: "20px", color: "#003580" }} />
+          <div>
+            <h3 style={{ fontWeight: 800, fontSize: "16px", color: "#003580", margin: 0 }}>Funções Incluídas no Plano</h3>
+            <p style={{ fontSize: "12px", color: "#336699", margin: 0 }}>Disponíveis para todos os condomínios — {standardFeatures.length} funcionalidades</p>
+          </div>
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
-          {allFeatures.map((f) => {
+          {standardFeatures.map((f) => {
             const Icon = f.icon;
             return (
               <div key={f.title} className="print-section" style={{
                 border: "1.5px solid #e2e8f0", borderRadius: "14px", padding: "22px",
                 display: "flex", flexDirection: "column", position: "relative",
               }}>
-                {f.badge && (
-                  <span style={{
-                    position: "absolute", top: "10px", right: "10px",
-                    border: "1.5px solid #003580", color: "#003580", fontSize: "11px",
-                    fontWeight: 700, padding: "2px 8px", borderRadius: "999px",
-                  }}>
-                    {f.badge}
-                  </span>
-                )}
+                <div style={{
+                  width: "40px", height: "40px", borderRadius: "10px",
+                  background: "rgba(0,53,128,0.08)", display: "flex", alignItems: "center",
+                  justifyContent: "center", marginBottom: "12px",
+                }}>
+                  <Icon style={{ width: "20px", height: "20px", color: "#003580" }} />
+                </div>
+                <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#003580", marginBottom: "6px" }}>{f.title}</h3>
+                <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, flex: 1 }}>{f.desc}</p>
+                <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", marginTop: "12px", paddingTop: "10px", borderTop: "1px solid #f1f5f9" }}>
+                  {f.profiles.map((pk) => {
+                    const pr = PROFILES[pk]; const PrIcon = pr.icon;
+                    return (
+                      <div key={pk} style={{ display: "flex", alignItems: "center", gap: "4px", background: pr.bg, padding: "3px 8px", borderRadius: "999px" }}>
+                        <PrIcon style={{ width: "11px", height: "11px", color: "#fff" }} />
+                        <span style={{ fontSize: "10px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ── Funções Extras ── */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: "10px", marginTop: "48px", marginBottom: "20px",
+          padding: "14px 20px", borderRadius: "14px",
+          background: "linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.02))",
+          border: "1.5px dashed rgba(124,58,237,0.25)",
+        }}>
+          <Cpu style={{ width: "20px", height: "20px", color: "#7c3aed" }} />
+          <div>
+            <h3 style={{ fontWeight: 800, fontSize: "16px", color: "#7c3aed", margin: 0 }}>Módulos Extras</h3>
+            <p style={{ fontSize: "12px", color: "#8b5cf6", margin: 0 }}>Funcionalidades adicionais contratadas à parte — {extraFeatures.length} módulos</p>
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+          {extraFeatures.map((f) => {
+            const Icon = f.icon;
+            return (
+              <div key={f.title} className="print-section" style={{
+                border: "1.5px solid #e2e8f0", borderRadius: "14px", padding: "22px",
+                display: "flex", flexDirection: "column", position: "relative",
+              }}>
+
                 <div style={{
                   width: "40px", height: "40px", borderRadius: "10px",
                   background: "rgba(0,53,128,0.08)", display: "flex", alignItems: "center",
@@ -310,9 +420,16 @@ export default function ApresentacaoPage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" }}>
           {BRANDS.map((brand) => {
-            const diffColor = brand.difficulty <= 3 ? "#10b981" : brand.difficulty <= 5 ? "#f59e0b" : brand.difficulty <= 7 ? "#f97316" : "#ef4444";
-            const diffLabel = brand.difficulty <= 3 ? "Fácil" : brand.difficulty <= 5 ? "Moderado" : brand.difficulty <= 7 ? "Avançado" : "Expert";
-            const IntegIcon = brand.integrationType === "cloud" ? Globe : brand.integrationType === "local" ? Wifi : Signal;
+            let diffColor: string;
+            let diffLabel: string;
+            if (brand.difficulty <= 3) { diffColor = "#10b981"; diffLabel = "Fácil"; }
+            else if (brand.difficulty <= 5) { diffColor = "#f59e0b"; diffLabel = "Moderado"; }
+            else if (brand.difficulty <= 7) { diffColor = "#f97316"; diffLabel = "Avançado"; }
+            else { diffColor = "#ef4444"; diffLabel = "Expert"; }
+            let IntegIcon: typeof Globe;
+            if (brand.integrationType === "cloud") IntegIcon = Globe;
+            else if (brand.integrationType === "local") IntegIcon = Wifi;
+            else IntegIcon = Signal;
             return (
               <div key={brand.id} className="print-section" style={{
                 border: "1.5px solid #e2e8f0", borderRadius: "14px", padding: "20px",
@@ -357,13 +474,13 @@ export default function ApresentacaoPage() {
           <p style={sectionSub}>Teste grátis por 7 dias. Sem taxa de implantação. Sem fidelidade. Cancele quando quiser.</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "20px", maxWidth: "960px", margin: "0 auto" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px", maxWidth: "960px", margin: "0 auto" }}>
           {plans.map((plan) => (
             <div key={`${plan.name}-${plan.price}`} className="print-section" style={{
               border: "2px solid #003580", borderRadius: "16px", padding: "28px 24px",
+              width: "100%", maxWidth: "360px",
             }}>
-              <h3 style={{ fontWeight: 800, fontSize: "18px", color: "#003580", marginBottom: "2px" }}>{plan.name}</h3>
-              <p style={{ fontSize: "13px", color: "#336699", marginBottom: "16px" }}>{plan.subtitle}</p>
+              <h3 style={{ fontWeight: 800, fontSize: "18px", color: "#003580", marginBottom: "16px" }}>{plan.name}</h3>
               <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginBottom: "20px" }}>
                 <span style={{ fontSize: "14px", color: "#003580" }}>R$</span>
                 <span style={{ fontSize: "44px", fontWeight: 900, color: "#003580", lineHeight: 1 }}>{plan.price}</span>
@@ -380,22 +497,7 @@ export default function ApresentacaoPage() {
           ))}
         </div>
 
-        {/* Addons */}
-        <div style={{ maxWidth: "700px", margin: "32px auto 0", display: "flex", flexDirection: "column", gap: "12px" }}>
-          <h3 style={{ textAlign: "center", fontWeight: 800, fontSize: "18px", color: "#003580", marginBottom: "8px" }}>Módulos Adicionais</h3>
-          {addons.map((a, i) => (
-            <div key={i} className="print-section" style={{
-              display: "flex", alignItems: "center", gap: "16px", padding: "16px 20px",
-              border: "2px solid #003580", borderRadius: "12px",
-            }}>
-              <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "rgba(0,53,128,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <a.icon style={{ width: "20px", height: "20px", color: "#003580" }} />
-              </div>
-              <span style={{ flex: 1, fontWeight: 700, fontSize: "15px", color: "#003580" }}>{a.title}</span>
-              <span style={{ fontWeight: 900, fontSize: "20px", color: "#003580" }}>+{a.price}<span style={{ fontSize: "13px", fontWeight: 600 }}>/mês</span></span>
-            </div>
-          ))}
-        </div>
+
       </section>
 
       <hr style={divider} />
@@ -408,8 +510,8 @@ export default function ApresentacaoPage() {
           <h2 style={sectionTitle}>Perguntas Frequentes</h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "700px", margin: "0 auto" }}>
-          {faqs.map((faq, i) => (
-            <div key={i} className="print-section" style={{ border: "1.5px solid #e2e8f0", borderRadius: "12px", overflow: "hidden" }}>
+          {faqs.map((faq) => (
+            <div key={faq.q} className="print-section" style={{ border: "1.5px solid #e2e8f0", borderRadius: "12px", overflow: "hidden" }}>
               <div style={{ background: "#f8fafc", padding: "14px 18px", fontWeight: 700, fontSize: "15px", color: "#003580" }}>
                 {faq.q}
               </div>
@@ -452,7 +554,7 @@ export default function ApresentacaoPage() {
         padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "center",
         gap: "10px", flexWrap: "wrap",
       }}>
-        <button onClick={() => window.print()} style={{
+        <button onClick={() => globalThis.print()} style={{
           display: "flex", alignItems: "center", gap: "6px",
           padding: "12px 24px", borderRadius: "10px",
           background: "linear-gradient(135deg, #0062d1, #003580)", border: "none",

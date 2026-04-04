@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from "react";
 import { apiFetch, setToken, clearToken } from "@/lib/api";
 import { initPushNotifications, unregisterPushToken } from "@/lib/pushNotifications";
 import { isDemoMode, setDemoMode } from "@/hooks/useDemoGuard";
@@ -96,7 +96,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(isDemoMode());
@@ -205,8 +205,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const value = useMemo(() => ({ user, isLoading, isDemo, login, loginDemo, registerMorador, registerCondominio, logout }), [user, isLoading, isDemo]);
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, isDemo, login, loginDemo, registerMorador, registerCondominio, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

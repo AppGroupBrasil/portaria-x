@@ -255,7 +255,7 @@ export default function SindicoEstouChegandoConfig() {
           </p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs block" style={{ color: p.textSecondary, marginBottom: "12px" }}>Início</label>
+              <span className="text-xs block" style={{ color: p.textSecondary, marginBottom: "12px" }}>Início</span>
               <div className="relative">
                 <input
                   type="time"
@@ -268,7 +268,7 @@ export default function SindicoEstouChegandoConfig() {
               </div>
             </div>
             <div>
-              <label className="text-xs block" style={{ color: p.textSecondary, marginBottom: "12px" }}>Fim</label>
+              <span className="text-xs block" style={{ color: p.textSecondary, marginBottom: "12px" }}>Fim</span>
               <div className="relative">
                 <input
                   type="time"

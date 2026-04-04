@@ -200,7 +200,7 @@ export default function MasterGuiaInstalacao() {
   const [copied, setCopied] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
 
-  const guideUrl = `${window.location.origin}/master/guia-instalacao`;
+  const guideUrl = `${globalThis.window.location.origin}/master/guia-instalacao`;
 
   const copyLink = async () => {
     try {
@@ -221,7 +221,7 @@ export default function MasterGuiaInstalacao() {
   };
 
   const handlePrint = () => {
-    window.print();
+    globalThis.print();
   };
 
   const bg = isDark

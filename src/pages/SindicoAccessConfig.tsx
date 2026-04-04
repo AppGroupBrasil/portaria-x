@@ -538,7 +538,7 @@ export default function SindicoAccessConfig() {
                     {/* Device assignment (if devices loaded) */}
                     {devices.length > 0 && (
                       <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(0, 53, 128, 0.05)" }}>
-                        <label className="text-xs mb-1 block" style={{ color: "#64748b" }}>Dispositivo smart switch:</label>
+                        <span className="text-xs mb-1 block" style={{ color: "#64748b" }}>Dispositivo smart switch:</span>
                         <select
                           value={ap.device_id || ""}
                           onChange={(e) => {
@@ -564,10 +564,10 @@ export default function SindicoAccessConfig() {
                           if (!dev || dev.channelCount <= 1) return null;
                           return (
                             <div className="mt-2">
-                              <label className="text-xs mb-1 block" style={{ color: "#64748b" }}>Canal (saída do relê):</label>
+                              <span className="text-xs mb-1 block" style={{ color: "#64748b" }}>Canal (saída do relê):</span>
                               <select
                                 value={ap.channel ?? 0}
-                                onChange={(e) => assignDevice(ap.id, ap.device_id!, parseInt(e.target.value))}
+                                onChange={(e) => assignDevice(ap.id, ap.device_id!, Number.parseInt(e.target.value))}
                                 disabled={isSaving}
                                 className="w-full rounded-lg px-3 py-2 text-sm"
                                 style={{ background: "#f8fafc", border: "1px solid rgba(0, 53, 128, 0.1)", color: "#003580" }}
@@ -628,8 +628,8 @@ export default function SindicoAccessConfig() {
 
         {/* ─── Edit Modal ────────────────────────────── */}
         {editingAP && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: "rgba(241,245,249,0.92)", backdropFilter: "blur(8px)" }} onClick={() => setEditingAP(null)}>
-            <div className="w-full max-w-md overflow-hidden" style={{ borderRadius: 20, boxShadow: "0 25px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.06)", border: "1px solid rgba(0,53,128,0.08)" }} onClick={(e) => e.stopPropagation()}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: "rgba(241,245,249,0.92)", backdropFilter: "blur(8px)" }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => setEditingAP(null))(); } }} onClick={() => setEditingAP(null)}>
+            <div className="w-full max-w-md overflow-hidden" style={{ borderRadius: 20, boxShadow: "0 25px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.06)", border: "1px solid rgba(0,53,128,0.08)" }} role="dialog">
               {/* Header bar */}
               <div style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "20px 24px" }}>
                 <div className="flex items-center justify-between">
@@ -649,7 +649,7 @@ export default function SindicoAccessConfig() {
               <div style={{ background: "#ffffff", padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
                 {/* Name */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</span>
                   <input
                     value={editForm.name}
                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
@@ -660,7 +660,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Icon */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</span>
                   <div className="flex gap-2 flex-wrap">
                     {ICON_OPTIONS.map((opt) => (
                       <button
@@ -681,7 +681,7 @@ export default function SindicoAccessConfig() {
                 {/* Pulse duration */}
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</label>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</span>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#003580", background: "#eef2ff", padding: "2px 10px", borderRadius: 20 }}>{editForm.pulse_duration}ms</span>
                   </div>
                   <input
@@ -690,7 +690,7 @@ export default function SindicoAccessConfig() {
                     max={5000}
                     step={100}
                     value={editForm.pulse_duration}
-                    onChange={(e) => setEditForm({ ...editForm, pulse_duration: parseInt(e.target.value) })}
+                    onChange={(e) => setEditForm({ ...editForm, pulse_duration: Number.parseInt(e.target.value) })}
                     className="w-full"
                     style={{ accentColor: "#003580" }}
                   />
@@ -698,7 +698,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Allowed roles */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</span>
                   <div className="flex gap-2 flex-wrap">
                     {ROLE_OPTIONS.map((role) => {
                       const active = editForm.allowed_roles.includes(role.value);
@@ -729,7 +729,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Allow manual open toggle */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Abertura por biometria do celular</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Abertura por biometria do celular</span>
                   <button
                     onClick={() => setEditForm({ ...editForm, allow_manual_open: !editForm.allow_manual_open })}
                     style={{
@@ -761,7 +761,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Botoeira for Morador */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Morador</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Morador</span>
                   <button
                     onClick={() => setEditForm({ ...editForm, allow_botoeira_morador: !editForm.allow_botoeira_morador })}
                     style={{
@@ -793,7 +793,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Botoeira for Portaria */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Portaria</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Portaria</span>
                   <button
                     onClick={() => setEditForm({ ...editForm, allow_botoeira_portaria: !editForm.allow_botoeira_portaria })}
                     style={{
@@ -840,8 +840,8 @@ export default function SindicoAccessConfig() {
 
         {/* ─── New AP Modal ──────────────────────────── */}
         {showNew && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: "rgba(241,245,249,0.92)", backdropFilter: "blur(8px)" }} onClick={() => setShowNew(false)}>
-            <div className="w-full max-w-md overflow-hidden" style={{ borderRadius: 20, boxShadow: "0 25px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.06)", border: "1px solid rgba(0,53,128,0.08)" }} onClick={(e) => e.stopPropagation()}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: "rgba(241,245,249,0.92)", backdropFilter: "blur(8px)" }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => setShowNew(false))(); } }} onClick={() => setShowNew(false)}>
+            <div className="w-full max-w-md overflow-hidden" style={{ borderRadius: 20, boxShadow: "0 25px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.06)", border: "1px solid rgba(0,53,128,0.08)" }} role="dialog">
               {/* Header bar */}
               <div style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "20px 24px" }}>
                 <div className="flex items-center justify-between">
@@ -861,7 +861,7 @@ export default function SindicoAccessConfig() {
               <div style={{ background: "#ffffff", padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
                 {/* Name */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</span>
                   <input
                     value={newForm.name}
                     onChange={(e) => setNewForm({ ...newForm, name: e.target.value })}
@@ -873,7 +873,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Icon */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</span>
                   <div className="flex gap-2 flex-wrap">
                     {ICON_OPTIONS.map((opt) => (
                       <button
@@ -894,7 +894,7 @@ export default function SindicoAccessConfig() {
                 {/* Pulse duration */}
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</label>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</span>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#003580", background: "#eef2ff", padding: "2px 10px", borderRadius: 20 }}>{newForm.pulse_duration}ms</span>
                   </div>
                   <input
@@ -903,7 +903,7 @@ export default function SindicoAccessConfig() {
                     max={5000}
                     step={100}
                     value={newForm.pulse_duration}
-                    onChange={(e) => setNewForm({ ...newForm, pulse_duration: parseInt(e.target.value) })}
+                    onChange={(e) => setNewForm({ ...newForm, pulse_duration: Number.parseInt(e.target.value) })}
                     className="w-full"
                     style={{ accentColor: "#003580" }}
                   />
@@ -911,7 +911,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Allowed roles */}
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</label>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</span>
                   <div className="flex gap-2 flex-wrap">
                     {ROLE_OPTIONS.map((role) => {
                       const active = newForm.allowed_roles.includes(role.value);

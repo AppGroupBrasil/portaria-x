@@ -167,7 +167,7 @@ export default function VeiculosPorteiro() {
           setUniquePlateEnabled(cfg.vehicle_unique_access === "true");
           setAutoCancelTime(cfg.vehicle_auto_cancel_time || "");
           setLimitPerAptEnabled(cfg.vehicle_limit_per_apt === "true");
-          if (cfg.vehicle_limit_per_apt_count) setLimitPerAptCount(parseInt(cfg.vehicle_limit_per_apt_count) || 3);
+          if (cfg.vehicle_limit_per_apt_count) setLimitPerAptCount(Number.parseInt(cfg.vehicle_limit_per_apt_count) || 3);
           setReqModelo(cfg.vehicle_require_modelo === "true");
           setReqCor(cfg.vehicle_require_cor === "true");
           setReqMotorista(cfg.vehicle_require_motorista === "true");
@@ -276,7 +276,7 @@ export default function VeiculosPorteiro() {
 
   // ── Auto-search plate in DB ──
   const searchPlateInDb = useCallback(async (plateValue: string) => {
-    const clean = plateValue.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const clean = plateValue.toUpperCase().replaceAll(/[^A-Z0-9]/g, "");
     if (clean.length < 3) { setPlateFound(null); setPlateNotFound(false); return; }
     setSearchingPlate(true);
     setPlateNotFound(false);
@@ -316,7 +316,7 @@ export default function VeiculosPorteiro() {
 
   // Explicit search button handler
   const handleBuscarPlaca = useCallback(() => {
-    const clean = placa.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const clean = placa.toUpperCase().replaceAll(/[^A-Z0-9]/g, "");
     if (clean.length >= 3) searchPlateInDb(clean);
   }, [placa, searchPlateInDb]);
 
@@ -371,9 +371,9 @@ export default function VeiculosPorteiro() {
       if (!res.ok) { setFormError(data.error || "Erro ao cadastrar."); setSaving(false); return; }
 
       // Build WhatsApp URL
-      const phone = data.morador_phone || (moradorPhone ? moradorPhone.replace(/\D/g, "") : null);
+      const phone = data.morador_phone || (moradorPhone ? moradorPhone.replaceAll(/\D/g, "") : null);
       const approvalUrl = `${APP_ORIGIN}/veiculo/aprovar/${data.token}`;
-      const cleanPhone = phone ? phone.replace(/\D/g, "") : "";
+      const cleanPhone = phone ? phone.replaceAll(/\D/g, "") : "";
       const fullPhone = cleanPhone && !cleanPhone.startsWith("55") ? `55${cleanPhone}` : cleanPhone;
       const msg =
         `*Solicitacao de Acesso de Veiculo*\n\n` +
@@ -389,7 +389,7 @@ export default function VeiculosPorteiro() {
         : `https://wa.me/?text=${encodeURIComponent(msg)}`;
 
       // Auto-open WhatsApp
-      window.open(waUrl, "_blank");
+      globalThis.open(waUrl, "_blank");
 
       resetForm();
       setShowForm(false);
@@ -444,7 +444,7 @@ export default function VeiculosPorteiro() {
   // ── Solicitar Liberação de Saída → WhatsApp ──
   const buildExitWhatsAppUrl = (v: VehicleAuth) => {
     if (!v.morador_phone) return null;
-    const phone = v.morador_phone.replace(/\D/g, "");
+    const phone = v.morador_phone.replaceAll(/\D/g, "");
     const fullPhone = phone.startsWith("55") ? phone : `55${phone}`;
     const msg =
       `*Solicitacao de Saida de Veiculo*\n\n` +
@@ -471,7 +471,7 @@ export default function VeiculosPorteiro() {
         fetchVehicles();
         if (waUrl) {
           setTimeout(() => {
-            window.location.href = waUrl;
+            globalThis.window.location.href = waUrl;
           }, 300);
         }
       }
@@ -511,8 +511,8 @@ export default function VeiculosPorteiro() {
   };
 
   const callMorador = (phone: string) => {
-    const clean = phone.replace(/\D/g, "");
-    window.location.href = `tel:${clean}`;
+    const clean = phone.replaceAll(/\D/g, "");
+    globalThis.window.location.href = `tel:${clean}`;
   };
 
   const isExpired = (v: VehicleAuth) => new Date() > new Date(v.data_fim + "T23:59:59");
@@ -1013,7 +1013,7 @@ export default function VeiculosPorteiro() {
 
             {/* Placa + Buscar */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Placa *</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Placa *</span>
               <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
                 <input type="text" value={placa} onChange={(e) => handlePlacaChange(e.target.value)} placeholder="ABC1D23"
                   maxLength={7}
@@ -1027,14 +1027,14 @@ export default function VeiculosPorteiro() {
                 <button
                   type="button"
                   onClick={handleBuscarPlaca}
-                  disabled={searchingPlate || placa.replace(/[^A-Za-z0-9]/g, "").length < 3}
+                  disabled={searchingPlate || placa.replaceAll(/[^A-Za-z0-9]/g, "").length < 3}
                   style={{
                     padding: "0 20px", borderRadius: "12px", border: "none",
                     background: searchingPlate ? "#94a3b8" : "#003580",
                     color: "#fff", fontWeight: 700, fontSize: "14px", cursor: searchingPlate ? "wait" : "pointer",
                     display: "flex", alignItems: "center", gap: "6px", whiteSpace: "nowrap",
                     boxShadow: "0 2px 8px rgba(14,165,233,0.3)",
-                    opacity: placa.replace(/[^A-Za-z0-9]/g, "").length < 3 ? 0.5 : 1,
+                    opacity: placa.replaceAll(/[^A-Za-z0-9]/g, "").length < 3 ? 0.5 : 1,
                     transition: "opacity 0.2s",
                   }}
                 >
@@ -1119,12 +1119,12 @@ export default function VeiculosPorteiro() {
             {/* Modelo + Cor */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Modelo{reqModelo ? " *" : ""}</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Modelo{reqModelo ? " *" : ""}</span>
                 <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ex: Civic, Onix..."
                   style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
               </div>
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Cor{reqCor ? " *" : ""}</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Cor{reqCor ? " *" : ""}</span>
                 <input type="text" value={cor} onChange={(e) => setCor(e.target.value)} placeholder="Ex: Preto, Branco..."
                   style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
               </div>
@@ -1132,14 +1132,14 @@ export default function VeiculosPorteiro() {
 
             {/* Motorista */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Nome do Motorista{reqMotorista ? " *" : ""}</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Nome do Motorista{reqMotorista ? " *" : ""}</span>
               <input type="text" value={motorista} onChange={(e) => setMotorista(e.target.value)} placeholder="Nome completo do motorista"
                 style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
             </div>
 
             {/* Bloco */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Bloco *</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Bloco *</span>
               <select
                 value={bloco}
                 onChange={(e) => {
@@ -1160,7 +1160,7 @@ export default function VeiculosPorteiro() {
             {/* Morador (dropdown com busca) */}
             {bloco && moradores.length > 0 && (
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Morador</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Morador</span>
                 <SearchableSelect
                   value={selectedMoradorId}
                   onChange={(val) => handleSelectMorador(val)}
@@ -1178,7 +1178,7 @@ export default function VeiculosPorteiro() {
             {/* Apartamento — só aparece se NÃO selecionou morador (fallback manual) */}
             {!selectedMoradorId && (
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Apartamento *</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Apartamento *</span>
                 <input type="text" value={apartamento} onChange={(e) => setApartamento(e.target.value)} placeholder="Ex: 101"
                   style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
               </div>
@@ -1186,7 +1186,7 @@ export default function VeiculosPorteiro() {
 
             {/* Observação */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Observação{reqObservacao ? " *" : " (portaria)"}</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Observação{reqObservacao ? " *" : " (portaria)"}</span>
               <textarea value={observacao} onChange={(e) => setObservacao(e.target.value)} placeholder="Informações adicionais..."
                 rows={3}
                 style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box", resize: "vertical" }} />
@@ -1559,9 +1559,9 @@ export default function VeiculosPorteiro() {
 
             {/* Approval link */}
             <div style={{ marginBottom: "16px" }}>
-              <label style={{ fontWeight: 600, fontSize: "12px", color: "#475569", marginBottom: "6px", display: "block" }}>
+              <span style={{ fontWeight: 600, fontSize: "12px", color: "#475569", marginBottom: "6px", display: "block" }}>
                 Link de aprovação:
-              </label>
+              </span>
               <div style={{
                 display: "flex", alignItems: "center", gap: "8px",
                 padding: "10px 12px", borderRadius: "10px", background: "#f1f5f9",
@@ -1588,7 +1588,7 @@ export default function VeiculosPorteiro() {
             {/* Buttons */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <button
-                onClick={() => { window.open(whatsappModal.waUrl, "_blank"); }}
+                onClick={() => { globalThis.open(whatsappModal.waUrl, "_blank"); }}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
                   padding: "14px", borderRadius: "14px", background: "#25d366",

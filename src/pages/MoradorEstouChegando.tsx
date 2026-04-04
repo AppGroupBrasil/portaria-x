@@ -13,7 +13,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { apiFetch, getToken } from "@/lib/api";
 import { buildWsUrl } from "@/lib/config";
@@ -25,7 +24,6 @@ import {
   Car,
   Loader2,
   Check,
-  X,
   Clock,
   Wifi,
   WifiOff,
@@ -54,7 +52,6 @@ const STORAGE_KEY_VEHICLE_TYPE = "estou_chegando_vehicle_type";
 const STORAGE_KEY_AUTO_GATE = "estou_chegando_auto_gate";
 
 export default function MoradorEstouChegando() {
-  const { user } = useAuth();
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
 
@@ -75,7 +72,7 @@ export default function MoradorEstouChegando() {
 
   // Radius (persisted)
   const [radius, setRadius] = useState(
-    () => parseInt(localStorage.getItem(STORAGE_KEY_RADIUS) || "200")
+    () => Number.parseInt(localStorage.getItem(STORAGE_KEY_RADIUS) || "200")
   );
 
   // Auto-tracking toggle (persisted)
@@ -251,7 +248,7 @@ export default function MoradorEstouChegando() {
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         const ws = wsRef.current;
-        if (!ws || ws.readyState !== WebSocket.OPEN) return;
+        if (ws?.readyState !== WebSocket.OPEN) return;
 
         const vt = localStorage.getItem(STORAGE_KEY_VEHICLE_TYPE) || "proprio";
         const savedPlaca = localStorage.getItem(STORAGE_KEY_VEHICLE) || "";
@@ -273,7 +270,7 @@ export default function MoradorEstouChegando() {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
           vehicle_type: vt,
-          radius_meters: parseInt(localStorage.getItem(STORAGE_KEY_RADIUS) || "200"),
+          radius_meters: Number.parseInt(localStorage.getItem(STORAGE_KEY_RADIUS) || "200"),
           auto_open_gate: localStorage.getItem(STORAGE_KEY_AUTO_GATE) === "true",
           ...vehicleData,
         }));
@@ -297,7 +294,7 @@ export default function MoradorEstouChegando() {
       watchIdRef.current = null;
     }
     const ws = wsRef.current;
-    if (ws && ws.readyState === WebSocket.OPEN) {
+    if (ws?.readyState === WebSocket.OPEN) {
       if (eventId) ws.send(JSON.stringify({ type: "cancel-arrival" }));
       ws.close();
     }
@@ -439,11 +436,8 @@ export default function MoradorEstouChegando() {
                 <TBullet>Se for de <strong>Uber/Táxi</strong>, informe a placa para o porteiro identificar o veículo</TBullet>
               </TSection>
             </TutorialButton>
-            {wsConnected ? (
-              <Wifi className="w-4 h-4 text-emerald-400" />
-            ) : autoEnabled ? (
-              <WifiOff className="w-4 h-4 text-red-400" />
-            ) : null}
+            {wsConnected && <Wifi className="w-4 h-4 text-emerald-400" />}
+            {!wsConnected && autoEnabled && <WifiOff className="w-4 h-4 text-red-400" />}
           </div>
         </div>
       </header>
@@ -680,6 +674,18 @@ export default function MoradorEstouChegando() {
           </span>
         </button>
 
+        <p
+          style={{
+            marginTop: '-0.25rem',
+            fontSize: '0.75rem',
+            lineHeight: 1.5,
+            color: isDark ? '#93c5fd' : '#64748b',
+            padding: '0 0.25rem',
+          }}
+        >
+          Observação: o Portão Automático só será acionado quando o Rastreamento estiver ativo e você entrar no raio configurado.
+        </p>
+
         {showConfig && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }} className="animate-in fade-in duration-200">
             {/* Schedule info */}
@@ -695,9 +701,9 @@ export default function MoradorEstouChegando() {
 
             {/* Radius slider */}
             <div>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b", display: 'block', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b", display: 'block', marginBottom: '0.5rem' }}>
                 Raio de detecção: <span style={{ color: isDark ? '#7dd3fc' : '#475569', fontWeight: 700 }}>{radius}m</span>
-              </label>
+              </span>
               <input
                 type="range"
                 min={50}
@@ -801,7 +807,7 @@ export default function MoradorEstouChegando() {
             {vehicleType === "uber_taxi" && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Placa do veículo</label>
+                  <span style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Placa do veículo</span>
                   <input
                     type="text"
                     value={uberPlate}
@@ -813,7 +819,7 @@ export default function MoradorEstouChegando() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Modelo</label>
+                    <span style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Modelo</span>
                     <input
                       type="text"
                       value={uberModel}
@@ -823,7 +829,7 @@ export default function MoradorEstouChegando() {
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Cor</label>
+                    <span style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Cor</span>
                     <input
                       type="text"
                       value={uberColor}
@@ -834,7 +840,7 @@ export default function MoradorEstouChegando() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Nome do motorista</label>
+                  <span style={{ fontSize: '0.875rem', color: isDark ? '#93c5fd' : "#1e293b", display: 'block', marginBottom: '0.25rem' }}>Nome do motorista</span>
                   <input
                     type="text"
                     value={driverName}

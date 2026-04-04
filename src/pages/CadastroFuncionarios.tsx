@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +10,6 @@ import {
   EyeOff,
   AlertCircle,
   CheckCircle2,
-  Info,
   Trash2,
   Pencil,
   HardHat,
@@ -32,8 +31,8 @@ const cargos = [
 function sanitizeLogin(value: string): string {
   return value
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // remove acentos
-    .replace(/[^a-z0-9]/g, ""); // só letras minúsculas e números
+    .replaceAll(/[\u0300-\u036f]/g, "") // remove acentos
+    .replaceAll(/[^a-z0-9]/g, ""); // só letras minúsculas e números
 }
 
 // Gera login a partir de nome + sobrenome
@@ -115,16 +114,17 @@ export default function CadastroFuncionarios() {
     if (!login) return "Login é obrigatório.";
     if (login.length < 3) return "Login deve ter pelo menos 3 caracteres.";
     if (!editingId) {
-      if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
+      if (!/^\d{6}$/.test(password)) return "Senha deve ter exatamente 6 dígitos numéricos.";
       if (password !== confirmPassword) return "As senhas não coincidem.";
-    } else if (password) {
-      if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
-      if (password !== confirmPassword) return "As senhas não coincidem.";
+    } else if (password && !/^\d{6}$/.test(password)) {
+      return "Senha deve ter exatamente 6 dígitos numéricos.";
+    } else if (password && password !== confirmPassword) {
+      return "As senhas não coincidem.";
     }
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -153,15 +153,15 @@ export default function CadastroFuncionarios() {
       console.log("[handleSubmit] status:", res.status, "data:", data);
       if (!res.ok) throw new Error(data.error || "Erro ao salvar.");
 
-      if (!editingId) {
+      if (editingId) {
+        setSuccess("Funcionário atualizado!");
+        resetForm();
+        setShowForm(false);
+      } else {
         const savedData = { nome: nome.trim() + " " + sobrenome.trim(), cargo, login };
         resetForm();
         setShowForm(false);
         setModalData(savedData);
-      } else {
-        setSuccess("Funcionário atualizado!");
-        resetForm();
-        setShowForm(false);
       }
       fetchLista();
     } catch (err: any) {
@@ -201,7 +201,7 @@ export default function CadastroFuncionarios() {
                 <TStep n={1}>Clique no botão <strong>"+"</strong> para abrir o formulário</TStep>
                 <TStep n={2}>Preencha <strong>nome completo</strong> e <strong>sobrenome</strong></TStep>
                 <TStep n={3}>Selecione o <strong>cargo</strong>: Gerente, Supervisão, Porteiro, Zelador, Manutenção, etc.</TStep>
-                <TStep n={4}>Defina um <strong>login</strong> (nome de usuário) e uma <strong>senha de 4 dígitos</strong></TStep>
+                <TStep n={4}>Defina um <strong>login</strong> (nome de usuário) e uma <strong>senha de 6 dígitos</strong></TStep>
                 <TStep n={5}>Clique em <strong>"Cadastrar"</strong> para salvar</TStep>
                 <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 O funcionário já pode acessar o sistema imediatamente usando login + senha definidos.</p>
               </TSection>
@@ -218,7 +218,7 @@ export default function CadastroFuncionarios() {
                 <TBullet><strong>Interfone</strong> — Todos os funcionários podem atender chamadas do interfone digital</TBullet>
               </TSection>
               <TSection icon={<span>⭐</span>} title="DICAS IMPORTANTES">
-                <TBullet>A <strong>senha tem 4 dígitos</strong> — fácil de memorizar mas segura</TBullet>
+                <TBullet>A <strong>senha tem 6 dígitos</strong> — fácil de memorizar mas segura</TBullet>
                 <TBullet>Se o funcionário esquecer a senha, você pode <strong>redefinir</strong> editando o cadastro</TBullet>
                 <TBullet>Funcionários demitidos devem ser <strong>excluídos imediatamente</strong> para revogar o acesso</TBullet>
                 <TBullet>O login deve ser <strong>único</strong> — não pode haver dois funcionários com o mesmo login</TBullet>
@@ -232,13 +232,7 @@ export default function CadastroFuncionarios() {
       <main className="flex-1" style={{ paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingTop: "1.5rem", paddingBottom: "3.5rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
           {/* Toggle Form */}
-          {!showForm ? (
-            <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
-              <Button onClick={() => { resetForm(); setShowForm(true); }} className="w-full h-12 font-semibold" style={isDark ? { border: "2px solid #ffffff" } : undefined}>
-                + Novo Funcionário
-              </Button>
-            </div>
-          ) : (
+          {showForm ? (
           <div className="rounded-2xl p-8 animate-fade-in">
             <form onSubmit={handleSubmit}>
               {/* Cargo */}
@@ -304,17 +298,17 @@ export default function CadastroFuncionarios() {
               )}
               <div style={{ display: "flex", gap: "12px", marginBottom: "19px" }}>
                 <div style={{ flex: 1 }}>
-                  <Label htmlFor="password" style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Senha (4 dígitos){editingId ? '' : ' *'}</Label>
+                  <Label htmlFor="password" style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Senha (6 dígitos){editingId ? '' : ' *'}</Label>
                   <div className="relative">
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
+                      maxLength={6}
+                      placeholder="••••••"
                       value={password}
                       onChange={(e) =>
-                        setPassword(e.target.value.replace(/\D/g, "").slice(0, 4))
+                        setPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))
                       }
                       className="pr-10"
                       style={{ paddingLeft: "19px" }}
@@ -338,11 +332,11 @@ export default function CadastroFuncionarios() {
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     inputMode="numeric"
-                    maxLength={4}
-                    placeholder="••••"
+                    maxLength={6}
+                    placeholder="••••••"
                     value={confirmPassword}
                     onChange={(e) =>
-                      setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))
+                      setConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))
                     }
                     style={{ paddingLeft: "19px" }}
                   />
@@ -351,9 +345,9 @@ export default function CadastroFuncionarios() {
 
               {/* Error Modal */}
               {error && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
+                <div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setError(""); }} style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
                   <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
-                  <div onClick={(e) => e.stopPropagation()} className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
+                  <div role="dialog" className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
                     <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                       <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />
@@ -381,11 +375,17 @@ export default function CadastroFuncionarios() {
                 <Button type="submit" className="flex-1 h-12 font-semibold" disabled={isLoading} style={isDark ? { backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : undefined}>
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                  ) : editingId ? "Salvar" : "Cadastrar"}
+                  ) : (editingId ? "Salvar" : "Cadastrar")}
                 </Button>
               </div>
             </form>
           </div>
+          ) : (
+            <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+              <Button onClick={() => { resetForm(); setShowForm(true); }} className="w-full h-12 font-semibold" style={isDark ? { border: "2px solid #ffffff" } : undefined}>
+                + Novo Funcionário
+              </Button>
+            </div>
           )}
 
           {/* Lista */}
@@ -425,12 +425,15 @@ export default function CadastroFuncionarios() {
       {/* Modal Premium de Confirmação */}
       {modalData && (
         <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setModalData(null); }}
           style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
           onClick={() => setModalData(null)}
         >
           <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
           <div
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
             className="animate-fade-in"
             style={{
               position: "relative", width: "100%", maxWidth: 420, borderRadius: 20,

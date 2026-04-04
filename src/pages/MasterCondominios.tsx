@@ -13,6 +13,7 @@ import {
   Briefcase,
   Search,
   X,
+  Settings,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
@@ -32,7 +33,7 @@ interface Condominio {
 }
 
 export default function MasterCondominios() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [condominios, setCondominios] = useState<Condominio[]>([]);
@@ -153,7 +154,7 @@ export default function MasterCondominios() {
   const filtered = condominios.filter(
     (c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
-      (c.cnpj && c.cnpj.includes(search))
+      c.cnpj?.includes(search)
   );
 
   return (
@@ -277,7 +278,11 @@ export default function MasterCondominios() {
               className="w-full h-10 rounded-lg text-white text-sm font-medium disabled:opacity-50 transition-colors"
               style={{ background: p.accent }}
             >
-              {saving ? "Salvando..." : editingId ? "Salvar Alterações" : "Criar Condomínio"}
+              {(() => {
+                if (saving) return "Salvando...";
+                if (editingId) return "Salvar Alterações";
+                return "Criar Condomínio";
+              })()}
             </button>
           </div>
         </div>
@@ -285,19 +290,22 @@ export default function MasterCondominios() {
 
       {/* List */}
       <main className="flex-1 pb-6 space-y-3" style={{ paddingLeft: "24px", paddingRight: "24px" }}>
-        {loading ? (
+        {loading && (
           <div className="flex justify-center py-8">
             <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : filtered.length === 0 ? (
+        )}
+        {!loading && filtered.length === 0 && (
           <p className="text-center text-sm py-8" style={{ color: p.textMuted }}>Nenhum condomínio encontrado.</p>
-        ) : (
+        )}
+        {!loading && filtered.length > 0 && (
           filtered.map((c) => (
             <div key={c.id} className="rounded-xl overflow-hidden" style={{ background: p.cardBg, border: p.cardBorder }}>
-              <div
+              <button
+                type="button"
                 onClick={() => handleExpand(c.id)}
                 className="w-full flex items-center text-left cursor-pointer"
-                style={{ paddingLeft: "16px", paddingRight: "12px", paddingTop: "24px", paddingBottom: "24px", gap: "16px" }}
+                style={{ paddingLeft: "16px", paddingRight: "12px", paddingTop: "24px", paddingBottom: "24px", gap: "16px", background: "transparent", border: "none" }}
               >
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: p.btnGrad }}>
                   <Building2 className="w-5 h-5 text-white" />
@@ -309,6 +317,14 @@ export default function MasterCondominios() {
                   </p>
                 </div>
                 <div className="flex gap-3 shrink-0">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigate(`/admin/features-config?condo=${c.id}`); }}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ border: "2px solid #8b5cf6" }}
+                    title="Config Funções"
+                  >
+                    <Settings className="w-3.5 h-3.5" style={{ color: "#8b5cf6" }} />
+                  </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleEdit(c); }}
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -324,7 +340,7 @@ export default function MasterCondominios() {
                     <Trash2 className="w-3.5 h-3.5" style={{ color: "#ef4444" }} />
                   </button>
                 </div>
-              </div>
+              </button>
 
               {/* Expanded stats */}
               {expandedId === c.id && (

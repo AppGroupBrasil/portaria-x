@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import db, { type DbUser, type DbCondominio } from "./db.js";
 import { authenticate } from "./middleware.js";
 import { emailBoasVindasMorador, emailBoasVindasSindico, emailSenhaAlterada } from "./emailService.js";
+import { applyDefaultConfig } from "./condominioConfig.js";
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production-32chars!!";
@@ -160,7 +161,11 @@ function ensureDemoData() {
 }
 
 // Ensure demo data exists on server start
-try { ensureDemoData(); } catch (e) { /* demo data may already exist */ }
+try {
+  ensureDemoData();
+} catch (e) {
+  console.warn("Demo data initialization failed:", e);
+}
 
 const DEMO_EMAILS: Record<string, string> = {
   sindico: "demo.sindico@portariax.com",
@@ -189,6 +194,7 @@ router.post("/demo", (req, res) => {
     setCookie(res, token);
     res.json({ user: sanitizeUser(user), token, demo: true });
   } catch (err: any) {
+    console.error("Erro ao iniciar demonstração:", err);
     res.status(500).json({ error: "Erro interno ao iniciar demonstração." });
   }
 });
@@ -202,7 +208,7 @@ router.get("/condominio/search", (req, res) => {
       return;
     }
 
-    const cleanCnpj = cnpj.replace(/\D/g, "");
+    const cleanCnpj = cnpj.replaceAll(/\D/g, "");
     if (cleanCnpj.length !== 14) {
       res.status(400).json({ error: "CNPJ deve ter 14 dígitos." });
       return;
@@ -241,8 +247,8 @@ router.post("/register/morador", async (req, res) => {
       res.status(400).json({ error: "Nome, e-mail e senha são obrigatórios." });
       return;
     }
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
 
@@ -260,7 +266,7 @@ router.post("/register/morador", async (req, res) => {
       const configRow = db.prepare(
         "SELECT value FROM condominio_config WHERE condominio_id = ? AND key = 'feature_auto_cadastro'"
       ).get(condominioId) as { value: string } | undefined;
-      if (configRow && configRow.value === "true") {
+      if (configRow?.value === "true") {
         needsApproval = true;
       }
     }
@@ -270,7 +276,7 @@ router.post("/register/morador", async (req, res) => {
     ).run(
       name.trim(),
       email.toLowerCase().trim(),
-      phone?.replace(/\D/g, "") || null,
+      phone?.replaceAll(/\D/g, "") || null,
       perfil || null,
       hashedPassword,
       unit?.trim() || null,
@@ -320,8 +326,8 @@ router.post("/register/condominio", async (req, res) => {
       res.status(400).json({ error: "Nome do condomínio, responsável, e-mail e senha são obrigatórios." });
       return;
     }
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
 
@@ -332,7 +338,7 @@ router.post("/register/condominio", async (req, res) => {
     }
 
     if (cnpj) {
-      const existingCondo = db.prepare("SELECT id FROM condominios WHERE cnpj = ?").get(cnpj.replace(/\D/g, ""));
+      const existingCondo = db.prepare("SELECT id FROM condominios WHERE cnpj = ?").get(cnpj.replaceAll(/\D/g, ""));
       if (existingCondo) {
         res.status(409).json({ error: "Este CNPJ já está cadastrado." });
         return;
@@ -346,12 +352,12 @@ router.post("/register/condominio", async (req, res) => {
       "INSERT INTO condominios (name, cnpj, address, city, state, zip_code, units_count) VALUES (?, ?, ?, ?, ?, ?, ?)"
     ).run(
       condominioName.trim(),
-      cnpj?.replace(/\D/g, "") || null,
+      cnpj?.replaceAll(/\D/g, "") || null,
       address?.trim() || null,
       city?.trim() || null,
       state?.trim() || null,
-      zipCode?.replace(/\D/g, "") || null,
-      unitsCount ? parseInt(unitsCount) : 0
+      zipCode?.replaceAll(/\D/g, "") || null,
+      unitsCount ? Number.parseInt(unitsCount) : 0
     );
 
     // Create admin user linked to condominio
@@ -360,7 +366,7 @@ router.post("/register/condominio", async (req, res) => {
     ).run(
       adminName.trim(),
       email.toLowerCase().trim(),
-      phone?.replace(/\D/g, "") || null,
+      phone?.replaceAll(/\D/g, "") || null,
       hashedPassword,
       condoResult.lastInsertRowid
     );
@@ -370,6 +376,9 @@ router.post("/register/condominio", async (req, res) => {
       userResult.lastInsertRowid,
       condoResult.lastInsertRowid
     );
+
+    // Apply default feature config from Condomínio Exemplo
+    applyDefaultConfig(condoResult.lastInsertRowid as number);
 
     // ─── CREATE SAMPLE MORADOR ───────────────────────────
     // Auto-create a demo resident account so the person who registered
@@ -387,7 +396,7 @@ router.post("/register/condominio", async (req, res) => {
       ).run(
         sampleName,
         sampleEmail,
-        phone?.replace(/\D/g, "") || null,
+        phone?.replaceAll(/\D/g, "") || null,
         hashedPassword,               // same 4-digit password
         sampleUnit,
         sampleBlock,
@@ -412,7 +421,7 @@ router.post("/register/condominio", async (req, res) => {
       ).run(
         porteiroName,
         porteiroEmail,
-        phone?.replace(/\D/g, "") || null,
+        phone?.replaceAll(/\D/g, "") || null,
         hashedPassword,               // same 4-digit password
         condoResult.lastInsertRowid
       );
@@ -442,14 +451,14 @@ router.post("/register/condominio", async (req, res) => {
         name: "Morador Exemplo",
         block: "A",
         unit: "101",
-        phone: phone?.replace(/\D/g, "") || null,
+        phone: phone?.replaceAll(/\D/g, "") || null,
         message: "Acesso de morador de exemplo criado automaticamente. Use o mesmo WhatsApp e senha para testar a experiência do morador."
       },
       samplePorteiro: samplePorteiroData ? {
         email: samplePorteiroData.email,
         name: samplePorteiroData.name,
         cargo: samplePorteiroData.cargo,
-        phone: phone?.replace(/\D/g, "") || null,
+        phone: phone?.replaceAll(/\D/g, "") || null,
         message: "Acesso de porteiro de exemplo criado automaticamente. Use o mesmo WhatsApp e senha para testar a experiência da portaria."
       } : null
     });
@@ -458,6 +467,85 @@ router.post("/register/condominio", async (req, res) => {
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
+
+// ─── FUNCIONÁRIO LOGIN HELPER ─────────────────────────────
+async function handleFuncionarioLogin(credential: string, password: string, res: any) {
+  const func = db.prepare("SELECT * FROM funcionarios WHERE login = ?").get(credential) as any;
+  if (!func) {
+    res.status(401).json({ error: "Login ou senha incorretos." });
+    return;
+  }
+
+  const valid = await bcrypt.compare(password, func.password);
+  if (!valid) {
+    res.status(401).json({ error: "Login ou senha incorretos." });
+    return;
+  }
+
+  // Check if condomínio is blocked
+  if (func.condominio_id) {
+    const condo = db.prepare("SELECT bloqueado, bloqueado_motivo, name FROM condominios WHERE id = ?")
+      .get(func.condominio_id) as { bloqueado: number; bloqueado_motivo: string | null; name: string } | undefined;
+    if (condo?.bloqueado === 1) {
+      res.status(403).json({
+        error: "Usuário bloqueado! Entre em contato com seu síndico ou administradora.",
+        blocked: true,
+      });
+      return;
+    }
+  }
+
+  // Update last login
+  db.prepare("UPDATE funcionarios SET updated_at = datetime('now') WHERE id = ?").run(func.id);
+
+  // Track condomínio access metrics
+  if (func.condominio_id) {
+    db.prepare(`
+      UPDATE condominios 
+      SET last_access_at = datetime('now'), 
+          access_count = COALESCE(access_count, 0) + 1 
+      WHERE id = ?
+    `).run(func.condominio_id);
+  }
+
+  // Sign token with funcId flag so middleware knows it's a funcionário
+  const token = jwt.sign({ funcId: func.id }, JWT_SECRET, { expiresIn: "7d" });
+
+  // Fetch condominio name
+  let condominioNome: string | null = null;
+  if (func.condominio_id) {
+    const condo = db.prepare("SELECT name FROM condominios WHERE id = ?").get(func.condominio_id) as { name: string } | undefined;
+    condominioNome = condo?.name || null;
+  }
+
+  res.cookie(COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: COOKIE_MAX_AGE,
+    path: "/",
+  });
+
+  res.json({
+    user: {
+      id: func.id,
+      name: `${func.nome} ${func.sobrenome}`,
+      email: func.login,
+      phone: null,
+      cpf: null,
+      role: "funcionario",
+      perfil: func.cargo,
+      unit: null,
+      block: null,
+      condominioId: func.condominio_id,
+      condominio_nome: condominioNome,
+      parent_administradora_id: null,
+      avatarUrl: null,
+      aprovado: 1,
+    },
+    token,
+  });
+}
 
 // ─── LOGIN ───────────────────────────────────────────────
 router.post("/login", async (req, res) => {
@@ -474,81 +562,7 @@ router.post("/login", async (req, res) => {
 
     // ─── FUNCIONÁRIO LOGIN (sem @) ─────────────────────────
     if (!isEmail) {
-      const func = db.prepare("SELECT * FROM funcionarios WHERE login = ?").get(credential) as any;
-      if (!func) {
-        res.status(401).json({ error: "Login ou senha incorretos." });
-        return;
-      }
-
-      const valid = await bcrypt.compare(password, func.password);
-      if (!valid) {
-        res.status(401).json({ error: "Login ou senha incorretos." });
-        return;
-      }
-
-      // Check if condomínio is blocked
-      if (func.condominio_id) {
-        const condo = db.prepare("SELECT bloqueado, bloqueado_motivo, name FROM condominios WHERE id = ?")
-          .get(func.condominio_id) as { bloqueado: number; bloqueado_motivo: string | null; name: string } | undefined;
-        if (condo && condo.bloqueado === 1) {
-          res.status(403).json({
-            error: "Usuário bloqueado! Entre em contato com seu síndico ou administradora.",
-            blocked: true,
-          });
-          return;
-        }
-      }
-
-      // Update last login
-      db.prepare("UPDATE funcionarios SET updated_at = datetime('now') WHERE id = ?").run(func.id);
-
-      // Track condomínio access metrics
-      if (func.condominio_id) {
-        db.prepare(`
-          UPDATE condominios 
-          SET last_access_at = datetime('now'), 
-              access_count = COALESCE(access_count, 0) + 1 
-          WHERE id = ?
-        `).run(func.condominio_id);
-      }
-
-      // Sign token with funcId flag so middleware knows it's a funcionário
-      const token = jwt.sign({ funcId: func.id }, JWT_SECRET, { expiresIn: "7d" });
-
-      // Fetch condominio name
-      let condominioNome: string | null = null;
-      if (func.condominio_id) {
-        const condo = db.prepare("SELECT name FROM condominios WHERE id = ?").get(func.condominio_id) as { name: string } | undefined;
-        condominioNome = condo?.name || null;
-      }
-
-      res.cookie(COOKIE_NAME, token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: COOKIE_MAX_AGE,
-        path: "/",
-      });
-
-      res.json({
-        user: {
-          id: func.id,
-          name: `${func.nome} ${func.sobrenome}`,
-          email: func.login,
-          phone: null,
-          cpf: null,
-          role: "funcionario",
-          perfil: func.cargo,
-          unit: null,
-          block: null,
-          condominioId: func.condominio_id,
-          condominio_nome: condominioNome,
-          parent_administradora_id: null,
-          avatarUrl: null,
-          aprovado: 1,
-        },
-        token,
-      });
+      await handleFuncionarioLogin(credential, password, res);
       return;
     }
 
@@ -572,7 +586,7 @@ router.post("/login", async (req, res) => {
     if (user.condominio_id && user.role !== "master") {
       const condo = db.prepare("SELECT bloqueado, bloqueado_motivo, name FROM condominios WHERE id = ?")
         .get(user.condominio_id) as { bloqueado: number; bloqueado_motivo: string | null; name: string } | undefined;
-      if (condo && condo.bloqueado === 1) {
+      if (condo?.bloqueado === 1) {
         res.status(403).json({
           error: "Usuário bloqueado! Entre em contato com seu síndico ou administradora.",
           blocked: true,
@@ -666,7 +680,7 @@ router.put("/account", authenticate, async (req, res) => {
     const user = req.user!;
     const { name, phone, email, block, unit } = req.body;
 
-    if (!name || !name.trim()) {
+    if (!name?.trim()) {
       res.status(400).json({ error: "Nome é obrigatório." });
       return;
     }

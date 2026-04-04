@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
@@ -25,23 +25,23 @@ export default function Login() {
   const [isBlocked, setIsBlocked] = useState(false);
 
   // Show blocked message if user was redirected here after being blocked
-  useState(() => {
+  useEffect(() => {
     const blockedMsg = localStorage.getItem("blocked_message");
     if (blockedMsg) {
       setError(blockedMsg);
       setIsBlocked(true);
       localStorage.removeItem("blocked_message");
     }
-  });
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!email) return setError("Informe seu e-mail ou login.");
     if (!password) return setError("Informe sua senha.");
-    if (!/^\d{4}$/.test(password))
-      return setError("Senha deve ter 4 dígitos numéricos.");
+    if (!/^\d{6}$/.test(password))
+      return setError("Senha deve ter 6 dígitos numéricos.");
 
     setIsLoading(true);
     setIsBlocked(false);
@@ -147,10 +147,10 @@ export default function Login() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   inputMode="numeric"
-                  maxLength={4}
-                  placeholder="••••••••"
+                  maxLength={6}
+                  placeholder="••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  onChange={(e) => setPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                   className="h-12 rounded-xl pr-12"
                   style={{
                     outline: "none",
@@ -187,9 +187,9 @@ export default function Login() {
                 }}
               >
                 {isBlocked ? (
-                  <Shield className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                  <Shield className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "#f87171" }} />
                 ) : (
-                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#f87171" }} />
                 )}
                 <div>
                   {isBlocked && (
@@ -271,7 +271,7 @@ export default function Login() {
             <div style={{ height: "19px" }} />
             <button
               type="button"
-              onClick={() => window.open("https://portariax.com.br", "_blank")}
+              onClick={() => globalThis.open("https://portariax.com.br", "_blank")}
               className="w-full rounded-xl font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"
               style={{
                 height: "46px",

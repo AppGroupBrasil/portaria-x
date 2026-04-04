@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,26 @@ interface Administradora {
   phone: string | null;
   parent_administradora_id: number | null;
   created_at: string;
+}
+
+function SubUserRow({ sub, isDark, onEdit, onDelete }: Readonly<{ sub: Administradora; isDark: boolean; onEdit: (sub: Administradora) => void; onDelete: (id: number, name: string) => void }>) {
+  return (
+    <div className="flex items-center gap-4 py-3" style={{ paddingLeft: "3.5rem", paddingRight: "1.25rem", backgroundColor: isDark ? "rgba(0,0,0,0.15)" : "#f8fafc" }}>
+      <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: isDark ? "rgba(139,92,246,0.2)" : "#ede9fe" }}>
+        <Users className="w-4 h-4 text-purple-400" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium truncate" style={{ color: "#003580" }}>{sub.name}</p>
+        <p className="text-xs truncate" style={{ color: "#64748b" }}>{sub.email}</p>
+      </div>
+      <button onClick={() => onEdit(sub)} className="p-2 hover:text-sky-400 transition-colors" style={{ color: "#94a3b8" }}>
+        <Pencil className="w-4 h-4" />
+      </button>
+      <button onClick={() => onDelete(sub.id, sub.name)} className="p-2 hover:text-destructive transition-colors" style={{ color: "#94a3b8" }}>
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  );
 }
 
 export default function CadastroAdministradoras() {
@@ -64,7 +84,7 @@ export default function CadastroAdministradoras() {
   }, []);
 
   const formatPhone = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
     if (n.length <= 11) return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
@@ -99,17 +119,14 @@ export default function CadastroAdministradoras() {
     if (!nome.trim()) return "Informe o nome.";
     if (!email.trim()) return "Informe o e-mail.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "E-mail inválido.";
-    if (!editingId) {
-      if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
-      if (password !== confirmPassword) return "As senhas não coincidem.";
-    } else if (password) {
-      if (!/^\d{4}$/.test(password)) return "Senha deve ter exatamente 4 dígitos numéricos.";
+    if (!editingId || password) {
+      if (!/^\d{6}$/.test(password)) return "Senha deve ter exatamente 6 dígitos numéricos.";
       if (password !== confirmPassword) return "As senhas não coincidem.";
     }
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -191,7 +208,7 @@ export default function CadastroAdministradoras() {
                 <TStep n={1}>Clique em <strong>"+"</strong> ou <strong>"Nova Administradora"</strong></TStep>
                 <TStep n={2}>Preencha o <strong>nome da empresa</strong> administradora</TStep>
                 <TStep n={3}>Informe o <strong>e-mail</strong> (será o login de acesso ao sistema)</TStep>
-                <TStep n={4}>Defina uma <strong>senha de 4 dígitos</strong></TStep>
+                <TStep n={4}>Defina uma <strong>senha de 6 dígitos</strong></TStep>
                 <TStep n={5}>Clique em <strong>"Cadastrar"</strong> para salvar</TStep>
                 <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 A administradora já pode acessar o sistema usando e-mail + senha definidos.</p>
               </TSection>
@@ -231,13 +248,7 @@ export default function CadastroAdministradoras() {
           </div>
 
           {/* Toggle Form */}
-          {!showForm ? (
-            <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
-              <Button onClick={() => { resetForm(); setShowForm(true); }} className="w-full h-12 font-semibold">
-                + Nova Administradora
-              </Button>
-            </div>
-          ) : (
+          {showForm ? (
             <div className="rounded-2xl p-8 animate-fade-in">
               <form onSubmit={handleSubmit} className="space-y-3">
                 {subUserParentId && (
@@ -261,7 +272,7 @@ export default function CadastroAdministradoras() {
                   <Input id="whatsapp" type="tel" placeholder="(11) 99999-9999" value={whatsapp} onChange={(e) => setWhatsapp(formatPhone(e.target.value))} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Senha (4 dígitos){editingId ? '' : ' *'}</Label>
+                  <Label htmlFor="password">Senha (6 dígitos){editingId ? '' : ' *'}</Label>
                   {editingId && (
                     <p className="text-[11px] text-muted-foreground">Deixe em branco para manter a senha atual.</p>
                   )}
@@ -270,10 +281,10 @@ export default function CadastroAdministradoras() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
+                      maxLength={6}
+                      placeholder="••••••"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      onChange={(e) => setPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                       className="pr-10"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
@@ -287,10 +298,10 @@ export default function CadastroAdministradoras() {
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     inputMode="numeric"
-                    maxLength={4}
-                    placeholder="••••"
+                    maxLength={6}
+                    placeholder="••••••"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                    onChange={(e) => setConfirmPassword(e.target.value.replaceAll(/\D/g, "").slice(0, 6))}
                   />
                 </div>
 
@@ -310,10 +321,16 @@ export default function CadastroAdministradoras() {
                     Cancelar
                   </Button>
                   <Button type="submit" className="flex-1 h-12 font-semibold" disabled={isLoading}>
-                    {isLoading ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : editingId ? "Salvar" : subUserParentId ? "Criar Sub-Usuário" : "Cadastrar"}
+                    {isLoading ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : (editingId ? "Salvar" : "Cadastrar")}
                   </Button>
                 </div>
               </form>
+            </div>
+          ) : (
+            <div style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+              <Button onClick={() => { resetForm(); setShowForm(true); }} className="w-full h-12 font-semibold">
+                + Nova Administradora
+              </Button>
             </div>
           )}
 
@@ -379,21 +396,7 @@ export default function CadastroAdministradoras() {
                       {isExpanded && subs.length > 0 && (
                         <div style={{ borderTop: p.headerBorder }}>
                           {subs.map((sub) => (
-                            <div key={sub.id} className="flex items-center gap-4 py-3" style={{ paddingLeft: "3.5rem", paddingRight: "1.25rem", backgroundColor: isDark ? "rgba(0,0,0,0.15)" : "#f8fafc" }}>
-                              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: isDark ? "rgba(139,92,246,0.2)" : "#ede9fe" }}>
-                                <Users className="w-4 h-4 text-purple-400" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium truncate" style={{ color: "#003580" }}>{sub.name}</p>
-                                <p className="text-xs truncate" style={{ color: "#64748b" }}>{sub.email}</p>
-                              </div>
-                              <button onClick={() => startEdit(sub)} className="p-2 hover:text-sky-400 transition-colors" style={{ color: "#94a3b8" }}>
-                                <Pencil className="w-4 h-4" />
-                              </button>
-                              <button onClick={() => handleDelete(sub.id, sub.name)} className="p-2 hover:text-destructive transition-colors" style={{ color: "#94a3b8" }}>
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
+                            <SubUserRow key={sub.id} sub={sub} isDark={isDark} onEdit={startEdit} onDelete={handleDelete} />
                           ))}
                         </div>
                       )}

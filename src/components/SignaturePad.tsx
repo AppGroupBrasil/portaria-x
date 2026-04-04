@@ -121,9 +121,9 @@ export default function SignaturePad({
         display: "flex", alignItems: "center", justifyContent: "space-between",
         marginBottom: "8px",
       }}>
-        <label style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b" }}>
+        <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b" }}>
           {label}
-        </label>
+        </span>
         {hasDrawn && (
           <button
             type="button"

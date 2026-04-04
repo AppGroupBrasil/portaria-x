@@ -24,8 +24,8 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       return;
     }
 
-    if (!/^\d{4}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos numéricos." });
+    if (!/^\d{6}$/.test(password)) {
+      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
       return;
     }
 
@@ -146,7 +146,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
     if (dup) { res.status(409).json({ error: "Este e-mail já está cadastrado." }); return; }
 
     if (password) {
-      if (!/^\d{4}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 4 dígitos." }); return; }
+      if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
       const hashed = await bcrypt.hash(password, 10);
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ?, password = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, hashed, parseInt(id));
     } else {
@@ -236,7 +236,7 @@ router.get("/pendentes/count", authorize("master", "administradora", "sindico"),
 // PUT /api/moradores/:id/aprovar - Aprovar cadastro
 router.put("/:id/aprovar", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
     const scope = condominioScope(req.user!);
     const morador = db.prepare(
       `SELECT id, name FROM users WHERE id = ? AND role = 'morador' AND aprovado = 0 AND ${scope.clause}`
@@ -256,7 +256,7 @@ router.put("/:id/aprovar", authorize("master", "administradora", "sindico"), (re
 // DELETE /api/moradores/:id/rejeitar - Rejeitar cadastro (remove user)
 router.delete("/:id/rejeitar", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
     const scope = condominioScope(req.user!);
     const morador = db.prepare(
       `SELECT id, name FROM users WHERE id = ? AND role = 'morador' AND aprovado = 0 AND ${scope.clause}`

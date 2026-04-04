@@ -180,7 +180,7 @@ export default function ThemePicker() {
           {pendingTheme && (
             <div style={{ padding: "8px 4px 4px", borderTop: `1px solid ${p.isDarkBase ? "rgba(255,255,255,0.08)" : "#e2e8f0"}`, marginTop: 4 }}>
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => globalThis.window.location.reload()}
                 style={{
                   width: "100%",
                   display: "flex",

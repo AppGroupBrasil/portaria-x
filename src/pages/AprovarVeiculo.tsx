@@ -259,9 +259,9 @@ export default function AprovarVeiculo() {
           background: "#fff", borderRadius: "16px", padding: "20px",
           border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "10px",
         }}>
-          <label style={{ fontWeight: 700, fontSize: "14px", color: "#0c4a6e" }}>
+          <span style={{ fontWeight: 700, fontSize: "14px", color: "#0c4a6e" }}>
             Observação (opcional)
-          </label>
+          </span>
           <p style={{ fontSize: "12px", color: "#64748b", marginTop: "-4px" }}>
             Informe à portaria onde o veículo deve estacionar ou outra instrução.
           </p>

@@ -42,45 +42,96 @@ const DEMO_ALLOW = ["/api/auth/demo", "/api/auth/me", "/api/auth/logout"];
 
 // Custom event fired when a mutating action is blocked in demo mode
 export function onDemoBlocked(cb: () => void) {
-  window.addEventListener("portariax:demo-blocked", cb);
-  return () => window.removeEventListener("portariax:demo-blocked", cb);
+  globalThis.window.addEventListener("portariax:demo-blocked", cb);
+  return () => globalThis.window.removeEventListener("portariax:demo-blocked", cb);
+}
+
+// ─── Helper: resolve input to URL string ─────────────────
+function resolveUrl(input: string | URL | Request): string {
+  let url: string;
+  if (typeof input === "string") {
+    url = input;
+  } else if (input instanceof URL) {
+    url = input.href;
+  } else {
+    url = input.url;
+  }
+  if (url.startsWith("/")) {
+    url = API_BASE + url;
+  }
+  return url;
+}
+
+// ─── Helper: block mutating requests in demo mode ────────
+function maybeDemoBlock(url: string, method: string): Response | null {
+  if (!_isDemoMode()) return null;
+  if (!["POST", "PUT", "PATCH", "DELETE"].includes(method)) return null;
+
+  const path = url.replace(API_BASE, "");
+  if (DEMO_ALLOW.some(a => path.startsWith(a))) return null;
+
+  globalThis.window.dispatchEvent(new Event("portariax:demo-blocked"));
+  return new Response(JSON.stringify({ error: "Modo demonstração — ação bloqueada.", demo: true }), {
+    status: 403,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+// ─── Helper: mobile fallback fetch ───────────────────────
+const CONNECTION_ERR = "Falha de conexão com o servidor. Verifique a internet do celular e tente novamente.";
+
+async function fetchWithFallback(url: string, fetchInit: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, fetchInit);
+  } catch (err) {
+    console.warn("Fetch failed:", err);
+    if (!isNative) throw new Error(CONNECTION_ERR);
+
+    const isWww = url.startsWith("https://www.portariax.com.br");
+    const isApex = url.startsWith("https://portariax.com.br");
+    if (!isWww && !isApex) throw new Error(CONNECTION_ERR);
+
+    const altUrl = isWww
+      ? url.replace("https://www.portariax.com.br", "https://portariax.com.br")
+      : url.replace("https://portariax.com.br", "https://www.portariax.com.br");
+
+    try {
+      return await fetch(altUrl, fetchInit);
+    } catch {
+      throw new Error(CONNECTION_ERR);
+    }
+  }
+}
+
+// ─── Helper: handle blocked condomínio response ──────────
+async function handleBlockedResponse(response: Response) {
+  if (response.status !== 403) return;
+  try {
+    const cloned = response.clone();
+    const body = await cloned.json();
+    if (body.blocked) {
+      clearToken();
+      localStorage.setItem("blocked_message", body.error || "Usuário bloqueado! Entre em contato com seu síndico ou administradora.");
+      globalThis.window.location.href = "/login";
+    }
+  } catch {
+    // ignore parse errors
+  }
 }
 
 // ─── apiFetch — drop-in replacement for fetch() ─────────
-/**
- * Works exactly like `fetch()` but:
- * 1. Prepends API_BASE to relative URLs (needed in Capacitor).
- * 2. In Capacitor: attaches `Authorization: Bearer <token>` header.
- * 3. In Web: sends `credentials: "include"` (cookie-based, same-origin).
- */
 export async function apiFetch(
   input: string | URL | Request,
   init?: RequestInit
 ): Promise<Response> {
-  let url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+  const url = resolveUrl(input);
 
-  // Prepend API_BASE to relative paths (e.g. "/api/auth/me" → "https://portariax.com.br/api/auth/me")
-  if (url.startsWith("/")) {
-    url = API_BASE + url;
-  }
-
-  // ─── Demo mode: block mutating requests ────────────────
   const method = (init?.method || "GET").toUpperCase();
-  if (_isDemoMode() && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-    const path = url.replace(API_BASE, "");
-    if (!DEMO_ALLOW.some(a => path.startsWith(a))) {
-      window.dispatchEvent(new Event("portariax:demo-blocked"));
-      return new Response(JSON.stringify({ error: "Modo demonstração — ação bloqueada.", demo: true }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  }
+  const blocked = maybeDemoBlock(url, method);
+  if (blocked) return blocked;
 
   const headers = new Headers(init?.headers);
-
   if (isNative) {
-    // Capacitor: use Bearer token
     const token = getToken();
     if (token && !headers.has("Authorization")) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -90,27 +141,10 @@ export async function apiFetch(
   const fetchInit: RequestInit = {
     ...init,
     headers,
-    // Web: include cookies. Capacitor: no cookies, but harmless to include.
     credentials: isNative ? "omit" : "include",
   };
 
-  const response = await fetch(url, fetchInit);
-
-  // Global blocked interceptor: if user's condomínio was blocked while logged in,
-  // clear session and redirect to login with the blocked message.
-  if (response.status === 403) {
-    try {
-      const cloned = response.clone();
-      const body = await cloned.json();
-      if (body.blocked) {
-        clearToken();
-        localStorage.setItem("blocked_message", body.error || "Usuário bloqueado! Entre em contato com seu síndico ou administradora.");
-        window.location.href = "/login";
-      }
-    } catch {
-      // ignore parse errors
-    }
-  }
-
+  const response = await fetchWithFallback(url, fetchInit);
+  await handleBlockedResponse(response);
   return response;
 }

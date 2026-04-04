@@ -526,7 +526,7 @@ export default function InterfoneVisitor() {
   const handleNameValidation = () => {
     if (!nameInput.trim()) { setNameError("Digite o nome do morador."); return; }
     // Flexible comparison
-    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replaceAll(/[\u0300-\u036f]/g, "").trim();
     const inputNorm = normalize(nameInput);
     const moradorNorm = normalize(selectedMorador?.name || "");
     // Check if first name matches or full name matches
@@ -761,7 +761,7 @@ export default function InterfoneVisitor() {
     // Build WhatsApp link if morador has whatsapp enabled
     const whatsappNumber = selectedMorador?.whatsapp;
     const whatsappLink = whatsappNumber
-      ? `https://wa.me/55${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(
+      ? `https://wa.me/55${whatsappNumber.replaceAll(/\D/g, "")}?text=${encodeURIComponent(
           `Olá! Sou visitante no ${blockInfo?.condominio || "condomínio"}, Bloco ${blockInfo?.bloco || ""}, Apto ${selectedApto?.unit || ""}. Tentei ligar pelo interfone mas não consegui contato.`
         )}`
       : null;
@@ -928,7 +928,7 @@ export default function InterfoneVisitor() {
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                   <div>
-                    <label className="font-bold" style={{ fontSize: 13, color: "#003580" }}>Seu Nome *</label>
+                    <span className="font-bold" style={{ fontSize: 13, color: "#003580" }}>Seu Nome *</span>
                     <input
                       type="text"
                       placeholder="Nome completo"
@@ -941,7 +941,7 @@ export default function InterfoneVisitor() {
                     />
                   </div>
                   <div>
-                    <label className="font-bold" style={{ fontSize: 13, color: "#003580" }}>Empresa / Motivo *</label>
+                    <span className="font-bold" style={{ fontSize: 13, color: "#003580" }}>Empresa / Motivo *</span>
                     <input
                       type="text"
                       placeholder="Ex: Visita familiar, Entrega, Manutenção"
@@ -954,7 +954,7 @@ export default function InterfoneVisitor() {
                     />
                   </div>
                   <div>
-                    <label className="font-bold" style={{ fontSize: 13, color: "#003580" }}>Foto do Rosto *</label>
+                    <span className="font-bold" style={{ fontSize: 13, color: "#003580" }}>Foto do Rosto *</span>
                     {authForm.foto ? (
                       <div className="flex items-center gap-3" style={{ marginTop: 8 }}>
                         <img src={authForm.foto} alt="Foto" className="object-cover" style={{ width: 72, height: 72, borderRadius: 16, border: "3px solid #22c55e" }} />
@@ -1078,7 +1078,7 @@ export default function InterfoneVisitor() {
   // ═══════════════════════════════════
   if (tokenData?.tipo === "condominio" && !selectedBloco) {
     const condoData = tokenData as CondoTokenData;
-    const normalizeSearch = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    const normalizeSearch = (s: string) => s.toLowerCase().normalize("NFD").replaceAll(/[\u0300-\u036f]/g, "").trim();
     const query = normalizeSearch(searchQuery);
 
     // Filter blocks by search — also match apartment numbers inside blocks
@@ -1232,14 +1232,14 @@ export default function InterfoneVisitor() {
   // ═══════════════════════════════════
 
   // Filter apartments by search query
-  const aptoSearchNorm = searchQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const aptoSearchNorm = searchQuery.toLowerCase().normalize("NFD").replaceAll(/[\u0300-\u036f]/g, "").trim();
   const filteredApartments = aptoSearchNorm && blockInfo
     ? blockInfo.apartamentos.filter(a => {
-        const unitNorm = a.unit.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const unitNorm = a.unit.toLowerCase().normalize("NFD").replaceAll(/[\u0300-\u036f]/g, "");
         if (unitNorm.includes(aptoSearchNorm)) return true;
         // Also search by morador name
         return a.moradores.some(m =>
-          m.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(aptoSearchNorm)
+          m.name.toLowerCase().normalize("NFD").replaceAll(/[\u0300-\u036f]/g, "").includes(aptoSearchNorm)
         );
       })
     : blockInfo?.apartamentos || [];

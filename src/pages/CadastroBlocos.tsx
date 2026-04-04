@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,7 +75,7 @@ export default function CadastroBlocos() {
 
 
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -89,7 +89,7 @@ export default function CadastroBlocos() {
         const res = await apiFetch("/api/blocos/personalizado", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nomes: [nome], condominioId: formCondominioId ? parseInt(formCondominioId) : undefined }),
+          body: JSON.stringify({ nomes: [nome], condominioId: formCondominioId ? Number.parseInt(formCondominioId) : undefined }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Erro ao cadastrar.");
@@ -102,7 +102,7 @@ export default function CadastroBlocos() {
         setIsLoading(false);
       }
     } else {
-      const qtd = parseInt(quantidade);
+      const qtd = Number.parseInt(quantidade);
       if (!qtd || qtd < 1) return setError("Informe uma quantidade válida (mínimo 1).");
       if (qtd > 200) return setError("Quantidade máxima: 200 blocos.");
 
@@ -111,7 +111,7 @@ export default function CadastroBlocos() {
         const res = await apiFetch("/api/blocos/automatico", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ quantidade: qtd, condominioId: formCondominioId ? parseInt(formCondominioId) : undefined }),
+          body: JSON.stringify({ quantidade: qtd, condominioId: formCondominioId ? Number.parseInt(formCondominioId) : undefined }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Erro ao cadastrar.");
@@ -203,7 +203,7 @@ export default function CadastroBlocos() {
               )}
 
               {/* Toggle personalizar */}
-              <label className="flex items-center gap-3 cursor-pointer select-none">
+              <span className="flex items-center gap-3 cursor-pointer select-none">
                 <div
                   className={`w-10 h-6 rounded-full relative transition-colors duration-200 ${
                     personalizar ? "bg-[#003580]" : "bg-border"
@@ -219,7 +219,7 @@ export default function CadastroBlocos() {
                 <span className="text-sm" style={{ color: isDark ? "#ffffff" : "#003580" }}>
                   Personalizar cadastro (cadastrar 1 por 1)
                 </span>
-              </label>
+              </span>
 
               {!personalizar ? (
                 <>
@@ -260,9 +260,9 @@ export default function CadastroBlocos() {
 
               {/* Error Modal */}
               {error && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
+                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => setError(""))(); } }} onClick={() => setError("")}>
                   <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
-                  <div onClick={(e) => e.stopPropagation()} className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
+                  <div role="dialog" className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
                     <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                       <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />

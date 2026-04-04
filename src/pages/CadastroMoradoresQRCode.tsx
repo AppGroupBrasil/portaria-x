@@ -76,7 +76,7 @@ export default function CadastroMoradoresQRCode() {
 
     // Criar HTML para impressão
     const dataUrl = qrImage;
-    const printWindow = window.open("", "_blank");
+    const printWindow = globalThis.open("", "_blank");
     if (!printWindow) return;
 
     printWindow.document.write(`

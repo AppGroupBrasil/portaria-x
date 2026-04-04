@@ -12,11 +12,26 @@ import {
   Check,
   Loader2,
   Settings,
+  Phone,
+  Navigation,
+  DoorOpen,
+  UserPlus,
+  Camera,
+  MapPin,
+  BookOpen,
+  LayoutDashboard,
+  Scan,
+  Package,
+  Layers,
+  Users2,
+  Wrench,
+  Zap,
+  Cpu,
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 
-// ─── Feature definitions ─────────────────────────────────
+// ─── Feature definitions per profile ─────────────────────
 interface FeatureDef {
   key: string;
   label: string;
@@ -25,75 +40,83 @@ interface FeatureDef {
   gradient: string;
 }
 
-const FEATURES: FeatureDef[] = [
-  {
-    key: "feature_autorizacoes",
-    label: "Autorizar Visitante",
-    description: "Morador pode criar autorizações prévias de entrada para visitantes",
-    icon: ShieldCheck,
-    gradient: "#003580",
-  },
-  {
-    key: "feature_delivery",
-    label: "Entregas e Delivery",
-    description: "Morador pode autorizar recebimento de pedidos na portaria",
-    icon: Truck,
-    gradient: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
-  },
-  {
-    key: "feature_veiculos",
-    label: "Autorizar Veículo",
-    description: "Morador pode autorizar acesso de veículos ao condomínio",
-    icon: Car,
-    gradient: "#003580",
-  },
-  {
-    key: "feature_qr_visitante",
-    label: "QR Code de Visitante",
-    description: "Morador pode gerar QR Code de autorização para visitantes",
-    icon: QrCode,
-    gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-  },
-  {
-    key: "feature_correspondencias",
-    label: "Correspondências",
-    description: "Morador pode visualizar avisos de correspondência na portaria",
-    icon: Mail,
-    gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-  },
+const MORADOR_FEATURES: FeatureDef[] = [
+  { key: "feature_autorizacoes", label: "Autorizar Visitante", description: "Criar autorizações prévias de entrada para visitantes", icon: ShieldCheck, gradient: "#003580" },
+  { key: "feature_delivery", label: "Entregas e Delivery", description: "Autorizar recebimento de pedidos na portaria", icon: Truck, gradient: "#003580" },
+  { key: "feature_veiculos", label: "Autorizar Veículo", description: "Autorizar acesso de veículos ao condomínio", icon: Car, gradient: "#003580" },
+  { key: "feature_qr_visitante", label: "QR Code Visitante", description: "Gerar QR Code de autorização para visitantes", icon: QrCode, gradient: "#003580" },
+  { key: "feature_correspondencias", label: "Correspondências", description: "Visualizar avisos de correspondência na portaria", icon: Mail, gradient: "#003580" },
+  { key: "feature_interfone", label: "Interfone Digital", description: "Receber chamadas de visitantes com vídeo", icon: Phone, gradient: "#003580" },
+  { key: "feature_estou_chegando", label: "Estou Chegando", description: "Avisar a portaria que está chegando", icon: Navigation, gradient: "#003580" },
+  { key: "feature_portaria_virtual", label: "Portaria Virtual", description: "Abrir portões e portas remotamente", icon: DoorOpen, gradient: "#003580" },
+];
+
+const PORTEIRO_FEATURES: FeatureDef[] = [
+  { key: "feature_porteiro_pedestres", label: "Controle de Pedestres", description: "Visitantes e autorizações prévias", icon: UserPlus, gradient: "#d97706" },
+  { key: "feature_porteiro_veiculos", label: "Acesso Veículos", description: "Controlar entrada e saída de veículos", icon: Car, gradient: "#d97706" },
+  { key: "feature_porteiro_delivery", label: "Delivery Porteiro", description: "Gerenciar entregas recebidas", icon: Package, gradient: "#d97706" },
+  { key: "feature_porteiro_correspondencias", label: "Correspondências", description: "Registrar correspondências recebidas", icon: Mail, gradient: "#d97706" },
+  { key: "feature_porteiro_monitoramento", label: "Monitoramento", description: "Visualizar câmeras do condomínio", icon: Camera, gradient: "#d97706" },
+  { key: "feature_porteiro_rondas", label: "Rondas de Segurança", description: "Registrar rondas e escanear QR Codes", icon: MapPin, gradient: "#d97706" },
+  { key: "feature_porteiro_interfone", label: "Interfone", description: "Atender chamadas de visitantes", icon: Phone, gradient: "#d97706" },
+  { key: "feature_porteiro_estou_chegando", label: "Estou Chegando", description: "Ver moradores a caminho", icon: Navigation, gradient: "#d97706" },
+  { key: "feature_porteiro_portaria_virtual", label: "Portaria Virtual", description: "Controle remoto de portões", icon: DoorOpen, gradient: "#d97706" },
+  { key: "feature_porteiro_centro_comando", label: "Centro de Comando", description: "Painel unificado da portaria", icon: LayoutDashboard, gradient: "#d97706" },
+  { key: "feature_porteiro_qr_scanner", label: "Scanner QR", description: "Escanear QR de visitantes", icon: Scan, gradient: "#d97706" },
+  { key: "feature_porteiro_livro_protocolo", label: "Livro Protocolo", description: "Livro de ocorrências da portaria", icon: BookOpen, gradient: "#d97706" },
+  { key: "feature_porteiro_espelho", label: "Espelho Portaria", description: "Visão geral do espelho da portaria", icon: ShieldCheck, gradient: "#d97706" },
+  { key: "feature_porteiro_acesso_auto", label: "Acesso Automático", description: "Liberação automática de veículos", icon: Scan, gradient: "#d97706" },
+];
+
+const SINDICO_FEATURES: FeatureDef[] = [
+  { key: "feature_sindico_cadastros", label: "Cadastros", description: "Gerenciar moradores e funcionários", icon: UserPlus, gradient: "#16a34a" },
+  { key: "feature_sindico_blocos", label: "Blocos", description: "Cadastrar e gerenciar blocos", icon: Layers, gradient: "#16a34a" },
+  { key: "feature_sindico_moradores", label: "Moradores", description: "Cadastrar e gerenciar moradores", icon: Users2, gradient: "#16a34a" },
+  { key: "feature_sindico_funcionarios", label: "Funcionários", description: "Cadastrar e gerenciar funcionários", icon: Wrench, gradient: "#16a34a" },
+  { key: "feature_sindico_cameras", label: "Câmeras", description: "Configurar câmeras do condomínio", icon: Camera, gradient: "#16a34a" },
+  { key: "feature_sindico_rondas", label: "Rondas", description: "Controlar rondas de segurança", icon: MapPin, gradient: "#16a34a" },
+  { key: "feature_sindico_interfone", label: "Interfone Config", description: "Configurar sistema de interfone", icon: Phone, gradient: "#16a34a" },
+  { key: "feature_sindico_estou_chegando", label: "Estou Chegando Config", description: "Configurar notificações de chegada", icon: Navigation, gradient: "#16a34a" },
+  { key: "feature_sindico_acessos", label: "Acessos", description: "Gerenciar pontos de acesso", icon: DoorOpen, gradient: "#16a34a" },
+  { key: "feature_sindico_portao", label: "Portão IoT", description: "Configurar portões e dispositivos IoT", icon: Zap, gradient: "#16a34a" },
+  { key: "feature_sindico_qr_config", label: "Config QR", description: "Configurar QR Code para visitantes", icon: QrCode, gradient: "#16a34a" },
+  { key: "feature_sindico_dispositivos", label: "Dispositivos", description: "Biblioteca de dispositivos IoT", icon: Cpu, gradient: "#16a34a" },
+  { key: "feature_sindico_liberacao", label: "Liberação Cadastros", description: "Aprovar cadastros pendentes", icon: ShieldCheck, gradient: "#16a34a" },
+  { key: "feature_sindico_whatsapp", label: "WhatsApp Config", description: "Configurar integração WhatsApp", icon: Phone, gradient: "#16a34a" },
+];
+
+type TabId = "morador" | "porteiro" | "sindico";
+
+const TABS: { id: TabId; label: string; color: string; features: FeatureDef[] }[] = [
+  { id: "morador", label: "Morador", color: "#003580", features: MORADOR_FEATURES },
+  { id: "porteiro", label: "Portaria", color: "#d97706", features: PORTEIRO_FEATURES },
+  { id: "sindico", label: "Síndico", color: "#16a34a", features: SINDICO_FEATURES },
 ];
 
 export default function SindicoFeaturesConfig() {
-  const { user } = useAuth();
+  useAuth();
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
 
+  const [tab, setTab] = useState<TabId>("morador");
   const [config, setConfig] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Fetch current config
   useEffect(() => {
     apiFetch("/api/condominio-config")
       .then((res) => res.ok ? res.json() : {})
-      .then((data) => {
-        setConfig(data);
-        setLoading(false);
-      })
+      .then((data) => { setConfig(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
-  const isFeatureEnabled = (key: string): boolean => {
-    // Default: all features are enabled if not configured
-    return config[key] !== "false";
-  };
+  const isFeatureEnabled = (key: string): boolean => config[key] !== "false";
 
   const toggleFeature = async (key: string) => {
     const newValue = isFeatureEnabled(key) ? "false" : "true";
     const newConfig = { ...config, [key]: newValue };
     setConfig(newConfig);
-
     setSaving(true);
     setSaved(false);
     try {
@@ -108,11 +131,35 @@ export default function SindicoFeaturesConfig() {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       }
-    } catch {}
+    } catch (err) { console.warn("Toggle feature failed:", err); }
     setSaving(false);
   };
 
-  const enabledCount = FEATURES.filter((f) => isFeatureEnabled(f.key)).length;
+  const toggleAll = async (features: FeatureDef[], enable: boolean) => {
+    const updates: Record<string, string> = {};
+    features.forEach((f) => { updates[f.key] = enable ? "true" : "false"; });
+    const newConfig = { ...config, ...updates };
+    setConfig(newConfig);
+    setSaving(true);
+    setSaved(false);
+    try {
+      const res = await apiFetch("/api/condominio-config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setConfig(data);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (err) { console.warn("Toggle all failed:", err); }
+    setSaving(false);
+  };
+
+  const currentTab = TABS.find((t) => t.id === tab)!;
+  const enabledCount = currentTab.features.filter((f) => isFeatureEnabled(f.key)).length;
 
   if (loading) {
     return (
@@ -124,74 +171,132 @@ export default function SindicoFeaturesConfig() {
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
-      {/* ═════════ Header ═════════ */}
+      {/* Header */}
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
         <div className="flex items-center justify-between" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate(-1)}
-              style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}
-            >
+            <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
               <ArrowLeft className="w-6 h-6" />
             </button>
             <div>
-              <span style={{ fontWeight: 700, fontSize: 18 }} className="block">Funções do Morador</span>
-              <span style={{ fontSize: 12, color: isDark ? "rgba(255,255,255,0.6)" : "#64748b" }}>Configure os recursos disponíveis</span>
+              <span style={{ fontWeight: 700, fontSize: 18 }} className="block">Config. Funcionalidades</span>
+              <span style={{ fontSize: 12, color: isDark ? "rgba(255,255,255,0.6)" : "#64748b" }}>Ativar/desativar por perfil</span>
             </div>
           </div>
-          {saving ? (
-            <Loader2 className="w-5 h-5 animate-spin text-white/60" />
-          ) : saved ? (
+          {saving && <Loader2 className="w-5 h-5 animate-spin text-white/60" />}
+          {!saving && saved && (
             <div className="flex items-center gap-1 text-emerald-300 text-sm font-medium">
               <Check className="w-4 h-4" /> Salvo
             </div>
-          ) : null}
+          )}
         </div>
       </header>
 
-      <main style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.2rem", paddingBottom: "8rem" }}>
-        {/* Info card */}
-        <div
-          style={{
-            background: "transparent",
-            borderRadius: "16px",
-            padding: "16px 18px",
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "12px",
-            border: "none",
-          }}
-        >
-          <Settings className="w-5 h-5 shrink-0" style={{ color: "#6366f1", marginTop: "2px" }} />
-          <div>
-            <p style={{ fontSize: "13px", fontWeight: 600, color: isDark ? "#a5b4fc" : "#4f46e5", marginBottom: "4px" }}>
-              Configuração de Funções
-            </p>
-            <p style={{ fontSize: "12px", color: "#dc2626", lineHeight: 1.5 }}>
-              Habilite ou desabilite as funções que aparecem para os moradores do seu condomínio.
-              Funções desabilitadas ficam invisíveis no painel do morador.
-            </p>
+      {/* Tab switcher */}
+      <div style={{ display: "flex", borderBottom: "1px solid #e5e7eb" }}>
+        {TABS.map((t) => {
+          const count = t.features.filter((f) => isFeatureEnabled(f.key)).length;
+          const isActive = tab === t.id;
+          let tabBg: string;
+          let tabColor: string;
+          let badgeBg: string;
+          if (isActive) {
+            tabBg = isDark ? "rgba(255,255,255,0.05)" : "#f0f9ff";
+            tabColor = t.color;
+            badgeBg = `${t.color}20`;
+          } else {
+            tabBg = isDark ? "transparent" : "#fff";
+            tabColor = isDark ? "#94a3b8" : "#6b7280";
+            badgeBg = isDark ? "rgba(255,255,255,0.06)" : "#f1f5f9";
+          }
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              style={{
+                flex: 1,
+                padding: "12px 8px",
+                fontSize: "13px",
+                fontWeight: 700,
+                border: "none",
+                background: tabBg,
+                color: tabColor,
+                borderBottom: isActive ? `3px solid ${t.color}` : "3px solid transparent",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+              }}
+            >
+              {t.label}
+              <span style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "1px 6px",
+                borderRadius: "6px",
+                background: badgeBg,
+                color: isActive ? t.color : "#94a3b8",
+              }}>
+                {count}/{t.features.length}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <main style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem", paddingBottom: "8rem" }}>
+        {/* Info + bulk actions */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Settings className="w-4 h-4" style={{ color: currentTab.color }} />
+            <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
+              {enabledCount} de {currentTab.features.length} ativas
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: "6px" }}>
+            <button
+              onClick={() => toggleAll(currentTab.features, true)}
+              style={{
+                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                border: "none", background: `${currentTab.color}15`, color: currentTab.color, cursor: "pointer",
+              }}
+            >
+              Ativar Todas
+            </button>
+            <button
+              onClick={() => toggleAll(currentTab.features, false)}
+              style={{
+                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                border: "1px solid #e5e7eb", background: isDark ? "rgba(255,255,255,0.04)" : "#fff", color: "#dc2626", cursor: "pointer",
+              }}
+            >
+              Desativar Todas
+            </button>
           </div>
         </div>
 
-        {/* Summary */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 4px" }}>
-          <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
-            Funções Disponíveis
-          </span>
-          <span style={{ fontSize: "12px", color: p.textSecondary }}>
-            {enabledCount} de {FEATURES.length} ativas
-          </span>
-        </div>
-
         {/* Feature toggles */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
-          {FEATURES.map((feature) => {
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {currentTab.features.map((feature) => {
             const enabled = isFeatureEnabled(feature.key);
             const Icon = feature.icon;
+            let iconBoxBg: string;
+            let iconColor: string;
+            let toggleBg: string;
+            if (enabled) {
+              iconBoxBg = currentTab.color;
+              iconColor = "#fff";
+              toggleBg = currentTab.color;
+            } else {
+              iconBoxBg = isDark ? "rgba(255,255,255,0.06)" : "#e2e8f0";
+              iconColor = isDark ? "#64748b" : "#94a3b8";
+              toggleBg = isDark ? "rgba(255,255,255,0.1)" : "#cbd5e1";
+            }
             return (
-              <div
+              <button
                 key={feature.key}
+                type="button"
                 onClick={() => toggleFeature(feature.key)}
                 style={{
                   display: "flex",
@@ -202,78 +307,36 @@ export default function SindicoFeaturesConfig() {
                   cursor: "pointer",
                   background: "transparent",
                   border: "none",
-                  opacity: enabled ? 1 : 0.6,
+                  opacity: enabled ? 1 : 0.5,
                   transition: "all 0.2s ease",
-                  boxShadow: "none",
+                  width: "100%",
+                  textAlign: "left" as const,
                 }}
               >
-                {/* Icon */}
-                <div
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "12px",
-                    background: enabled ? feature.gradient : isDark ? "rgba(255,255,255,0.06)" : "#e2e8f0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  <Icon className="w-5 h-5" style={{ color: enabled ? "#fff" : p.textMuted }} />
+                <div style={{
+                  width: 44, height: 44, borderRadius: 12,
+                  background: iconBoxBg,
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                  transition: "all 0.2s ease",
+                }}>
+                  <Icon className="w-5 h-5" style={{ color: iconColor }} />
                 </div>
-
-                {/* Text */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      color: p.textHeading,
-                      marginBottom: "2px",
-                    }}
-                  >
-                    {feature.label}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "11px",
-                      color: p.textSecondary,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {feature.description}
-                  </p>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: p.textHeading, marginBottom: 2 }}>{feature.label}</p>
+                  <p style={{ fontSize: 11, color: p.textSecondary, lineHeight: 1.4 }}>{feature.description}</p>
                 </div>
-
-                {/* Toggle */}
-                <div
-                  style={{
-                    width: "48px",
-                    height: "28px",
-                    borderRadius: "14px",
-                    background: enabled
-                      ? "#003580"
-                      : isDark ? "rgba(255,255,255,0.1)" : "#cbd5e1",
-                    padding: "3px",
-                    transition: "all 0.2s ease",
-                    flexShrink: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      borderRadius: "50%",
-                      background: "#fff",
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                      transition: "all 0.2s ease",
-                      transform: enabled ? "translateX(20px)" : "translateX(0)",
-                    }}
-                  />
+                <div style={{
+                  width: 48, height: 28, borderRadius: 14, padding: 3, flexShrink: 0,
+                  background: toggleBg,
+                  transition: "all 0.2s ease",
+                }}>
+                  <div style={{
+                    width: 22, height: 22, borderRadius: "50%", background: "#fff",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "all 0.2s ease",
+                    transform: enabled ? "translateX(20px)" : "translateX(0)",
+                  }} />
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

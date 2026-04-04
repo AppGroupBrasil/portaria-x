@@ -31,7 +31,7 @@ export default function SearchCondominio() {
   const [condominio, setCondominio] = useState<CondominioResult | null>(null);
 
   const formatCnpj = (value: string) => {
-    const n = value.replace(/\D/g, "");
+    const n = value.replaceAll(/\D/g, "");
     if (n.length <= 2) return n;
     if (n.length <= 5) return `${n.slice(0, 2)}.${n.slice(2)}`;
     if (n.length <= 8) return `${n.slice(0, 2)}.${n.slice(2, 5)}.${n.slice(5)}`;
@@ -43,7 +43,7 @@ export default function SearchCondominio() {
     setError("");
     setCondominio(null);
 
-    const clean = cnpj.replace(/\D/g, "");
+    const clean = cnpj.replaceAll(/\D/g, "");
     if (clean.length !== 14) {
       setError("CNPJ deve ter 14 dígitos.");
       return;
@@ -160,7 +160,7 @@ export default function SearchCondominio() {
             {/* Error */}
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -175,7 +175,7 @@ export default function SearchCondominio() {
                   </div>
                   <div className="space-y-1 mt-2">
                     <div className="flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
                       <p className="text-sm font-semibold text-foreground">{condominio.name}</p>
                     </div>
                     {buildAddress() && (

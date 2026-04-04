@@ -196,7 +196,7 @@ export default function DeliveryPorteiro() {
       }
 
       // Build WhatsApp URL
-      const cleanPhone = morador_phone.replace(/\D/g, "");
+      const cleanPhone = morador_phone.replaceAll(/\D/g, "");
       const fullPhone = cleanPhone && !cleanPhone.startsWith("55") ? `55${cleanPhone}` : cleanPhone;
       const sv = SERVICOS[formServico] || SERVICOS["outro"];
       const serviceName = formServico === "outro" && formServicoCustom ? formServicoCustom : sv.label;
@@ -221,7 +221,7 @@ export default function DeliveryPorteiro() {
       fetchDeliveries();
 
       if (waUrl) {
-        setTimeout(() => { window.open(waUrl, "_blank"); }, 300);
+        setTimeout(() => { globalThis.open(waUrl, "_blank"); }, 300);
       }
     } catch {
       setFormError("Erro de conexao.");
@@ -320,7 +320,7 @@ export default function DeliveryPorteiro() {
 
   const buildWhatsAppUrl = (delivery: DeliveryAuth) => {
     if (!delivery.morador_phone) return null;
-    const phone = delivery.morador_phone.replace(/\D/g, "");
+    const phone = delivery.morador_phone.replaceAll(/\D/g, "");
     const fullPhone = phone.startsWith("55") ? phone : `55${phone}`;
     const sv = getServicoInfo(delivery.servico);
     const serviceName = delivery.servico === "outro" && delivery.servico_custom
@@ -352,7 +352,7 @@ export default function DeliveryPorteiro() {
         // Use location.href which isn't blocked by popup blockers
         if (waUrl) {
           setTimeout(() => {
-            window.location.href = waUrl;
+            globalThis.window.location.href = waUrl;
           }, 300);
         }
       }
@@ -870,9 +870,9 @@ export default function DeliveryPorteiro() {
 
             {/* Camera / Photo section */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "14px", color: "#1e293b", marginBottom: "10px", display: "block" }}>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: "#1e293b", marginBottom: "10px", display: "block" }}>
                 📸 Foto da Entrega (opcional)
-              </label>
+              </span>
 
               <canvas ref={canvasRef} style={{ display: "none" }} />
 
@@ -1041,7 +1041,7 @@ export default function DeliveryPorteiro() {
 
             {/* Bloco */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Bloco *</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Bloco *</span>
               <select
                 value={formBloco}
                 onChange={(e) => { setFormBloco(e.target.value); setFormMoradorId(""); setFormApartamento(""); fetchMoradoresBloco(e.target.value); }}
@@ -1060,7 +1060,7 @@ export default function DeliveryPorteiro() {
             {/* Morador */}
             {formBloco && (
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Morador *</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Morador *</span>
                 <SearchableSelect
                   options={formMoradores.map((m) => {
                     const label = `${m.name}${m.unit ? ` - Apto ${m.unit}` : ""}`;
@@ -1076,7 +1076,7 @@ export default function DeliveryPorteiro() {
             {/* Apartamento */}
             {formBloco && (
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Apartamento</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Apartamento</span>
                 <input
                   type="text" value={formApartamento} onChange={(e) => setFormApartamento(e.target.value)}
                   placeholder="Apto" style={{
@@ -1091,7 +1091,7 @@ export default function DeliveryPorteiro() {
 
             {/* Servico */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Servico *</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Servico *</span>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
                 {Object.entries(SERVICOS).map(([key, sv]) => (
                   <button
@@ -1112,7 +1112,7 @@ export default function DeliveryPorteiro() {
 
             {formServico === "outro" && (
               <div>
-                <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Nome do Servico</label>
+                <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Nome do Servico</span>
                 <input
                   type="text" value={formServicoCustom} onChange={(e) => setFormServicoCustom(e.target.value)}
                   placeholder="Ex: Farmacia, Mercado..." style={{
@@ -1127,7 +1127,7 @@ export default function DeliveryPorteiro() {
 
             {/* Numero pedido */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Numero do Pedido</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Numero do Pedido</span>
               <input
                 type="text" value={formNumeroPedido} onChange={(e) => setFormNumeroPedido(e.target.value)}
                 placeholder="Ex: #12345" style={{
@@ -1141,7 +1141,7 @@ export default function DeliveryPorteiro() {
 
             {/* Observacao */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Observacao</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Observacao</span>
               <textarea
                 value={formObs} onChange={(e) => setFormObs(e.target.value)}
                 placeholder="Notas sobre a entrega..." rows={2} style={{
@@ -1155,7 +1155,7 @@ export default function DeliveryPorteiro() {
 
             {/* Foto */}
             <div>
-              <label style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Foto da Entrega</label>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Foto da Entrega</span>
               {formCapturing ? (
                 <div style={{ position: "relative", borderRadius: "12px", overflow: "hidden" }}>
                   <video ref={formVideoRef} autoPlay playsInline muted style={{ width: "100%", borderRadius: "12px" }} />

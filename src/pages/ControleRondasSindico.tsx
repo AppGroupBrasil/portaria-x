@@ -22,10 +22,16 @@ import {
   ToggleRight,
   Shield,
   Volume2,
+  FileText,
+  User,
+  Calendar,
+  Search,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import ReportModal from "@/components/ReportModal";
+import { gerarRelatorioRondas } from "@/lib/pdfUtils";
 
 const API = "/api";
 
@@ -55,15 +61,34 @@ export default function ControleRondasSindico() {
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [tab, setTab] = useState<"checkpoints" | "schedules">("checkpoints");
+  const [tab, setTab] = useState<"checkpoints" | "schedules" | "historico">("checkpoints");
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([]);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Histórico
+  interface Registro {
+    id: number;
+    checkpoint_nome: string;
+    funcionario_nome: string;
+    localizacao: string | null;
+    observacao: string | null;
+    foto: string | null;
+    created_at: string;
+  }
+  const [registros, setRegistros] = useState<Registro[]>([]);
+  const [loadingRegistros, setLoadingRegistros] = useState(false);
+  const [filtroFuncionario, setFiltroFuncionario] = useState("");
+  const [filtroCheckpoint, setFiltroCheckpoint] = useState("");
+  const today = new Date().toISOString().slice(0, 10);
+  const [filtroDataInicio, setFiltroDataInicio] = useState(today);
+  const [filtroDataFim, setFiltroDataFim] = useState(today);
   const [showForm, setShowForm] = useState(false);
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [editingCheckpoint, setEditingCheckpoint] = useState<Checkpoint | null>(null);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
   const [showQR, setShowQR] = useState<Checkpoint | null>(null);
+  const [showReport, setShowReport] = useState(false);
   const [error, setError] = useState("");
 
   // Checkpoint form
@@ -85,6 +110,50 @@ export default function ControleRondasSindico() {
   };
 
   useEffect(() => { fetchAll(); }, []);
+
+  // Fetch registros for Histórico tab
+  const fetchRegistros = async () => {
+    setLoadingRegistros(true);
+    try {
+      const params = new URLSearchParams();
+      if (filtroDataInicio) params.set("data_inicio", filtroDataInicio);
+      if (filtroDataFim) params.set("data_fim", filtroDataFim);
+      const res = await apiFetch(`${API}/rondas/registros?${params.toString()}`);
+      if (res.ok) setRegistros(await res.json());
+    } catch {}
+    setLoadingRegistros(false);
+  };
+
+  useEffect(() => {
+    if (tab === "historico") fetchRegistros();
+  }, [tab, filtroDataInicio, filtroDataFim]);
+
+  // ─── PDF REPORT ─────────────
+  const handleGenerateReport = async (dateFrom: string, dateTo: string, _withCharts: boolean) => {
+    try {
+      const params = new URLSearchParams({ data_inicio: dateFrom, data_fim: dateTo });
+      if (filtroFuncionario) params.set("funcionario_nome", filtroFuncionario);
+      const [regRes, statsRes] = await Promise.all([
+        apiFetch(`${API}/rondas/registros?${params.toString()}`),
+        apiFetch(`${API}/rondas/stats?data_inicio=${dateFrom}&data_fim=${dateTo}`),
+      ]);
+      let regs = regRes.ok ? await regRes.json() : [];
+      const stats = statsRes.ok ? await statsRes.json() : {
+        total: 0, byCheckpoint: [], byFuncionario: [], byHour: [], byDay: [],
+        totalCheckpoints: 0, checkpointsCobertos: 0,
+      };
+      // Apply client-side filters that match the Histórico tab
+      if (filtroFuncionario) {
+        regs = regs.filter((r: any) => r.funcionario_nome?.toLowerCase().includes(filtroFuncionario.toLowerCase()));
+      }
+      if (filtroCheckpoint) {
+        regs = regs.filter((r: any) => r.checkpoint_nome?.toLowerCase().includes(filtroCheckpoint.toLowerCase()));
+      }
+      gerarRelatorioRondas(regs, stats, dateFrom, dateTo, user?.condominio_nome);
+    } catch {
+      alert("Erro ao gerar relatório.");
+    }
+  };
 
   // ─── CHECKPOINT CRUD ─────────────
   const handleSaveCheckpoint = async () => {
@@ -113,7 +182,7 @@ export default function ControleRondasSindico() {
   };
 
   const handleDeleteCheckpoint = async (id: number) => {
-    if (!window.confirm("Excluir este ponto de ronda?")) return;
+    if (!globalThis.confirm("Excluir este ponto de ronda?")) return;
     await apiFetch(`${API}/rondas/checkpoints/${id}`, { method: "DELETE" });
     fetchAll();
   };
@@ -157,7 +226,7 @@ export default function ControleRondasSindico() {
   };
 
   const handleDeleteSchedule = async (id: number) => {
-    if (!window.confirm("Excluir este horário?")) return;
+    if (!globalThis.confirm("Excluir este horário?")) return;
     await apiFetch(`${API}/rondas/schedules/${id}`, { method: "DELETE" });
     fetchAll();
   };
@@ -176,7 +245,7 @@ export default function ControleRondasSindico() {
 
   // Print QR code
   const handlePrintQR = (cp: Checkpoint) => {
-    const win = window.open("", "_blank", "width=500,height=600");
+    const win = globalThis.open("", "_blank", "width=500,height=600");
     if (!win) return;
     win.document.write(`
       <!DOCTYPE html>
@@ -200,7 +269,7 @@ export default function ControleRondasSindico() {
         ${cp.localizacao ? `<div class="loc">📍 ${cp.localizacao}</div>` : ""}
         ${cp.descricao ? `<div class="loc">${cp.descricao}</div>` : ""}
         <div class="footer">Escaneie este QR Code durante a ronda para registrar a passagem</div>
-        <script>setTimeout(() => { window.print(); }, 500);</script>
+        <script>setTimeout(() => { globalThis.print(); }, 500);</script>
       </body>
       </html>
     `);
@@ -215,7 +284,7 @@ export default function ControleRondasSindico() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `qrcode-ronda-${cp.nome.replace(/\s+/g, "-").toLowerCase()}.png`;
+      a.download = `qrcode-ronda-${cp.nome.replaceAll(/\s+/g, "-").toLowerCase()}.png`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {}
@@ -225,7 +294,7 @@ export default function ControleRondasSindico() {
   const handlePrintAll = () => {
     const active = checkpoints.filter((c) => c.ativo);
     if (active.length === 0) return;
-    const win = window.open("", "_blank", "width=800,height=600");
+    const win = globalThis.open("", "_blank", "width=800,height=600");
     if (!win) return;
     win.document.write(`
       <!DOCTYPE html>
@@ -254,7 +323,7 @@ export default function ControleRondasSindico() {
             </div>
           `).join("")}
         </div>
-        <script>setTimeout(() => { window.print(); }, 800);</script>
+        <script>setTimeout(() => { globalThis.print(); }, 800);</script>
       </body>
       </html>
     `);
@@ -389,6 +458,26 @@ export default function ControleRondasSindico() {
         >
           <Clock style={{ width: 14, height: 14 }} /> Horários ({schedules.length})
         </button>
+        <button
+          onClick={() => setTab("historico")}
+          style={{
+            flex: 1,
+            padding: "12px",
+            fontSize: "13px",
+            fontWeight: 700,
+            border: "none",
+            background: tab === "historico" ? "#f0f9ff" : "#fff",
+            color: tab === "historico" ? "#0369a1" : "#6b7280",
+            borderBottom: tab === "historico" ? "3px solid #003580" : "3px solid transparent",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+          }}
+        >
+          <FileText style={{ width: 14, height: 14 }} /> Histórico
+        </button>
       </div>
 
       {/* Content */}
@@ -396,6 +485,165 @@ export default function ControleRondasSindico() {
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : tab === "historico" ? (
+          /* ═══ HISTÓRICO TAB ═══ */
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {/* Report button */}
+            <button
+              onClick={() => setShowReport(true)}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                padding: "12px",
+                borderRadius: "14px",
+                border: "none",
+                background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                color: "#fff",
+                fontSize: "14px",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              <FileText style={{ width: 18, height: 18 }} /> Gerar Relatório PDF
+            </button>
+
+            {/* Filters */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", background: "#f8fafc", borderRadius: "14px", padding: "14px" }}>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", display: "block", marginBottom: "4px" }}>De</span>
+                  <input type="date" value={filtroDataInicio} onChange={(e) => setFiltroDataInicio(e.target.value)}
+                    className="w-full h-9 rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", display: "block", marginBottom: "4px" }}>Até</span>
+                  <input type="date" value={filtroDataFim} onChange={(e) => setFiltroDataFim(e.target.value)}
+                    className="w-full h-9 rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" />
+                </div>
+              </div>
+            </div>
+
+            {/* Stats summary */}
+            {(() => {
+              const filtered = registros.filter((r) => {
+                if (filtroFuncionario && !r.funcionario_nome.toLowerCase().includes(filtroFuncionario.toLowerCase())) return false;
+                if (filtroCheckpoint && !r.checkpoint_nome.toLowerCase().includes(filtroCheckpoint.toLowerCase())) return false;
+                return true;
+              });
+              const uniqueFuncionarios = new Set(filtered.map((r) => r.funcionario_nome));
+              const uniqueCheckpoints = new Set(filtered.map((r) => r.checkpoint_nome));
+              return (
+                <>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+                    <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #dbeafe, #eff6ff)" }}>
+                      <p style={{ fontSize: "24px", fontWeight: 800, color: "#003580" }}>{filtered.length}</p>
+                      <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Registros</p>
+                    </div>
+                    <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #dcfce7, #f0fdf4)" }}>
+                      <p style={{ fontSize: "24px", fontWeight: 800, color: "#16a34a" }}>{uniqueFuncionarios.size}</p>
+                      <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Funcionários</p>
+                    </div>
+                    <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #fef3c7, #fffbeb)" }}>
+                      <p style={{ fontSize: "24px", fontWeight: 800, color: "#d97706" }}>{uniqueCheckpoints.size}</p>
+                      <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Pontos</p>
+                    </div>
+                  </div>
+
+                  {/* Search filters */}
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <div style={{ flex: 1, position: "relative" }}>
+                      <Search style={{ width: 14, height: 14, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+                      <input
+                        type="text" placeholder="Funcionário..."
+                        value={filtroFuncionario} onChange={(e) => setFiltroFuncionario(e.target.value)}
+                        className="w-full h-9 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300"
+                        style={{ paddingLeft: "30px", paddingRight: "10px" }}
+                      />
+                    </div>
+                    <div style={{ flex: 1, position: "relative" }}>
+                      <MapPin style={{ width: 14, height: 14, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+                      <input
+                        type="text" placeholder="Ponto..."
+                        value={filtroCheckpoint} onChange={(e) => setFiltroCheckpoint(e.target.value)}
+                        className="w-full h-9 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300"
+                        style={{ paddingLeft: "30px", paddingRight: "10px" }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Records list */}
+                  {loadingRegistros ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  ) : filtered.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "48px 24px" }}>
+                      <FileText style={{ width: 48, height: 48, color: "#d1d5db", margin: "0 auto 12px" }} />
+                      <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "14px" }}>Nenhum registro encontrado</p>
+                      <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                        {registros.length === 0 ? "Nenhuma ronda foi registrada ainda" : "Ajuste os filtros para ver os registros"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      {filtered.slice(0, 100).map((r) => {
+                        const dt = new Date(r.created_at + "Z");
+                        const hora = dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                        const dataCompleta = dt.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+                        return (
+                          <div key={r.id} style={{ background: "#fff", borderRadius: "14px", padding: "14px", border: "1px solid #e5e7eb" }}>
+                            {/* Checkpoint name + badge */}
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                              <div style={{ width: 36, height: 36, borderRadius: "10px", background: "linear-gradient(135deg, #10b981, #059669)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                <CheckCircle2 style={{ width: 18, height: 18, color: "#fff" }} />
+                              </div>
+                              <p style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", flex: 1 }}>{r.checkpoint_nome}</p>
+                            </div>
+
+                            {/* Info grid: funcionário, localização, data/hora */}
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", background: "#f8fafc", borderRadius: "10px", padding: "10px 12px" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <User style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
+                                <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{r.funcionario_nome}</span>
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <Calendar style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
+                                <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{dataCompleta}</span>
+                              </div>
+                              {r.localizacao && (
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                  <MapPin style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
+                                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{r.localizacao}</span>
+                                </div>
+                              )}
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <Clock style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
+                                <span style={{ fontSize: "13px", fontWeight: 700, color: "#003580" }}>{hora}</span>
+                              </div>
+                            </div>
+
+                            {r.observacao && (
+                              <p style={{ fontSize: "12px", color: "#475569", marginTop: "8px", background: "#f0f9ff", padding: "8px 10px", borderRadius: "8px", borderLeft: "3px solid #003580" }}>
+                                💬 {r.observacao}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })}
+                      {filtered.length > 100 && (
+                        <p style={{ textAlign: "center", fontSize: "12px", color: "#94a3b8", padding: "8px" }}>
+                          Mostrando 100 de {filtered.length} registros
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         ) : tab === "checkpoints" ? (
           /* ═══ CHECKPOINTS TAB ═══ */
@@ -762,9 +1010,9 @@ export default function ControleRondasSindico() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Nome do Ponto *
-                </label>
+                </span>
                 <input
                   type="text"
                   value={cpForm.nome}
@@ -774,9 +1022,9 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Localização
-                </label>
+                </span>
                 <input
                   type="text"
                   value={cpForm.localizacao}
@@ -786,9 +1034,9 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Descrição (opcional)
-                </label>
+                </span>
                 <textarea
                   value={cpForm.descricao}
                   onChange={(e) => setCpForm({ ...cpForm, descricao: e.target.value })}
@@ -812,6 +1060,14 @@ export default function ControleRondasSindico() {
       )}
 
       {/* ═══ Schedule Form Modal ═══ */}
+      {/* ═══ Report Modal ═══ */}
+      <ReportModal
+        show={showReport}
+        onClose={() => setShowReport(false)}
+        onGenerate={handleGenerateReport}
+        title="Relatório de rondas com estatísticas, gráficos e detalhamento por funcionário e ponto."
+      />
+
       {showScheduleForm && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
           <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px" }}>
@@ -832,9 +1088,9 @@ export default function ControleRondasSindico() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Nome *
-                </label>
+                </span>
                 <input
                   type="text"
                   value={schedForm.nome}
@@ -844,9 +1100,9 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Horário *
-                </label>
+                </span>
                 <input
                   type="time"
                   value={schedForm.horario}
@@ -855,9 +1111,9 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "8px", display: "block" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "8px", display: "block" }}>
                   Dias da Semana
-                </label>
+                </span>
                 <div style={{ display: "flex", gap: "4px" }}>
                   {DIAS_SEMANA.map((dia, i) => {
                     const active = schedForm.dias_semana.split(",").map(Number).includes(i);
