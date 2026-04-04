@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from "react";
 import { apiFetch, setToken, clearToken } from "@/lib/api";
+import { AppError, APP_ERROR_CODES, readErrorResponse } from "@/lib/errorCodes";
 import { initPushNotifications, unregisterPushToken } from "@/lib/pushNotifications";
 import { isDemoMode, setDemoMode } from "@/hooks/useDemoGuard";
 
@@ -125,12 +126,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       body: JSON.stringify({ email, password }),
     });
     if (!res.ok) {
-      let errorMsg = "Erro ao fazer login";
-      try {
-        const err = await res.json();
-        errorMsg = err.error || errorMsg;
-      } catch {}
-      throw new Error(errorMsg);
+      throw await readErrorResponse(res, "Erro ao fazer login", APP_ERROR_CODES.AUTH_INVALID_CREDENTIALS);
     }
     const data = await res.json();
     if (data.token) setToken(data.token);
@@ -146,9 +142,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       body: JSON.stringify({ role }),
     });
     if (!res.ok) {
-      let errorMsg = "Erro ao iniciar demonstração";
-      try { const err = await res.json(); errorMsg = err.error || errorMsg; } catch {}
-      throw new Error(errorMsg);
+      throw await readErrorResponse(res, "Erro ao iniciar demonstração", APP_ERROR_CODES.DEMO_START_FAILED);
     }
     const data = await res.json();
     if (data.token) setToken(data.token);
@@ -166,10 +160,10 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     let body: any;
     try { body = await res.json(); } catch { body = {}; }
     if (!res.ok) {
-      throw new Error(body.error || "Erro ao criar conta");
+      throw new AppError(body.error || "Erro ao criar conta", body.code);
     }
     if (body.pendingApproval) {
-      throw new Error("__PENDING_APPROVAL__");
+      throw new AppError(body.message || "Cadastro pendente de aprovação.", body.code || APP_ERROR_CODES.AUTH_PENDING_APPROVAL);
     }
     if (body.token) setToken(body.token);
     setUser(body.user);
@@ -184,7 +178,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     let body: any;
     try { body = await res.json(); } catch { body = {}; }
     if (!res.ok) {
-      throw new Error(body.error || "Erro ao criar conta");
+      throw new AppError(body.error || "Erro ao criar conta", body.code);
     }
     if (body.token) setToken(body.token);
     setUser(body.user);

@@ -30,16 +30,9 @@ export const APP_ORIGIN: string =
   (isNative ? "https://www.portariax.com.br" : globalThis.window.location.origin);
 
 /**
- * Build a WebSocket URL from the current API base.
- * - Web dev:  ws://<host>:3001/ws/interfone  (direct to backend, bypasses Vite proxy)
- * - Web prod: wss://portariax.com.br/ws/interfone
- * - Capacitor: wss://portariax.com.br/ws/interfone
- */
-/**
  * Build a WebSocket URL.
- * In dev, WebSocket servers run on dedicated ports to avoid Vite proxy issues:
- *   /ws/interfone      → port 3002
- *   /ws/estou-chegando  → port 3003
+ * In dev, the backend serves WebSocket endpoints directly on port 3001:
+ *   /ws/estou-chegando  → port 3001
  * In prod / Capacitor, same origin or API_BASE.
  */
 export function buildWsUrl(path: string): string {
@@ -51,9 +44,9 @@ export function buildWsUrl(path: string): string {
   const hostname = globalThis.window.location.hostname;
   const port = globalThis.window.location.port;
 
-  // Dev: Vite runs on 5173, route to dedicated WS ports
+  // Dev: Vite runs on 5173 while the backend serves HTTP + WS on 3001.
   if (port && port !== "80" && port !== "443" && port !== "3001") {
-    const wsPort = path.includes("estou-chegando") ? "3003" : "3002";
+    const wsPort = path.includes("estou-chegando") ? "3001" : "3002";
     return `${proto}//${hostname}:${wsPort}${path}`;
   }
 

@@ -147,11 +147,6 @@ const standardFeatures = [
 
 const premiumFeatures = [
   {
-    icon: Phone, title: "Interfone Digital",
-    desc: "QR Code por bloco. Visitante escaneia e liga direto pro morador com vídeo. 3 níveis de segurança configuráveis.",
-    profiles: ["portaria", "morador", "sindico"] as ProfileKey[],
-  },
-  {
     icon: Monitor, title: "Monitoramento de Câmeras",
     desc: "Câmeras RTSP em tempo real. Grade multi-câmera com snapshot automático. Configure pelo painel do síndico.",
     profiles: ["portaria", "sindico"] as ProfileKey[],
@@ -180,7 +175,6 @@ const baseFeatures = [
   "Controle de Veículos + OCR",
   "Correspondências com Notificação",
   "Delivery",
-  "Interfone Digital com QR Code",
   "Estou Chegando (GPS)",
   "Livro de Protocolo Digital",
   "Espelho de Portaria",
@@ -582,7 +576,7 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
               <Users style={{ width: "32px", height: "32px", color: "#ffffff" }} />
             </div>
             <span style={{ fontSize: "18px", fontWeight: 800, color: "#ffffff" }}>{demoLoading === "morador" ? "Carregando..." : "Morador"}</span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Autorizações, veículos, delivery, correspondências e interfone</span>
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Autorizações, veículos, delivery e correspondências</span>
             <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "13px" }}>
               Explorar <ArrowRight style={{ width: "14px", height: "14px" }} />
             </div>

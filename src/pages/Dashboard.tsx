@@ -1,12 +1,10 @@
-import { useAuth, getRoleLabel, hasMinRole } from "@/hooks/useAuth";
+import { useAuth, getRoleLabel } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   UserPlus,
-  ClipboardList,
   Home,
-  Search,
   Menu,
   LogOut,
   Settings,
@@ -20,11 +18,8 @@ import {
   FileText,
   Wrench,
   Bell,
-  ChevronRight,
-  Upload,
   DoorOpen,
   BookOpen,
-  Briefcase as BriefcaseIcon,
   MessageCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -48,7 +43,7 @@ interface Stats {
 }
 
 /* ── Circular Gauge SVG ── */
-function CircleGauge({ value, max, label, color, size = 110 }: { value: number; max: number; label: string; color: string; size?: number }) {
+function CircleGauge({ value, max, label, color, size = 110 }: Readonly<{ value: number; max: number; label: string; color: string; size?: number }>) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   const r = (size - 16) / 2;
   const circ = 2 * Math.PI * r;
@@ -103,11 +98,13 @@ function CircleGauge({ value, max, label, color, size = 110 }: { value: number; 
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme, isDark, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loadingStats, setLoadingStats] = useState(false);
   const [activeModule, setActiveModule] = useState(0);
+  const secondaryHoverBg = p.isDarkBase ? "rgba(255,255,255,0.15)" : "#e2e8f0";
+  const secondaryIdleBg = p.btnBg;
 
   const isMaster = user?.role === "master";
 
@@ -138,160 +135,166 @@ export default function Dashboard() {
     morador: "Moradores",
   };
 
-  const masterMenuItems = [
-    { icon: BarChart3, label: "Dashboard", route: "/dashboard", active: true },
-    { icon: Building2, label: "Condomínios", route: "/master/condominios" },
-    { icon: Shield, label: "Painel", route: "/master/painel" },
-    { icon: Users, label: "Usuários", route: "/master/usuarios" },
-    { icon: Wrench, label: "Config", route: "/master/config" },
-    { icon: FileText, label: "Logs", route: "/master/logs" },
-  ];
+  let statsContent: React.ReactNode = null;
+  if (loadingStats) {
+    statsContent = (
+      <div className="flex justify-center py-10">
+        <div className="premium-spinner w-7 h-7" />
+      </div>
+    );
+  } else if (stats) {
+    statsContent = (
+      <div className="animate-fade-in grid grid-cols-1 sm:grid-cols-2" style={{ animationDelay: "0.14s", gap: "1rem" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <p className="text-[20px] font-semibold text-foreground uppercase tracking-wider mb-3">Distribuição</p>
+        <div className="ui-card rounded-3xl overflow-hidden" style={{ border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box", flex: 1, padding: "1.5rem 0.75rem" }}>
+          {(() => {
+            const barData = [
+              { label: "Condomínios", value: stats.totals.condominios, icon: Building2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              { label: "Usuários", value: stats.totals.users, icon: Users, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              { label: "Blocos", value: stats.totals.blocos, icon: Layers, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              { label: "Funcionários", value: stats.totals.funcionarios, icon: Wrench, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              { label: "Moradores", value: stats.totals.moradores, icon: Users2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+            ];
+            const maxVal = Math.max(...barData.map((bar) => bar.value), 1);
+            return barData.map((bar, index) => {
+              const BarIcon = bar.icon;
+              const pct = Math.max((bar.value / maxVal) * 100, 6);
+              return (
+                <div
+                  key={bar.label}
+                  className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/2 ${
+                    index < barData.length - 1 ? "border-b border-white/4" : ""
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-xl bg-linear-to-br ${bar.gradient} flex items-center justify-center shadow-md shrink-0`}>
+                    <BarIcon className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[20px] font-medium text-foreground">{bar.label}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 h-1.5 bg-foreground/8 rounded-full overflow-hidden">
+                        <div className={`h-full bg-linear-to-r ${bar.gradient} rounded-full transition-all duration-1000`} style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  </div>
+                  <span className={`text-2xl font-bold ${bar.color}`}>{bar.value}</span>
+                </div>
+              );
+            });
+          })()}
+        </div>
+      </div>
 
-  const totalAll = stats ? Object.values(stats.totals).reduce((a, b) => a + b, 0) : 0;
-
-  // Module chips
-  const moduleChips = [
-    { label: "Cadastro", active: false },
-    { label: "Usuários", active: true },
-    { label: "Blocos", active: false },
-    { label: "Moradores", active: false },
-    { label: "Config", active: false },
-    { label: "Relatórios", active: false },
-  ];
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[22px] font-semibold text-foreground tracking-tight">Usuários por Perfil</p>
+          <span className="text-[18px] font-semibold text-foreground">{stats.usersByRole.reduce((a, b) => a + b.count, 0)} total</span>
+        </div>
+        <div className="ui-card rounded-3xl overflow-hidden" style={{ border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box", flex: 1, padding: "0.75rem" }}>
+          {stats.usersByRole.map((item, index) => {
+            const cfgs: Record<string, { icon: LucideIcon; gradient: string; color: string }> = {
+              master: { icon: Shield, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              administradora: { icon: Building2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              sindico: { icon: Briefcase, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              funcionario: { icon: Wrench, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+              morador: { icon: Users2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
+            };
+            const cfg = cfgs[item.role] || { icon: Users, gradient: "from-gray-500 to-gray-600", color: "text-gray-400" };
+            const RoleIcon = cfg.icon;
+            const total = stats.usersByRole.reduce((a, b) => a + b.count, 0);
+            const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+            return (
+              <button
+                key={item.role}
+                type="button"
+                className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-white/2 ${
+                  index < stats.usersByRole.length - 1 ? "border-b border-white/4" : ""
+                } ${index === activeModule ? "sidebar-item-active-light" : ""}`}
+                onClick={() => setActiveModule(index)}
+              >
+                <div className={`w-8 h-8 rounded-xl bg-linear-to-br ${cfg.gradient} flex items-center justify-center shadow-md shrink-0`}>
+                  <RoleIcon className="w-3.5 h-3.5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[20px] font-medium text-foreground">{roleLabels[item.role] || item.role}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex-1 h-1.5 bg-foreground/8 rounded-full overflow-hidden">
+                      <div className={`h-full bg-linear-to-r ${cfg.gradient} rounded-full transition-all duration-700`} style={{ width: `${Math.max(pct, 5)}%` }} />
+                    </div>
+                  </div>
+                </div>
+                <span className={`text-2xl font-bold ${cfg.color}`}>{item.count}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       {/* ═══════════ Header ═══════════ */}
-      <header className="sticky top-0 z-40 premium-header text-white" style={{ marginBottom: "3rem" }}>
-        <div className="flex items-center justify-between" style={{ padding: "1rem 2rem", height: "4.5rem" }}>
-          <div className="flex items-center gap-4">
-            <button className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all">
-              <Menu className="w-7 h-7" />
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0 }}>
+        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5rem", gap: 16 }}>
+          <div className="flex items-center gap-4" style={{ minWidth: 0 }}>
+            <button className="p-2.5 rounded-xl transition-all" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
+              <Menu className="w-7 h-7" style={{ color: p.text }} />
             </button>
-            <div>
-              <span className="font-bold text-xl tracking-tight truncate block">
-                {user?.condominio_nome || "Meu Condomínio"}
+            <div style={{ minWidth: 0 }}>
+              <span
+                className="block"
+                style={{
+                  fontWeight: 800,
+                  fontSize: 18,
+                  letterSpacing: "-0.01em",
+                  color: p.textHeading,
+                  lineHeight: 1.15,
+                  maxWidth: "min(46vw, 280px)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  wordBreak: "break-word",
+                }}
+              >
+                {user?.name || "Painel Master"}
               </span>
-              <span className="text-sm text-white/60 flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: p.textDim, marginTop: 6, flexWrap: "wrap" }}>
                 <Shield className="w-4 h-4" />
-                {getRoleLabel(user?.role || "morador")}
+                {getRoleLabel(user?.role || "master")}
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" style={{ flexShrink: 0 }}>
             <ThemePicker />
-            <button className="p-3 rounded-xl bg-white/8 hover:bg-white/15 transition-all relative">
-              <Bell className="w-6 h-6" />
+            <button className="p-3 rounded-xl transition-all relative" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
+              <Bell className="w-6 h-6" style={{ color: p.text }} />
               <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-emerald-400 rounded-full" />
             </button>
-            <button className="p-3 rounded-xl bg-white/8 hover:bg-white/15 transition-all" onClick={handleLogout}>
-              <LogOut className="w-6 h-6" />
+            <button className="p-3 rounded-xl transition-all" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }} onClick={handleLogout}>
+              <LogOut className="w-6 h-6" style={{ color: p.text }} />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 overflow-x-hidden" style={{ display: "flex", flexDirection: "column", gap: "2rem", paddingBottom: "10rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "2rem" }}>
+      <div style={{ padding: "16px 20px 8px" }}>
+        <p style={{ fontSize: 14, color: p.accentBright, fontWeight: 500 }}>Bem-vindo(a) ao</p>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: p.text, marginTop: 4 }}>Painel Master</h1>
+        <p style={{ fontSize: 14, color: p.textDim, marginTop: 6 }}>Visão geral da operação do Portaria X</p>
+      </div>
+
+      <main className="flex-1 overflow-x-hidden" style={{ display: "flex", flexDirection: "column", gap: "2rem", paddingBottom: "10rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem" }}>
 
         <FuncoesIndex userRole={user?.role || "master"} />
 
         {isMaster && (
           <>
             {/* ═══════════ ROW 4: Color Bars + Sidebar Nav ═══════════ */}
-            {loadingStats ? (
-              <div className="flex justify-center py-10">
-                <div className="premium-spinner w-7 h-7" />
-              </div>
-            ) : stats ? (
-              <div className="animate-fade-in grid grid-cols-1 sm:grid-cols-2" style={{ animationDelay: "0.14s", gap: "1rem" }}>
-                {/* Distribuição */}
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <p className="text-[20px] font-semibold text-foreground uppercase tracking-wider mb-3">Distribuição</p>
-                  <div className="ui-card rounded-3xl overflow-hidden" style={{ border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box", flex: 1, padding: "1.5rem 0.75rem" }}>
-                    {(() => {
-                      const barData = [
-                        { label: "Condomínios", value: stats.totals.condominios, icon: Building2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        { label: "Usuários", value: stats.totals.users, icon: Users, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        { label: "Blocos", value: stats.totals.blocos, icon: Layers, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        { label: "Funcionários", value: stats.totals.funcionarios, icon: Wrench, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        { label: "Moradores", value: stats.totals.moradores, icon: Users2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                      ];
-                      const maxVal = Math.max(...barData.map(b => b.value), 1);
-                      return barData.map((bar, index) => {
-                        const BarIcon = bar.icon;
-                        const pct = Math.max((bar.value / maxVal) * 100, 6);
-                        return (
-                          <div
-                            key={bar.label}
-                            className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/2 ${
-                              index < barData.length - 1 ? "border-b border-white/4" : ""
-                            }`}
-                          >
-                            <div className={`w-8 h-8 rounded-xl bg-linear-to-br ${bar.gradient} flex items-center justify-center shadow-md shrink-0`}>
-                              <BarIcon className="w-3.5 h-3.5 text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[20px] font-medium text-foreground">{bar.label}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <div className="flex-1 h-1.5 bg-foreground/8 rounded-full overflow-hidden">
-                                  <div className={`h-full bg-linear-to-r ${bar.gradient} rounded-full transition-all duration-1000`} style={{ width: `${pct}%` }} />
-                                </div>
-                              </div>
-                            </div>
-                            <span className={`text-2xl font-bold ${bar.color}`}>{bar.value}</span>
-                          </div>
-                        );
-                      });
-                    })()}
-                  </div>
-                </div>
-
-                {/* Usuários por Perfil */}
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-[22px] font-semibold text-foreground tracking-tight">Usuários por Perfil</p>
-                    <span className="text-[18px] font-semibold text-foreground">{stats.usersByRole.reduce((a, b) => a + b.count, 0)} total</span>
-                  </div>
-                  <div className="ui-card rounded-3xl overflow-hidden" style={{ border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box", flex: 1, padding: "0.75rem" }}>
-                    {stats.usersByRole.map((item, index) => {
-                      const cfgs: Record<string, { icon: LucideIcon; gradient: string; color: string }> = {
-                        master: { icon: Shield, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        administradora: { icon: Building2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        sindico: { icon: Briefcase, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        funcionario: { icon: Wrench, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                        morador: { icon: Users2, gradient: "from-[#003580] to-[#003580]", color: "text-white" },
-                      };
-                      const cfg = cfgs[item.role] || { icon: Users, gradient: "from-gray-500 to-gray-600", color: "text-gray-400" };
-                      const RoleIcon = cfg.icon;
-                      const total = stats.usersByRole.reduce((a, b) => a + b.count, 0);
-                      const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
-                      return (
-                        <div
-                          key={item.role}
-                          className={`flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/2 ${
-                            index < stats.usersByRole.length - 1 ? "border-b border-white/4" : ""
-                          } ${index === activeModule ? "sidebar-item-active-light" : ""}`}
-                          onClick={() => setActiveModule(index)}
-                        >
-                          <div className={`w-8 h-8 rounded-xl bg-linear-to-br ${cfg.gradient} flex items-center justify-center shadow-md shrink-0`}>
-                            <RoleIcon className="w-3.5 h-3.5 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[20px] font-medium text-foreground">{roleLabels[item.role] || item.role}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <div className="flex-1 h-1.5 bg-foreground/8 rounded-full overflow-hidden">
-                                <div className={`h-full bg-linear-to-r ${cfg.gradient} rounded-full transition-all duration-700`} style={{ width: `${Math.max(pct, 5)}%` }} />
-                              </div>
-                            </div>
-                          </div>
-                          <span className={`text-2xl font-bold ${cfg.color}`}>{item.count}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            ) : null}
+            {statsContent}
 
             {/* ═══════════ ROW 6: Stat numbers row ═══════════ */}
             {stats && (
@@ -303,10 +306,10 @@ export default function Dashboard() {
                   { label: "Funcionários", value: stats.totals.funcionarios, color: "stat-num-teal", route: "/master/usuarios" },
                   { label: "Moradores", value: stats.totals.moradores, color: "stat-num-green", route: "/master/usuarios" },
                 ].map((s) => (
-                  <div key={s.label} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => navigate(s.route))(); } }} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box" }}>
+                  <button type="button" key={s.label} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box" }}>
                     <span className="text-2xl sm:text-3xl font-extrabold" style={{ color: "#2563eb" }}>{s.value}</span>
                     <span className="font-medium uppercase tracking-wider text-center" style={{ fontSize: "11px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word", color: p.isDarkBase ? "rgba(255,255,255,0.7)" : "#374151" }}>{s.label}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -322,11 +325,11 @@ export default function Dashboard() {
                   { icon: BookOpen, label: "Guia Instalação", description: "Tutorial de instalação do sistema", route: "/master/guia-instalacao" },
                   { icon: MessageCircle, label: "WhatsApp", description: "Controlar WhatsApp por condomínio", route: "/master/whatsapp" },
                 ].map((item) => (
-                  <div key={item.label} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => navigate(item.route))(); } }} onClick={() => navigate(item.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "1.25rem 0.75rem", minHeight: "120px", border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box", textAlign: "center" }}>
+                  <button type="button" key={item.label} onClick={() => navigate(item.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "1.25rem 0.75rem", minHeight: "120px", border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box", textAlign: "center" }}>
                     <item.icon className="w-7 h-7 mb-2" style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }} />
                     <p className="font-bold text-sm" style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }}>{item.label}</p>
                     <p className="text-[11px] mt-1" style={{ color: p.isDarkBase ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>{item.description}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

@@ -239,7 +239,6 @@ export default function ContratoPage() {
             Funcionalidades Premium:
           </p>
           <ul style={{ paddingLeft: "24px" }}>
-            <li>Interfone Digital com QR Code por Bloco e vídeo</li>
             <li>Monitoramento de Câmeras CFTV (RTSP) com grade multi-câmera</li>
             <li>Controle de Veículos com OCR (leitura de placa pelo celular)</li>
             <li>Portaria Virtual (IoT) — abertura de portões pelo app com ESP32 + relé</li>

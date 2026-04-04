@@ -1,10 +1,17 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
-import db from "./db.js";
+import db, { type DbUser } from "./db.js";
 import { authenticate, authorize, condominioScope, moradorSelfScope } from "./middleware.js";
 import { emailContaCriada } from "./emailService.js";
 
 const router = Router();
+
+function getAuthenticatedUser(user: DbUser | undefined): DbUser {
+  if (!user) {
+    throw new Error("Authenticated user missing from request.");
+  }
+  return user;
+}
 
 // All moradores routes require authentication
 router.use(authenticate);
@@ -13,6 +20,7 @@ router.use(authenticate);
 router.post("/", authorize("master", "administradora", "sindico"), async (req, res) => {
   try {
     const { nome, bloco, unidade, perfil, whatsapp, email, password } = req.body;
+    const user = getAuthenticatedUser(req.user);
 
     if (!nome || !bloco || !unidade || !perfil || !email || !password) {
       res.status(400).json({ error: "Nome, bloco, unidade, perfil, e-mail e senha são obrigatórios." });
@@ -37,7 +45,7 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
     }
 
     // Verificar se o bloco existe no condomínio
-    const condoId = req.user!.condominio_id || (req.body.condominioId ? Number(req.body.condominioId) : null);
+    const condoId = user.condominio_id || (req.body.condominioId ? Number(req.body.condominioId) : null);
     if (!condoId) {
       res.status(400).json({ error: "Selecione um condomínio." });
       return;
@@ -99,13 +107,14 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
 // master: vê todos
 router.get("/", (req, res) => {
   try {
-    const scope = condominioScope(req.user!);
-    const selfScope = moradorSelfScope(req.user!);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
+    const selfScope = moradorSelfScope(user);
 
     const moradores = db.prepare(
       `SELECT id, name, email, phone, perfil, unit, block, condominio_id, created_at
        FROM users
-       WHERE role = 'morador' AND ${scope.clause} AND ${selfScope.clause}
+       WHERE role = 'morador' AND COALESCE(is_demo, 0) = 0 AND ${scope.clause} AND ${selfScope.clause}
        ORDER BY name ASC`
     ).all(...scope.params, ...selfScope.params);
     res.json(moradores);
@@ -118,13 +127,14 @@ router.get("/", (req, res) => {
 // PUT /api/moradores/:id - Editar morador (sindico+)
 router.put("/:id", authorize("master", "administradora", "sindico"), async (req, res) => {
   try {
-    const id = req.params.id as string;
+    const id = Number.parseInt(req.params.id as string, 10);
     const { nome, bloco, unidade, perfil, whatsapp, email, password } = req.body;
-    const scope = condominioScope(req.user!);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
 
     const morador = db.prepare(
       `SELECT id FROM users WHERE id = ? AND role = 'morador' AND ${scope.clause}`
-    ).get(parseInt(id), ...scope.params);
+    ).get(id, ...scope.params);
     if (!morador) { res.status(404).json({ error: "Morador não encontrado." }); return; }
 
     if (!nome || !bloco || !unidade || !perfil || !email) {
@@ -133,7 +143,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { res.status(400).json({ error: "E-mail inválido." }); return; }
 
     // Verificar se o bloco existe no condomínio
-    const condoId = req.user!.condominio_id || null;
+    const condoId = user.condominio_id || null;
     if (condoId) {
       const blocoExists = db.prepare("SELECT id FROM blocks WHERE condominio_id = ? AND name = ?").get(condoId, bloco);
       if (!blocoExists) {
@@ -142,15 +152,15 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
       }
     }
 
-    const dup = db.prepare("SELECT id FROM users WHERE email = ? AND id != ?").get(email.toLowerCase().trim(), parseInt(id));
+    const dup = db.prepare("SELECT id FROM users WHERE email = ? AND id != ?").get(email.toLowerCase().trim(), id);
     if (dup) { res.status(409).json({ error: "Este e-mail já está cadastrado." }); return; }
 
     if (password) {
       if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
       const hashed = await bcrypt.hash(password, 10);
-      db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ?, password = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, hashed, parseInt(id));
+      db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ?, password = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, hashed, id);
     } else {
-      db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, parseInt(id));
+      db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, id);
     }
 
     res.json({ success: true, message: "Morador atualizado." });
@@ -163,19 +173,20 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
 // DELETE /api/moradores/:id - Excluir morador (sindico+)
 router.delete("/:id", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const id = req.params.id as string;
-    const scope = condominioScope(req.user!);
+    const id = Number.parseInt(req.params.id as string, 10);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
 
     const morador = db.prepare(
       `SELECT id FROM users WHERE id = ? AND role = 'morador' AND ${scope.clause}`
-    ).get(parseInt(id), ...scope.params);
+    ).get(id, ...scope.params);
 
     if (!morador) {
       res.status(404).json({ error: "Morador não encontrado." });
       return;
     }
 
-    db.prepare("DELETE FROM users WHERE id = ?").run(parseInt(id));
+    db.prepare("DELETE FROM users WHERE id = ?").run(id);
     res.json({ success: true, message: "Morador excluído." });
   } catch (err) {
     console.error("Erro ao excluir morador:", err);
@@ -186,7 +197,8 @@ router.delete("/:id", authorize("master", "administradora", "sindico"), (req, re
 // POST /api/moradores/gerar-link - Gerar link de cadastro (sindico+)
 router.post("/gerar-link", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    let condoId = req.user!.condominio_id;
+    const user = getAuthenticatedUser(req.user);
+    let condoId = user.condominio_id;
     // Administradora/master may not have condominio_id directly — try from body or query
     if (!condoId && req.body.condominio_id) {
       condoId = req.body.condominio_id;
@@ -194,7 +206,8 @@ router.post("/gerar-link", authorize("master", "administradora", "sindico"), (re
     const token = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
     // Use Referer/Origin header to build frontend URL, or fallback to request host
     const origin = req.get("origin") || req.get("referer")?.replace(/\/[^/]*$/, "") || `${req.protocol}://${req.get("host")}`;
-    const link = `${origin}/register/morador?ref=${token}${condoId ? `&condo=${condoId}` : ""}`;
+    const condoQuery = condoId ? `&condo=${condoId}` : "";
+    const link = `${origin}/register/morador?ref=${token}${condoQuery}`;
     res.json({ link, token });
   } catch (err) {
     console.error("Erro ao gerar link:", err);
@@ -205,11 +218,12 @@ router.post("/gerar-link", authorize("master", "administradora", "sindico"), (re
 // GET /api/moradores/pendentes - Listar moradores aguardando aprovação
 router.get("/pendentes", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const scope = condominioScope(req.user!);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
     const pendentes = db.prepare(
       `SELECT id, name, email, phone, perfil, unit, block, condominio_id, created_at
        FROM users
-       WHERE role = 'morador' AND aprovado = 0 AND ${scope.clause}
+       WHERE role = 'morador' AND COALESCE(is_demo, 0) = 0 AND aprovado = 0 AND ${scope.clause}
        ORDER BY created_at DESC`
     ).all(...scope.params);
     res.json(pendentes);
@@ -222,9 +236,10 @@ router.get("/pendentes", authorize("master", "administradora", "sindico"), (req,
 // GET /api/moradores/pendentes/count - Contar moradores aguardando
 router.get("/pendentes/count", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const scope = condominioScope(req.user!);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
     const result = db.prepare(
-      `SELECT COUNT(*) as count FROM users WHERE role = 'morador' AND aprovado = 0 AND ${scope.clause}`
+      `SELECT COUNT(*) as count FROM users WHERE role = 'morador' AND COALESCE(is_demo, 0) = 0 AND aprovado = 0 AND ${scope.clause}`
     ).get(...scope.params) as { count: number };
     res.json({ count: result.count });
   } catch (err) {
@@ -236,8 +251,9 @@ router.get("/pendentes/count", authorize("master", "administradora", "sindico"),
 // PUT /api/moradores/:id/aprovar - Aprovar cadastro
 router.put("/:id/aprovar", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const id = parseInt(req.params.id as string);
-    const scope = condominioScope(req.user!);
+    const id = Number.parseInt(req.params.id as string, 10);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
     const morador = db.prepare(
       `SELECT id, name FROM users WHERE id = ? AND role = 'morador' AND aprovado = 0 AND ${scope.clause}`
     ).get(id, ...scope.params) as { id: number; name: string } | undefined;
@@ -256,8 +272,9 @@ router.put("/:id/aprovar", authorize("master", "administradora", "sindico"), (re
 // DELETE /api/moradores/:id/rejeitar - Rejeitar cadastro (remove user)
 router.delete("/:id/rejeitar", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
-    const id = parseInt(req.params.id as string);
-    const scope = condominioScope(req.user!);
+    const id = Number.parseInt(req.params.id as string, 10);
+    const user = getAuthenticatedUser(req.user);
+    const scope = condominioScope(user);
     const morador = db.prepare(
       `SELECT id, name FROM users WHERE id = ? AND role = 'morador' AND aprovado = 0 AND ${scope.clause}`
     ).get(id, ...scope.params) as { id: number; name: string } | undefined;
@@ -282,7 +299,8 @@ router.post("/importar", authorize("master", "administradora", "sindico"), async
       return;
     }
 
-    const condoId = req.user!.condominio_id || null;
+    const user = getAuthenticatedUser(req.user);
+    const condoId = user.condominio_id || null;
     const defaultPassword = await bcrypt.hash("1234", 10); // Senha padrão para importação
     let imported = 0;
     let errors = 0;
@@ -319,10 +337,11 @@ router.post("/importar", authorize("master", "administradora", "sindico"), async
       }
     }
 
+    const importErrorsMessage = errors > 0 ? `, ${errors} com erro` : "";
     res.json({
       imported,
       errors,
-      message: `${imported} morador(es) importado(s)${errors > 0 ? `, ${errors} com erro` : ""}.`,
+      message: `${imported} morador(es) importado(s)${importErrorsMessage}.`,
     });
   } catch (err) {
     console.error("Erro ao importar moradores:", err);

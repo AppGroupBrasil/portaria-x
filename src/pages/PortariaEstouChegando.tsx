@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch, getToken } from "@/lib/api";
 import { buildWsUrl } from "@/lib/config";
+import { DEFAULT_MAP_CENTER, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID } from "@/lib/googleMaps";
 import TutorialButton, { FlowPortaria, FlowMorador, TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   ArrowLeft,
@@ -24,57 +25,13 @@ import {
   Wifi,
   WifiOff,
   User,
-  Phone,
   Building,
   Loader2,
   History,
 } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-// Fix default Leaflet marker icons (missing in bundlers)
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { CircleF, GoogleMap, InfoWindowF, LoadScriptNext, MarkerF } from "@react-google-maps/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
-
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({ iconRetinaUrl: markerIcon2x, iconUrl: markerIcon, shadowUrl: markerShadow });
-
-// Custom morador marker (green)
-const moradorIcon = new L.Icon({
-  iconUrl: "data:image/svg+xml;base64," + btoa(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="42" viewBox="0 0 30 42">
-      <path d="M15 0C6.7 0 0 6.7 0 15c0 10.5 15 27 15 27s15-16.5 15-27C30 6.7 23.3 0 15 0z" fill="#10b981"/>
-      <circle cx="15" cy="14" r="7" fill="white"/>
-      <path d="M15 9a5 5 0 110 10 5 5 0 010-10z" fill="#10b981"/>
-      <circle cx="15" cy="12" r="2" fill="white"/>
-      <path d="M11.5 16.5c0-2 1.5-2 3.5-2s3.5 0 3.5 2" stroke="white" stroke-width="1" fill="none"/>
-    </svg>
-  `),
-  iconSize: [30, 42],
-  iconAnchor: [15, 42],
-  popupAnchor: [0, -42],
-});
-
-// Condominium marker (blue)
-const condoIcon = new L.Icon({
-  iconUrl: "data:image/svg+xml;base64," + btoa(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="42" viewBox="0 0 30 42">
-      <path d="M15 0C6.7 0 0 6.7 0 15c0 10.5 15 27 15 27s15-16.5 15-27C30 6.7 23.3 0 15 0z" fill="#2d3354"/>
-      <rect x="9" y="8" width="12" height="14" rx="1" fill="white"/>
-      <rect x="11" y="10" width="3" height="3" fill="#2d3354"/>
-      <rect x="16" y="10" width="3" height="3" fill="#2d3354"/>
-      <rect x="11" y="15" width="3" height="3" fill="#2d3354"/>
-      <rect x="16" y="15" width="3" height="3" fill="#2d3354"/>
-    </svg>
-  `),
-  iconSize: [30, 42],
-  iconAnchor: [15, 42],
-  popupAnchor: [0, -42],
-});
 
 interface ArrivalEvent {
   id: number;
@@ -98,23 +55,24 @@ interface ArrivalEvent {
   vehicles?: { placa: string; modelo: string; cor: string }[];
 }
 
-// Component to auto-fit map bounds
-function FitBounds({ events, condoLat, condoLng }: { events: ArrivalEvent[]; condoLat: number; condoLng: number }) {
-  const map = useMap();
-  useEffect(() => {
-    const points: [number, number][] = [[condoLat, condoLng]];
-    events.forEach(e => { if (e.latitude && e.longitude) points.push([e.latitude, e.longitude]); });
-    if (points.length > 1) {
-      map.fitBounds(points, { padding: [40, 40], maxZoom: 16 });
-    } else {
-      map.setView([condoLat, condoLng], 15);
-    }
-  }, [events, condoLat, condoLng, map]);
-  return null;
+function hasValidCoordinates(lat: number | null | undefined, lng: number | null | undefined): lat is number {
+  return typeof lat === "number" && Number.isFinite(lat) && typeof lng === "number" && Number.isFinite(lng);
+}
+
+function buildMarkerIcon(fillColor: string): google.maps.Symbol | undefined {
+  if (!globalThis.google?.maps?.SymbolPath) return undefined;
+  return {
+    path: globalThis.google.maps.SymbolPath.CIRCLE,
+    fillColor,
+    fillOpacity: 1,
+    strokeColor: "#ffffff",
+    strokeWeight: 2,
+    scale: 11,
+  };
 }
 
 export default function PortariaEstouChegando() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -127,9 +85,11 @@ export default function PortariaEstouChegando() {
   const [history, setHistory] = useState<ArrivalEvent[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [confirmedIds, setConfirmedIds] = useState<Set<number>>(new Set());
+  const [selectedMarker, setSelectedMarker] = useState<string | number | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   // ─── Alert sound ───
   const playAlertSound = useCallback(() => {
@@ -246,6 +206,34 @@ export default function PortariaEstouChegando() {
       .catch(() => setHistoryLoading(false));
   }, []);
 
+  const condoLat = config?.latitude || DEFAULT_MAP_CENTER.lat;
+  const condoLng = config?.longitude || DEFAULT_MAP_CENTER.lng;
+  const condoPosition = { lat: condoLat, lng: condoLng };
+  const hasConfiguredCondoLocation = hasValidCoordinates(config?.latitude, config?.longitude);
+  const condoMarkerIcon = buildMarkerIcon("#2d3354");
+  const moradorMarkerIcon = buildMarkerIcon("#10b981");
+
+  useEffect(() => {
+    if (!mapRef.current || !globalThis.google?.maps) return;
+
+    const bounds = new globalThis.google.maps.LatLngBounds();
+    bounds.extend(condoPosition);
+
+    let markerCount = 1;
+    for (const event of events) {
+      if (!hasValidCoordinates(event.latitude, event.longitude)) continue;
+      bounds.extend({ lat: event.latitude, lng: event.longitude });
+      markerCount += 1;
+    }
+
+    if (markerCount > 1) {
+      mapRef.current.fitBounds(bounds, 40);
+    } else {
+      mapRef.current.setCenter(condoPosition);
+      mapRef.current.setZoom(15);
+    }
+  }, [condoPosition, events]);
+
   if (loading) {
     return (
       <div className="min-h-dvh bg-background flex items-center justify-center">
@@ -253,9 +241,6 @@ export default function PortariaEstouChegando() {
       </div>
     );
   }
-
-  const condoLat = config?.latitude || -23.55;
-  const condoLng = config?.longitude || -46.63;
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
@@ -401,41 +386,82 @@ export default function PortariaEstouChegando() {
           <>
             {/* ═══ Map ═══ */}
             <div style={{ height: "45vh", minHeight: "250px" }}>
-              {config?.latitude && config?.longitude ? (
-                <MapContainer
-                  center={[condoLat, condoLng]}
-                  zoom={15}
-                  style={{ height: "100%", width: "100%" }}
-                  zoomControl={false}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <FitBounds events={events} condoLat={condoLat} condoLng={condoLng} />
+              {hasConfiguredCondoLocation ? (
+                GOOGLE_MAPS_API_KEY ? (
+                  <LoadScriptNext googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+                    <GoogleMap
+                      center={condoPosition}
+                      zoom={15}
+                      mapContainerStyle={{ height: "100%", width: "100%" }}
+                      options={{
+                        disableDefaultUI: true,
+                        zoomControl: true,
+                        clickableIcons: false,
+                        mapId: GOOGLE_MAPS_MAP_ID || undefined,
+                      }}
+                      onLoad={(map) => {
+                        mapRef.current = map;
+                      }}
+                      onUnmount={() => {
+                        mapRef.current = null;
+                      }}
+                    >
+                      <MarkerF
+                        position={condoPosition}
+                        icon={condoMarkerIcon}
+                        label={{ text: "C", color: "#ffffff", fontWeight: "700" }}
+                        onClick={() => setSelectedMarker("condo")}
+                      />
+                      {selectedMarker === "condo" && (
+                        <InfoWindowF position={condoPosition} onCloseClick={() => setSelectedMarker(null)}>
+                          <strong>{user?.condominio_nome || "Condomínio"}</strong>
+                        </InfoWindowF>
+                      )}
 
-                  {/* Condominium marker + radius circle */}
-                  <Marker position={[condoLat, condoLng]} icon={condoIcon}>
-                    <Popup>
-                      <strong>{user?.condominio_nome || "Condomínio"}</strong>
-                    </Popup>
-                  </Marker>
-                  <Circle center={[condoLat, condoLng]} radius={config.radius_default || 200} pathOptions={{ color: "#2d3354", fillOpacity: 0.08 }} />
+                      <CircleF
+                        center={condoPosition}
+                        radius={config.radius_default || 200}
+                        options={{
+                          strokeColor: "#2d3354",
+                          strokeOpacity: 0.8,
+                          strokeWeight: 2,
+                          fillColor: "#2d3354",
+                          fillOpacity: 0.08,
+                        }}
+                      />
 
-                  {/* Morador markers */}
-                  {events.map(ev => ev.latitude && ev.longitude && (
-                    <Marker key={ev.id} position={[ev.latitude, ev.longitude]} icon={moradorIcon}>
-                      <Popup>
-                        <div style={{ minWidth: 150 }}>
-                          <strong>{ev.morador_name}</strong><br />
-                          {ev.bloco && <span>Bloco {ev.bloco}</span>} {ev.apartamento && <span>Apt {ev.apartamento}</span>}<br />
-                          {ev.vehicle_plate && <span>Placa: {ev.vehicle_plate}</span>}<br />
-                          <span>{Math.round(ev.distance_meters)}m do condomínio</span>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
+                      {events.map((ev) => {
+                        if (!hasValidCoordinates(ev.latitude, ev.longitude)) return null;
+
+                        const eventPosition = { lat: ev.latitude, lng: ev.longitude };
+                        return (
+                          <MarkerF
+                            key={ev.id}
+                            position={eventPosition}
+                            icon={moradorMarkerIcon}
+                            label={{ text: "M", color: "#ffffff", fontWeight: "700" }}
+                            onClick={() => setSelectedMarker(ev.id)}
+                          >
+                            {selectedMarker === ev.id && (
+                              <InfoWindowF position={eventPosition} onCloseClick={() => setSelectedMarker(null)}>
+                                <div style={{ minWidth: 150 }}>
+                                  <strong>{ev.morador_name}</strong><br />
+                                  {ev.bloco && <span>Bloco {ev.bloco}</span>} {ev.apartamento && <span>Apt {ev.apartamento}</span>}<br />
+                                  {ev.vehicle_plate && <span>Placa: {ev.vehicle_plate}</span>}<br />
+                                  <span>{Math.round(ev.distance_meters)}m do condomínio</span>
+                                </div>
+                              </InfoWindowF>
+                            )}
+                          </MarkerF>
+                        );
+                      })}
+                    </GoogleMap>
+                  </LoadScriptNext>
+                ) : (
+                  <div className="h-full flex items-center justify-center bg-muted text-center px-4 text-sm text-muted-foreground">
+                    Configure a variável VITE_GOOGLE_MAPS_API_KEY para exibir o mapa.
+                  </div>
+                )
               ) : (
                 <div className="h-full flex items-center justify-center bg-muted">
                   <div className="text-center">

@@ -5,7 +5,6 @@ import {
   Search,
   Star,
   Wifi,
-  WifiOff,
   Cloud,
   Globe,
   Zap,
@@ -13,12 +12,10 @@ import {
   ChevronUp,
   ExternalLink,
   CheckCircle2,
-  XCircle,
   Info,
   Filter,
   Package,
   Cpu,
-  Radio,
   Shield,
   Camera,
   Fingerprint,
@@ -34,18 +31,16 @@ import {
   PROTOCOL_LABELS,
   type DeviceModel,
   type DeviceCategory,
-  type DeviceProtocol,
   type BrandInfo,
 } from "@/lib/deviceLibrary";
 import { useTheme } from "@/hooks/useTheme";
 
 /* ── Ícone de categoria ───────────────── */
-function CategoryIcon({ cat, size = 16, color = "#003580" }: { cat: DeviceCategory; size?: number; color?: string }) {
+function CategoryIcon({ cat, size = 16, color = "#003580" }: Readonly<{ cat: DeviceCategory; size?: number; color?: string }>) {
   const s = { color, width: size, height: size };
   switch (cat) {
     case "relay": return <Zap style={s} />;
     case "controller": return <Settings2 style={s} />;
-    case "intercom": return <Radio style={s} />;
     case "camera": return <Camera style={s} />;
     case "biometric": return <Fingerprint style={s} />;
     case "reader": return <CreditCard style={s} />;
@@ -56,7 +51,7 @@ function CategoryIcon({ cat, size = 16, color = "#003580" }: { cat: DeviceCatego
 }
 
 /* ── Ícone de integração ──────────────── */
-function IntegrationBadge({ type }: { type: "cloud" | "local" | "hybrid" }) {
+function IntegrationBadge({ type }: Readonly<{ type: "cloud" | "local" | "hybrid" }>) {
   const colors = { cloud: "#7c3aed", local: "#059669", hybrid: "#d97706" };
   const icons = { cloud: Cloud, local: Wifi, hybrid: Globe };
   const Icon = icons[type];
@@ -74,8 +69,9 @@ function IntegrationBadge({ type }: { type: "cloud" | "local" | "hybrid" }) {
 }
 
 /* ── Card de Marca ────────────────────── */
-function BrandCard({ brand, isActive, onClick }: { brand: BrandInfo; isActive: boolean; onClick: () => void }) {
+function BrandCard({ brand, isActive, onClick }: Readonly<{ brand: BrandInfo; isActive: boolean; onClick: () => void }>) {
   const count = DEVICES.filter((d) => d.brand === brand.id).length;
+  const countSuffix = count === 1 ? "" : "s";
   return (
     <button
       onClick={onClick}
@@ -97,13 +93,13 @@ function BrandCard({ brand, isActive, onClick }: { brand: BrandInfo; isActive: b
       }}
     >
       <span style={{ fontSize: "14px", fontWeight: 700 }}>{brand.name.split("/")[0].trim()}</span>
-      <span style={{ fontSize: "11px", opacity: 0.7 }}>{count} dispositivo{count !== 1 ? "s" : ""}</span>
+      <span style={{ fontSize: "11px", opacity: 0.7 }}>{count} dispositivo{countSuffix}</span>
     </button>
   );
 }
 
 /* ── Card de Dispositivo ──────────────── */
-function DeviceCard({ device }: { device: DeviceModel }) {
+function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
   const [expanded, setExpanded] = useState(false);
   const brand = BRANDS.find((b) => b.id === device.brand);
 
@@ -396,7 +392,7 @@ function DeviceCard({ device }: { device: DeviceModel }) {
 }
 
 /* ── Mini spec ────────────────────────── */
-function Spec({ label, value }: { label: string; value: string }) {
+function Spec({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
     <div>
       <div style={{ fontSize: "10px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.3px" }}>
@@ -415,7 +411,7 @@ function Spec({ label, value }: { label: string; value: string }) {
 
 type TabKey = "all" | "brand" | "category";
 
-const CATEGORIES: DeviceCategory[] = ["relay", "controller", "intercom", "biometric", "module", "camera", "reader", "sensor"];
+const CATEGORIES: DeviceCategory[] = ["relay", "controller", "biometric", "module", "camera", "reader", "sensor"];
 
 export default function BibliotecaDispositivos() {
   const { isDark, p } = useTheme();
@@ -668,7 +664,7 @@ export default function BibliotecaDispositivos() {
               ].map((f) => (
                 <button
                   key={String(f.value)}
-                  onClick={() => setFilterAvailable(f.value as boolean | null)}
+                  onClick={() => setFilterAvailable(f.value)}
                   style={{
                     padding: "6px 12px",
                     borderRadius: "16px",
@@ -730,8 +726,8 @@ export default function BibliotecaDispositivos() {
                 cursor: "pointer",
                 fontSize: "12px",
                 fontWeight: 600,
-                background: !selectedCat ? "#003580" : "#fff",
-                color: !selectedCat ? "#fff" : "#475569",
+                background: selectedCat === null ? "#003580" : "#fff",
+                color: selectedCat === null ? "#fff" : "#475569",
               }}
             >
               Todos
@@ -806,7 +802,7 @@ export default function BibliotecaDispositivos() {
           fontSize: "12px", fontWeight: 600, color: "#64748b",
           marginBottom: "12px",
         }}>
-          {filtered.length} dispositivo{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
+          {filtered.length} dispositivo{filtered.length === 1 ? "" : "s"} encontrado{filtered.length === 1 ? "" : "s"}
         </div>
 
         {/* Device list */}
@@ -847,7 +843,7 @@ export default function BibliotecaDispositivos() {
 }
 
 /* ── Stat box ─────────────────────────── */
-function StatBox({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
+function StatBox({ label, value, icon }: Readonly<{ label: string; value: number; icon: React.ReactNode }>) {
   return (
     <div style={{
       background: "#fff",

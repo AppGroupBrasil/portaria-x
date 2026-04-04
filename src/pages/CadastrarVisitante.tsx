@@ -51,7 +51,6 @@ interface Visitor {
   documento_foto: string | null;
   bloco: string | null;
   apartamento: string | null;
-  autorizado_interfone: string;
   quem_autorizou: string | null;
   morador_whatsapp: string | null;
   status: string;
@@ -174,7 +173,6 @@ export default function CadastrarVisitante() {
     { key: "bloco", label: "Bloco", defaultOn: true },
     { key: "apartamento", label: "Apartamento", defaultOn: true },
     { key: "morador_whatsapp", label: "WhatsApp do Morador", defaultOn: true },
-    { key: "autorizado_interfone", label: "Autorizado por Interfone", defaultOn: true },
     { key: "quem_autorizou", label: "Quem Autorizou", defaultOn: true },
     { key: "documento_foto", label: "Anexar Foto do Documento", defaultOn: false },
   ] as const;
@@ -237,7 +235,6 @@ export default function CadastrarVisitante() {
     documento_foto: "",
     bloco: "",
     apartamento: "",
-    autorizado_interfone: "nao",
     quem_autorizou: "",
     morador_whatsapp: "",
   });
@@ -273,7 +270,7 @@ export default function CadastrarVisitante() {
     }
   };
 
-  // Selecionar morador → preenche apartamento, whatsapp e quem_autorizou
+  // Selecionar morador → preenche apartamento, whatsapp e nome do autorizador
   const handleSelectMorador = (moradorId: string) => {
     setSelectedMoradorId(moradorId);
     if (!moradorId) {
@@ -604,7 +601,6 @@ export default function CadastrarVisitante() {
       documento_foto: "",
       bloco: v.bloco || "",
       apartamento: v.apartamento || "",
-      autorizado_interfone: "nao",
       quem_autorizou: "",
       morador_whatsapp: "",
     });
@@ -620,7 +616,6 @@ export default function CadastrarVisitante() {
       foto: capturedFacePhoto || "",
       documento_foto: "",
       bloco: "", apartamento: "",
-      autorizado_interfone: "nao",
       quem_autorizou: "",
       morador_whatsapp: "",
     });
@@ -685,7 +680,7 @@ export default function CadastrarVisitante() {
       // Reset form
       setForm({
         nome: "", documento: "", telefone: "", foto: "", documento_foto: "",
-        bloco: "", apartamento: "", autorizado_interfone: "nao",
+        bloco: "", apartamento: "",
         quem_autorizou: "", morador_whatsapp: "",
       });
       setShowForm(false);
@@ -1305,37 +1300,6 @@ export default function CadastrarVisitante() {
               </div>
               )}
 
-              {/* Autorizado por interfone */}
-              {isFieldVisible("autorizado_interfone") && (
-              <div style={{ marginTop: 20 }}>
-                <span className="text-sm font-medium text-foreground mb-2 block">Autorizado por interfone?</span>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setForm({ ...form, autorizado_interfone: "sim" })}
-                    className="flex-1 h-10 rounded-lg text-sm font-medium transition-colors"
-                    style={{
-                      backgroundColor: form.autorizado_interfone === "sim" ? "#16a34a" : "transparent",
-                      color: form.autorizado_interfone === "sim" ? "#fff" : "#6b7280",
-                      border: form.autorizado_interfone === "sim" ? "2px solid #16a34a" : "2px solid #d1d5db",
-                    }}
-                  >
-                    Sim
-                  </button>
-                  <button
-                    onClick={() => setForm({ ...form, autorizado_interfone: "nao" })}
-                    className="flex-1 h-10 rounded-lg text-sm font-medium transition-colors"
-                    style={{
-                      backgroundColor: form.autorizado_interfone === "nao" ? "#dc2626" : "transparent",
-                      color: form.autorizado_interfone === "nao" ? "#fff" : "#6b7280",
-                      border: form.autorizado_interfone === "nao" ? "2px solid #dc2626" : "2px solid #d1d5db",
-                    }}
-                  >
-                    Não
-                  </button>
-                </div>
-              </div>
-              )}
-
               {/* Quem autorizou */}
               {isFieldVisible("quem_autorizou") && (
                 <div>
@@ -1604,13 +1568,6 @@ export default function CadastrarVisitante() {
                         </span>
                       </div>
                     </div>
-                    {v.autorizado_interfone === "sim" && (
-                      <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-                        <p className="text-xs text-muted-foreground">
-                          ✅ Autorizado por interfone — {v.quem_autorizou || "Nome não informado"}
-                        </p>
-                      </div>
-                    )}
                     <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
                       {gateEnabled && v.status === "liberado" && (
                         <button

@@ -7,7 +7,6 @@ import FuncoesIndex from "@/components/FuncoesIndex";
 import ThemePicker from "@/components/ThemePicker";
 import {
   Home,
-  Menu,
   LogOut,
   Settings,
   Shield,
@@ -19,35 +18,40 @@ import {
   Wrench,
   Bell,
   UserPlus,
-  ClipboardList,
-  FileText,
-  UserCircle,
   BarChart3,
   DoorOpen,
   ShieldCheck,
   FileText as FileTextIcon,
-  type LucideIcon,
 } from "lucide-react";
 
-/* ═══ Mock data for Administradora ═══ */
-const mockStats = {
-  condominios: 8,
-  sindicos: 8,
-  blocos: 24,
-  funcionarios: 32,
-  moradores: 480,
-};
+interface Condominio {
+  id: number;
+  name: string;
+}
 
-const mockByCondominio = [
-  { nome: "Residencial Aurora", moradores: 120, blocos: 4 },
-  { nome: "Edifício Solar", moradores: 85, blocos: 2 },
-  { nome: "Condomínio Verde", moradores: 64, blocos: 3 },
-  { nome: "Torre Azul", moradores: 92, blocos: 4 },
-  { nome: "Parque das Flores", moradores: 55, blocos: 3 },
-  { nome: "Vila Serena", moradores: 42, blocos: 2 },
-  { nome: "Residencial Horizonte", moradores: 72, blocos: 4 },
-  { nome: "Jardins do Vale", moradores: 50, blocos: 2 },
-];
+interface CondominioDetalhe extends Condominio {
+  stats?: {
+    moradores: number;
+    blocos: number;
+    funcionarios: number;
+  };
+}
+
+interface Sindico {
+  id: number;
+}
+
+interface Bloco {
+  id: number;
+}
+
+interface Funcionario {
+  id: number;
+}
+
+interface Morador {
+  id: number;
+}
 
 const gradientBorder = {
   border: "1.5px solid transparent",
@@ -58,17 +62,74 @@ const gradientBorder = {
 
 export default function DashboardAdmin() {
   const { user, logout } = useAuth();
-  const { isDark, toggleTheme, p } = useTheme();
+  const { isDark, p } = useTheme();
   const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
+  const [stats, setStats] = useState({ condominios: 0, sindicos: 0, blocos: 0, funcionarios: 0, moradores: 0 });
+  const [condominiosResumo, setCondominiosResumo] = useState<Array<{ id: number; nome: string; moradores: number; blocos: number }>>([]);
+  const pendingMoradoresLabel = pendingCount === 1 ? "morador" : "moradores";
+  const secondaryHoverBg = p.isDarkBase ? "rgba(255,255,255,0.15)" : "#e2e8f0";
+  const secondaryIdleBg = p.btnBg;
 
   useEffect(() => {
-    apiFetch("/api/moradores/pendentes/count")
-      .then((r) => r.ok ? r.json() : { count: 0 })
-      .then((d) => setPendingCount(d.count))
+    Promise.all([
+      apiFetch("/api/moradores/pendentes/count").then((r) => r.ok ? r.json() : { count: 0 }),
+      apiFetch("/api/condominios").then((r) => r.ok ? r.json() : []),
+      apiFetch("/api/users/sindicos").then((r) => r.ok ? r.json() : []),
+      apiFetch("/api/blocos").then((r) => r.ok ? r.json() : []),
+      apiFetch("/api/funcionarios").then((r) => r.ok ? r.json() : []),
+      apiFetch("/api/moradores").then((r) => r.ok ? r.json() : []),
+    ])
+      .then(async ([pendingData, condominiosData, sindicosData, blocosData, funcionariosData, moradoresData]) => {
+        const condominios = Array.isArray(condominiosData) ? (condominiosData as Condominio[]) : [];
+        const sindicos = Array.isArray(sindicosData) ? (sindicosData as Sindico[]) : [];
+        const blocos = Array.isArray(blocosData) ? (blocosData as Bloco[]) : [];
+        const funcionarios = Array.isArray(funcionariosData) ? (funcionariosData as Funcionario[]) : [];
+        const moradores = Array.isArray(moradoresData) ? (moradoresData as Morador[]) : [];
+
+        setPendingCount(Number(pendingData?.count || 0));
+        setStats({
+          condominios: condominios.length,
+          sindicos: sindicos.length,
+          blocos: blocos.length,
+          funcionarios: funcionarios.length,
+          moradores: moradores.length,
+        });
+
+        const detalhes = await Promise.all(
+          condominios.map(async (condominio) => {
+            try {
+              const response = await apiFetch(`/api/condominios/${condominio.id}`);
+              if (!response.ok) {
+                return null;
+              }
+              return response.json() as Promise<CondominioDetalhe>;
+            } catch {
+              return null;
+            }
+          }),
+        );
+
+        setCondominiosResumo(
+          detalhes
+            .filter((condominio): condominio is CondominioDetalhe => Boolean(condominio))
+            .map((condominio) => ({
+              id: condominio.id,
+              nome: condominio.name,
+              moradores: condominio.stats?.moradores || 0,
+              blocos: condominio.stats?.blocos || 0,
+            })),
+        );
+      })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (activeModule >= condominiosResumo.length && condominiosResumo.length > 0) {
+      setActiveModule(0);
+    }
+  }, [activeModule, condominiosResumo.length]);
 
   const handleLogout = async () => {
     await logout();
@@ -78,52 +139,77 @@ export default function DashboardAdmin() {
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       {/* ═══════════ Header ═══════════ */}
-      <header className="sticky top-0 z-40 premium-header text-white" style={{ marginBottom: "3rem" }}>
-        <div className="flex items-center justify-between" style={{ padding: "1rem 2rem", height: "4.5rem" }}>
-          <div className="flex items-center gap-4">
-            <div>
-              <span className="font-bold text-xl tracking-tight truncate block">
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0 }}>
+        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5rem", gap: 16 }}>
+          <div className="flex items-center gap-4" style={{ minWidth: 0 }}>
+            <div className="flex items-center justify-center" style={{ width: 48, height: 48, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder, flexShrink: 0 }}>
+              <Building2 style={{ width: 22, height: 22, color: p.text }} />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <span
+                className="block"
+                style={{
+                  fontWeight: 800,
+                  fontSize: 18,
+                  letterSpacing: "-0.01em",
+                  color: p.textHeading,
+                  lineHeight: 1.15,
+                  maxWidth: "min(46vw, 280px)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  wordBreak: "break-word",
+                }}
+              >
                 {user?.name || "Administradora"}
               </span>
-              <span className="text-sm text-white/60 flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: p.textDim, marginTop: 6, flexWrap: "wrap" }}>
                 <Shield className="w-4 h-4" />
                 {getRoleLabel(user?.role || "administradora")}
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" style={{ flexShrink: 0 }}>
             <ThemePicker />
-            <button className="p-3 rounded-xl bg-white/8 hover:bg-white/15 transition-all relative">
-              <Bell className="w-6 h-6" />
+            <button className="p-3 rounded-xl transition-all relative" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
+              <Bell className="w-6 h-6" style={{ color: p.text }} />
               <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-emerald-400 rounded-full" />
             </button>
-            <button className="p-3 rounded-xl bg-white/8 hover:bg-white/15 transition-all" onClick={handleLogout}>
-              <LogOut className="w-6 h-6" />
+            <button className="p-3 rounded-xl transition-all" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }} onClick={handleLogout}>
+              <LogOut className="w-6 h-6" style={{ color: p.text }} />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 overflow-x-hidden" style={{ display: "flex", flexDirection: "column", gap: "2rem", paddingBottom: "10rem", paddingLeft: "1rem", paddingRight: "1rem" }}>
+      <div style={{ padding: "16px 20px 8px" }}>
+        <p style={{ fontSize: 14, color: p.accentBright, fontWeight: 500 }}>Bem-vindo(a) ao</p>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: p.text, marginTop: 4 }}>Painel da Administradora</h1>
+        <p style={{ fontSize: 14, color: p.textDim, marginTop: 6 }}>Acompanhe os condomínios sob sua gestão</p>
+      </div>
+
+      <main className="flex-1 overflow-x-hidden" style={{ display: "flex", flexDirection: "column", gap: "2rem", paddingBottom: "10rem", paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem" }}>
 
         <FuncoesIndex userRole={user?.role || "administradora"} />
 
         {/* ═══════════ ROW 1: Stat Cards ═══════════ */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 animate-fade-in" style={{ animationDelay: "0.14s" }}>
           {[
-            { label: "Condomínios", value: mockStats.condominios, color: "stat-num-blue", route: "/master/condominios" },
-            { label: "Síndicos", value: mockStats.sindicos, color: "stat-num-emerald", route: "/cadastros/sindicos" },
-            { label: "Blocos", value: mockStats.blocos, color: "stat-num-cyan", route: "/cadastros/blocos" },
-            { label: "Funcionários", value: mockStats.funcionarios, color: "stat-num-teal", route: "/cadastros/funcionarios" },
-            { label: "Moradores", value: mockStats.moradores, color: "stat-num-green", route: "/cadastros/moradores" },
+            { label: "Condomínios", value: stats.condominios, color: "stat-num-blue", route: "/master/condominios" },
+            { label: "Síndicos", value: stats.sindicos, color: "stat-num-emerald", route: "/cadastros/sindicos" },
+            { label: "Blocos", value: stats.blocos, color: "stat-num-cyan", route: "/cadastros/blocos" },
+            { label: "Funcionários", value: stats.funcionarios, color: "stat-num-teal", route: "/cadastros/funcionarios" },
+            { label: "Moradores", value: stats.moradores, color: "stat-num-green", route: "/cadastros/moradores" },
           ].map((s) => (
-            <div key={s.label} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => navigate(s.route))(); } }} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, ...gradientBorder }}>
+            <button type="button" key={s.label} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, ...gradientBorder }}>
               <span className="text-2xl sm:text-3xl font-extrabold text-white">{s.value}</span>
               <span className="font-medium uppercase tracking-wider text-center text-white" style={{ fontSize: "11px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word" }}>{s.label}</span>
-            </div>
+            </button>
           ))}
           {/* Liberações card */}
-          <div
+          <button
+            type="button"
             onClick={() => navigate("/liberacao-cadastros")}
             className={`rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform relative ${pendingCount > 0 ? "animate-pulse" : ""}`}
             style={{
@@ -147,7 +233,7 @@ export default function DashboardAdmin() {
             >
               Liberações
             </span>
-          </div>
+          </button>
         </div>
 
         {/* ═══════════ ROW 2: Distribuição + Condomínios ═══════════ */}
@@ -157,25 +243,29 @@ export default function DashboardAdmin() {
             <p className="text-[20px] font-semibold uppercase tracking-wider mb-3" style={{ color: p.textAccent }}>Distribuição</p>
             <div className="ui-card rounded-3xl overflow-hidden" style={{ ...gradientBorder, flex: 1, padding: "1.5rem 0.75rem" }}>
               {(() => {
+                const liberacoesBarColor = pendingCount > 0 ? "from-red-500 to-red-600" : "from-violet-400 to-purple-500";
+                const liberacoesIconGradient = pendingCount > 0 ? "from-red-500 to-red-600" : "from-[#003580] to-[#003580]";
+                let liberacoesTextColor = "text-violet-600";
+                if (pendingCount > 0) {
+                  liberacoesTextColor = "text-red-500";
+                } else if (isDark) {
+                  liberacoesTextColor = "text-white";
+                }
                 const barData = [
-                  { label: "Condomínios", value: mockStats.condominios, icon: Building2, barColor: "from-sky-400 to-blue-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-sky-600" },
-                  { label: "Síndicos", value: mockStats.sindicos, icon: Briefcase, barColor: "from-amber-400 to-orange-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-amber-600" },
-                  { label: "Blocos", value: mockStats.blocos, icon: Layers, barColor: "from-emerald-400 to-green-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-emerald-600" },
-                  { label: "Funcionários", value: mockStats.funcionarios, icon: Wrench, barColor: "from-teal-400 to-cyan-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-teal-600" },
-                  { label: "Moradores", value: mockStats.moradores, icon: Users2, barColor: "from-green-400 to-lime-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-green-600" },
-                  { label: "Liberações", value: pendingCount, icon: ShieldCheck, barColor: pendingCount > 0 ? "from-red-500 to-red-600" : "from-violet-400 to-purple-500", iconGradient: pendingCount > 0 ? "from-red-500 to-red-600" : "from-[#003580] to-[#003580]", color: pendingCount > 0 ? "text-red-500" : (isDark ? "text-white" : "text-violet-600") },
+                  { label: "Condomínios", value: stats.condominios, icon: Building2, barColor: "from-sky-400 to-blue-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-sky-600" },
+                  { label: "Síndicos", value: stats.sindicos, icon: Briefcase, barColor: "from-amber-400 to-orange-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-amber-600" },
+                  { label: "Blocos", value: stats.blocos, icon: Layers, barColor: "from-emerald-400 to-green-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-emerald-600" },
+                  { label: "Funcionários", value: stats.funcionarios, icon: Wrench, barColor: "from-teal-400 to-cyan-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-teal-600" },
+                  { label: "Moradores", value: stats.moradores, icon: Users2, barColor: "from-green-400 to-lime-500", iconGradient: "from-[#003580] to-[#003580]", color: isDark ? "text-white" : "text-green-600" },
+                  { label: "Liberações", value: pendingCount, icon: ShieldCheck, barColor: liberacoesBarColor, iconGradient: liberacoesIconGradient, color: liberacoesTextColor },
                 ];
                 const maxVal = Math.max(...barData.map(b => b.value), 1);
                 return barData.map((bar) => {
                   const BarIcon = bar.icon;
                   const pct = Math.max((bar.value / maxVal) * 100, 6);
                   const isLiberacoes = bar.label === "Liberações";
-                  return (
-                    <div
-                      key={bar.label}
-                      className={`flex items-center gap-3 px-4 py-5 transition-colors hover:bg-white/[0.05] ${isLiberacoes ? "cursor-pointer" : ""}`}
-                      onClick={isLiberacoes ? () => navigate("/liberacao-cadastros") : undefined}
-                    >
+                  const content = (
+                    <>
                       <div className={`w-8 h-8 rounded-xl bg-linear-to-br ${bar.iconGradient} flex items-center justify-center shadow-md shrink-0`}>
                         <BarIcon className="w-3.5 h-3.5 text-white" />
                       </div>
@@ -188,6 +278,25 @@ export default function DashboardAdmin() {
                         </div>
                       </div>
                       <span className={`text-2xl font-bold ${bar.color}`}>{bar.value}</span>
+                    </>
+                  );
+
+                  if (isLiberacoes) {
+                    return (
+                      <button
+                        type="button"
+                        key={bar.label}
+                        className="flex w-full items-center gap-3 px-4 py-5 transition-colors hover:bg-white/5 cursor-pointer"
+                        onClick={() => navigate("/liberacao-cadastros")}
+                      >
+                        {content}
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <div key={bar.label} className="flex items-center gap-3 px-4 py-5 transition-colors hover:bg-white/5">
+                      {content}
                     </div>
                   );
                 });
@@ -199,13 +308,19 @@ export default function DashboardAdmin() {
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div className="flex items-center justify-between mb-3">
             <p className="text-[20px] font-semibold tracking-tight" style={{ color: p.textAccent }}>Condomínios</p>
-              <span className="text-[16px] text-muted-foreground/40">{mockByCondominio.length} total</span>
+              <span className="text-[16px] text-muted-foreground/40">{condominiosResumo.length} total</span>
             </div>
             <div className="ui-card rounded-3xl overflow-hidden" style={{ ...gradientBorder, flex: 1, padding: "0.75rem" }}>
-              {mockByCondominio.map((condo, index) => (
-                <div
-                  key={condo.nome}
-                  className={`flex items-center gap-3 px-4 py-5 transition-colors hover:bg-white/[0.05] cursor-pointer ${index < mockByCondominio.length - 1 ? "border-b border-white/10" : ""} ${index === activeModule ? "sidebar-item-active-light" : ""}`}
+              {condominiosResumo.length === 0 && (
+                <div className="px-4 py-5" style={{ color: p.isDarkBase ? "rgba(255,255,255,0.65)" : "#475569" }}>
+                  Nenhum condomínio vinculado a esta administradora.
+                </div>
+              )}
+              {condominiosResumo.map((condo, index) => (
+                <button
+                  type="button"
+                  key={condo.id}
+                  className={`flex w-full items-center gap-3 px-4 py-5 text-left transition-colors hover:bg-white/5 cursor-pointer ${index < condominiosResumo.length - 1 ? "border-b border-white/10" : ""} ${index === activeModule ? "sidebar-item-active-light" : ""}`}
                   onClick={() => setActiveModule(index)}
                 >
                   <div className="w-8 h-8 rounded-xl bg-linear-to-br from-[#003580] to-[#003580] flex items-center justify-center shadow-md shrink-0">
@@ -215,7 +330,7 @@ export default function DashboardAdmin() {
                     <p className="text-[15px] sm:text-[18px] font-medium truncate" style={{ color: "#fff" }}>{condo.nome}</p>
                     <p className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>{condo.blocos} blocos · {condo.moradores} moradores</p>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -223,7 +338,8 @@ export default function DashboardAdmin() {
 
         {/* ═══════════ ROW 3: Liberação Cadastros (if pending) ═══════════ */}
         {pendingCount > 0 && (
-          <div
+          <button
+            type="button"
             className="animate-fade-in cursor-pointer"
             style={{ animationDelay: "0.30s" }}
             onClick={() => navigate("/liberacao-cadastros")}
@@ -240,14 +356,14 @@ export default function DashboardAdmin() {
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-lg" style={{ color: p.text }}>Cadastros Pendentes</p>
                 <p className="text-sm" style={{ color: p.textSecondary }}>
-                  {pendingCount} morador{pendingCount !== 1 ? "es" : ""} aguardando liberação
+                  {pendingCount} {pendingMoradoresLabel} aguardando liberação
                 </p>
               </div>
               <div className="shrink-0" style={{ marginRight: "16px" }}>
                 <span className="font-extrabold text-xl" style={{ color: p.text }}>{pendingCount}</span>
               </div>
             </div>
-          </div>
+          </button>
         )}
 
         {/* ═══════════ ROW 4: Feature Cards ═══════════ */}
@@ -258,11 +374,11 @@ export default function DashboardAdmin() {
               { icon: FileTextIcon, label: "Logs", description: "Histórico de atividades", route: "/master/logs" },
               ...(user?.role === "master" ? [{ icon: DoorOpen, label: "Portão", description: "Configurar portões IoT", route: "/master/portao" }] : []),
             ].map((item) => (
-              <div key={item.label} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => navigate(item.route))(); } }} onClick={() => navigate(item.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "1.25rem 0.75rem", minHeight: "120px", ...gradientBorder, textAlign: "center" }}>
+              <button type="button" key={item.label} onClick={() => navigate(item.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "1.25rem 0.75rem", minHeight: "120px", ...gradientBorder, textAlign: "center" }}>
                 <item.icon className="w-7 h-7 mb-2" style={{ color: "#fff" }} />
                 <p className="font-bold text-sm text-white">{item.label}</p>
                 <p className="text-[11px] mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>{item.description}</p>
-              </div>
+              </button>
             ))}
           </div>
         </div>

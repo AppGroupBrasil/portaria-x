@@ -1,7 +1,7 @@
 {
   "name": "Portaria X — Gestão de Portaria Inteligente",
   "short_name": "Portaria X",
-  "description": "Sistema completo de gestão de portaria para condomínios: visitantes, veículos, correspondências, delivery, interfone digital, câmeras e rondas.",
+  "description": "Sistema completo de gestão de portaria para condomínios: visitantes, veículos, correspondências, delivery, câmeras e rondas.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

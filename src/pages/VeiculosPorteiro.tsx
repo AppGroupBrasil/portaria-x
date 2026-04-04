@@ -34,6 +34,7 @@ import ReportModal from "@/components/ReportModal";
 import { gerarPdfVeiculo, gerarRelatorioVeiculos, gerarRelatorioVeiculosComGraficos } from "@/lib/pdfUtils";
 import { APP_ORIGIN } from "@/lib/config";
 import { apiFetch } from "@/lib/api";
+import { getConfigBoolean } from "@/lib/featureFlags";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 import { ShieldCheck } from "lucide-react";
@@ -164,14 +165,14 @@ export default function VeiculosPorteiro() {
         const res = await apiFetch("/api/condominio-config");
         if (res.ok) {
           const cfg = await res.json();
-          setUniquePlateEnabled(cfg.vehicle_unique_access === "true");
+          setUniquePlateEnabled(getConfigBoolean(cfg, "vehicle_unique_access", false));
           setAutoCancelTime(cfg.vehicle_auto_cancel_time || "");
-          setLimitPerAptEnabled(cfg.vehicle_limit_per_apt === "true");
+          setLimitPerAptEnabled(getConfigBoolean(cfg, "vehicle_limit_per_apt", false));
           if (cfg.vehicle_limit_per_apt_count) setLimitPerAptCount(Number.parseInt(cfg.vehicle_limit_per_apt_count) || 3);
-          setReqModelo(cfg.vehicle_require_modelo === "true");
-          setReqCor(cfg.vehicle_require_cor === "true");
-          setReqMotorista(cfg.vehicle_require_motorista === "true");
-          setReqObservacao(cfg.vehicle_require_observacao === "true");
+          setReqModelo(getConfigBoolean(cfg, "vehicle_require_modelo", false));
+          setReqCor(getConfigBoolean(cfg, "vehicle_require_cor", false));
+          setReqMotorista(getConfigBoolean(cfg, "vehicle_require_motorista", false));
+          setReqObservacao(getConfigBoolean(cfg, "vehicle_require_observacao", false));
         }
       } catch {}
     })();

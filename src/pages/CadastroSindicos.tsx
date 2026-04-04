@@ -178,7 +178,7 @@ export default function CadastroSindicos() {
           <div style={{ marginLeft: "auto" }}>
             <TutorialButton title="Cadastro de Síndicos">
               <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
-                <p>Cadastra e gerencia os <strong>síndicos</strong> do sistema. O síndico é o responsável direto pelo condomínio — ele tem acesso completo ao painel de gestão para cadastrar moradores, funcionários, blocos, configurar interfone, câmeras, rondas, portaria virtual e todas as funcionalidades do sistema.</p>
+                <p>Cadastra e gerencia os <strong>síndicos</strong> do sistema. O síndico é o responsável direto pelo condomínio e tem acesso ao painel de gestão para cadastrar moradores, funcionários, blocos, configurar câmeras, rondas, portaria virtual e as demais funcionalidades do sistema.</p>
               </TSection>
               <TSection icon={<span>🏗️</span>} title="COMO CADASTRAR">
                 <TStep n={1}>Clique em <strong>"+"</strong> ou <strong>"Novo Síndico"</strong></TStep>
@@ -197,7 +197,6 @@ export default function CadastroSindicos() {
               </TSection>
               <TSection icon={<span>📱</span>} title="O QUE O SÍNDICO ACESSA">
                 <TBullet><strong>Cadastros</strong> — Moradores, funcionários e blocos do condomínio</TBullet>
-                <TBullet><strong>Interfone Digital</strong> — Configuração e QR Codes do interfone</TBullet>
                 <TBullet><strong>Câmeras</strong> — Cadastro e monitoramento de câmeras de segurança</TBullet>
                 <TBullet><strong>Rondas</strong> — Checkpoints, horários obrigatórios e alertas</TBullet>
                 <TBullet><strong>Portaria Virtual</strong> — Controle de portões via app</TBullet>

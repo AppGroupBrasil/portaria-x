@@ -546,7 +546,6 @@ export async function emailBoasVindasMorador(data: {
       <li>👤 Autorizar visitantes remotamente</li>
       <li>🛵 Gerenciar entregas de delivery</li>
       <li>🚗 Autorizar veículos</li>
-      <li>📞 Usar o interfone digital</li>
       <li>📍 Ativar o "Estou Chegando"</li>
     </ul>
     ${actionButton("Acessar Portaria X", APP_URL)}
@@ -570,7 +569,6 @@ export async function emailBoasVindasSindico(data: {
       <li>🏗️ Gestão de blocos e apartamentos</li>
       <li>📹 Configuração de câmeras</li>
       <li>🔄 Controle de rondas</li>
-      <li>📞 Interfone digital</li>
       <li>📊 Relatórios e métricas</li>
     </ul>
     ${actionButton("Acessar Painel do Síndico", APP_URL)}
@@ -641,41 +639,7 @@ export async function emailPreAuthAutoCadastro(data: {
 }
 
 // ──────────────────────────────────────────
-// 7. INTERFONE — Chamada perdida
-// ──────────────────────────────────────────
-
-/** Notify morador: missed intercom call */
-export async function emailChamadaPerdida(data: {
-  condominioId: number;
-  moradorId: number;
-  moradorName: string;
-  visitorName: string;
-  bloco: string;
-  apartamento: string;
-  horario: string;
-}): Promise<void> {
-  const email = getMoradorEmail(data.moradorId);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">Olá <strong>${data.moradorName}</strong>,</p>
-    <p style="color:#475569;font-size:15px;">Você recebeu uma chamada no interfone digital do <strong>${condo}</strong>, mas não foi atendida.</p>
-    ${infoTable(
-      infoRow("Visitante", data.visitorName) +
-      infoRow("Destino", `Bloco ${data.bloco} - Apto ${data.apartamento}`) +
-      infoRow("Horário", data.horario)
-    )}
-    ${alertBox("📞 Chamada não atendida. Verifique se precisa retornar contato.", "warning")}
-    ${actionButton("Abrir Portaria X", APP_URL)}
-  `;
-
-  await sendEmail(email, `📞 Chamada perdida no interfone — ${condo}`, emailLayout("Chamada Perdida", body));
-}
-
-// ──────────────────────────────────────────
-// 8. RONDAS
+// 7. RONDAS
 // ──────────────────────────────────────────
 
 /** Notify sindico: round was missed */

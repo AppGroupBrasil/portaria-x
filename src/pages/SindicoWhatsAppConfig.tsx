@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { getConfigBoolean } from "@/lib/featureFlags";
 import {
   ArrowLeft,
   Save,
@@ -80,11 +81,11 @@ export default function SindicoWhatsAppConfig() {
       .then(r => r.ok ? r.json() : null)
       .then(cfg => {
         if (cfg) {
-          setEnabled(cfg.whatsapp_enabled === "true");
-          setGlobalConfigured(cfg._global_configured === "true");
+          setEnabled(getConfigBoolean(cfg, "whatsapp_enabled", false));
+          setGlobalConfigured(getConfigBoolean(cfg, "_global_configured", false));
           const notifs: Record<string, boolean> = {};
           for (const nt of NOTIFICATION_TYPES) {
-            notifs[nt.key] = cfg[nt.key] === undefined || cfg[nt.key] === null ? true : cfg[nt.key] === "true";
+            notifs[nt.key] = getConfigBoolean(cfg, nt.key, false);
           }
           setNotifications(notifs);
         }

@@ -16,9 +16,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Loader2,
-  Volume2,
-  ChevronRight,
-  MessageCircle,
   Palette,
   Check,
 } from "lucide-react";
@@ -62,23 +59,6 @@ export default function MinhaConta() {
   const [deleting, setDeleting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-
-  // WhatsApp interfone
-  const [whatsappInterfone, setWhatsappInterfone] = useState(false);
-  const [savingWhatsapp, setSavingWhatsapp] = useState(false);
-
-  // Load interfone config on mount
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await apiFetch("/api/interfone/config");
-        if (res.ok) {
-          const data = await res.json();
-          setWhatsappInterfone(!!data.whatsapp_interfone);
-        }
-      } catch {}
-    })();
-  }, []);
 
   const showSuccess = (msg: string) => {
     setSuccess(msg);
@@ -319,29 +299,6 @@ export default function MinhaConta() {
           </div>
         </div>
 
-        {/* ═══════ TOQUE DE CHAMADA ═══════ */}
-        <div
-          onClick={() => navigate("/configuracao-toque")}
-          style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
-            border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Volume2 className="w-4 h-4" style={{ color: "#003580" }} />
-            <div>
-              <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0 }}>
-                Toque de Chamada
-              </h2>
-              <p style={{ fontSize: "12px", color: "#64748b", margin: "2px 0 0" }}>
-                Escolha o som do interfone
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="w-5 h-5" style={{ color: "#94a3b8" }} />
-        </div>
-
         {/* ═══════ TEMA VISUAL ═══════ */}
         <div style={{
           background: "#fff", borderRadius: "16px", padding: "20px",
@@ -399,81 +356,6 @@ export default function MinhaConta() {
             })}
           </div>
         </div>
-
-        {/* ═══════ WHATSAPP NO INTERFONE ═══════ */}
-        {(isMorador || isFuncionario) && (
-          <div style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
-            border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
-                <MessageCircle className="w-4 h-4" style={{ color: "#25d366" }} />
-                <div>
-                  <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0 }}>
-                    WhatsApp no Interfone
-                  </h2>
-                  <p style={{ fontSize: "12px", color: "#64748b", margin: "2px 0 0" }}>
-                    {whatsappInterfone
-                      ? "Visitantes podem te contactar pelo WhatsApp"
-                      : "Permitir que visitantes enviem WhatsApp"}
-                  </p>
-                  {whatsappInterfone && !phone && (
-                    <p style={{ fontSize: "11px", color: "#dc2626", margin: "4px 0 0", fontWeight: 600 }}>
-                      ⚠️ Preencha seu WhatsApp acima para funcionar
-                    </p>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={async () => {
-                  setSavingWhatsapp(true);
-                  const newVal = !whatsappInterfone;
-                  try {
-                    const configRes = await apiFetch("/api/interfone/config");
-                    const currentConfig = configRes.ok ? await configRes.json() : {};
-                    const res = await apiFetch("/api/interfone/config", {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        ...currentConfig,
-                        whatsapp_interfone: newVal ? "1" : null,
-                      }),
-                    });
-                    if (res.ok) {
-                      setWhatsappInterfone(newVal);
-                      showSuccess(newVal
-                        ? "WhatsApp habilitado no interfone!"
-                        : "WhatsApp desabilitado no interfone.");
-                    } else {
-                      showError("Erro ao salvar configuração.");
-                    }
-                  } catch {
-                    showError("Erro de conexão.");
-                  } finally {
-                    setSavingWhatsapp(false);
-                  }
-                }}
-                disabled={savingWhatsapp}
-                style={{
-                  width: "52px", height: "28px", borderRadius: "14px", border: "none",
-                  background: whatsappInterfone ? "#25d366" : "#cbd5e1",
-                  cursor: savingWhatsapp ? "wait" : "pointer",
-                  position: "relative", transition: "background 0.2s",
-                  flexShrink: 0,
-                }}
-              >
-                <div style={{
-                  width: "22px", height: "22px", borderRadius: "50%",
-                  background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                  position: "absolute", top: "3px",
-                  left: whatsappInterfone ? "27px" : "3px",
-                  transition: "left 0.2s",
-                }} />
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* ═══════ ALTERAR SENHA ═══════ */}
         <div style={{

@@ -16,6 +16,8 @@ import {
   MessageCircle,
   CheckCircle2,
 } from "lucide-react";
+import { getConfigBoolean } from "@/lib/featureFlags";
+import { APP_ERROR_CODES } from "@/lib/errorCodes";
 
 interface LocationState {
   condominioId: number;
@@ -66,7 +68,7 @@ export default function RegisterMorador() {
         const res = await fetch(`/api/condominio-config/public?condominio_id=${condominioId}`);
         if (res.ok) {
           const data = await res.json();
-          if (data.notify_whatsapp_enabled === "true" && data.notify_whatsapp_phone) {
+          if (getConfigBoolean(data, "notify_whatsapp_enabled", false) && data.notify_whatsapp_phone) {
             setWhatsappEnabled(true);
             setWhatsappPhone(data.notify_whatsapp_phone);
           }
@@ -129,7 +131,7 @@ export default function RegisterMorador() {
       });
       navigate("/dashboard");
     } catch (err: any) {
-      if (err.message === "__PENDING_APPROVAL__") {
+      if (err.code === APP_ERROR_CODES.AUTH_PENDING_APPROVAL) {
         setError("");
         if (whatsappEnabled && whatsappPhone) {
           // Show WhatsApp prompt

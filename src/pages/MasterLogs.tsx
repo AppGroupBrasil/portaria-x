@@ -119,7 +119,7 @@ export default function MasterLogs() {
               <TBullet><strong>Cadastros</strong> — Criação de moradores, funcionários, visitantes, etc.</TBullet>
               <TBullet><strong>Edições</strong> — Alterações de dados em qualquer cadastro</TBullet>
               <TBullet><strong>Exclusões</strong> — Remoção de registros do sistema</TBullet>
-              <TBullet><strong>Configurações</strong> — Alterações de configuração (interfone, câmeras, rondas, portões)</TBullet>
+              <TBullet><strong>Configurações</strong> — Alterações de configuração (câmeras, rondas, portões e integrações)</TBullet>
             </TSection>
             <TSection icon={<span>⭐</span>} title="DICAS IMPORTANTES">
               <TBullet>Esta tela é <strong>exclusiva do usuário Master</strong> — apenas o Master tem visão global de todos os logs</TBullet>

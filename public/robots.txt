@@ -11,7 +11,6 @@ Disallow: /cadastro-moradores-link
 Disallow: /cadastro-moradores-qrcode
 Disallow: /auto-cadastro-visitante
 Disallow: /auto-cadastro-pre-auth
-Disallow: /interfone-visitor
 
 # Sitemap
 Sitemap: https://www.portariax.com.br/sitemap.xml

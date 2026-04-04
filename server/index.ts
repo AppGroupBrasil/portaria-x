@@ -7,7 +7,6 @@ import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import path from "node:path";
 import http from "node:http";
 import { fileURLToPath } from "node:url";
-import { initSignalingServer } from "./websocket.js";
 import { initArrivalWebSocket } from "./wsEstouChegando.js";
 import authRouter from "./auth.js";
 import funcionariosRouter from "./funcionarios.js";
@@ -25,7 +24,6 @@ import correspondenciasRouter from "./correspondencias.js";
 import livroProtocoloRouter from "./livroProtocolo.js";
 import camerasRouter from "./cameras.js";
 import rondasRouter from "./rondas.js";
-import interfoneRouter from "./interfone.js";
 import estouChegandoRouter from "./estouChegando.js";
 import deviceTokensRouter from "./deviceTokens.js";
 import visitorQRShareRouter from "./visitorQRShare.js";
@@ -77,6 +75,7 @@ const ALLOWED_ORIGINS = new Set([
   "http://localhost:5173",
   "https://localhost:5173",
   "http://localhost:3001",
+  "https://localhost",
   "https://portariax.com.br",
   "https://www.portariax.com.br",
   "capacitor://localhost",
@@ -173,7 +172,6 @@ app.use("/api/correspondencias", correspondenciasRouter);
 app.use("/api/livro-protocolo", livroProtocoloRouter);
 app.use("/api/cameras", camerasRouter);
 app.use("/api/rondas", rondasRouter);
-app.use("/api/interfone", interfoneRouter);
 app.use("/api/estou-chegando", estouChegandoRouter);
 app.use("/api/device-tokens", deviceTokensRouter);
 app.use("/api/visitor-qr", visitorQRShareRouter);
@@ -221,7 +219,6 @@ app.use((err: any, _req: any, res: any, _next: any) => {
 
 // Start
 const server = http.createServer(app);
-initSignalingServer(server);
 initArrivalWebSocket(server);
 
 server.listen(PORT, "0.0.0.0", () => {

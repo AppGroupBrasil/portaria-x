@@ -22,6 +22,7 @@ import {
   Save,
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
+import { getConfigBoolean } from "@/lib/featureFlags";
 
 interface PendingMorador {
   id: number;
@@ -81,10 +82,10 @@ export default function LiberacaoCadastros() {
       const res = await apiFetch("/api/condominio-config");
       if (res.ok) {
         const data = await res.json();
-        setAutoCadastroEnabled(data.feature_auto_cadastro === "true");
-        setEmailEnabled(data.notify_email_enabled === "true");
+        setAutoCadastroEnabled(getConfigBoolean(data, "feature_auto_cadastro", false));
+        setEmailEnabled(getConfigBoolean(data, "notify_email_enabled", false));
         setEmailAddress(data.notify_email_address || "");
-        setWhatsappEnabled(data.notify_whatsapp_enabled === "true");
+        setWhatsappEnabled(getConfigBoolean(data, "notify_whatsapp_enabled", false));
         setWhatsappPhone(data.notify_whatsapp_phone || "");
       }
     } catch (err) {

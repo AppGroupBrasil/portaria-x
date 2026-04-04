@@ -100,7 +100,6 @@ db.exec(`
     documento_foto TEXT,
     bloco TEXT,
     apartamento TEXT,
-    autorizado_interfone TEXT DEFAULT 'nao',
     quem_autorizou TEXT,
     morador_whatsapp TEXT,
     status TEXT DEFAULT 'pendente',
@@ -506,94 +505,6 @@ for (const table of ["visitors", "delivery_authorizations", "vehicle_authorizati
   }
 }
 
-// ─── Interfone Digital tables ───
-db.exec(`
-  CREATE TABLE IF NOT EXISTS interfone_tokens (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    condominio_id INTEGER NOT NULL REFERENCES condominios(id),
-    bloco_id INTEGER REFERENCES blocks(id),
-    bloco_nome TEXT NOT NULL,
-    token TEXT NOT NULL UNIQUE,
-    ativo INTEGER NOT NULL DEFAULT 1,
-    created_by INTEGER REFERENCES users(id),
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-
-  CREATE TABLE IF NOT EXISTS interfone_config (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    condominio_id INTEGER NOT NULL REFERENCES condominios(id),
-    nivel_seguranca INTEGER NOT NULL DEFAULT 1,
-    nome_validacao TEXT,
-    horario_silencioso_inicio TEXT,
-    horario_silencioso_fim TEXT,
-    bloqueados TEXT,
-    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-    UNIQUE(user_id)
-  );
-
-  CREATE TABLE IF NOT EXISTS interfone_calls (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    condominio_id INTEGER NOT NULL REFERENCES condominios(id),
-    bloco TEXT NOT NULL,
-    apartamento TEXT NOT NULL,
-    morador_id INTEGER REFERENCES users(id),
-    morador_nome TEXT,
-    visitante_nome TEXT,
-    visitante_empresa TEXT,
-    visitante_foto TEXT,
-    nivel_seguranca INTEGER NOT NULL DEFAULT 1,
-    status TEXT NOT NULL DEFAULT 'chamando',
-    duracao_segundos INTEGER DEFAULT 0,
-    resultado TEXT,
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    atendido_at TEXT,
-    encerrado_at TEXT
-  );
-`);
-
-// ─── Interfone: add 'call_id' column for WS signaling callId ───
-try {
-  db.exec(`ALTER TABLE interfone_calls ADD COLUMN call_id TEXT`);
-} catch (_) {
-  // Column already exists
-}
-
-// ─── Interfone: add 'tipo' column for condominium-wide tokens ───
-try {
-  db.exec(`ALTER TABLE interfone_tokens ADD COLUMN tipo TEXT NOT NULL DEFAULT 'bloco'`);
-} catch (_) {
-  // Column already exists
-}
-
-// Migration: make bloco_id nullable for condominium-wide tokens (bloco_id=0 → NULL)
-try {
-  db.transaction(() => {
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS interfone_tokens_new (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        condominio_id INTEGER NOT NULL REFERENCES condominios(id),
-        bloco_id INTEGER REFERENCES blocks(id),
-        bloco_nome TEXT NOT NULL,
-        token TEXT NOT NULL UNIQUE,
-        ativo INTEGER NOT NULL DEFAULT 1,
-        created_by INTEGER REFERENCES users(id),
-        created_at TEXT NOT NULL DEFAULT (datetime('now')),
-        updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-        tipo TEXT NOT NULL DEFAULT 'bloco'
-      );
-      INSERT INTO interfone_tokens_new (id, condominio_id, bloco_id, bloco_nome, token, ativo, created_by, created_at, updated_at, tipo)
-        SELECT id, condominio_id, CASE WHEN bloco_id = 0 THEN NULL ELSE bloco_id END, bloco_nome, token, ativo, created_by, created_at, updated_at, tipo
-        FROM interfone_tokens;
-      DROP TABLE interfone_tokens;
-      ALTER TABLE interfone_tokens_new RENAME TO interfone_tokens;
-    `);
-  })();
-} catch (_) {
-  // Migration already applied or table doesn't need migration
-}
-
 // ─── QR Visitor Share tokens ───
 db.exec(`
   CREATE TABLE IF NOT EXISTS visitor_qr_shares (
@@ -648,9 +559,7 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_cameras_condominio ON cameras(condominio_id);
   CREATE INDEX IF NOT EXISTS idx_ronda_registros_condominio ON ronda_registros(condominio_id, created_at);
   CREATE INDEX IF NOT EXISTS idx_ronda_checkpoints_condominio ON ronda_checkpoints(condominio_id);
-  CREATE INDEX IF NOT EXISTS idx_interfone_tokens_condominio ON interfone_tokens(condominio_id);
   CREATE INDEX IF NOT EXISTS idx_visitor_qr_shares_token ON visitor_qr_shares(token);
-  CREATE INDEX IF NOT EXISTS idx_interfone_calls_condominio ON interfone_calls(condominio_id);
   CREATE INDEX IF NOT EXISTS idx_audit_logs_user ON audit_logs(user_id);
   CREATE INDEX IF NOT EXISTS idx_condominios_cnpj ON condominios(cnpj);
   CREATE INDEX IF NOT EXISTS idx_estou_chegando_condominio_status ON estou_chegando_events(condominio_id, status);
@@ -713,13 +622,6 @@ for (const { col, def } of condoAdminColumns) {
   } catch {
     db.exec(`ALTER TABLE condominios ADD COLUMN ${col} ${def}`);
   }
-}
-
-// ─── Migration: add whatsapp_interfone to interfone_config ───
-try {
-  db.prepare("SELECT whatsapp_interfone FROM interfone_config LIMIT 1").get();
-} catch {
-  db.exec("ALTER TABLE interfone_config ADD COLUMN whatsapp_interfone TEXT");
 }
 
 // ─── Migration: add parent_administradora_id to users ───

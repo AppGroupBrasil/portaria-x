@@ -41,7 +41,7 @@ router.get("/", authenticate, authorize("master", "administradora", "sindico", "
 // ─── CREATE visitor ──────────────────────────────────────
 router.post("/", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
-    const { nome, documento, telefone, foto, documento_foto, bloco, apartamento, autorizado_interfone, quem_autorizou, morador_whatsapp, face_descriptor } = req.body;
+    const { nome, documento, telefone, foto, documento_foto, bloco, apartamento, quem_autorizou, morador_whatsapp, face_descriptor } = req.body;
 
     if (!nome) {
       res.status(400).json({ error: "Nome é obrigatório." });
@@ -52,9 +52,9 @@ router.post("/", authenticate, authorize("master", "administradora", "sindico", 
     const condominioId = req.user!.condominio_id;
 
     const result = db.prepare(`
-      INSERT INTO visitors (nome, documento, telefone, foto, documento_foto, bloco, apartamento, autorizado_interfone, quem_autorizou, morador_whatsapp, token, condominio_id, created_by, status, face_descriptor)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)
-    `).run(nome, documento || null, telefone || null, foto || null, documento_foto || null, bloco || null, apartamento || null, autorizado_interfone || 'nao', quem_autorizou || null, morador_whatsapp || null, token, condominioId, req.user!.id, face_descriptor ? JSON.stringify(face_descriptor) : null);
+      INSERT INTO visitors (nome, documento, telefone, foto, documento_foto, bloco, apartamento, quem_autorizou, morador_whatsapp, token, condominio_id, created_by, status, face_descriptor)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)
+    `).run(nome, documento || null, telefone || null, foto || null, documento_foto || null, bloco || null, apartamento || null, quem_autorizou || null, morador_whatsapp || null, token, condominioId, req.user!.id, face_descriptor ? JSON.stringify(face_descriptor) : null);
 
     const visitorId = result.lastInsertRowid;
 
@@ -104,7 +104,7 @@ router.post("/", authenticate, authorize("master", "administradora", "sindico", 
 // ─── GET visitor by token (PUBLIC - no auth) ─────────────
 router.get("/auth/:token", (req: Request, res: Response) => {
   try {
-    const visitor = db.prepare("SELECT id, nome, documento, telefone, foto, documento_foto, bloco, apartamento, autorizado_interfone, quem_autorizou, status, created_at FROM visitors WHERE token = ?").get(req.params.token);
+    const visitor = db.prepare("SELECT id, nome, documento, telefone, foto, documento_foto, bloco, apartamento, quem_autorizou, status, created_at FROM visitors WHERE token = ?").get(req.params.token);
 
     if (!visitor) {
       res.status(404).json({ error: "Visitante não encontrado." });
@@ -174,8 +174,8 @@ router.post("/self-register", (req: Request, res: Response) => {
     const token = crypto.randomUUID();
 
     const result = db.prepare(`
-      INSERT INTO visitors (nome, documento, telefone, foto, documento_foto, bloco, apartamento, autorizado_interfone, token, condominio_id, status, face_descriptor, observacoes)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'nao', ?, ?, 'pendente', ?, ?)
+      INSERT INTO visitors (nome, documento, telefone, foto, documento_foto, bloco, apartamento, token, condominio_id, status, face_descriptor, observacoes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?, ?)
     `).run(nome, documento || null, telefone || null, foto || null, documento_foto || null, bloco || null, apartamento || null, token, condominio_id || null, face_descriptor ? JSON.stringify(face_descriptor) : null, observacoes || null);
 
     const visitor = db.prepare("SELECT * FROM visitors WHERE id = ?").get(result.lastInsertRowid);
@@ -293,7 +293,7 @@ router.get("/pendentes-morador", authenticate, (req: Request, res: Response) => 
       return;
     }
     const visitors = db.prepare(
-      "SELECT id, nome, documento, telefone, foto, documento_foto, bloco, apartamento, autorizado_interfone, quem_autorizou, status, created_at FROM visitors WHERE condominio_id = ? AND bloco = ? AND apartamento = ? AND status = 'pendente' ORDER BY created_at DESC"
+      "SELECT id, nome, documento, telefone, foto, documento_foto, bloco, apartamento, quem_autorizou, status, created_at FROM visitors WHERE condominio_id = ? AND bloco = ? AND apartamento = ? AND status = 'pendente' ORDER BY created_at DESC"
     ).all(user.condominio_id, user.block, user.unit);
     res.json(visitors);
   } catch (err: any) {

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, FormEvent } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,6 @@ import {
   Info,
   AlertCircle,
   CheckCircle2,
-  Plus,
   Trash2,
   Pencil,
   Building2,
@@ -37,6 +36,7 @@ export default function CadastroBlocos() {
   const { isDark, p } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const canChooseCondominio = user?.role === "administradora" || user?.role === "master";
 
   const [quantidade, setQuantidade] = useState("");
   const [personalizar, setPersonalizar] = useState(false);
@@ -45,7 +45,7 @@ export default function CadastroBlocos() {
 
   const [lista, setLista] = useState<Bloco[]>([]);
   const [condominios, setCondominios] = useState<Condominio[]>([]);
-  const [selectedCondominioId, setSelectedCondominioId] = useState<number | "all">("all");
+  const [selectedCondominioId, setSelectedCondominioId] = useState<number | null>(null);
   const [editingBlocoId, setEditingBlocoId] = useState<number | null>(null);
   const [editingBlocoName, setEditingBlocoName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -63,20 +63,41 @@ export default function CadastroBlocos() {
   const fetchCondominios = () => {
     apiFetch("/api/condominios")
       .then((res) => res.json())
-      .then((data) => { if (Array.isArray(data)) setCondominios(data); })
+      .then((data) => {
+        if (!Array.isArray(data)) return;
+        setCondominios(data);
+
+        if (data.length === 0) {
+          setSelectedCondominioId(null);
+          setFormCondominioId("");
+          return;
+        }
+
+        if (!canChooseCondominio || data.length === 1) {
+          const condoId = data[0].id;
+          setSelectedCondominioId(condoId);
+          setFormCondominioId(String(condoId));
+          return;
+        }
+
+        setSelectedCondominioId((current) => current ?? data[0].id);
+        setFormCondominioId((current) => current || String(data[0].id));
+      })
       .catch(() => {});
   };
 
   useEffect(() => { fetchLista(); fetchCondominios(); }, []);
 
-  const listaFiltrada = selectedCondominioId === "all"
+  const listaFiltrada = selectedCondominioId === null
     ? lista
     : lista.filter((b) => b.condominio_id === selectedCondominioId);
 
+  const shouldShowCondominioSelector = canChooseCondominio && condominios.length > 1;
 
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
     setError("");
     setSuccess("");
 
@@ -183,9 +204,9 @@ export default function CadastroBlocos() {
 
           {/* Form card */}
           <div className="rounded-2xl" style={{ paddingLeft: "0", paddingRight: "0" }}>
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <form onSubmit={(event) => { void handleSubmit(event); }} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               {/* Seletor de condomínio (para administradora/master) */}
-              {(user?.role === "administradora" || user?.role === "master") && condominios.length > 0 && (
+              {shouldShowCondominioSelector && (
                 <div style={{ marginBottom: "19px" }}>
                   <Label style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Condomínio *</Label>
                   <select
@@ -203,25 +224,41 @@ export default function CadastroBlocos() {
               )}
 
               {/* Toggle personalizar */}
-              <span className="flex items-center gap-3 cursor-pointer select-none">
-                <div
+              <button
+                type="button"
+                className="flex items-center gap-3 cursor-pointer select-none text-left"
+                onClick={() => setPersonalizar(!personalizar)}
+              >
+                <span
                   className={`w-10 h-6 rounded-full relative transition-colors duration-200 ${
                     personalizar ? "bg-[#003580]" : "bg-border"
                   }`}
-                  onClick={() => setPersonalizar(!personalizar)}
                 >
-                  <div
+                  <span
                     className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ${
                       personalizar ? "translate-x-5" : "translate-x-1"
                     }`}
                   />
-                </div>
+                </span>
                 <span className="text-sm" style={{ color: isDark ? "#ffffff" : "#003580" }}>
                   Personalizar cadastro (cadastrar 1 por 1)
                 </span>
-              </span>
+              </button>
 
-              {!personalizar ? (
+              {personalizar ? (
+                <>
+                  {/* Modo personalizado: 1 bloco por vez */}
+                  <div style={{ marginBottom: "19px" }}>
+                    <Label style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Nome do bloco</Label>
+                    <Input
+                      placeholder="Ex: Torre A, Bloco Norte, Casa 1..."
+                      value={nomeBloco}
+                      onChange={(e) => setNomeBloco(e.target.value)}
+                      style={{ paddingLeft: "19px" }}
+                    />
+                  </div>
+                </>
+              ) : (
                 <>
                   {/* Modo automático: quantidade */}
                   <div style={{ marginBottom: "19px" }}>
@@ -243,26 +280,13 @@ export default function CadastroBlocos() {
                     </p>
                   </div>
                 </>
-              ) : (
-                <>
-                  {/* Modo personalizado: 1 bloco por vez */}
-                  <div style={{ marginBottom: "19px" }}>
-                    <Label style={{ display: "block", marginBottom: "4px", color: isDark ? "#ffffff" : undefined }}>Nome do bloco</Label>
-                    <Input
-                      placeholder="Ex: Torre A, Bloco Norte, Casa 1..."
-                      value={nomeBloco}
-                      onChange={(e) => setNomeBloco(e.target.value)}
-                      style={{ paddingLeft: "19px" }}
-                    />
-                  </div>
-                </>
               )}
 
               {/* Error Modal */}
               {error && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { (() => setError(""))(); } }} onClick={() => setError("")}>
-                  <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
-                  <div role="dialog" className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
+                <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+                  <button type="button" aria-label="Fechar aviso" onClick={() => setError("")} style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", border: "none" }} />
+                  <dialog open className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
                     <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                       <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />
@@ -270,7 +294,7 @@ export default function CadastroBlocos() {
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Atenção</h2>
                     <p style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", marginBottom: 28, lineHeight: 1.5 }}>{error}</p>
                     <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "#ffffff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
-                  </div>
+                  </dialog>
                 </div>
               )}
 
@@ -306,16 +330,15 @@ export default function CadastroBlocos() {
               </h3>
 
               {/* Filtro por condomínio */}
-              {condominios.length > 0 && (
+              {shouldShowCondominioSelector && (
                 <div className="flex items-center gap-3 p-4 rounded-xl border border-border/50" style={{ marginBottom: "19px" }}>
                   <Filter className="w-5 h-5 text-sky-400 shrink-0" />
                   <select
-                    value={selectedCondominioId}
-                    onChange={(e) => setSelectedCondominioId(e.target.value === "all" ? "all" : Number(e.target.value))}
+                    value={selectedCondominioId ?? ""}
+                    onChange={(e) => setSelectedCondominioId(Number(e.target.value))}
                     className="flex-1 h-10 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/30"
                     style={isDark ? { paddingLeft: "19px", background: "#ffffff", color: "#000000" } : { paddingLeft: "19px" }}
                   >
-                    <option value="all">Todos os condomínios</option>
                     {condominios.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
@@ -341,7 +364,15 @@ export default function CadastroBlocos() {
                         onChange={(e) => setEditingBlocoName(e.target.value)}
                         className="flex-1 h-8 text-sm"
                         autoFocus
-                        onKeyDown={(e) => { if (e.key === "Enter") handleSaveBloco(b.id); if (e.key === "Escape") setEditingBlocoId(null); }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleSaveBloco(b.id);
+                          }
+                          if (e.key === "Escape") {
+                            setEditingBlocoId(null);
+                          }
+                        }}
                       />
                       <button onClick={() => handleSaveBloco(b.id)} className="p-2 text-emerald-400 hover:text-emerald-300 transition-colors">
                         <Check className="w-4 h-4" />
@@ -376,11 +407,10 @@ export default function CadastroBlocos() {
       {modalData && (
         <div
           style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
-          onClick={() => setModalData(null)}
         >
-          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
-          <div
-            onClick={(e) => e.stopPropagation()}
+          <button type="button" aria-label="Fechar confirmação" onClick={() => setModalData(null)} style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", border: "none" }} />
+          <dialog
+            open
             className="animate-fade-in"
             style={{
               position: "relative", width: "100%", maxWidth: 420, borderRadius: 20,
@@ -412,7 +442,7 @@ export default function CadastroBlocos() {
                 Ver lista
               </button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
     </div>

@@ -12,6 +12,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { getConfigBoolean } from "@/lib/featureFlags";
 
 const API = "/api";
 
@@ -61,11 +62,11 @@ export default function AutoCadastroVisitante() {
       .then((r) => r.json())
       .then((data) => {
         setRequiredFields({
-          photo: data.require_visit_photo === "true",
-          document: data.require_visit_document === "true",
-          phone: data.require_visit_phone === "true",
-          reason: data.require_visit_reason === "true",
-          docPhoto: data.require_visit_doc_photo === "true",
+          photo: getConfigBoolean(data, "require_visit_photo", false),
+          document: getConfigBoolean(data, "require_visit_document", false),
+          phone: getConfigBoolean(data, "require_visit_phone", false),
+          reason: getConfigBoolean(data, "require_visit_reason", false),
+          docPhoto: getConfigBoolean(data, "require_visit_doc_photo", false),
         });
       })
       .catch(() => {});

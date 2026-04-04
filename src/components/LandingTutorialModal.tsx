@@ -383,41 +383,6 @@ const tutorials: Record<string, ReactNode> = {
     </>
   ),
 
-  "Interfone Digital": (
-    <>
-      <S icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
-        <p>O <strong>Interfone Digital</strong> substitui o interfone físico. Cada bloco recebe um <strong>QR Code exclusivo</strong> que permite ao visitante ligar diretamente para o morador com <strong>vídeo unidirecional</strong>.</p>
-      </S>
-      <S icon={<span>🏢</span>} title="DOIS MODOS DE QR CODE">
-        <St n={1}><strong>QR Code da Entrada Principal</strong> — Um único QR para o condomínio inteiro</St>
-        <St n={2}><strong>QR Code por Bloco</strong> — Cada bloco tem seu próprio QR</St>
-      </S>
-      <S icon={<span>📱</span>} title="FLUXO DO VISITANTE">
-        <St n={1}>Visitante escaneia o QR Code na entrada</St>
-        <St n={2}>Seleciona o bloco e apartamento</St>
-        <St n={3}>Dependendo do <strong>nível de segurança</strong>:</St>
-        <B><strong>Nível 1</strong> — Ligação direta</B>
-        <B><strong>Nível 2</strong> — Visitante digita o nome</B>
-        <B><strong>Nível 3</strong> — Nome, empresa e foto</B>
-        <St n={4}>Morador recebe a chamada com <strong>vídeo do visitante</strong></St>
-        <St n={5}>Morador pode atender, recusar ou <strong>abrir o portão remotamente</strong></St>
-      </S>
-      <S icon={<span>🎮</span>} title="CONTROLES">
-        <B><strong>🔇 Mudo</strong> — Desliga microfone</B>
-        <B><strong>🚪 Abrir Portão</strong> — Comando remoto para abrir</B>
-        <B><strong>📞 Encerrar</strong> — Finaliza a chamada</B>
-        <B><strong>🏢 PORTARIA</strong> — Visitante liga direto para o porteiro</B>
-      </S>
-      <S icon={<span>⭐</span>} title="DICAS IMPORTANTES">
-        <B>Se um QR Code vazar, <strong>regenere-o</strong></B>
-        <B>Moradores configuram <strong>nível de segurança</strong> individualmente</B>
-        <B><strong>Horário silencioso</strong> impede chamadas em horários configurados</B>
-        <B>Todas as chamadas ficam no <strong>histórico</strong></B>
-        <B>Funciona em qualquer celular com <strong>câmera e navegador</strong></B>
-      </S>
-    </>
-  ),
-
   /* ── MORADOR ── */
   "Autorizar Visitantes": (
     <>
@@ -547,9 +512,9 @@ const tutorials: Record<string, ReactNode> = {
       <S icon={<span>👥</span>} title="NÍVEIS DE ACESSO">
         <St n={1}><strong>Master</strong> — Acesso total. Gerencia todos os condomínios, administradoras e usuários. Painel de controle geral.</St>
         <St n={2}><strong>Administradora</strong> — Gerencia os condomínios vinculados. Cadastra síndicos, moradores e funcionários.</St>
-        <St n={3}><strong>Síndico</strong> — Visualiza o Espelho da Portaria, configura rondas, câmeras, interfone. Relatórios gerenciais.</St>
+        <St n={3}><strong>Síndico</strong> — Visualiza o Espelho da Portaria, configura rondas, câmeras e acessos. Relatórios gerenciais.</St>
         <St n={4}><strong>Funcionário/Porteiro</strong> — Opera a portaria: visitantes, veículos, correspondências, delivery, livro de protocolo, rondas.</St>
-        <St n={5}><strong>Morador</strong> — Autoriza visitantes, acompanha entregas, cadastra veículos, usa interfone, gera QR Codes.</St>
+        <St n={5}><strong>Morador</strong> — Autoriza visitantes, acompanha entregas, cadastra veículos e gera QR Codes.</St>
       </S>
       <S icon={<span>⭐</span>} title="DICAS IMPORTANTES">
         <B>Cada nível vê <strong>apenas suas funções</strong> no menu</B>
@@ -660,7 +625,7 @@ const tutorials: Record<string, ReactNode> = {
         <B><strong>Cadastro de Visitantes</strong>, <strong>Autorizações Prévias</strong></B>
         <B><strong>Controle de Veículos</strong>, <strong>Correspondências</strong>, <strong>Delivery</strong></B>
         <B><strong>Livro de Protocolo</strong>, <strong>Monitoramento de Câmeras</strong></B>
-        <B><strong>Controle de Rondas</strong>, <strong>Interfone Digital</strong></B>
+        <B><strong>Controle de Rondas</strong>, <strong>Portaria Virtual (IoT)</strong></B>
         <B><strong>Portaria Virtual (IoT)</strong>, <strong>QR Code de Visitante</strong></B>
       </S>
       <S icon={<span>⭐</span>} title="DICAS IMPORTANTES">

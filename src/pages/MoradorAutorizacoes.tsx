@@ -56,7 +56,6 @@ interface PendingVisitor {
   documento_foto: string | null;
   bloco: string | null;
   apartamento: string | null;
-  autorizado_interfone: number;
   quem_autorizou: string | null;
   status: string;
   created_at: string;

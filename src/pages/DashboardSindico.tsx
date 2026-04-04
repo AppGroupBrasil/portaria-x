@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api";
 import FuncoesIndex from "@/components/FuncoesIndex";
 import ThemePicker from "@/components/ThemePicker";
+import { isFeatureEnabled } from "@/lib/featureFlags";
 import {
   Home,
   LogOut,
@@ -19,31 +20,24 @@ import {
   ClipboardList,
   UserCircle,
   QrCode,
-  Camera,
   MapPin,
-  Phone,
   Navigation,
-  DoorOpen,
   ShieldCheck,
-  Cpu,
-  BookOpen,
-  Zap,
-  MessageCircle,
 } from "lucide-react";
 
-/* ═══ Mock data for Síndico ═══ */
-const mockStats = {
-  blocos: 4,
-  funcionarios: 6,
-  moradores: 120,
-};
+interface Bloco {
+  id: number;
+  name: string;
+}
 
-const mockBlocos = [
-  { nome: "Bloco A", moradores: 32, andares: 8 },
-  { nome: "Bloco B", moradores: 28, andares: 8 },
-  { nome: "Bloco C", moradores: 35, andares: 10 },
-  { nome: "Bloco D", moradores: 25, andares: 6 },
-];
+interface Funcionario {
+  id: number;
+}
+
+interface Morador {
+  id: number;
+  block?: string | null;
+}
 
 export default function DashboardSindico() {
   const { user, logout } = useAuth();
@@ -52,19 +46,67 @@ export default function DashboardSindico() {
   const [activeModule, setActiveModule] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [featureConfig, setFeatureConfig] = useState<Record<string, string>>({});
+  const [stats, setStats] = useState({ blocos: 0, funcionarios: 0, moradores: 0 });
+  const [blocosResumo, setBlocosResumo] = useState<Array<{ id: number; nome: string; moradores: number }>>([]);
 
   useEffect(() => {
-    apiFetch("/api/moradores/pendentes/count")
-      .then((r) => r.ok ? r.json() : { count: 0 })
-      .then((d) => setPendingCount(d.count))
-      .catch(() => {});
-    apiFetch("/api/condominio-config")
-      .then((r) => r.ok ? r.json() : {})
-      .then(setFeatureConfig)
+    Promise.all([
+      apiFetch("/api/moradores/pendentes/count").then((r) => r.ok ? r.json() : { count: 0 }),
+      apiFetch("/api/condominio-config").then((r) => r.ok ? r.json() : {}),
+      apiFetch("/api/blocos").then((r) => r.ok ? r.json() : []),
+      apiFetch("/api/funcionarios").then((r) => r.ok ? r.json() : []),
+      apiFetch("/api/moradores").then((r) => r.ok ? r.json() : []),
+    ])
+      .then(([pendingData, configData, blocosData, funcionariosData, moradoresData]) => {
+        const blocos = Array.isArray(blocosData) ? (blocosData as Bloco[]) : [];
+        const funcionarios = Array.isArray(funcionariosData) ? (funcionariosData as Funcionario[]) : [];
+        const moradores = Array.isArray(moradoresData) ? (moradoresData as Morador[]) : [];
+        const moradoresPorBloco = moradores.reduce<Record<string, number>>((acc, morador) => {
+          const bloco = morador.block?.trim();
+          if (!bloco) return acc;
+          acc[bloco] = (acc[bloco] || 0) + 1;
+          return acc;
+        }, {});
+
+        setPendingCount(Number(pendingData?.count || 0));
+        setFeatureConfig(configData || {});
+        setStats({
+          blocos: blocos.length,
+          funcionarios: funcionarios.length,
+          moradores: moradores.length,
+        });
+        setBlocosResumo(
+          blocos.map((bloco) => ({
+            id: bloco.id,
+            nome: bloco.name,
+            moradores: moradoresPorBloco[bloco.name] || 0,
+          })),
+        );
+      })
       .catch(() => {});
   }, []);
 
-  const isSindicoFeatureEnabled = (key: string) => featureConfig[key] !== "false";
+  const isSindicoFeatureEnabled = (key: string) => isFeatureEnabled(featureConfig, key, true);
+  const surfaceHoverBg = p.isDarkBase ? "rgba(255,255,255,0.12)" : "#eef2f7";
+  const surfaceIdleBg = p.surfaceBg;
+  const secondaryHoverBg = p.isDarkBase ? "rgba(255,255,255,0.15)" : "#e2e8f0";
+  const secondaryIdleBg = p.btnBg;
+  const inactiveAlertColor = p.isDarkBase ? p.textSemi : p.textHeading;
+  const inactiveAlertSubtle = p.isDarkBase ? p.textDim : p.textMuted;
+  const getBlocoSummary = (moradores: number) => {
+    if (moradores === 0) {
+      return "Sem moradores cadastrados";
+    }
+    return `${moradores} morador${moradores === 1 ? "" : "es"} cadastrado${moradores === 1 ? "" : "s"}`;
+  };
+  const sindicoHomeFeatures = [
+    { icon: UserPlus, label: "Cadastro", description: "Gerenciar moradores e funcionários", route: "/cadastros", configKey: "feature_sindico_cadastros" },
+    { icon: MapPin, label: "Rondas", description: "Controlar rondas de segurança", route: "/sindico/rondas", configKey: "feature_sindico_rondas" },
+    { icon: Navigation, label: "Estou Chegando", description: "Configurar notificações de chegada", route: "/sindico/estou-chegando", configKey: "feature_sindico_estou_chegando" },
+    { icon: QrCode, label: "Config QR", description: "Configurar QR Code para visitantes", route: "/sindico/qr-config", configKey: "feature_sindico_qr_config" },
+    { icon: ShieldCheck, label: "Liberações", description: "Aprovar cadastros pendentes", route: "/liberacao-cadastros", configKey: "feature_sindico_liberacao" },
+    { icon: Settings, label: "Config Funções", description: "Ativar ou desativar funções", route: "/sindico/features-config", configKey: "" },
+  ].filter((item) => !item.configKey || isSindicoFeatureEnabled(item.configKey));
 
   const handleLogout = async () => {
     await logout();
@@ -77,28 +119,43 @@ export default function DashboardSindico() {
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* ═══════════ Header ═══════════ */}
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0 }}>
-        <div className="flex items-center justify-between" style={{ padding: "20px 28px", height: "5rem" }}>
+        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5rem", gap: 16 }}>
           <div className="flex items-center" style={{ gap: 14 }}>
             <div className="flex items-center justify-center" style={{ width: 48, height: 48, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
               <Building2 style={{ width: 22, height: 22, color: p.text }} />
             </div>
-            <div>
-              <span className="block text-white" style={{ fontWeight: 800, fontSize: 20, letterSpacing: "-0.01em" }}>
+            <div style={{ minWidth: 0 }}>
+              <span
+                className="block"
+                style={{
+                  fontWeight: 800,
+                  fontSize: 18,
+                  letterSpacing: "-0.01em",
+                  color: p.textHeading,
+                  lineHeight: 1.15,
+                  maxWidth: "min(46vw, 280px)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  wordBreak: "break-word",
+                }}
+              >
                 {user?.condominio_nome || "Meu Condomínio"}
               </span>
-              <span className="flex items-center" style={{ fontSize: 13, color: p.textDim, gap: 6 }}>
+              <span className="flex items-center" style={{ fontSize: 13, color: p.textDim, gap: 6, marginTop: 6 }}>
                 <Shield style={{ width: 14, height: 14 }} />
                 {getRoleLabel(user?.role || "sindico")}
               </span>
             </div>
           </div>
-          <div className="flex items-center" style={{ gap: 10 }}>
+          <div className="flex items-center" style={{ gap: 10, flexShrink: 0 }}>
             <ThemePicker />
             <button
               className="flex items-center justify-center relative"
               style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
               <Bell style={{ width: 20, height: 20, color: p.text }} />
               <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
@@ -108,7 +165,7 @@ export default function DashboardSindico() {
               onClick={handleLogout}
               style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
               <LogOut style={{ width: 20, height: 20, color: p.text }} />
             </button>
@@ -116,8 +173,8 @@ export default function DashboardSindico() {
         </div>
       </header>
 
-{/* ═══════════ Welcome Banner ═══════════ */}
-      <div style={{ padding: "28px 28px 8px" }}>
+  {/* ═══════════ Welcome Banner ═══════════ */}
+  <div style={{ padding: "16px 20px 8px" }}>
         <p style={{ fontSize: 14, color: p.accentBright, fontWeight: 500 }}>Bem-vindo(a) ao</p>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: p.text, marginTop: 4 }}>Painel do Síndico</h1>
         <p style={{ fontSize: 14, color: p.textDim, marginTop: 6 }}>Gerencie seu condomínio</p>
@@ -125,14 +182,14 @@ export default function DashboardSindico() {
 
       <main className="flex-1 overflow-x-hidden" style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: "10rem", paddingLeft: 16, paddingRight: 16, paddingTop: 20 }}>
 
-        <FuncoesIndex userRole={user?.role || "sindico"} />
+        <FuncoesIndex userRole={user?.role || "sindico"} featureConfig={featureConfig} onlyDefaultFeatures />
 
         {/* ═══════════ ROW 1: Stat Cards ═══════════ */}
         <div className="animate-fade-in grid grid-cols-2 sm:grid-cols-4" style={{ animationDelay: "0.1s", gap: 12 }}>
           {[
-            { label: "Blocos", value: mockStats.blocos, icon: Layers, route: "/cadastros/blocos" },
-            { label: "Funcionários", value: mockStats.funcionarios, icon: Wrench, route: "/cadastros/funcionarios" },
-            { label: "Moradores", value: mockStats.moradores, icon: Users2, route: "/cadastros/moradores" },
+            { label: "Blocos", value: stats.blocos, icon: Layers, route: "/cadastros/blocos" },
+            { label: "Funcionários", value: stats.funcionarios, icon: Wrench, route: "/cadastros/funcionarios" },
+            { label: "Moradores", value: stats.moradores, icon: Users2, route: "/cadastros/moradores" },
           ].map((s) => (
             <button
               key={s.label}
@@ -146,8 +203,8 @@ export default function DashboardSindico() {
                 transition: "all 0.2s ease",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = surfaceHoverBg; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = surfaceIdleBg; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, background: p.iconBoxBg, border: p.btnBorder, marginBottom: 8 }}>
                 <s.icon style={{ width: 18, height: 18, color: p.text }} />
@@ -164,18 +221,18 @@ export default function DashboardSindico() {
               padding: "18px 8px",
               borderRadius: 20,
               background: pendingCount > 0 ? "linear-gradient(135deg, rgba(239,68,68,0.25), rgba(220,38,38,0.15))" : "rgba(255,255,255,0.06)",
-              border: pendingCount > 0 ? "2px solid rgba(239,68,68,0.4)" : "2px solid rgba(255,255,255,0.12)",
+              border: pendingCount > 0 ? "2px solid rgba(239,68,68,0.4)" : p.featureBorder,
               transition: "all 0.2s ease",
               boxShadow: pendingCount > 0 ? "0 4px 16px rgba(239,68,68,0.2)" : "0 2px 12px rgba(0,0,0,0.08)",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
           >
-            <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, background: pendingCount > 0 ? "rgba(239,68,68,0.2)" : "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)", border: pendingCount > 0 ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(255,255,255,0.1)", marginBottom: 8 }}>
-              <ShieldCheck style={{ width: 18, height: 18, color: pendingCount > 0 ? "#f87171" : "#fff" }} />
+            <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, background: pendingCount > 0 ? "rgba(239,68,68,0.2)" : p.iconBoxBg, border: pendingCount > 0 ? "1px solid rgba(239,68,68,0.3)" : p.iconBoxBorder, marginBottom: 8 }}>
+              <ShieldCheck style={{ width: 18, height: 18, color: pendingCount > 0 ? "#f87171" : inactiveAlertColor }} />
             </div>
-            <span style={{ fontSize: 28, fontWeight: 800, color: pendingCount > 0 ? "#f87171" : "#fff" }}>{pendingCount}</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: pendingCount > 0 ? "rgba(248,113,113,0.7)" : "rgba(255,255,255,0.5)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>Liberações</span>
+            <span style={{ fontSize: 28, fontWeight: 800, color: pendingCount > 0 ? "#f87171" : inactiveAlertColor }}>{pendingCount}</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: pendingCount > 0 ? "rgba(248,113,113,0.7)" : inactiveAlertSubtle, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>Liberações</span>
           </button>
         </div>
 
@@ -187,9 +244,9 @@ export default function DashboardSindico() {
             <div style={{ borderRadius: 20, background: p.surfaceBg, border: p.featureBorder, overflow: "hidden" }}>
               {(() => {
                 const barData = [
-                  { label: "Blocos", value: mockStats.blocos, icon: Layers, color: "#60a5fa" },
-                  { label: "Funcionários", value: mockStats.funcionarios, icon: Wrench, color: "#34d399" },
-                  { label: "Moradores", value: mockStats.moradores, icon: Users2, color: "#a78bfa" },
+                  { label: "Blocos", value: stats.blocos, icon: Layers, color: "#60a5fa" },
+                  { label: "Funcionários", value: stats.funcionarios, icon: Wrench, color: "#34d399" },
+                  { label: "Moradores", value: stats.moradores, icon: Users2, color: "#a78bfa" },
                   { label: "Liberações", value: pendingCount, icon: ShieldCheck, color: pendingCount > 0 ? "#f87171" : "#fbbf24" },
                 ];
                 const maxVal = Math.max(...barData.map(b => b.value), 1);
@@ -237,34 +294,39 @@ export default function DashboardSindico() {
           <div>
             <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: p.accentBright, textTransform: "uppercase", letterSpacing: "0.08em" }}>Blocos</p>
-              <span style={{ fontSize: 13, color: p.textDim }}>{mockBlocos.length} total</span>
+              <span style={{ fontSize: 13, color: p.textDim }}>{blocosResumo.length} total</span>
             </div>
             <div style={{ borderRadius: 20, background: p.surfaceBg, border: p.featureBorder, overflow: "hidden" }}>
-              {mockBlocos.map((bloco, index) => (
+              {blocosResumo.length === 0 && (
+                <div style={{ padding: "18px 20px", color: p.textDim, fontSize: 14 }}>
+                  Nenhum bloco cadastrado neste condomínio.
+                </div>
+              )}
+              {blocosResumo.map((bloco, index) => (
                 <button
                   type="button"
-                  key={bloco.nome}
+                  key={bloco.id}
                   className="flex items-center"
                   style={{
                     width: "100%",
-                    background: index === activeModule ? "rgba(255,255,255,0.08)" : "transparent",
+                    background: index === activeModule ? surfaceHoverBg : "transparent",
                     border: "none",
                     padding: "14px 18px",
                     gap: 12,
                     cursor: "pointer",
-                    borderBottom: index < mockBlocos.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                    borderBottom: index < blocosResumo.length - 1 ? `1px solid ${p.divider}` : "none",
                     transition: "background 0.15s",
                   }}
                   onClick={() => setActiveModule(index)}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = index === activeModule ? "rgba(255,255,255,0.08)" : "transparent"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = surfaceHoverBg; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = index === activeModule ? surfaceHoverBg : "transparent"; }}
                 >
                   <div className="flex items-center justify-center shrink-0" style={{ width: 34, height: 34, borderRadius: 10, background: p.iconBoxBg, border: p.iconBoxBorder }}>
                     <Layers style={{ width: 16, height: 16, color: "#60a5fa" }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p style={{ fontSize: 14, fontWeight: 600, color: p.text }}>{bloco.nome}</p>
-                    <p style={{ fontSize: 11, color: p.textDim }}>{bloco.andares} andares · {bloco.moradores} moradores</p>
+                    <p style={{ fontSize: 11, color: p.textDim }}>{getBlocoSummary(bloco.moradores)}</p>
                   </div>
                   <span style={{ fontSize: 18, fontWeight: 800, color: "#34d399" }}>{bloco.moradores}</span>
                 </button>
@@ -312,21 +374,7 @@ export default function DashboardSindico() {
         <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: p.accentBright, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.08em" }}>Funções</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }} className="sindico-features-grid">
-            {[
-              { icon: UserPlus, label: "Cadastro", description: "Gerenciar moradores e funcionários", route: "/cadastros", configKey: "feature_sindico_cadastros" },
-              { icon: Camera, label: "Câmeras", description: "Monitorar câmeras do condomínio", route: "/sindico/cameras", configKey: "feature_sindico_cameras" },
-              { icon: MapPin, label: "Rondas", description: "Controlar rondas de segurança", route: "/sindico/rondas", configKey: "feature_sindico_rondas" },
-              { icon: Phone, label: "Interfone", description: "Configurar interfone digital", route: "/sindico/interfone-config", configKey: "feature_sindico_interfone" },
-              { icon: Navigation, label: "Estou Chegando", description: "Configurar notificações de chegada", route: "/sindico/estou-chegando", configKey: "feature_sindico_estou_chegando" },
-              { icon: DoorOpen, label: "Acessos", description: "Gerenciar pontos de acesso", route: "/sindico/acessos", configKey: "feature_sindico_acessos" },
-              { icon: DoorOpen, label: "Portaria Virtual", description: "Abrir portas e portões remotamente", route: "/morador/portaria-virtual", configKey: "feature_sindico_portao" },
-              { icon: Cpu, label: "Dispositivos", description: "Biblioteca de dispositivos IoT", route: "/biblioteca-dispositivos", configKey: "feature_sindico_dispositivos" },
-              { icon: QrCode, label: "Config QR", description: "Configurar QR Code para visitantes", route: "/sindico/qr-config", configKey: "feature_sindico_qr_config" },
-              { icon: Zap, label: "Portão", description: "Configurar portões e dispositivos IoT", route: "/sindico/portao", configKey: "feature_sindico_portao" },
-              { icon: BookOpen, label: "Livro Protocolo", description: "Livro de ocorrências da portaria", route: "/portaria/livro-protocolo", configKey: "" },
-              { icon: MessageCircle, label: "WhatsApp", description: "Configurar notificações WhatsApp", route: "/sindico/whatsapp", configKey: "feature_sindico_whatsapp" },
-              { icon: Settings, label: "Config Funções", description: "Ativar/desativar funções por perfil", route: "/sindico/features-config", configKey: "" },
-            ].filter((item) => !item.configKey || isSindicoFeatureEnabled(item.configKey)).map((item, idx) => (
+            {sindicoHomeFeatures.map((item, idx) => (
               <div key={item.label} className="animate-fade-in" style={{ animationDelay: `${0.15 + idx * 0.08}s` }}>
                 <button
                   onClick={() => navigate(item.route)}
@@ -344,8 +392,8 @@ export default function DashboardSindico() {
                     boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
                     textAlign: "center",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = surfaceHoverBg; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = surfaceIdleBg; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
                   onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
                   onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
                 >

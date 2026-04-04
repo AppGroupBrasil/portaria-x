@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { getConfigBoolean } from "@/lib/featureFlags";
 
 const API = "/api/condominio-config";
 
@@ -60,8 +61,8 @@ export default function PortariaConfig() {
       const res = await apiFetch(API);
       if (res.ok) {
         const config = await res.json();
-        setVehicleUniqueAccess(config.vehicle_unique_access === "true");
-        setVehicleLimitPerApt(config.vehicle_limit_per_apt === "true");
+        setVehicleUniqueAccess(getConfigBoolean(config, "vehicle_unique_access", false));
+        setVehicleLimitPerApt(getConfigBoolean(config, "vehicle_limit_per_apt", false));
         if (config.vehicle_limit_per_apt_count) {
           setVehicleLimitPerAptCount(config.vehicle_limit_per_apt_count);
         }
@@ -70,11 +71,11 @@ export default function PortariaConfig() {
           setMaxAuthDays(config.max_auth_days);
         }
         setRequireFields({
-          require_visit_photo: config.require_visit_photo === "true",
-          require_visit_document: config.require_visit_document === "true",
-          require_visit_phone: config.require_visit_phone === "true",
-          require_visit_reason: config.require_visit_reason === "true",
-          require_visit_doc_photo: config.require_visit_doc_photo === "true",
+          require_visit_photo: getConfigBoolean(config, "require_visit_photo", false),
+          require_visit_document: getConfigBoolean(config, "require_visit_document", false),
+          require_visit_phone: getConfigBoolean(config, "require_visit_phone", false),
+          require_visit_reason: getConfigBoolean(config, "require_visit_reason", false),
+          require_visit_doc_photo: getConfigBoolean(config, "require_visit_doc_photo", false),
         });
       }
     } catch (err) {

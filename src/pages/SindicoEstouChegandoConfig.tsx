@@ -8,8 +8,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
+import { DEFAULT_MAP_CENTER, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID } from "@/lib/googleMaps";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   ArrowLeft,
@@ -24,31 +24,23 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-// Fix Leaflet icons
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { CircleF, GoogleMap, LoadScriptNext, MarkerF } from "@react-google-maps/api";
 import { useTheme } from "@/hooks/useTheme";
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({ iconRetinaUrl: markerIcon2x, iconUrl: markerIcon, shadowUrl: markerShadow });
-
-function LocationPicker({ position, onPositionChange }: { position: [number, number] | null; onPositionChange: (lat: number, lng: number) => void }) {
-  useMapEvents({
-    click(e) {
-      onPositionChange(e.latlng.lat, e.latlng.lng);
-    },
-  });
-  return position ? <Marker position={position} /> : null;
+function buildMarkerIcon(fillColor: string): google.maps.Symbol | undefined {
+  if (!globalThis.google?.maps?.SymbolPath) return undefined;
+  return {
+    path: globalThis.google.maps.SymbolPath.CIRCLE,
+    fillColor,
+    fillOpacity: 1,
+    strokeColor: "#ffffff",
+    strokeWeight: 2,
+    scale: 11,
+  };
 }
 
 export default function SindicoEstouChegandoConfig() {
-  const { isDark, p } = useTheme();
-  const { user } = useAuth();
+  const { p } = useTheme();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -126,7 +118,8 @@ export default function SindicoEstouChegandoConfig() {
     );
   }
 
-  const mapCenter: [number, number] = latitude && longitude ? [latitude, longitude] : [-23.55, -46.63];
+  const mapCenter = latitude && longitude ? { lat: latitude, lng: longitude } : DEFAULT_MAP_CENTER;
+  const markerIcon = buildMarkerIcon("#ef4444");
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
@@ -328,16 +321,53 @@ export default function SindicoEstouChegandoConfig() {
           </p>
 
           <div className="rounded-xl overflow-hidden border border-border" style={{ height: "300px" }}>
-            <MapContainer center={mapCenter} zoom={15} style={{ height: "100%", width: "100%" }} zoomControl>
-              <TileLayer
-                attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <LocationPicker
-                position={latitude && longitude ? [latitude, longitude] : null}
-                onPositionChange={(lat, lng) => { setLatitude(lat); setLongitude(lng); }}
-              />
-            </MapContainer>
+            {GOOGLE_MAPS_API_KEY ? (
+              <LoadScriptNext googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+                <GoogleMap
+                  center={mapCenter}
+                  zoom={15}
+                  mapContainerStyle={{ height: "100%", width: "100%" }}
+                  options={{
+                    clickableIcons: false,
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    fullscreenControl: false,
+                    mapId: GOOGLE_MAPS_MAP_ID || undefined,
+                  }}
+                  onClick={(event) => {
+                    const latLng = event.latLng;
+                    if (!latLng) return;
+                    setLatitude(latLng.lat());
+                    setLongitude(latLng.lng());
+                  }}
+                >
+                  {latitude && longitude && (
+                    <>
+                      <MarkerF
+                        position={{ lat: latitude, lng: longitude }}
+                        icon={markerIcon}
+                        label={{ text: "C", color: "#ffffff", fontWeight: "700" }}
+                      />
+                      <CircleF
+                        center={{ lat: latitude, lng: longitude }}
+                        radius={radiusDefault}
+                        options={{
+                          strokeColor: "#2563eb",
+                          strokeOpacity: 0.9,
+                          strokeWeight: 2,
+                          fillColor: "#2563eb",
+                          fillOpacity: 0.08,
+                        }}
+                      />
+                    </>
+                  )}
+                </GoogleMap>
+              </LoadScriptNext>
+            ) : (
+              <div className="h-full flex items-center justify-center bg-muted text-center px-4 text-sm text-muted-foreground">
+                Configure a variável VITE_GOOGLE_MAPS_API_KEY para selecionar a localização do condomínio.
+              </div>
+            )}
           </div>
 
           {latitude && longitude && (

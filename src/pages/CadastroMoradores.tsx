@@ -210,7 +210,7 @@ export default function CadastroMoradores() {
           <div style={{ marginLeft: "auto" }}>
             <TutorialButton title="Cadastro de Moradores">
               <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
-                <p>Central de cadastro de moradores do condomínio. Aqui você gerencia <strong>todos os moradores</strong> — cadastra novos, edita dados e remove quem saiu. O morador cadastrado recebe acesso completo ao app (visitantes, delivery, veículos, correspondências, interfone, etc.).</p>
+                <p>Central de cadastro de moradores do condomínio. Aqui você gerencia <strong>todos os moradores</strong> — cadastra novos, edita dados e remove quem saiu. O morador cadastrado recebe acesso completo ao app para visitantes, delivery, veículos, correspondências e demais funções habilitadas.</p>
               </TSection>
               <TSection icon={<span>🏗️</span>} title="4 MÉTODOS DE CADASTRO">
                 <TStep n={1}><strong>Manual</strong> — Você preenche o formulário com nome, bloco, unidade, WhatsApp, e-mail e senha do morador. Ideal para cadastrar poucos moradores.</TStep>

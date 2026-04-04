@@ -18,7 +18,6 @@ export type DeviceProtocol =
 export type DeviceCategory =
   | "relay"         // Relé de acionamento (portão, fechadura)
   | "controller"    // Controladora de acesso
-  | "intercom"      // Porteiro eletrônico / videoporteiro
   | "camera"        // Câmera IP
   | "biometric"     // Leitor biométrico
   | "reader"        // Leitor de cartão / tag
@@ -465,37 +464,6 @@ export const DEVICES: DeviceModel[] = [
   // ────── INTELBRAS ─────────────────────────────
   // ═══════════════════════════════════════════════
   {
-    id: "intelbras-xpe-3101-ip",
-    brand: "intelbras",
-    name: "Intelbras XPE 3101 IP",
-    model: "XPE 3101 IP",
-    category: "intercom",
-    protocol: "intelbras",
-    integrationType: "local",
-    description: "Porteiro eletrônico IP com câmera e relé integrado. Protocolo SIP para integração com centrais. Ideal para substituir porteiros analógicos.",
-    specs: {
-      channels: 1,
-      voltage: "PoE 802.3af / 12V DC",
-      connectivity: "Ethernet 10/100",
-      dimensions: "120 × 168 × 45mm",
-      protocols: ["SIP", "HTTP", "RTSP"],
-      extras: ["Câmera 1MP", "Relé seco integrado", "Proteção IP65"],
-    },
-    features: [
-      "Videoporteiro IP com câmera",
-      "Protocolo SIP nativo",
-      "Relé integrado para acionamento",
-      "API HTTP para integração",
-      "PoE — um único cabo",
-      "Proteção contra chuva IP65",
-    ],
-    useCase: "Substituição do porteiro analógico. Faz chamada SIP + aciona portão via relé integrado.",
-    installNotes: "Instalar na guarita/portão. Conectar via cabo Ethernet (PoE). Configurar SIP e relé via interface web.",
-    purchaseUrl: "https://www.amazon.com.br/s?k=intelbras+xpe+3101+ip",
-    available: false,
-    priceRange: "R$ 800–1.200",
-  },
-  {
     id: "intelbras-ct-500-1r",
     brand: "intelbras",
     name: "Intelbras CT 500 1R",
@@ -589,35 +557,6 @@ export const DEVICES: DeviceModel[] = [
     priceRange: "R$ 2.500–4.000",
   },
   {
-    id: "hikvision-ds-k1t502",
-    brand: "hikvision",
-    name: "Hikvision DS-K1T502 Series",
-    model: "DS-K1T502",
-    category: "intercom",
-    protocol: "hikvision",
-    integrationType: "hybrid",
-    description: "Videoporteiro IP Hikvision com câmera 2MP e relé. Protocolo SIP e ISAPI. Integração com app Hik-Connect.",
-    specs: {
-      channels: 1,
-      voltage: "PoE 802.3af / 12V DC",
-      connectivity: "Ethernet 10/100",
-      protocols: ["SIP", "ISAPI", "RTSP"],
-      extras: ["Câmera 2MP", "Relé integrado", "IP65", "Infravermelho"],
-    },
-    features: [
-      "Câmera 2MP com IR",
-      "SIP + ISAPI",
-      "Relé para portão integrado",
-      "Integração Hik-Connect",
-      "PoE",
-    ],
-    useCase: "Videoporteiro profissional com integração IP. Substitui porteiros analógicos mantendo visual premium.",
-    installNotes: "Instalar na entrada do condomínio. Cabo Ethernet até switch PoE. Configurar via iVMS ou ISAPI.",
-    purchaseUrl: "https://www.amazon.com.br/s?k=hikvision+video+porteiro+ip",
-    available: false,
-    priceRange: "R$ 1.500–2.500",
-  },
-  {
     id: "hikvision-ds-k2602t",
     brand: "hikvision",
     name: "Hikvision DS-K2602T",
@@ -684,7 +623,6 @@ export function getBrandById(id: string): BrandInfo | undefined {
 export const CATEGORY_LABELS: Record<DeviceCategory, string> = {
   relay: "Relé / Acionamento",
   controller: "Controladora de Acesso",
-  intercom: "Porteiro Eletrônico",
   camera: "Câmera IP",
   biometric: "Biometria",
   reader: "Leitor de Cartão",

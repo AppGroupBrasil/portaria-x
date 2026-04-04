@@ -215,7 +215,6 @@ export default function CadastroFuncionarios() {
                 <TBullet><strong>Porteiro</strong> — Cadastrar visitantes, registrar entregas, correspondências, livro de protocolo, controle de portões</TBullet>
                 <TBullet><strong>Zelador</strong> — Registro de rondas, ocorrências e manutenção</TBullet>
                 <TBullet><strong>Gerente/Supervisão</strong> — Visão geral de todas as operações da portaria</TBullet>
-                <TBullet><strong>Interfone</strong> — Todos os funcionários podem atender chamadas do interfone digital</TBullet>
               </TSection>
               <TSection icon={<span>⭐</span>} title="DICAS IMPORTANTES">
                 <TBullet>A <strong>senha tem 6 dígitos</strong> — fácil de memorizar mas segura</TBullet>

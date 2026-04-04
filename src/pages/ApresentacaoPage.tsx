@@ -39,7 +39,6 @@ const standardFeatures = [
 ];
 
 const extraFeatures = [
-  { icon: Phone, title: "Interfone Digital", desc: "QR Code por bloco. Visitante escaneia e liga direto pro morador com vídeo. 3 níveis de segurança configuráveis.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[] },
   { icon: Monitor, title: "Monitoramento de Câmeras", desc: "Câmeras RTSP em tempo real. Grade multi-câmera com snapshot automático. Configure pelo painel do síndico.", profiles: ["portaria", "sindico"] as ProfileKey[] },
   { icon: DoorOpen, title: "Portaria Virtual (IoT)", desc: "Abra portões e portas dos blocos pelo app com ESP32 + relé. Multi-portão. Sem fio. Instalação simples.", profiles: ["portaria", "morador", "sindico"] as ProfileKey[] },
   { icon: Eye, title: "Leitura de Placa Veicular por Câmera IP", desc: "Câmera IP lê a placa automaticamente na entrada e saída. Identifica veículos cadastrados e libera acesso sem interação manual. Pelo celular já incluso no plano.", profiles: ["portaria", "sindico"] as ProfileKey[] },
@@ -48,7 +47,7 @@ const extraFeatures = [
 
 const planFeatures = [
   "Cadastro de Visitantes com QR Code", "Autorizações Prévias", "Controle de Veículos + OCR",
-  "Correspondências com Notificação", "Delivery", "Interfone Digital com QR Code",
+  "Correspondências com Notificação", "Delivery",
   "Estou Chegando (GPS)", "Livro de Protocolo Digital", "Espelho de Portaria",
   "Monitoramento de Câmeras (CFTV)", "Controle de Rondas", "Relatórios em PDF e Gráficos",
   "Configuração de Features", "App do Morador completo", "Multi-perfil (5 níveis)",

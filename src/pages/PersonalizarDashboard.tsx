@@ -43,7 +43,6 @@ export const ALL_ITEMS: DashboardItem[] = [
   { id: "estou-chegando",   icon: "MapPin",          label: "Estou Chegando",       shortLabel: "Chegando",        route: "/portaria/estou-chegando" },
   { id: "deliveries",       icon: "Truck",           label: "Entregas e Delivery",  shortLabel: "Entregas",        route: "/portaria/delivery" },
   { id: "livro-protocolo",  icon: "BookOpen",        label: "Livro de Protocolo",   shortLabel: "Protocolo",       route: "/portaria/livro-protocolo" },
-  { id: "interfone",        icon: "Phone",           label: "Interfone Digital",    shortLabel: "Interfone",       route: "/portaria/interfone" },
   { id: "correspondencias", icon: "Package",         label: "Correspondências",     shortLabel: "Corresp.",        route: "/portaria/correspondencias" },
   { id: "monitoramento",    icon: "Camera",          label: "Monitoramento",        shortLabel: "Monitoramento",   route: "/portaria/monitoramento" },
   { id: "rondas",           icon: "MapPin",          label: "Controle de Rondas",   shortLabel: "Rondas",          route: "/portaria/rondas" },
@@ -56,7 +55,7 @@ export const ALL_ITEMS: DashboardItem[] = [
 /* ── Icon map ── */
 const ICON_MAP: Record<string, any> = {
   UserPlus, Car, Package, Camera, ShieldCheck, Truck, BookOpen,
-  DoorOpen, Scan, MapPin, Phone, LayoutDashboard,
+  DoorOpen, Scan, MapPin, LayoutDashboard,
 };
 
 export function getIconComponent(iconName: string) {
@@ -66,7 +65,7 @@ export function getIconComponent(iconName: string) {
 /* ── Default config ── */
 export const DEFAULT_DASHBOARD_IDS = [
   "visitantes", "autorizacoes", "veiculos", "qr-scanner",
-  "deliveries", "livro-protocolo", "interfone", "correspondencias",
+  "deliveries", "livro-protocolo", "correspondencias",
   "rondas", "estou-chegando",
 ];
 

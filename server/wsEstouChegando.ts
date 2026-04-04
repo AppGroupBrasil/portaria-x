@@ -23,12 +23,10 @@
  */
 
 import { WebSocketServer, WebSocket } from "ws";
-import http from "http";
-import https from "https";
-import fs from "fs";
-import path from "path";
-import type { Server } from "http";
-import type { IncomingMessage } from "http";
+import http, { type IncomingMessage, type Server } from "node:http";
+import https from "node:https";
+import fs from "node:fs";
+import path from "node:path";
 import jwt from "jsonwebtoken";
 import db, { type DbUser } from "./db.js";
 import { sendPushToPortaria } from "./pushService.js";
@@ -117,11 +115,11 @@ function broadcastToPortaria(condominioId: number, data: any) {
   }
 }
 
-export function initArrivalWebSocket(_server?: Server) {
+export function initArrivalWebSocket(server?: Server) {
   const certsDir = path.resolve(process.cwd(), "certs");
   const hasCerts = fs.existsSync(path.join(certsDir, "key.pem")) && fs.existsSync(path.join(certsDir, "cert.pem"));
 
-  const wsHttpServer = hasCerts
+  const standaloneWsServer = hasCerts
     ? https.createServer({
         key: fs.readFileSync(path.join(certsDir, "key.pem")),
         cert: fs.readFileSync(path.join(certsDir, "cert.pem")),
@@ -134,12 +132,17 @@ export function initArrivalWebSocket(_server?: Server) {
         res.end("WS server");
       });
 
-  const WS_PORT = parseInt(process.env.WS_ARRIVAL_PORT || "3003");
-  const wss = new WebSocketServer({ server: wsHttpServer, path: "/ws/estou-chegando", perMessageDeflate: false });
+  const wsServer = server ?? standaloneWsServer;
+  const wss = new WebSocketServer({ server: wsServer, path: "/ws/estou-chegando", perMessageDeflate: false });
 
-  wsHttpServer.listen(WS_PORT, "0.0.0.0", () => {
-    console.log(`  \u{1F4CD} Estou Chegando WebSocket ready at ${hasCerts ? 'wss' : 'ws'}://0.0.0.0:${WS_PORT}/ws/estou-chegando`);
-  });
+  if (server) {
+    console.log("  \u{1F4CD} Estou Chegando WebSocket mounted on main server at /ws/estou-chegando");
+  } else {
+    const WS_PORT = Number.parseInt(process.env.WS_ARRIVAL_PORT || "3003");
+    standaloneWsServer.listen(WS_PORT, "0.0.0.0", () => {
+      console.log(`  \u{1F4CD} Estou Chegando WebSocket ready at ${hasCerts ? 'wss' : 'ws'}://0.0.0.0:${WS_PORT}/ws/estou-chegando`);
+    });
+  }
 
   wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
     const authUser = authenticateWsArrival(req);

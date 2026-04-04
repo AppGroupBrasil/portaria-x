@@ -78,9 +78,6 @@ router.delete("/:id", authorize("master"), (req, res) => {
 
     // Delete all related data
     const deleteCondominio = db.transaction(() => {
-      db.prepare("DELETE FROM interfone_calls WHERE condominio_id = ?").run(condoId);
-      db.prepare("DELETE FROM interfone_config WHERE condominio_id = ?").run(condoId);
-      db.prepare("DELETE FROM interfone_tokens WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM ronda_registros WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM ronda_schedules WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM ronda_checkpoints WHERE condominio_id = ?").run(condoId);

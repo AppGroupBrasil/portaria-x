@@ -11,11 +11,10 @@
 | Servidor | Hetzner VPS (46.225.191.114) — provavelmente CX21/CX31 |
 | Banco de dados | SQLite (better-sqlite3) — arquivo único `data.db` |
 | Backend | Node.js 20 + Express — processo único, sem clustering |
-| WebSocket | 2 servidores WS separados (porta 3002 interfone, 3003 estou chegando) — estado in-memory |
+| WebSocket | Estou Chegando montado no servidor HTTP principal em `/ws/estou-chegando` — estado in-memory |
 | Face Recognition | @vladmandic/face-api com TensorFlow.js WASM — server-side, bloqueia event loop |
 | Leitura de Placa | Tesseract.js — client-side (sem custo no servidor) |
 | IoT (eWeLink) | Token único global — suporta apenas 1 conta |
-| Interfone (WebRTC) | STUN-only (Google), sem TURN — ~30-40% das chamadas falham em NAT restritivo |
 | Push | Firebase FCM (gratuito) |
 | WhatsApp | Apenas links wa.me/, sem API programática |
 | Deploy | Docker container único, sem réplicas, sem limites de CPU/RAM |
@@ -44,7 +43,7 @@
 | 🔴 P0 | Sem servidor TURN | ~30-40% das chamadas de vídeo falham |
 | 🟡 P1 | eWeLink token único | Não suporta contas IoT por condomínio |
 | 🟡 P1 | Docker container único | Sem scaling, sem failover, OOM imprevisível |
-| 🟡 P1 | WS ports não expostos | Interfone e Estou Chegando podem não funcionar em produção |
+| 🟡 P1 | Estado WS in-memory | Réplicas exigirão Redis/pub-sub para compartilhar presença e eventos |
 | 🟢 P2 | FCM push | OK — FCM suporta a escala |
 | 🟢 P2 | Leitura de placa | OK — roda client-side |
 | 🟢 P2 | Camera snapshots | OK — depende de rede local do condomínio |
@@ -59,7 +58,6 @@
 | Leitura de Placa | ✅ OK | ✅ OK | ✅ OK (client-side) |
 | Biometria Facial por Câmera IP | ⚠️ Lento | 🔴 Trava | 🔴 Inutilizável |
 | Biometria pelo Celular | ✅ OK | ✅ OK | ✅ OK (client-side) |
-| Interfone Vídeo | ⚠️ ~70% funciona | ⚠️ ~70% funciona | 🔴 ~60% funciona |
 | Portaria Virtual (IoT) | ✅ OK | 🔴 Não funciona (1 token) | 🔴 Não funciona |
 | Câmeras CFTV | ✅ OK | ✅ OK | ✅ OK (direto da câmera) |
 | Rondas/Protocolo | ✅ OK | ✅ OK | ⚠️ Lento (SQLite) |
@@ -140,7 +138,7 @@
 - **Migração de dados**: SQLite → PostgreSQL precisa de script de migração com zero downtime (exportar, importar, switch)
 - **Fotos em base64 no SQLite**: Campos `foto`, `face_descriptor` armazenam base64 direto no banco. No PostgreSQL, considerar mover para object storage (Hetzner Storage Box) para reduzir tamanho do DB
 - **Senhas de câmera**: Armazenadas em plaintext no SQLite. Na migração, criptografar com AES-256
-- **WebSocket ports**: Atualmente 3002/3003 podem não estar expostos no Docker. Garantir na migração
+- **WebSocket scale-out**: Hoje o WS de Estou Chegando usa o servidor principal e estado em memória. Em múltiplas réplicas, compartilhar eventos via Redis/pub-sub
 - **Backup**: Implementar backup incremental diário do PostgreSQL + snapshot semanal do servidor
 
 ---

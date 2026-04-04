@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { APP_ERROR_CODES, readErrorResponse, toAppError } from "@/lib/errorCodes";
 
 interface CondominioResult {
   id: number;
@@ -53,13 +54,12 @@ export default function SearchCondominio() {
     try {
       const res = await apiFetch(`/api/auth/condominio/search?cnpj=${clean}`);
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Condomínio não encontrado.");
+        throw await readErrorResponse(res, "Condomínio não encontrado.", APP_ERROR_CODES.CONDO_NOT_FOUND);
       }
       const data = await res.json();
       setCondominio(data.condominio);
-    } catch (err: any) {
-      setError(err.message || "Erro ao buscar condomínio.");
+    } catch (err: unknown) {
+      setError(toAppError(err, "Erro ao buscar condomínio.").message);
     } finally {
       setIsSearching(false);
     }

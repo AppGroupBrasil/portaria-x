@@ -35,6 +35,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { isFeatureEnabled as getFeatureEnabled } from "@/lib/featureFlags";
 
 // ─── Feature definitions per profile ─────────────────────
 interface FeatureDef {
@@ -56,7 +57,6 @@ const MORADOR_FEATURES: FeatureDef[] = [
   { key: "feature_correspondencias", label: "Correspondências", description: "Visualizar avisos de correspondência na portaria", icon: Mail, gradient: "#003580", isDefault: true },
   { key: "feature_estou_chegando", label: "Estou Chegando", description: "Avisar a portaria que está chegando", icon: Navigation, gradient: "#003580", isDefault: true },
   // Extras
-  { key: "feature_interfone", label: "Interfone Digital", description: "Receber chamadas de visitantes com vídeo", icon: Phone, gradient: "#003580", isDefault: false },
   { key: "feature_portaria_virtual", label: "Portaria Virtual", description: "Abrir portões e portas remotamente", icon: DoorOpen, gradient: "#003580", isDefault: false },
   { key: "feature_auto_cadastro", label: "Auto Cadastro", description: "Visitantes se cadastram sozinhos via link", icon: UserPlus, gradient: "#003580", isDefault: false },
 ];
@@ -76,7 +76,6 @@ const PORTEIRO_FEATURES: FeatureDef[] = [
   { key: "feature_porteiro_espelho", label: "Espelho Portaria", description: "Visão geral do espelho da portaria", icon: ShieldCheck, gradient: "#d97706", isDefault: true },
   // Extras
   { key: "feature_porteiro_monitoramento", label: "Monitoramento", description: "Visualizar câmeras do condomínio", icon: Camera, gradient: "#d97706", isDefault: false },
-  { key: "feature_porteiro_interfone", label: "Interfone", description: "Atender chamadas de visitantes", icon: Phone, gradient: "#d97706", isDefault: false },
   { key: "feature_porteiro_portaria_virtual", label: "Portaria Virtual", description: "Controle remoto de portões", icon: DoorOpen, gradient: "#d97706", isDefault: false },
   { key: "feature_porteiro_acesso_auto", label: "Acesso Automático", description: "Liberação automática de veículos", icon: Scan, gradient: "#d97706", isDefault: false },
 ];
@@ -94,7 +93,6 @@ const SINDICO_FEATURES: FeatureDef[] = [
   { key: "feature_sindico_liberacao", label: "Liberação Cadastros", description: "Aprovar cadastros pendentes", icon: ShieldCheck, gradient: "#16a34a", isDefault: true },
   // Extras
   { key: "feature_sindico_cameras", label: "Câmeras", description: "Configurar câmeras do condomínio", icon: Camera, gradient: "#16a34a", isDefault: false },
-  { key: "feature_sindico_interfone", label: "Interfone Config", description: "Configurar sistema de interfone", icon: Phone, gradient: "#16a34a", isDefault: false },
   { key: "feature_sindico_acessos", label: "Acessos", description: "Gerenciar pontos de acesso", icon: DoorOpen, gradient: "#16a34a", isDefault: false },
   { key: "feature_sindico_portao", label: "Portão IoT", description: "Configurar portões e dispositivos IoT", icon: Zap, gradient: "#16a34a", isDefault: false },
   { key: "feature_sindico_dispositivos", label: "Dispositivos", description: "Biblioteca de dispositivos IoT", icon: Cpu, gradient: "#16a34a", isDefault: false },
@@ -232,7 +230,7 @@ export default function AdminFeaturesConfig() {
   }, [selectedCondoId]);
 
   const isFeatureEnabled = (key: string): boolean => {
-    return config[key] !== "false";
+    return getFeatureEnabled(config, key, true);
   };
 
   const toggleFeature = async (key: string) => {

@@ -4,6 +4,63 @@ import { authenticate, authorize, getAccessibleCondominioIds } from "./middlewar
 
 const router = Router();
 
+const DEFAULT_CONFIG_VALUES: Record<string, string> = {
+  feature_autorizacoes: "true",
+  feature_delivery: "true",
+  feature_veiculos: "true",
+  feature_qr_visitante: "true",
+  feature_correspondencias: "true",
+  feature_estou_chegando: "true",
+  feature_auto_cadastro: "false",
+  feature_portaria_virtual: "false",
+
+  feature_porteiro_pedestres: "true",
+  feature_porteiro_veiculos: "true",
+  feature_porteiro_delivery: "true",
+  feature_porteiro_correspondencias: "true",
+  feature_porteiro_rondas: "true",
+  feature_porteiro_estou_chegando: "true",
+  feature_porteiro_centro_comando: "true",
+  feature_porteiro_qr_scanner: "true",
+  feature_porteiro_livro_protocolo: "true",
+  feature_porteiro_espelho: "true",
+  feature_porteiro_monitoramento: "false",
+  feature_porteiro_portaria_virtual: "false",
+  feature_porteiro_acesso_auto: "false",
+
+  feature_sindico_cadastros: "true",
+  feature_sindico_blocos: "true",
+  feature_sindico_moradores: "true",
+  feature_sindico_funcionarios: "true",
+  feature_sindico_rondas: "true",
+  feature_sindico_estou_chegando: "true",
+  feature_sindico_qr_config: "true",
+  feature_sindico_liberacao: "true",
+  feature_sindico_cameras: "false",
+  feature_sindico_acessos: "false",
+  feature_sindico_portao: "false",
+  feature_sindico_dispositivos: "false",
+  feature_sindico_whatsapp: "false",
+
+  require_visit_photo: "false",
+  require_visit_document: "false",
+  require_visit_phone: "false",
+  require_visit_reason: "false",
+  require_visit_doc_photo: "false",
+  notify_email_enabled: "false",
+  notify_whatsapp_enabled: "false",
+  whatsapp_enabled: "false",
+  whatsapp_notify_visitor_arrival: "false",
+  whatsapp_notify_delivery: "false",
+  whatsapp_notify_security_alert: "false",
+  whatsapp_notify_gate_opened: "false",
+  whatsapp_notify_estou_chegando: "false",
+  whatsapp_notify_pre_authorization: "false",
+  whatsapp_notify_vehicle_access: "false",
+  whatsapp_notify_ronda: "false",
+  whatsapp_notify_livro_protocolo: "false",
+};
+
 // Chaves permitidas na configuração do condomínio
 const ALLOWED_KEYS = new Set([
   // ── Morador features ──
@@ -13,7 +70,6 @@ const ALLOWED_KEYS = new Set([
   "feature_qr_visitante",
   "feature_correspondencias",
   "feature_auto_cadastro",
-  "feature_interfone",
   "feature_estou_chegando",
   "feature_portaria_virtual",
   // ── Porteiro/Funcionário features ──
@@ -23,7 +79,6 @@ const ALLOWED_KEYS = new Set([
   "feature_porteiro_correspondencias",
   "feature_porteiro_monitoramento",
   "feature_porteiro_rondas",
-  "feature_porteiro_interfone",
   "feature_porteiro_estou_chegando",
   "feature_porteiro_portaria_virtual",
   "feature_porteiro_centro_comando",
@@ -38,7 +93,6 @@ const ALLOWED_KEYS = new Set([
   "feature_sindico_funcionarios",
   "feature_sindico_cameras",
   "feature_sindico_rondas",
-  "feature_sindico_interfone",
   "feature_sindico_estou_chegando",
   "feature_sindico_acessos",
   "feature_sindico_portao",
@@ -81,18 +135,8 @@ const ALLOWED_KEYS = new Set([
   "whatsapp_notify_livro_protocolo",
 ]);
 
-// ─── DEFAULT CONFIG (copied from Condomínio Exemplo id=1) ──
-// Applied automatically to new condominiums
-const DEFAULT_CONDOMINIO_ID = 1;
-
 export function applyDefaultConfig(targetCondominioId: number): void {
   try {
-    const sourceRows = db
-      .prepare("SELECT key, value FROM condominio_config WHERE condominio_id = ?")
-      .all(DEFAULT_CONDOMINIO_ID) as { key: string; value: string }[];
-
-    if (sourceRows.length === 0) return;
-
     const upsert = db.prepare(`
       INSERT INTO condominio_config (condominio_id, key, value, updated_at)
       VALUES (?, ?, ?, datetime('now'))
@@ -101,9 +145,9 @@ export function applyDefaultConfig(targetCondominioId: number): void {
     `);
 
     const tx = db.transaction(() => {
-      for (const row of sourceRows) {
-        if (!ALLOWED_KEYS.has(row.key)) continue;
-        upsert.run(targetCondominioId, row.key, row.value);
+      for (const [key, value] of Object.entries(DEFAULT_CONFIG_VALUES)) {
+        if (!ALLOWED_KEYS.has(key)) continue;
+        upsert.run(targetCondominioId, key, value);
       }
     });
     tx();

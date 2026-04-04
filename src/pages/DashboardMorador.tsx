@@ -5,9 +5,7 @@ import { useState, useEffect } from "react";
 import ThemePicker from "@/components/ThemePicker";
 import {
   Home,
-  Menu,
   LogOut,
-  Settings,
   Shield,
   Bell,
   ShieldCheck,
@@ -17,11 +15,11 @@ import {
   Mail,
   QrCode,
   Loader2,
-  Phone,
   Navigation,
   DoorOpen,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { isFeatureEnabled as getFeatureEnabled } from "@/lib/featureFlags";
 import FuncoesIndex from "@/components/FuncoesIndex";
 
 // ─── Feature key mapping ─────────────────────────────────
@@ -82,22 +80,13 @@ const ALL_FEATURES: FeatureButton[] = [
     delay: "0.55s",
   },
   {
-    key: "feature_interfone",
-    label: "Interfone Digital",
-    description: "Receba chamadas de visitantes com vídeo",
-    route: "/morador/interfone-config",
-    icon: Phone,
-    gradient: "#003580",
-    delay: "0.65s",
-  },
-  {
     key: "feature_estou_chegando",
     label: "Estou Chegando",
     description: "Avise a portaria que você está chegando",
     route: "/morador/estou-chegando",
     icon: Navigation,
     gradient: "#003580",
-    delay: "0.75s",
+    delay: "0.65s",
   },
   {
     key: "feature_portaria_virtual",
@@ -106,7 +95,7 @@ const ALL_FEATURES: FeatureButton[] = [
     route: "/morador/portaria-virtual",
     icon: DoorOpen,
     gradient: "#003580",
-    delay: "0.85s",
+    delay: "0.75s",
   },
 ];
 
@@ -116,7 +105,6 @@ const BOTTOM_NAV_FEATURE_MAP: Record<string, string> = {
   "/morador/delivery": "feature_delivery",
   "/morador/veiculos": "feature_veiculos",
   "/morador/correspondencias": "feature_correspondencias",
-  "/morador/interfone-config": "feature_interfone",
   "/morador/estou-chegando": "feature_estou_chegando",
   "/morador/portaria-virtual": "feature_portaria_virtual",
 };
@@ -124,7 +112,7 @@ const BOTTOM_NAV_FEATURE_MAP: Record<string, string> = {
 
 export default function DashboardMorador() {
   const { user, logout } = useAuth();
-  const { toggleTheme, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
 
   const [config, setConfig] = useState<Record<string, string>>({});
@@ -142,8 +130,7 @@ export default function DashboardMorador() {
   }, []);
 
   const isFeatureEnabled = (key: string): boolean => {
-    // Default: all features enabled if not configured
-    return config[key] !== "false";
+    return getFeatureEnabled(config, key, true);
   };
 
   const enabledFeatures = ALL_FEATURES.filter((f) => isFeatureEnabled(f.key));
@@ -158,6 +145,66 @@ export default function DashboardMorador() {
     await logout();
     navigate("/login");
   };
+
+  let content: React.ReactNode;
+  if (!configLoaded) {
+    content = (
+      <div style={{ display: "flex", justifyContent: "center", paddingTop: "4rem" }}>
+        <div className="flex items-center justify-center" style={{ width: 64, height: 64, borderRadius: 20, background: p.btnBg, border: p.iconBoxBorder }}>
+          <Loader2 className="animate-spin" style={{ width: 28, height: 28, color: p.text }} />
+        </div>
+      </div>
+    );
+  } else if (enabledFeatures.length === 0) {
+    content = (
+      <div style={{ textAlign: "center", paddingTop: "4rem" }}>
+        <p style={{ fontSize: 15, color: p.isDarkBase ? "#ffffff" : "#003580" }}>
+          Nenhuma função habilitada pelo síndico.
+        </p>
+      </div>
+    );
+  } else {
+    content = (
+      <div className="morador-features-grid">
+        {enabledFeatures.map((feature) => {
+          const Icon = feature.icon;
+          return (
+            <div key={feature.key} className="animate-fade-in" style={{ animationDelay: feature.delay }}>
+              <button
+                onClick={() => navigate(feature.route)}
+                className="w-full flex flex-col items-center cursor-pointer"
+                style={{
+                  padding: "20px 12px",
+                  height: "100%",
+                  minHeight: 130,
+                  background: p.surfaceBg,
+                  border: p.featureBorder,
+                  borderRadius: 20,
+                  color: p.text,
+                  gap: 10,
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                  textAlign: "center",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
+                onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.96)"; }}
+                onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
+              >
+                <div className="flex items-center justify-center shrink-0" style={{ width: 48, height: 48, borderRadius: 14, background: p.featureIconBoxBg, border: p.featureIconBoxBorder }}>
+                  <Icon style={{ width: 22, height: 22, color: p.textAccent, stroke: p.textAccent }} />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontWeight: 700, fontSize: 13, marginBottom: 2, lineHeight: 1.2 }}>{feature.label}</p>
+                  <p style={{ color: p.isDarkBase ? "rgba(255,255,255,0.7)" : "#475569", fontSize: 11, lineHeight: 1.3 }}>{feature.description}</p>
+                </div>
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
@@ -213,58 +260,7 @@ export default function DashboardMorador() {
 
         <FuncoesIndex userRole={user?.role || "morador"} />
 
-        {!configLoaded ? (
-          <div style={{ display: "flex", justifyContent: "center", paddingTop: "4rem" }}>
-            <div className="flex items-center justify-center" style={{ width: 64, height: 64, borderRadius: 20, background: p.btnBg, border: p.iconBoxBorder }}>
-              <Loader2 className="animate-spin" style={{ width: 28, height: 28, color: p.text }} />
-            </div>
-          </div>
-        ) : enabledFeatures.length === 0 ? (
-          <div style={{ textAlign: "center", paddingTop: "4rem" }}>
-            <p style={{ fontSize: 15, color: p.isDarkBase ? "#ffffff" : "#003580" }}>
-              Nenhuma função habilitada pelo síndico.
-            </p>
-          </div>
-        ) : (
-          <div className="morador-features-grid">
-            {enabledFeatures.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <div key={feature.key} className="animate-fade-in" style={{ animationDelay: feature.delay }}>
-                  <button
-                    onClick={() => navigate(feature.route)}
-                    className="w-full flex flex-col items-center cursor-pointer"
-                    style={{
-                      padding: "20px 12px",
-                      height: "100%",
-                      minHeight: 130,
-                      background: p.surfaceBg,
-                      border: p.featureBorder,
-                      borderRadius: 20,
-                      color: p.text,
-                      gap: 10,
-                      transition: "all 0.2s ease",
-                      boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-                      textAlign: "center",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
-                    onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.96)"; }}
-                    onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  >
-                    <div className="flex items-center justify-center shrink-0" style={{ width: 48, height: 48, borderRadius: 14, background: p.featureIconBoxBg, border: p.featureIconBoxBorder }}>
-                      <Icon style={{ width: 22, height: 22, color: p.textAccent, stroke: p.textAccent }} />
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontWeight: 700, fontSize: 13, marginBottom: 2, lineHeight: 1.2 }}>{feature.label}</p>
-                      <p style={{ color: p.isDarkBase ? "rgba(255,255,255,0.7)" : "#475569", fontSize: 11, lineHeight: 1.3 }}>{feature.description}</p>
-                    </div>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {content}
       </main>
 
       {/* ═══════════ Bottom Nav ═══════════ */}

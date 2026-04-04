@@ -5,6 +5,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 import { API_BASE, isNative } from "./config";
+import { AppError, APP_ERROR_CODES } from "./errorCodes";
 
 const TOKEN_KEY = "auth_token";
 
@@ -85,11 +86,11 @@ async function fetchWithFallback(url: string, fetchInit: RequestInit): Promise<R
     return await fetch(url, fetchInit);
   } catch (err) {
     console.warn("Fetch failed:", err);
-    if (!isNative) throw new Error(CONNECTION_ERR);
+    if (!isNative) throw new AppError(CONNECTION_ERR, APP_ERROR_CODES.NETWORK_CONNECTION_FAILED);
 
     const isWww = url.startsWith("https://www.portariax.com.br");
     const isApex = url.startsWith("https://portariax.com.br");
-    if (!isWww && !isApex) throw new Error(CONNECTION_ERR);
+    if (!isWww && !isApex) throw new AppError(CONNECTION_ERR, APP_ERROR_CODES.NETWORK_CONNECTION_FAILED);
 
     const altUrl = isWww
       ? url.replace("https://www.portariax.com.br", "https://portariax.com.br")
@@ -98,7 +99,7 @@ async function fetchWithFallback(url: string, fetchInit: RequestInit): Promise<R
     try {
       return await fetch(altUrl, fetchInit);
     } catch {
-      throw new Error(CONNECTION_ERR);
+      throw new AppError(CONNECTION_ERR, APP_ERROR_CODES.NETWORK_CONNECTION_FAILED);
     }
   }
 }

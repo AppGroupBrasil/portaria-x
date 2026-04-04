@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.portariax.app',
+  appId: 'br.com.portariax.app',
   appName: 'Portaria X',
   webDir: 'dist',
   server: {

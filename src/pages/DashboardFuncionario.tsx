@@ -7,6 +7,7 @@ import ThemePicker from "@/components/ThemePicker";
 import FuncoesIndex from "@/components/FuncoesIndex";
 import { loadLayout, getItemById, getIconComponent } from "@/pages/PersonalizarDashboard";
 import { apiFetch } from "@/lib/api";
+import { isFeatureEnabled } from "@/lib/featureFlags";
 import {
   LogOut,
   Settings,
@@ -60,7 +61,6 @@ export default function DashboardFuncionario() {
     "correspondencias": "feature_porteiro_correspondencias",
     "monitoramento": "feature_porteiro_monitoramento",
     "rondas": "feature_porteiro_rondas",
-    "interfone": "feature_porteiro_interfone",
     "estou-chegando": "feature_porteiro_estou_chegando",
     "portaria-virtual": "feature_porteiro_portaria_virtual",
     "centro-comando": "feature_porteiro_centro_comando",
@@ -72,12 +72,16 @@ export default function DashboardFuncionario() {
   const isPorteiroFeatureEnabled = (itemId: string) => {
     const configKey = PORTEIRO_CONFIG_MAP[itemId];
     if (!configKey) return true; // no config key = always enabled
-    return featureConfig[configKey] !== "false";
+    return isFeatureEnabled(featureConfig, configKey, true);
   };
 
   const dashboardItems = layout.dashboard.map(getItemById).filter(Boolean).filter((item) => isPorteiroFeatureEnabled(item!.id));
   const bottomBarItems = layout.bottomBar.map(getItemById).filter(Boolean).filter((item) => isPorteiroFeatureEnabled(item!.id));
   const hasHidden = (layout.hidden?.length || 0) > 0;
+  const secondaryHoverBg = p.isDarkBase ? "rgba(255,255,255,0.15)" : "#e2e8f0";
+  const secondaryIdleBg = p.btnBg;
+  const surfaceHoverBg = p.isDarkBase ? "rgba(255,255,255,0.12)" : "#eef2f7";
+  const surfaceIdleBg = p.surfaceBg;
 
   const handleLogout = async () => {
     await logout();
@@ -92,16 +96,31 @@ export default function DashboardFuncionario() {
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* ═══════════ Header ═══════════ */}
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0 }}>
-        <div className="flex items-center justify-between" style={{ padding: "20px 28px", height: "5rem" }}>
+        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5rem", gap: 16 }}>
           <div className="flex items-center" style={{ gap: 14 }}>
             <div className="flex items-center justify-center" style={{ width: 48, height: 48, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
               <ShieldCheck style={{ width: 22, height: 22, color: p.text }} />
             </div>
-            <div>
-              <span className="block text-white" style={{ fontWeight: 800, fontSize: 20, letterSpacing: "-0.01em" }}>
+            <div style={{ minWidth: 0 }}>
+              <span
+                className="block"
+                style={{
+                  fontWeight: 800,
+                  fontSize: 18,
+                  letterSpacing: "-0.01em",
+                  color: p.textHeading,
+                  lineHeight: 1.15,
+                  maxWidth: "min(46vw, 280px)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  wordBreak: "break-word",
+                }}
+              >
                 {user?.condominio_nome || "Meu Condomínio"}
               </span>
-              <span className="flex items-center" style={{ fontSize: 13, color: p.textDim, gap: 6 }}>
+              <span className="flex items-center" style={{ fontSize: 13, color: p.textDim, gap: 6, marginTop: 6, flexWrap: "wrap" }}>
                 <Shield style={{ width: 14, height: 14 }} />
                 {getRoleLabel(user?.role || "funcionario")}
                 {hasHidden && (
@@ -129,13 +148,13 @@ export default function DashboardFuncionario() {
               </span>
             </div>
           </div>
-          <div className="flex items-center" style={{ gap: 10 }}>
+          <div className="flex items-center" style={{ gap: 10, flexShrink: 0 }}>
             <button
               className="flex items-center justify-center"
               onClick={() => navigate("/portaria/configuracoes")}
               style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
               <Settings style={{ width: 20, height: 20, color: p.text }} />
             </button>
@@ -143,8 +162,8 @@ export default function DashboardFuncionario() {
               className="flex items-center justify-center"
               onClick={() => navigate("/minha-conta")}
               style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
               <UserCircle style={{ width: 20, height: 20, color: p.text }} />
             </button>
@@ -152,8 +171,8 @@ export default function DashboardFuncionario() {
             <button
               className="flex items-center justify-center relative"
               style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
               <Bell style={{ width: 20, height: 20, color: p.text }} />
               <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
@@ -163,7 +182,7 @@ export default function DashboardFuncionario() {
               onClick={handleLogout}
               style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
               <LogOut style={{ width: 20, height: 20, color: p.text }} />
             </button>
@@ -172,15 +191,15 @@ export default function DashboardFuncionario() {
       </header>
 
       {/* ═══════════ Welcome Banner ═══════════ */}
-      <div style={{ padding: "28px 28px 8px" }}>
-        <p style={{ fontSize: 14, color: "#7dd3fc", fontWeight: 500 }}>Bem-vindo(a) ao</p>
+      <div style={{ padding: "16px 20px 8px" }}>
+        <p style={{ fontSize: 14, color: p.accentBright, fontWeight: 500 }}>Bem-vindo(a) ao</p>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: p.text, marginTop: 4 }}>Painel da Portaria</h1>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>Selecione uma função abaixo</p>
+        <p style={{ fontSize: 14, color: p.textDim, marginTop: 6 }}>Selecione uma função abaixo</p>
       </div>
 
       <main className="flex-1 overflow-x-hidden" style={{ display: "flex", flexDirection: "column", gap: 14, paddingBottom: "10rem", paddingLeft: 16, paddingRight: 16, paddingTop: 20 }}>
 
-        <FuncoesIndex userRole={user?.role || "funcionario"} />
+        <FuncoesIndex userRole={user?.role || "funcionario"} featureConfig={featureConfig} />
 
         {/* ═══════════ Funções da Portaria — Grid de Cards ═══════════ */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" style={{ gap: 12 }}>
@@ -203,8 +222,8 @@ export default function DashboardFuncionario() {
                     transition: "all 0.2s ease",
                     boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = surfaceHoverBg; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = surfaceIdleBg; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(0)"; }}
                   onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.96)"; }}
                   onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
                 >

@@ -10,7 +10,6 @@ import {
   Car,
   Mail,
   QrCode,
-  Phone,
   Navigation,
   DoorOpen,
   Camera,
@@ -33,6 +32,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
 } from "lucide-react";
+import { getFeatureDefault, isFeatureEnabled } from "@/lib/featureFlags";
 
 /* ── Role badge colors ── */
 const ROLE_COLORS: Record<string, { bg: string; text: string; label: string }> = {
@@ -66,7 +66,6 @@ const ALL_FUNCOES: FuncaoGroup[] = [
       { icon: Car, label: "Autorizar Veículo", description: "Autorizar acesso de veículos", route: "/morador/veiculos", minRole: "morador" },
       { icon: QrCode, label: "QR Code Visitante", description: "Gerar QR de autorização para visitantes", route: "/morador/qr-visitante", minRole: "morador" },
       { icon: Mail, label: "Correspondências", description: "Avisos de correspondência na portaria", route: "/morador/correspondencias", minRole: "morador" },
-      { icon: Phone, label: "Interfone Digital", description: "Receber chamadas de visitantes com vídeo", route: "/morador/interfone-config", minRole: "morador" },
       { icon: Navigation, label: "Estou Chegando", description: "Avisar a portaria que está chegando", route: "/morador/estou-chegando", minRole: "morador" },
       { icon: DoorOpen, label: "Portaria Virtual", description: "Abrir portões e portas remotamente", route: "/morador/portaria-virtual", minRole: "morador" },
     ],
@@ -80,7 +79,6 @@ const ALL_FUNCOES: FuncaoGroup[] = [
       { icon: Mail, label: "Correspondências", description: "Registrar correspondências recebidas", route: "/portaria/correspondencias", minRole: "funcionario" },
       { icon: Camera, label: "Monitoramento", description: "Visualizar câmeras do condomínio", route: "/portaria/monitoramento", minRole: "funcionario" },
       { icon: MapPin, label: "Rondas", description: "Registrar rondas de segurança", route: "/portaria/rondas", minRole: "funcionario" },
-      { icon: Phone, label: "Interfone", description: "Atender chamadas de visitantes", route: "/portaria/interfone", minRole: "funcionario" },
       { icon: Navigation, label: "Estou Chegando", description: "Ver moradores a caminho", route: "/portaria/estou-chegando", minRole: "funcionario" },
       { icon: DoorOpen, label: "Portaria Virtual", description: "Controle remoto de portões", route: "/portaria/portaria-virtual", minRole: "funcionario" },
       { icon: LayoutDashboard, label: "Centro de Comando", description: "Painel unificado da portaria", route: "/portaria/centro-comando", minRole: "funcionario" },
@@ -100,7 +98,6 @@ const ALL_FUNCOES: FuncaoGroup[] = [
       { icon: Wrench, label: "Funcionários", description: "Cadastrar e gerenciar funcionários", route: "/cadastros/funcionarios", minRole: "sindico" },
       { icon: Camera, label: "Câmeras", description: "Configurar câmeras do condomínio", route: "/sindico/cameras", minRole: "sindico" },
       { icon: MapPin, label: "Rondas", description: "Controlar rondas de segurança", route: "/sindico/rondas", minRole: "sindico" },
-      { icon: Phone, label: "Interfone Config", description: "Configurar sistema de interfone", route: "/sindico/interfone-config", minRole: "sindico" },
       { icon: Navigation, label: "Estou Chegando Config", description: "Configurar notificações de chegada", route: "/sindico/estou-chegando", minRole: "sindico" },
       { icon: DoorOpen, label: "Acessos", description: "Gerenciar pontos de acesso", route: "/sindico/acessos", minRole: "sindico" },
       { icon: Zap, label: "Portão", description: "Configurar portões e dispositivos IoT", route: "/sindico/portao", minRole: "sindico" },
@@ -143,21 +140,67 @@ const ROLE_LEVEL: Record<string, number> = {
 
 interface Props {
   userRole: string;
+  featureConfig?: Record<string, string>;
+  onlyDefaultFeatures?: boolean;
 }
 
-export default function FuncoesIndex({ userRole }: Props) {
+const ROUTE_FEATURE_MAP: Record<string, string> = {
+  "/morador/autorizacoes": "feature_autorizacoes",
+  "/morador/delivery": "feature_delivery",
+  "/morador/veiculos": "feature_veiculos",
+  "/morador/qr-visitante": "feature_qr_visitante",
+  "/morador/correspondencias": "feature_correspondencias",
+  "/morador/estou-chegando": "feature_estou_chegando",
+  "/morador/portaria-virtual": "feature_portaria_virtual",
+  "/portaria/acesso-pedestres": "feature_porteiro_pedestres",
+  "/portaria/acesso-veiculos": "feature_porteiro_veiculos",
+  "/portaria/delivery": "feature_porteiro_delivery",
+  "/portaria/correspondencias": "feature_porteiro_correspondencias",
+  "/portaria/monitoramento": "feature_porteiro_monitoramento",
+  "/portaria/rondas": "feature_porteiro_rondas",
+  "/portaria/estou-chegando": "feature_porteiro_estou_chegando",
+  "/portaria/portaria-virtual": "feature_porteiro_portaria_virtual",
+  "/portaria/centro-comando": "feature_porteiro_centro_comando",
+  "/portaria/qr-scanner": "feature_porteiro_qr_scanner",
+  "/portaria/livro-protocolo": "feature_porteiro_livro_protocolo",
+  "/espelho-portaria": "feature_porteiro_espelho",
+  "/portaria/acesso-auto": "feature_porteiro_acesso_auto",
+  "/cadastros": "feature_sindico_cadastros",
+  "/cadastros/blocos": "feature_sindico_blocos",
+  "/cadastros/moradores": "feature_sindico_moradores",
+  "/cadastros/funcionarios": "feature_sindico_funcionarios",
+  "/sindico/cameras": "feature_sindico_cameras",
+  "/sindico/rondas": "feature_sindico_rondas",
+  "/sindico/estou-chegando": "feature_sindico_estou_chegando",
+  "/sindico/acessos": "feature_sindico_acessos",
+  "/sindico/portao": "feature_sindico_portao",
+  "/sindico/qr-config": "feature_sindico_qr_config",
+  "/biblioteca-dispositivos": "feature_sindico_dispositivos",
+  "/liberacao-cadastros": "feature_sindico_liberacao",
+  "/sindico/features-config": "",
+};
+
+export default function FuncoesIndex({ userRole, featureConfig = {}, onlyDefaultFeatures = false }: Readonly<Props>) {
   const navigate = useNavigate();
   const { p } = useTheme();
   const [open, setOpen] = useState(false);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
 
   const userLevel = ROLE_LEVEL[userRole] || 0;
+  const isItemEnabled = (item: FuncaoItem) => {
+    const configKey = ROUTE_FEATURE_MAP[item.route];
+    if (!configKey) return true;
+    if (onlyDefaultFeatures && !getFeatureDefault(configKey, true)) {
+      return false;
+    }
+    return isFeatureEnabled(featureConfig, configKey, true);
+  };
 
   // Filter groups to only show functions the user can access
   const visibleGroups = ALL_FUNCOES
     .map((g) => ({
       ...g,
-      items: g.items.filter((item) => userLevel >= (ROLE_LEVEL[item.minRole] || 0)),
+      items: g.items.filter((item) => userLevel >= (ROLE_LEVEL[item.minRole] || 0) && isItemEnabled(item)),
     }))
     .filter((g) => g.items.length > 0);
 

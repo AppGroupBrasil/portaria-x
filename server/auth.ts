@@ -5,11 +5,19 @@ import db, { type DbUser, type DbCondominio } from "./db.js";
 import { authenticate } from "./middleware.js";
 import { emailBoasVindasMorador, emailBoasVindasSindico, emailSenhaAlterada } from "./emailService.js";
 import { applyDefaultConfig } from "./condominioConfig.js";
+import { ERROR_CODES, sendError } from "./errorCodes.js";
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production-32chars!!";
 const COOKIE_NAME = "session_token";
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+function getAuthenticatedUser(req: { user?: DbUser }): DbUser {
+  if (!req.user) {
+    throw new Error("Authenticated user missing from request.");
+  }
+  return req.user;
+}
 
 function signToken(userId: number): string {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
@@ -177,7 +185,7 @@ router.post("/demo", (req, res) => {
   try {
     const { role } = req.body;
     if (!role || !DEMO_EMAILS[role]) {
-      res.status(400).json({ error: "Perfil inválido. Use: sindico, portaria ou morador." });
+      sendError(res, 400, ERROR_CODES.DEMO_INVALID_ROLE, "Perfil inválido. Use: sindico, portaria ou morador.");
       return;
     }
 
@@ -186,7 +194,7 @@ router.post("/demo", (req, res) => {
     const email = DEMO_EMAILS[role];
     const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email) as DbUser | undefined;
     if (!user) {
-      res.status(500).json({ error: "Erro ao criar dados de demonstração." });
+      sendError(res, 500, ERROR_CODES.DEMO_INIT_FAILED, "Erro ao criar dados de demonstração.");
       return;
     }
 
@@ -195,7 +203,7 @@ router.post("/demo", (req, res) => {
     res.json({ user: sanitizeUser(user), token, demo: true });
   } catch (err: any) {
     console.error("Erro ao iniciar demonstração:", err);
-    res.status(500).json({ error: "Erro interno ao iniciar demonstração." });
+    sendError(res, 500, ERROR_CODES.DEMO_START_FAILED, "Erro interno ao iniciar demonstração.");
   }
 });
 
@@ -204,19 +212,19 @@ router.get("/condominio/search", (req, res) => {
   try {
     const { cnpj } = req.query;
     if (!cnpj || typeof cnpj !== "string") {
-      res.status(400).json({ error: "Informe o CNPJ." });
+      sendError(res, 400, ERROR_CODES.CONDO_CNPJ_REQUIRED, "Informe o CNPJ.");
       return;
     }
 
     const cleanCnpj = cnpj.replaceAll(/\D/g, "");
     if (cleanCnpj.length !== 14) {
-      res.status(400).json({ error: "CNPJ deve ter 14 dígitos." });
+      sendError(res, 400, ERROR_CODES.CONDO_CNPJ_INVALID, "CNPJ deve ter 14 dígitos.");
       return;
     }
 
     const condo = db.prepare("SELECT * FROM condominios WHERE cnpj = ?").get(cleanCnpj) as DbCondominio | undefined;
     if (!condo) {
-      res.status(404).json({ error: "Condomínio não encontrado. Verifique o CNPJ." });
+      sendError(res, 404, ERROR_CODES.CONDO_NOT_FOUND, "Condomínio não encontrado. Verifique o CNPJ.");
       return;
     }
 
@@ -234,7 +242,7 @@ router.get("/condominio/search", (req, res) => {
     });
   } catch (err) {
     console.error("Condominio search error:", err);
-    res.status(500).json({ error: "Erro interno do servidor." });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
 
@@ -244,17 +252,17 @@ router.post("/register/morador", async (req, res) => {
     const { name, email, phone, perfil, password, unit, block, condominioId } = req.body;
 
     if (!name || !email || !password) {
-      res.status(400).json({ error: "Nome, e-mail e senha são obrigatórios." });
+      sendError(res, 400, ERROR_CODES.AUTH_REQUIRED_FIELDS, "Nome, e-mail e senha são obrigatórios.");
       return;
     }
     if (!/^\d{6}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
+      sendError(res, 400, ERROR_CODES.AUTH_INVALID_PASSWORD_FORMAT, "Senha deve ter exatamente 6 dígitos numéricos.");
       return;
     }
 
     const existing = db.prepare("SELECT id FROM users WHERE email = ?").get(email.toLowerCase().trim());
     if (existing) {
-      res.status(409).json({ error: "Este e-mail já está cadastrado." });
+      sendError(res, 409, ERROR_CODES.AUTH_EMAIL_ALREADY_EXISTS, "Este e-mail já está cadastrado.");
       return;
     }
 
@@ -302,6 +310,7 @@ router.post("/register/morador", async (req, res) => {
     if (needsApproval) {
       // Don't auto-login — return a pending message
       res.json({
+        code: ERROR_CODES.AUTH_PENDING_APPROVAL,
         pendingApproval: true,
         message: "Cadastro realizado com sucesso! Aguarde a aprovação do síndico ou administradora para acessar o sistema.",
       });
@@ -313,7 +322,7 @@ router.post("/register/morador", async (req, res) => {
     res.json({ user: sanitizeUser(user), token });
   } catch (err) {
     console.error("Register morador error:", err);
-    res.status(500).json({ error: "Erro interno do servidor." });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
 
@@ -323,24 +332,24 @@ router.post("/register/condominio", async (req, res) => {
     const { condominioName, cnpj, address, city, state, zipCode, unitsCount, adminName, email, phone, password } = req.body;
 
     if (!condominioName || !adminName || !email || !password) {
-      res.status(400).json({ error: "Nome do condomínio, responsável, e-mail e senha são obrigatórios." });
+      sendError(res, 400, ERROR_CODES.AUTH_REQUIRED_FIELDS, "Nome do condomínio, responsável, e-mail e senha são obrigatórios.");
       return;
     }
     if (!/^\d{6}$/.test(password)) {
-      res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos numéricos." });
+      sendError(res, 400, ERROR_CODES.AUTH_INVALID_PASSWORD_FORMAT, "Senha deve ter exatamente 6 dígitos numéricos.");
       return;
     }
 
     const existingUser = db.prepare("SELECT id FROM users WHERE email = ?").get(email.toLowerCase().trim());
     if (existingUser) {
-      res.status(409).json({ error: "Este e-mail já está cadastrado." });
+      sendError(res, 409, ERROR_CODES.AUTH_EMAIL_ALREADY_EXISTS, "Este e-mail já está cadastrado.");
       return;
     }
 
     if (cnpj) {
       const existingCondo = db.prepare("SELECT id FROM condominios WHERE cnpj = ?").get(cnpj.replaceAll(/\D/g, ""));
       if (existingCondo) {
-        res.status(409).json({ error: "Este CNPJ já está cadastrado." });
+        sendError(res, 409, ERROR_CODES.AUTH_CNPJ_ALREADY_EXISTS, "Este CNPJ já está cadastrado.");
         return;
       }
     }
@@ -380,57 +389,6 @@ router.post("/register/condominio", async (req, res) => {
     // Apply default feature config from Condomínio Exemplo
     applyDefaultConfig(condoResult.lastInsertRowid as number);
 
-    // ─── CREATE SAMPLE MORADOR ───────────────────────────
-    // Auto-create a demo resident account so the person who registered
-    // can see the morador experience. Uses a derived email and the same
-    // phone/WhatsApp + password so they can easily log in and test.
-    try {
-      const sampleEmail = `morador.exemplo.${condoResult.lastInsertRowid}@demo.app`;
-      const sampleName = "Morador Exemplo";
-      const sampleBlock = "A";
-      const sampleUnit = "101";
-
-      db.prepare(
-        `INSERT INTO users (name, email, phone, password, role, unit, block, condominio_id, is_demo)
-         VALUES (?, ?, ?, ?, 'morador', ?, ?, ?, 1)`
-      ).run(
-        sampleName,
-        sampleEmail,
-        phone?.replaceAll(/\D/g, "") || null,
-        hashedPassword,               // same 4-digit password
-        sampleUnit,
-        sampleBlock,
-        condoResult.lastInsertRowid
-      );
-    } catch (sampleErr) {
-      // Non-critical — don't fail the whole registration if sample creation fails
-      console.warn("[REGISTER] Falha ao criar morador exemplo:", sampleErr);
-    }
-
-    // ─── CREATE SAMPLE PORTEIRO ───────────────────────────
-    // Auto-create a demo porteiro/funcionario account so the person
-    // can also test the portaria experience (visitor control, deliveries, etc.)
-    let samplePorteiroData: { email: string; name: string; cargo: string } | null = null;
-    try {
-      const porteiroEmail = `porteiro.exemplo.${condoResult.lastInsertRowid}@demo.app`;
-      const porteiroName = "Porteiro Exemplo";
-
-      db.prepare(
-        `INSERT INTO users (name, email, phone, password, role, condominio_id, is_demo)
-         VALUES (?, ?, ?, ?, 'funcionario', ?, 1)`
-      ).run(
-        porteiroName,
-        porteiroEmail,
-        phone?.replaceAll(/\D/g, "") || null,
-        hashedPassword,               // same 4-digit password
-        condoResult.lastInsertRowid
-      );
-
-      samplePorteiroData = { email: porteiroEmail, name: porteiroName, cargo: "Porteiro" };
-    } catch (porteiroErr) {
-      console.warn("[REGISTER] Falha ao criar porteiro exemplo:", porteiroErr);
-    }
-
     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userResult.lastInsertRowid) as DbUser;
     const token = signToken(user.id);
     setCookie(res, token);
@@ -442,29 +400,13 @@ router.post("/register/condominio", async (req, res) => {
       condominioNome: condominioName.trim(),
     }).catch((err) => console.error("[EMAIL] Erro boas-vindas síndico:", err));
 
-    // Include sample credentials in the response so the admin knows
     res.json({
       user: sanitizeUser(user),
       token,
-      sampleMorador: {
-        email: `morador.exemplo.${condoResult.lastInsertRowid}@demo.app`,
-        name: "Morador Exemplo",
-        block: "A",
-        unit: "101",
-        phone: phone?.replaceAll(/\D/g, "") || null,
-        message: "Acesso de morador de exemplo criado automaticamente. Use o mesmo WhatsApp e senha para testar a experiência do morador."
-      },
-      samplePorteiro: samplePorteiroData ? {
-        email: samplePorteiroData.email,
-        name: samplePorteiroData.name,
-        cargo: samplePorteiroData.cargo,
-        phone: phone?.replaceAll(/\D/g, "") || null,
-        message: "Acesso de porteiro de exemplo criado automaticamente. Use o mesmo WhatsApp e senha para testar a experiência da portaria."
-      } : null
     });
   } catch (err) {
     console.error("Register condominio error:", err);
-    res.status(500).json({ error: "Erro interno do servidor." });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
 
@@ -472,13 +414,13 @@ router.post("/register/condominio", async (req, res) => {
 async function handleFuncionarioLogin(credential: string, password: string, res: any) {
   const func = db.prepare("SELECT * FROM funcionarios WHERE login = ?").get(credential) as any;
   if (!func) {
-    res.status(401).json({ error: "Login ou senha incorretos." });
+    sendError(res, 401, ERROR_CODES.AUTH_INVALID_CREDENTIALS, "Login ou senha incorretos.");
     return;
   }
 
   const valid = await bcrypt.compare(password, func.password);
   if (!valid) {
-    res.status(401).json({ error: "Login ou senha incorretos." });
+    sendError(res, 401, ERROR_CODES.AUTH_INVALID_CREDENTIALS, "Login ou senha incorretos.");
     return;
   }
 
@@ -487,8 +429,7 @@ async function handleFuncionarioLogin(credential: string, password: string, res:
     const condo = db.prepare("SELECT bloqueado, bloqueado_motivo, name FROM condominios WHERE id = ?")
       .get(func.condominio_id) as { bloqueado: number; bloqueado_motivo: string | null; name: string } | undefined;
     if (condo?.bloqueado === 1) {
-      res.status(403).json({
-        error: "Usuário bloqueado! Entre em contato com seu síndico ou administradora.",
+      sendError(res, 403, ERROR_CODES.AUTH_USER_BLOCKED, "Usuário bloqueado! Entre em contato com seu síndico ou administradora.", {
         blocked: true,
       });
       return;
@@ -553,7 +494,7 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ error: "E-mail/login e senha são obrigatórios." });
+      sendError(res, 400, ERROR_CODES.AUTH_REQUIRED_FIELDS, "E-mail/login e senha são obrigatórios.");
       return;
     }
 
@@ -572,13 +513,13 @@ router.post("/login", async (req, res) => {
       .get(credential) as DbUser | undefined;
 
     if (!user) {
-      res.status(401).json({ error: "E-mail ou senha incorretos." });
+      sendError(res, 401, ERROR_CODES.AUTH_INVALID_CREDENTIALS, "E-mail ou senha incorretos.");
       return;
     }
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
-      res.status(401).json({ error: "E-mail ou senha incorretos." });
+      sendError(res, 401, ERROR_CODES.AUTH_INVALID_CREDENTIALS, "E-mail ou senha incorretos.");
       return;
     }
 
@@ -587,8 +528,7 @@ router.post("/login", async (req, res) => {
       const condo = db.prepare("SELECT bloqueado, bloqueado_motivo, name FROM condominios WHERE id = ?")
         .get(user.condominio_id) as { bloqueado: number; bloqueado_motivo: string | null; name: string } | undefined;
       if (condo?.bloqueado === 1) {
-        res.status(403).json({
-          error: "Usuário bloqueado! Entre em contato com seu síndico ou administradora.",
+        sendError(res, 403, ERROR_CODES.AUTH_USER_BLOCKED, "Usuário bloqueado! Entre em contato com seu síndico ou administradora.", {
           blocked: true,
         });
         return;
@@ -597,8 +537,7 @@ router.post("/login", async (req, res) => {
 
     // Check if morador self-registration is pending approval
     if (user.role === "morador" && (user as any).aprovado === 0) {
-      res.status(403).json({
-        error: "Seu cadastro ainda está aguardando aprovação do síndico ou administradora. Você será notificado quando for liberado.",
+      sendError(res, 403, ERROR_CODES.AUTH_PENDING_APPROVAL, "Seu cadastro ainda está aguardando aprovação do síndico ou administradora. Você será notificado quando for liberado.", {
         pendingApproval: true,
       });
       return;
@@ -630,7 +569,7 @@ router.post("/login", async (req, res) => {
     res.json({ user: sanitizeUser(user), token });
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ error: "Erro interno do servidor." });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
 
@@ -648,7 +587,7 @@ router.get("/me", (req, res) => {
       token = req.cookies?.[COOKIE_NAME];
     }
     if (!token) {
-      res.status(401).json({ error: "Não autenticado." });
+      sendError(res, 401, ERROR_CODES.AUTH_NOT_AUTHENTICATED, "Não autenticado.");
       return;
     }
 
@@ -657,14 +596,14 @@ router.get("/me", (req, res) => {
 
     if (!user) {
       res.clearCookie(COOKIE_NAME);
-      res.status(401).json({ error: "Usuário não encontrado." });
+      sendError(res, 401, ERROR_CODES.AUTH_USER_NOT_FOUND, "Usuário não encontrado.");
       return;
     }
 
     res.json({ user: sanitizeUser(user) });
   } catch {
     res.clearCookie(COOKIE_NAME);
-    res.status(401).json({ error: "Sessão inválida." });
+    sendError(res, 401, ERROR_CODES.AUTH_SESSION_INVALID, "Sessão inválida.");
   }
 });
 
@@ -677,11 +616,11 @@ router.post("/logout", (_req, res) => {
 // ─── UPDATE MY ACCOUNT ──────────────────────────────────
 router.put("/account", authenticate, async (req, res) => {
   try {
-    const user = req.user!;
+    const user = getAuthenticatedUser(req);
     const { name, phone, email, block, unit } = req.body;
 
     if (!name?.trim()) {
-      res.status(400).json({ error: "Nome é obrigatório." });
+      sendError(res, 400, ERROR_CODES.ACCOUNT_NAME_REQUIRED, "Nome é obrigatório.");
       return;
     }
 
@@ -689,7 +628,7 @@ router.put("/account", authenticate, async (req, res) => {
     if (email && email !== user.email) {
       const existing = db.prepare("SELECT id FROM users WHERE email = ? AND id != ?").get(email, user.id) as any;
       if (existing) {
-        res.status(400).json({ error: "Este e-mail já está em uso." });
+        sendError(res, 400, ERROR_CODES.ACCOUNT_EMAIL_IN_USE, "Este e-mail já está em uso.");
         return;
       }
     }
@@ -703,29 +642,29 @@ router.put("/account", authenticate, async (req, res) => {
     res.json({ user: sanitizeUser(updated), message: "Dados atualizados com sucesso." });
   } catch (err: any) {
     console.error("Erro em auth :", err);
-    res.status(500).json({ error: "Erro interno do servidor" });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor");
   }
 });
 
 // ─── CHANGE PASSWORD ─────────────────────────────────────
 router.put("/account/password", authenticate, async (req, res) => {
   try {
-    const user = req.user!;
+    const user = getAuthenticatedUser(req);
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
-      res.status(400).json({ error: "Senha atual e nova senha são obrigatórias." });
+      sendError(res, 400, ERROR_CODES.PASSWORD_REQUIRED_FIELDS, "Senha atual e nova senha são obrigatórias.");
       return;
     }
 
     if (newPassword.length < 6) {
-      res.status(400).json({ error: "A nova senha deve ter pelo menos 6 caracteres." });
+      sendError(res, 400, ERROR_CODES.PASSWORD_TOO_SHORT, "A nova senha deve ter pelo menos 6 caracteres.");
       return;
     }
 
     const valid = await bcrypt.compare(currentPassword, user.password);
     if (!valid) {
-      res.status(400).json({ error: "Senha atual incorreta." });
+      sendError(res, 400, ERROR_CODES.PASSWORD_CURRENT_INVALID, "Senha atual incorreta.");
       return;
     }
 
@@ -743,17 +682,17 @@ router.put("/account/password", authenticate, async (req, res) => {
     res.json({ message: "Senha alterada com sucesso." });
   } catch (err: any) {
     console.error("Erro em auth :", err);
-    res.status(500).json({ error: "Erro interno do servidor" });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor");
   }
 });
 
 // ─── DELETE MY ACCOUNT (morador only) ────────────────────
 router.delete("/account", authenticate, (req, res) => {
   try {
-    const user = req.user!;
+    const user = getAuthenticatedUser(req);
 
     if (user.role !== "morador") {
-      res.status(403).json({ error: "Apenas moradores podem excluir sua própria conta." });
+      sendError(res, 403, ERROR_CODES.ACCOUNT_DELETE_FORBIDDEN, "Apenas moradores podem excluir sua própria conta.");
       return;
     }
 
@@ -765,7 +704,7 @@ router.delete("/account", authenticate, (req, res) => {
     res.json({ message: "Conta excluída com sucesso." });
   } catch (err: any) {
     console.error("Erro em auth :", err);
-    res.status(500).json({ error: "Erro interno do servidor" });
+    sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor");
   }
 });
 

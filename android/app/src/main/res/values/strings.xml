@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Portaria X</string>
     <string name="title_activity_main">Portaria X</string>
-    <string name="package_name">com.portariax.app</string>
-    <string name="custom_url_scheme">com.portariax.app</string>
+    <string name="package_name">br.com.portariax.app</string>
+    <string name="custom_url_scheme">br.com.portariax.app</string>
 </resources>

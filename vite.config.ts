@@ -20,8 +20,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-maps": ["leaflet", "react-leaflet"],
-          "vendor-pdf": ["html2canvas", "jspdf"],
+          "vendor-maps": ["@react-google-maps/api"],
           "vendor-ui": ["lucide-react", "clsx", "tailwind-merge", "class-variance-authority"],
           "vendor-qr": ["qrcode"],
         },
