@@ -153,6 +153,13 @@ export default function SindicoWhatsAppConfig() {
     setTesting(false);
   };
 
+  const formatPhone = (value: string) => {
+    const digits = value.replaceAll(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits.length ? `(${digits}` : "";
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
   const loadLogs = async () => {
     try {
       const res = await apiFetch("/api/whatsapp/logs?limit=20");
@@ -584,7 +591,7 @@ export default function SindicoWhatsAppConfig() {
               <input
                 type="tel"
                 value={testPhone}
-                onChange={e => setTestPhone(e.target.value)}
+                onChange={e => setTestPhone(formatPhone(e.target.value))}
                 placeholder="Número com DDI (ex: 5511999999999)"
                 style={{ ...inputStyle, flex: 1 }}
               />

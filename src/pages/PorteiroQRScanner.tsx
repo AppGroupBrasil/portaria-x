@@ -126,6 +126,13 @@ export default function PorteiroQRScanner() {
     }
   };
 
+  const formatPhone = (value: string) => {
+    const digits = value.replaceAll(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits.length ? `(${digits}` : "";
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
   const processQRData = (data: string) => {
     try {
       const parsed: VisitorPayload = JSON.parse(data);
@@ -573,7 +580,7 @@ export default function PorteiroQRScanner() {
               <input
                 type="tel"
                 value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
+                onChange={(e) => setWhatsappNumber(formatPhone(e.target.value))}
                 placeholder="(11) 99999-9999"
                 style={{
                   width: "100%", padding: "14px", borderRadius: "10px",

@@ -16,6 +16,13 @@ import { getConfigBoolean } from "@/lib/featureFlags";
 
 const API = "/api";
 
+const formatPhone = (value: string) => {
+  const digits = value.replaceAll(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return digits.length ? `(${digits}` : "";
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
+
 export default function AutoCadastroVisitante() {
   const [form, setForm] = useState({
     nome: "",
@@ -333,8 +340,9 @@ export default function AutoCadastroVisitante() {
               {!requiredFields.phone && <span className="text-gray-400 font-normal ml-1">(opcional)</span>}
             </span>
             <input
+              type="tel"
               value={form.telefone}
-              onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+              onChange={(e) => setForm({ ...form, telefone: formatPhone(e.target.value) })}
               placeholder="(11) 99999-9999"
               className="w-full h-10 px-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
             />

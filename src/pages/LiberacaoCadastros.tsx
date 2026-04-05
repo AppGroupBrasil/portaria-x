@@ -56,6 +56,13 @@ export default function LiberacaoCadastros() {
   const [whatsappPhone, setWhatsappPhone] = useState("");
   const [whatsappSaving, setWhatsappSaving] = useState(false);
 
+  const formatPhone = (value: string) => {
+    const digits = value.replaceAll(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits.length ? `(${digits}` : "";
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
   useEffect(() => {
     fetchPendentes();
     fetchConfig();
@@ -382,7 +389,7 @@ export default function LiberacaoCadastros() {
                     type="tel"
                     placeholder="(11) 99999-9999"
                     value={whatsappPhone}
-                    onChange={(e) => setWhatsappPhone(e.target.value)}
+                    onChange={(e) => setWhatsappPhone(formatPhone(e.target.value))}
                     className="flex-1 h-10 rounded-lg border border-input bg-white dark:bg-secondary/50 px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary"
                     style={{ color: "#003580" }}
                   />
