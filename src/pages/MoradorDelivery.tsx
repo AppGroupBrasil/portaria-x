@@ -154,6 +154,7 @@ export default function MoradorDelivery() {
           boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)",
           padding: '1rem 1.5rem',
           color: isDark ? '#fff' : "#1e293b",
+          paddingTop: "max(0, env(safe-area-inset-top))",
         }}
       >
         <div className="flex items-center gap-4">

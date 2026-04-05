@@ -304,7 +304,7 @@ export default function AdminFeaturesConfig() {
       {/* ═════════ Header ═════════ */}
       <header
         className="sticky top-0 z-40"
-        style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}
+        style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}
       >
         <div className="flex items-center justify-between" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <div className="flex items-center gap-3">

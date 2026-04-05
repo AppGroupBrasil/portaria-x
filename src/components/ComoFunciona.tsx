@@ -15,7 +15,7 @@ export default function ComoFunciona({ steps }: Props) {
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between cursor-pointer"
-        style={{ padding: "12px 16px", color: p.text, background: "transparent", border: "none" }}
+        style={{ padding: "14px 16px", color: p.text, background: "transparent", border: "none", minHeight: "48px" }}
       >
         <div className="flex items-center" style={{ gap: 8 }}>
           <HelpCircle style={{ width: 16, height: 16, color: p.accentBright }} />

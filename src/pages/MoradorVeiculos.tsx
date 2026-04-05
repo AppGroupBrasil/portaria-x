@@ -583,7 +583,7 @@ export default function MoradorVeiculos() {
 
         {loading && (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
-            <div style={{ width: 32, height: 32, border: '2px solid #60a5fa', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            <div style={{ width: 40, height: 40, border: '2px solid #60a5fa', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
           </div>
         )}
       </main>

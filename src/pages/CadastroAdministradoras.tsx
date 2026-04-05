@@ -193,8 +193,8 @@ export default function CadastroAdministradoras() {
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ backgroundColor: "#ffffff" }}>
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
-        <div className="h-16 flex items-center gap-3" style={{ paddingLeft: "2rem", paddingRight: "2rem" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+        <div className="flex items-center gap-3" style={{ paddingLeft: "2rem", paddingRight: "2rem", height: "4.5rem" }}>
           <button onClick={() => navigate("/cadastros")} className="p-2">
             <ChevronLeft className="w-6 h-6" />
           </button>

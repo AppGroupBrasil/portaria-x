@@ -723,7 +723,7 @@ export default function PortariaVirtual() {
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       {/* Header */}
-      <header className="premium-header safe-area-top" style={{ padding: "18px 24px" }}>
+      <header className="premium-header safe-area-top" style={{ padding: "18px 24px", paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ color: p.text }}>
             <ArrowLeft className="w-6 h-6" />

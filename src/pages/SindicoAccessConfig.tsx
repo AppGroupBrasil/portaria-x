@@ -639,8 +639,8 @@ export default function SindicoAccessConfig() {
                     </div>
                     <h3 className="text-lg font-bold text-white">Editar Acesso</h3>
                   </div>
-                  <button onClick={() => setEditingAP(null)} style={{ width: 32, height: 32, borderRadius: 8, background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer" }}>
-                    <X className="w-4 h-4 text-white" />
+                  <button onClick={() => setEditingAP(null)} style={{ width: 40, height: 40, borderRadius: 8, background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer" }}>
+                    <X className="w-5 h-5 text-white" />
                   </button>
                 </div>
               </div>
@@ -851,8 +851,8 @@ export default function SindicoAccessConfig() {
                     </div>
                     <h3 className="text-lg font-bold text-white">Novo Ponto de Acesso</h3>
                   </div>
-                  <button onClick={() => setShowNew(false)} style={{ width: 32, height: 32, borderRadius: 8, background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer" }}>
-                    <X className="w-4 h-4 text-white" />
+                  <button onClick={() => setShowNew(false)} style={{ width: 40, height: 40, borderRadius: 8, background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer" }}>
+                    <X className="w-5 h-5 text-white" />
                   </button>
                 </div>
               </div>

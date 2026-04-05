@@ -477,7 +477,7 @@ export default function MoradorPortariaVirtual() {
   return (
     <div style={{ minHeight: '100dvh', background: isDark ? "linear-gradient(180deg, #001533 0%, #002254 25%, #003580 55%, #004aad 100%)" : "#f0f4f8", display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)" }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', height: '4.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button onClick={() => navigate(-1)} style={{ padding: '0.625rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer' }}>
@@ -1005,8 +1005,8 @@ export default function MoradorPortariaVirtual() {
                 : "2px solid rgba(239,68,68,0.3)",
             }}>
               {selfieResult.success
-                ? <CheckCircle2 style={{ width: 32, height: 32, color: "#10b981" }} />
-                : <XCircle style={{ width: 32, height: 32, color: "#ef4444" }} />}
+                ? <CheckCircle2 style={{ width: 40, height: 40, color: "#10b981" }} />
+                : <XCircle style={{ width: 40, height: 40, color: "#ef4444" }} />}
             </div>
             <h3 style={{ fontWeight: 800, fontSize: 18, color: isDark ? "#fff" : "#1e293b", marginBottom: 8 }}>
               {selfieResult.success ? "Portão Aberto!" : "Acesso Negado"}

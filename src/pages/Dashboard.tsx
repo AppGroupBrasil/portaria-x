@@ -237,8 +237,8 @@ export default function Dashboard() {
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       {/* ═══════════ Header ═══════════ */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0 }}>
-        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5rem", gap: 16 }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5.5rem", gap: 16 }}>
           <div className="flex items-center gap-4" style={{ minWidth: 0 }}>
             <button className="p-2.5 rounded-xl transition-all" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
               <Menu className="w-7 h-7" style={{ color: p.text }} />

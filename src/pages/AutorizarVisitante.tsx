@@ -157,7 +157,7 @@ export default function AutorizarVisitante() {
   return (
     <div className="min-h-dvh bg-gray-50 flex flex-col">
       {/* Header */}
-      <div className="text-white" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "24px 24px 32px" }}>
+      <div className="text-white" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "24px 24px 32px 24px", paddingTop: "max(24px, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-2 mb-2">
           <Shield className="w-5 h-5" />
           <span className="font-semibold text-sm">Portaria - Autorização de Visitante</span>
@@ -289,7 +289,7 @@ export default function AutorizarVisitante() {
                 />
               ) : (
                 <div style={{ height: "160px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Camera style={{ width: 32, height: 32, color: "#334155" }} />
+                  <Camera style={{ width: 40, height: 40, color: "#334155" }} />
                 </div>
               )}
               <div style={{ padding: "6px 12px", background: "rgba(15,23,42,0.9)", display: "flex", alignItems: "center", gap: "6px" }}>
@@ -311,7 +311,7 @@ export default function AutorizarVisitante() {
       )}
 
       {/* Action buttons */}
-      <div style={{ padding: "24px", marginTop: "auto" }}>
+      <div style={{ padding: "24px", paddingBottom: "max(24px, calc(24px + env(safe-area-inset-bottom)))", marginTop: "auto" }}>
         <div className="space-y-3">
           <button
             onClick={() => handleRespond("liberado")}

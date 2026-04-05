@@ -86,7 +86,7 @@ export default function VisitanteQRCode() {
       <div style={{ maxWidth: "420px", margin: "0 auto" }}>
         {steps.map((s) => (
           <div key={s.n} style={{ display: "flex", gap: "16px", alignItems: "flex-start", marginBottom: "16px" }}>
-            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "700", fontSize: "14px", flexShrink: 0 }}>{s.n}</div>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "700", fontSize: "14px", flexShrink: 0 }}>{s.n}</div>
             <div>
               <p style={{ fontSize: "14px", fontWeight: "600", color: "#1e293b" }}>{s.title}</p>
               <p style={{ fontSize: "13px", color: "#64748b" }}>{s.desc}</p>

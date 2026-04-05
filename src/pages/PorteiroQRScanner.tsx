@@ -216,7 +216,7 @@ export default function PorteiroQRScanner() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="safe-area-top" style={{ background: p.headerBg, padding: "18px 24px", borderBottom: p.headerBorder, boxShadow: p.headerShadow }}>
+      <header className="safe-area-top" style={{ background: p.headerBg, padding: "18px 24px", borderBottom: p.headerBorder, boxShadow: p.headerShadow, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ArrowLeft className="w-6 h-6" />
@@ -552,7 +552,7 @@ export default function PorteiroQRScanner() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
           <div
             className="bg-card w-full max-w-md rounded-t-3xl sm:rounded-3xl"
-            style={{ padding: "24px" }}
+            style={{ padding: "24px 24px 120px" }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
               <h2 style={{ fontWeight: 800, fontSize: "18px", color: "#374151", display: "flex", alignItems: "center", gap: "8px" }}>

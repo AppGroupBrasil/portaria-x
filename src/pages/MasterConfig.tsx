@@ -97,8 +97,8 @@ export default function MasterConfig() {
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
-        <div className="px-4 h-14 flex items-center gap-3">
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+        <div className="px-4 h-16 flex items-center gap-3">
           <button onClick={() => navigate("/dashboard")} className="p-1">
             <ArrowLeft className="w-5 h-5" />
           </button>

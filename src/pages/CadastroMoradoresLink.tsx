@@ -93,8 +93,8 @@ export default function CadastroMoradoresLink() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
-        <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+        <div style={{ height: "4rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros/moradores")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -129,7 +129,7 @@ export default function CadastroMoradoresLink() {
         </div>
       </header>
 
-      <main className="flex-1" style={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "2rem", paddingBottom: "3.5rem" }}>
+      <main className="flex-1" style={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "2rem", paddingBottom: "max(3.5rem, calc(3.5rem + env(safe-area-inset-bottom)))" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {/* Info box */}
           <div className="rounded-xl" style={{ padding: "20px", backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -191,7 +191,7 @@ export default function CadastroMoradoresLink() {
                   <Button
                     variant="outline"
                     onClick={copiarLink}
-                    className="h-11 gap-2 text-sm"
+                    className="h-12 gap-2 text-sm"
                     style={isDark ? { border: "2px solid #ffffff", color: "#ffffff" } : undefined}
                   >
                     {copied ? (
@@ -209,7 +209,7 @@ export default function CadastroMoradoresLink() {
                   <Button
                     variant="outline"
                     onClick={compartilhar}
-                    className="h-11 gap-2 text-sm"
+                    className="h-12 gap-2 text-sm"
                     style={isDark ? { border: "2px solid #ffffff", color: "#ffffff" } : undefined}
                   >
                     <Share2 className="w-4 h-4" />

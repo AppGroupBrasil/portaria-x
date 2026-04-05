@@ -799,8 +799,8 @@ export default function CadastrarVisitante() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
-        <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+        <div style={{ padding: "0 24px", height: "4rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -843,16 +843,16 @@ export default function CadastrarVisitante() {
           </TutorialButton>
           <button
             onClick={() => setShowConfig(true)}
-            className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
             title="Configuração"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-5 h-5" />
           </button>
           <button
             onClick={() => { setShowForm(true); setError(""); setSelectedMoradorId(""); setMoradores([]); setManualAutorizou(false); }}
-            className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <UserPlus className="w-4 h-4" />
+            <UserPlus className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -1054,7 +1054,7 @@ export default function CadastrarVisitante() {
       {/* Configuration modal */}
       {showConfig && (
         <div className="fixed inset-0 z-40 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-card w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto" style={{ padding: "24px" }}>
+          <div className="bg-card w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto" style={{ padding: "24px 24px 120px" }}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <Settings className="w-5 h-5" style={{ color: "#0ea5e9" }} />
@@ -1149,7 +1149,7 @@ export default function CadastrarVisitante() {
       {/* Form modal */}
       {showForm && (
         <div className="fixed inset-0 z-40 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-card w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto" style={{ padding: "24px" }}>
+          <div className="bg-card w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto" style={{ padding: "24px 24px 120px" }}>
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-bold text-lg text-foreground">Novo Visitante</h2>
               <div className="flex items-center gap-2">

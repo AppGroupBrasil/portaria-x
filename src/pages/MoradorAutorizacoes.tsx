@@ -309,9 +309,9 @@ export default function MoradorAutorizacoes() {
   return (
     <div style={{ minHeight: '100dvh', background: isDark ? "linear-gradient(180deg, #001533 0%, #002254 25%, #003580 55%, #004aad 100%)" : "#f0f4f8", display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", color: isDark ? '#fff' : "#1e293b" }}>
-        <div className="px-4 h-14 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} style={{ width: 32, height: 32, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <header className="sticky top-0 z-40" style={{ background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", color: isDark ? '#fff' : "#1e293b", paddingTop: "max(0, env(safe-area-inset-top))" }}>
+        <div className="px-4 h-16 flex items-center gap-3">
+          <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="flex-1">
@@ -352,7 +352,7 @@ export default function MoradorAutorizacoes() {
           </TutorialButton>
           <button
             onClick={() => { setShowForm(true); setError(""); setFormType("simples"); }}
-            style={{ width: 32, height: 32, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -374,7 +374,7 @@ export default function MoradorAutorizacoes() {
           <button
             onClick={() => { setShowForm(true); setFormType("simples"); setError(""); }}
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
-            style={{ height: "44px", background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))', border: '1.5px solid rgba(59,130,246,0.4)', color: isDark ? '#fff' : "#1e293b" }}
+            style={{ minHeight: "52px", background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))', border: '1.5px solid rgba(59,130,246,0.4)', color: isDark ? '#fff' : "#1e293b" }}
           >
             <ShieldCheck className="w-4 h-4" />
             Autorização Simples
@@ -382,7 +382,7 @@ export default function MoradorAutorizacoes() {
           <button
             onClick={() => { setShowForm(true); setFormType("auto_cadastro"); setError(""); }}
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
-            style={{ height: "44px", background: 'linear-gradient(135deg, #25d366, #128C7E)', border: '1.5px solid #25d366', color: isDark ? '#fff' : "#1e293b" }}
+            style={{ minHeight: "52px", background: 'linear-gradient(135deg, #25d366, #128C7E)', border: '1.5px solid #25d366', color: isDark ? '#fff' : "#1e293b" }}
           >
             <Link2 className="w-4 h-4" />
             Enviar Link WhatsApp
@@ -597,7 +597,7 @@ export default function MoradorAutorizacoes() {
       {/* ═══ Form Modal ═══ */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(0,0,0,0.6)' }}>
-          <div className="w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto" style={{ background: isDark ? 'linear-gradient(180deg, #002a66 0%, #003580 100%)' : '#ffffff', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1', padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
+          <div className="w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto" style={{ background: isDark ? 'linear-gradient(180deg, #002a66 0%, #003580 100%)' : '#ffffff', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1', padding: "24px 24px 120px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
             {/* Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -727,7 +727,7 @@ export default function MoradorAutorizacoes() {
               disabled={saving}
               className="w-full flex items-center justify-center gap-2 rounded-xl text-white font-semibold text-sm"
               style={{
-                height: "48px",
+                height: "56px",
                 background: editingId
                   ? "linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.15))"
                   : formType === "auto_cadastro"

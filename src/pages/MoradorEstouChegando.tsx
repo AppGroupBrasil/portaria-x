@@ -371,7 +371,7 @@ export default function MoradorEstouChegando() {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05))', border: '1.5px solid rgba(245,158,11,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <AlertTriangle style={{ width: 32, height: 32, color: '#f59e0b' }} />
+              <AlertTriangle style={{ width: 40, height: 40, color: '#f59e0b' }} />
             </div>
             <p style={{ color: isDark ? '#93c5fd' : "#1e293b", fontSize: '0.95rem' }}>Funcionalidade desativada pelo síndico.</p>
           </div>
@@ -394,7 +394,7 @@ export default function MoradorEstouChegando() {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05))', border: '1.5px solid rgba(245,158,11,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <MapPin style={{ width: 32, height: 32, color: '#f59e0b' }} />
+              <MapPin style={{ width: 40, height: 40, color: '#f59e0b' }} />
             </div>
             <p style={{ color: isDark ? '#93c5fd' : "#1e293b", fontSize: '0.95rem' }}>
               O síndico ainda não configurou a localização do condomínio.

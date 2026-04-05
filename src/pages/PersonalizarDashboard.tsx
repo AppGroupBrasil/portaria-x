@@ -270,7 +270,7 @@ export default function PersonalizarDashboard() {
       {/* Header */}
       <header
         className="sticky top-0 z-40"
-        style={{ background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}
+        style={{ background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}
       >
         <div className="flex items-center gap-4">
           <button
