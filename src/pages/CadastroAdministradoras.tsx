@@ -250,7 +250,7 @@ export default function CadastroAdministradoras() {
           {/* Toggle Form */}
           {showForm ? (
             <div className="rounded-2xl p-8 animate-fade-in">
-              <form onSubmit={handleSubmit} className="space-y-3">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 {subUserParentId && (
                   <div className="flex items-center gap-2 p-3 rounded-lg border border-purple-400/30 mb-2" style={{ backgroundColor: isDark ? "rgba(168,85,247,0.1)" : "#f5f0ff" }}>
                     <Users className="w-4 h-4 text-purple-400" />

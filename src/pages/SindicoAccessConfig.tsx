@@ -335,7 +335,7 @@ export default function SindicoAccessConfig() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center justify-between" style={{ padding: "1rem 2rem", height: "4.5rem" }}>
           <div className="flex items-center gap-4">
             <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
@@ -607,7 +607,7 @@ export default function SindicoAccessConfig() {
             </button>
 
             {showLogs && (
-              <div className="mt-4 space-y-3">
+              <div className="mt-4 flex flex-col gap-4">
                 {logs.length === 0 ? (
                   <p className="text-sm text-center py-4" style={{ color: "#64748b" }}>Nenhum registro.</p>
                 ) : (

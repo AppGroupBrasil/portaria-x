@@ -136,7 +136,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
           <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
               <span style={{
                 fontSize: "10px", fontWeight: 700, color: "#64748b",
                 textTransform: "uppercase", letterSpacing: "0.5px",
@@ -191,7 +191,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
 
         {/* Category + Protocol */}
         <div style={{
-          display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap",
+          display: "flex", gap: "12px", marginTop: "12px", flexWrap: "wrap",
         }}>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: "4px",
@@ -215,7 +215,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))",
-          gap: "8px",
+          gap: "12px",
           marginTop: "12px",
           background: "#f8fafc",
           borderRadius: "10px",
@@ -369,8 +369,8 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "8px",
-                  padding: "12px",
+                  gap: "12px",
+                  padding: "14px 16px",
                   borderRadius: "10px",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                   color: "#fff",
@@ -528,7 +528,7 @@ export default function BibliotecaDispositivos() {
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-          gap: "8px",
+          gap: "12px",
           marginBottom: "16px",
         }}>
           <StatBox label="Dispositivos" value={DEVICES.length} icon={<Package style={{ width: 16, height: 16, color: "#003580" }} />} />
@@ -687,7 +687,7 @@ export default function BibliotecaDispositivos() {
         {tab === "brand" && (
           <div style={{
             display: "flex",
-            gap: "8px",
+            gap: "12px",
             overflowX: "auto",
             WebkitOverflowScrolling: "touch",
             paddingBottom: "12px",
@@ -848,7 +848,7 @@ function StatBox({ label, value, icon }: Readonly<{ label: string; value: number
     <div style={{
       background: "#fff",
       borderRadius: "12px",
-      padding: "12px",
+      padding: "14px 16px",
       textAlign: "center",
       border: "1px solid #e2e8f0",
     }}>

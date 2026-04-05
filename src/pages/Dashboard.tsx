@@ -238,9 +238,9 @@ export default function Dashboard() {
     <div className="min-h-dvh bg-background flex flex-col">
       {/* ═══════════ Header ═══════════ */}
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0, env(safe-area-inset-top))" }}>
-        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "5.5rem", gap: 16 }}>
+        <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "4rem", gap: 16 }}>
           <div className="flex items-center gap-4" style={{ minWidth: 0 }}>
-            <button className="p-2.5 rounded-xl transition-all" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
+            <button className="p-2.5 rounded-xl transition-all" style={{ width: 40, height: 40, background: p.btnBg, border: p.btnBorder, display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
               <Menu className="w-7 h-7" style={{ color: p.text }} />
             </button>
             <div style={{ minWidth: 0 }}>
@@ -270,11 +270,11 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-3" style={{ flexShrink: 0 }}>
             <ThemePicker />
-            <button className="p-3 rounded-xl transition-all relative" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
+            <button className="p-3 rounded-xl transition-all relative" style={{ width: 40, height: 40, background: p.btnBg, border: p.btnBorder, display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
               <Bell className="w-6 h-6" style={{ color: p.text }} />
               <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-emerald-400 rounded-full" />
             </button>
-            <button className="p-3 rounded-xl transition-all" style={{ background: p.btnBg, border: p.btnBorder }} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }} onClick={handleLogout}>
+            <button className="p-3 rounded-xl transition-all" style={{ width: 40, height: 40, background: p.btnBg, border: p.btnBorder, display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }} onClick={handleLogout}>
               <LogOut className="w-6 h-6" style={{ color: p.text }} />
             </button>
           </div>

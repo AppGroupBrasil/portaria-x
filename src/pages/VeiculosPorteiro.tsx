@@ -593,7 +593,7 @@ export default function VeiculosPorteiro() {
         </div>
 
         {/* Filter tabs */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "12px", marginTop: "12px", flexWrap: "wrap" }}>
           {([
             { key: "ativa", label: "Ativas" },
             { key: "pendente_aprovacao", label: "Pendentes" },
@@ -620,7 +620,7 @@ export default function VeiculosPorteiro() {
           <button
             onClick={() => setShowReport(true)}
             style={{
-              marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px",
+              marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "#fff",
               color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
@@ -666,7 +666,7 @@ export default function VeiculosPorteiro() {
               <h3 style={{
                 fontWeight: 700, fontSize: "16px",
                 color: isDark ? "#f1f5f9" : "#0c4a6e",
-                display: "flex", alignItems: "center", gap: "8px",
+                display: "flex", alignItems: "center", gap: "12px",
               }}>
                 <Settings className="w-5 h-5" style={{ color: "#64748b" }} />
                 Campos do Cadastro
@@ -765,7 +765,7 @@ export default function VeiculosPorteiro() {
               onClick={handleCancelarDia}
               disabled={cancellingDay}
               style={{
-                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 padding: "12px 16px", borderRadius: "12px",
                 background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                 border: "none", color: "#fff", fontWeight: 700, fontSize: "13px",
@@ -994,7 +994,7 @@ export default function VeiculosPorteiro() {
             border: "2px solid #0ea5e920", display: "flex", flexDirection: "column", gap: "14px",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0c4a6e", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0c4a6e", display: "flex", alignItems: "center", gap: "12px" }}>
                 <Car className="w-5 h-5" style={{ color: "#0ea5e9" }} />
                 Cadastrar Veículo
               </h3>
@@ -1015,7 +1015,7 @@ export default function VeiculosPorteiro() {
             {/* Placa + Buscar */}
             <div>
               <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Placa *</span>
-              <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
+              <div style={{ display: "flex", gap: "12px", alignItems: "stretch" }}>
                 <input type="text" value={placa} onChange={(e) => handlePlacaChange(e.target.value)} placeholder="ABC1D23"
                   maxLength={7}
                   onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleBuscarPlaca(); } }}
@@ -1074,7 +1074,7 @@ export default function VeiculosPorteiro() {
               <div style={{
                 padding: "10px 14px", borderRadius: "10px", background: "#f0f9ff",
                 border: "1px solid #bae6fd", color: "#0369a1", fontSize: "13px", fontWeight: 500,
-                display: "flex", alignItems: "center", gap: "8px",
+                display: "flex", alignItems: "center", gap: "12px",
               }}>
                 <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#0ea5e9" }} />
                 Buscando veículo no sistema...
@@ -1086,7 +1086,7 @@ export default function VeiculosPorteiro() {
               <div style={{
                 padding: "10px 14px", borderRadius: "10px", background: "#fffbeb",
                 border: "1px solid #fde68a", color: "#92400e", fontSize: "13px", fontWeight: 500,
-                display: "flex", alignItems: "center", gap: "8px",
+                display: "flex", alignItems: "center", gap: "12px",
               }}>
                 <Car className="w-4 h-4" style={{ color: "#d97706" }} />
                 Veículo não encontrado. Preencha os dados manualmente.
@@ -1100,7 +1100,7 @@ export default function VeiculosPorteiro() {
                 background: "linear-gradient(135deg, #ecfdf5, #f0fdf4)",
                 border: "1px solid #86efac", display: "flex", flexDirection: "column", gap: "6px",
               }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <CheckCircle2 className="w-4 h-4" style={{ color: "#16a34a" }} />
                   <span style={{ fontWeight: 700, fontSize: "13px", color: "#15803d" }}>
                     Veículo encontrado no sistema!
@@ -1296,7 +1296,7 @@ export default function VeiculosPorteiro() {
 
               {/* ── Dates ── */}
               {!pendente && (
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "#475569" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "12px", color: "#475569" }}>
                   <Clock className="w-3.5 h-3.5" />
                   {formatDate(v.data_inicio)} até {formatDate(v.data_fim)}
                   {v.hora_inicio && v.hora_fim && ` · ${v.hora_inicio} - ${v.hora_fim}`}
@@ -1391,7 +1391,7 @@ export default function VeiculosPorteiro() {
 
               {/* ══ Action buttons ══ */}
               {active && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
 
                   {/* CONFIRMAR ENTRADA */}
                   {!entrou && (
@@ -1399,8 +1399,8 @@ export default function VeiculosPorteiro() {
                       onClick={() => handleConfirmEntry(v)}
                       disabled={isLoading}
                       style={{
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                        padding: "12px", borderRadius: "12px",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                        padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
                         border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                         cursor: "pointer", width: "100%", opacity: isLoading ? 0.7 : 1,
@@ -1417,8 +1417,8 @@ export default function VeiculosPorteiro() {
                       onClick={() => handleRequestExit(v)}
                       disabled={isLoading}
                       style={{
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                        padding: "12px", borderRadius: "12px",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                        padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
                         border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                         cursor: "pointer", width: "100%", opacity: isLoading ? 0.7 : 1,
@@ -1431,13 +1431,13 @@ export default function VeiculosPorteiro() {
 
                   {/* SAÍDA JÁ SOLICITADA - REENVIAR */}
                   {entrou && needsExitAuth && saidaSolicitada && !saidaAutorizada && (
-                    <div style={{ display: "flex", gap: "8px" }}>
+                    <div style={{ display: "flex", gap: "12px" }}>
                       <button
                         onClick={() => handleRequestExit(v)}
                         disabled={isLoading}
                         style={{
-                          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                          padding: "12px", borderRadius: "12px",
+                          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                          padding: "14px 16px", borderRadius: "12px",
                           background: "#fef3c7", border: "1px solid #fbbf24",
                           color: "#b45309", fontWeight: 600, fontSize: "13px", cursor: "pointer",
                         }}
@@ -1449,8 +1449,8 @@ export default function VeiculosPorteiro() {
                         onClick={() => handleAuthorizeExit(v)}
                         disabled={isLoading}
                         style={{
-                          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                          padding: "12px", borderRadius: "12px",
+                          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                          padding: "14px 16px", borderRadius: "12px",
                           background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
                           border: "none", color: "#fff", fontWeight: 600, fontSize: "13px", cursor: "pointer",
                         }}
@@ -1464,8 +1464,8 @@ export default function VeiculosPorteiro() {
                   {/* SAÍDA AUTORIZADA — pode liberar */}
                   {entrou && needsExitAuth && saidaAutorizada && (
                     <div style={{
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                      padding: "12px", borderRadius: "12px",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                      padding: "14px 16px", borderRadius: "12px",
                       background: "#dcfce7", border: "1px solid #86efac",
                       color: "#15803d", fontWeight: 700, fontSize: "14px",
                     }}>
@@ -1482,8 +1482,8 @@ export default function VeiculosPorteiro() {
                   onClick={() => handleRegistrarSaida(v)}
                   disabled={isLoading}
                   style={{
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                    width: "100%", padding: "12px", borderRadius: "12px",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                    width: "100%", padding: "14px 16px", borderRadius: "12px",
                     background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                     border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                     cursor: "pointer", opacity: isLoading ? 0.7 : 1,
@@ -1564,7 +1564,7 @@ export default function VeiculosPorteiro() {
                 Link de aprovação:
               </span>
               <div style={{
-                display: "flex", alignItems: "center", gap: "8px",
+                display: "flex", alignItems: "center", gap: "12px",
                 padding: "10px 12px", borderRadius: "10px", background: "#f1f5f9",
                 border: "1px solid #e2e8f0",
               }}>
@@ -1606,8 +1606,8 @@ export default function VeiculosPorteiro() {
               <button
                 onClick={() => setWhatsappModal(null)}
                 style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                  padding: "12px", borderRadius: "12px",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                  padding: "14px 16px", borderRadius: "12px",
                   background: "transparent", border: "1px solid #e2e8f0",
                   color: "#64748b", fontWeight: 600, fontSize: "14px",
                   cursor: "pointer", width: "100%",

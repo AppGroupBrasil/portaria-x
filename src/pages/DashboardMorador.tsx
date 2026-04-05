@@ -210,9 +210,9 @@ export default function DashboardMorador() {
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* ═══════════ Header ═══════════ */}
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0, env(safe-area-inset-top))" }}>
-        <div className="flex items-center justify-between" style={{ padding: "20px 28px", height: "5.5rem" }}>
+        <div className="flex items-center justify-between" style={{ padding: "20px 28px", height: "4rem" }}>
           <div className="flex items-center" style={{ gap: 14 }}>
-            <div className="flex items-center justify-center" style={{ width: 48, height: 48, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
+            <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
               <Home style={{ width: 22, height: 22, color: p.text }} />
             </div>
             <div>
@@ -229,7 +229,7 @@ export default function DashboardMorador() {
             <ThemePicker />
             <button
               className="flex items-center justify-center relative"
-              style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
+              style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
             >
@@ -239,7 +239,7 @@ export default function DashboardMorador() {
             <button
               className="flex items-center justify-center"
               onClick={handleLogout}
-              style={{ width: 44, height: 44, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s" }}
+              style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
             >

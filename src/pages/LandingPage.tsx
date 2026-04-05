@@ -260,7 +260,7 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
           color: "#ffffff",
           fontWeight: 700, fontSize: "15px", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
           transition: "transform 0.2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.02)"; }}
@@ -391,7 +391,7 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
             padding: "16px 32px", borderRadius: "14px",
             border: "2px solid #003580", background: "#ffffff",
             color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", gap: "12px",
             transition: "transform 0.2s",
           }}
           onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
@@ -405,7 +405,7 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
             padding: "16px 32px", borderRadius: "14px",
             border: "2px solid #ffffff", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
             color: "#ffffff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", gap: "12px",
             transition: "transform 0.2s",
           }}
           onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
@@ -502,7 +502,7 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
   return (
     <section style={{ background: "linear-gradient(135deg, #0a1628 0%, #0d2847 50%, #0a1628 100%)", padding: "80px 24px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: "#ffffff" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: "#ffffff" }}>
           <Play style={{ width: "14px", height: "14px" }} /> Teste Agora
         </div>
         <h2 style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", fontWeight: 800, color: "#ffffff", marginBottom: "12px", lineHeight: 1.2 }}>
@@ -596,7 +596,7 @@ function FeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonly<{ mod
     <section style={{ background: t.sectionGrad1, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
             <Zap style={{ width: "14px", height: "14px" }} /> Funcionalidades
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -722,7 +722,7 @@ function PremiumFeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonl
     <section style={{ background: t.sectionGrad2, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "linear-gradient(135deg, #7c3aed, #6d28d9)", border: "1.5px solid rgba(124,58,237,0.4)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "linear-gradient(135deg, #7c3aed, #6d28d9)", border: "1.5px solid rgba(124,58,237,0.4)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>
             <Star style={{ width: "14px", height: "14px" }} /> Premium
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -832,7 +832,7 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
     <section style={{ background: mode === "dark" ? "#ffffff" : "#003580", padding: "80px 24px", transition: "background 0.4s" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
         {/* Badge */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: mode === "dark" ? "#003580" : "rgba(255,255,255,0.1)", border: "1.5px solid #ffffff", borderRadius: "999px", padding: "8px 20px", marginBottom: "24px", fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "rgba(255,255,255,0.1)", border: "1.5px solid #ffffff", borderRadius: "999px", padding: "8px 20px", marginBottom: "24px", fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>
           <Zap style={{ width: "16px", height: "16px" }} /> Apresentação Completa
         </div>
 
@@ -955,7 +955,7 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
     <section id="integracoes" style={{ background: t.sectionGrad1, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
             <Cpu style={{ width: "14px", height: "14px" }} /> Integrações IoT
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -1087,7 +1087,7 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
               background: mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,53,128,0.06)",
               color: mode === "dark" ? "#ffffff" : "#003580",
               fontWeight: 700, fontSize: "15px", cursor: "pointer",
-              display: "inline-flex", alignItems: "center", gap: "8px",
+              display: "inline-flex", alignItems: "center", gap: "12px",
               transition: "background 0.2s, transform 0.2s",
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.03)"; e.currentTarget.style.background = mode === "dark" ? "rgba(255,255,255,0.14)" : "rgba(0,53,128,0.12)"; }}
@@ -1108,7 +1108,7 @@ function PlansSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light"
     <section id="precos" style={{ background: t.bg1, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
             <Star style={{ width: "14px", height: "14px" }} /> Preços
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>

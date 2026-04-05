@@ -189,7 +189,7 @@ export default function MinhaConta() {
         <div style={{
           margin: "16px 16px 0", padding: "12px 16px", borderRadius: "12px",
           background: "#ecfdf5", border: "1px solid #86efac", color: "#15803d",
-          fontSize: "13px", fontWeight: 500, display: "flex", alignItems: "center", gap: "8px",
+          fontSize: "13px", fontWeight: 500, display: "flex", alignItems: "center", gap: "12px",
         }}>
           <CheckCircle2 className="w-4 h-4" /> {success}
         </div>
@@ -198,7 +198,7 @@ export default function MinhaConta() {
         <div style={{
           margin: "16px 16px 0", padding: "12px 16px", borderRadius: "12px",
           background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c",
-          fontSize: "13px", fontWeight: 500, display: "flex", alignItems: "center", gap: "8px",
+          fontSize: "13px", fontWeight: 500, display: "flex", alignItems: "center", gap: "12px",
         }}>
           <AlertTriangle className="w-4 h-4" /> {error}
         </div>
@@ -214,7 +214,7 @@ export default function MinhaConta() {
           }}>
             <h2 style={{
               fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: "0 0 16px",
-              display: "flex", alignItems: "center", gap: "8px",
+              display: "flex", alignItems: "center", gap: "12px",
             }}>
               <Building2 className="w-4 h-4" style={{ color: "#003580" }} />
               Condomínio
@@ -252,7 +252,7 @@ export default function MinhaConta() {
         }}>
           <h2 style={{
             fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: "0 0 16px",
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", gap: "12px",
           }}>
             <User className="w-4 h-4" style={{ color: "#6366f1" }} />
             Dados Pessoais
@@ -296,7 +296,7 @@ export default function MinhaConta() {
                 width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                 background: saving ? "#94a3b8" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
                 color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: saving ? "wait" : "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 boxShadow: "0 4px 12px rgba(99,102,241,0.3)", marginTop: "4px",
               }}
             >
@@ -322,7 +322,7 @@ export default function MinhaConta() {
               </p>
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             {THEME_LIST.map((t) => {
               const isActive = theme === t.id;
               return (
@@ -333,7 +333,7 @@ export default function MinhaConta() {
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
-                    padding: "12px",
+                    padding: "14px 16px",
                     borderRadius: "12px",
                     border: isActive ? "2px solid #003580" : "2px solid #e2e8f0",
                     background: isActive ? "rgba(0,53,128,0.06)" : "#fff",
@@ -378,7 +378,7 @@ export default function MinhaConta() {
           >
             <h2 style={{
               fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0,
-              display: "flex", alignItems: "center", gap: "8px",
+              display: "flex", alignItems: "center", gap: "12px",
             }}>
               <Lock className="w-4 h-4" style={{ color: "#f59e0b" }} />
               Alterar Senha
@@ -465,7 +465,7 @@ export default function MinhaConta() {
                   width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                   background: savingPw ? "#94a3b8" : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
                   color: "#fff", fontWeight: 700, fontSize: "15px", cursor: savingPw ? "wait" : "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                   boxShadow: "0 4px 12px rgba(245,158,11,0.3)",
                 }}
               >
@@ -491,7 +491,7 @@ export default function MinhaConta() {
             >
               <h2 style={{
                 fontSize: "15px", fontWeight: 700, color: "#dc2626", margin: 0,
-                display: "flex", alignItems: "center", gap: "8px",
+                display: "flex", alignItems: "center", gap: "12px",
               }}>
                 <Trash2 className="w-4 h-4" style={{ color: "#dc2626" }} />
                 Excluir Minha Conta
@@ -543,7 +543,7 @@ export default function MinhaConta() {
                     color: deleteConfirmText === "EXCLUIR" ? "#fff" : "#94a3b8",
                     fontWeight: 700, fontSize: "15px",
                     cursor: deleteConfirmText === "EXCLUIR" && !deleting ? "pointer" : "not-allowed",
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     boxShadow: deleteConfirmText === "EXCLUIR" ? "0 4px 12px rgba(220,38,38,0.3)" : "none",
                   }}
                 >

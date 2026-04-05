@@ -238,7 +238,7 @@ export default function Login() {
           </div>
 
           {/* Registration buttons */}
-          <div className="space-y-3" style={{ marginTop: "28px", marginBottom: "16px" }}>
+          <div className="flex flex-col gap-4" style={{ marginTop: "28px", marginBottom: "16px" }}>
             <Link to="/register/condominio" className="block">
               <button
                 className="w-full rounded-xl text-white font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"

@@ -107,7 +107,7 @@ export default function MasterConfig() {
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-4 space-y-3">
+      <main className="flex-1 px-4 py-4 flex flex-col gap-4">
         {loading ? (
           <div className="flex justify-center py-8">
             <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />

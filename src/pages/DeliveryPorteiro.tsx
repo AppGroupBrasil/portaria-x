@@ -374,6 +374,7 @@ export default function DeliveryPorteiro() {
           borderBottom: p.headerBorder,
           boxShadow: p.headerShadow,
           color: p.text,
+          paddingTop: "max(0, env(safe-area-inset-top))",
         }}
       >
         <div className="flex items-center gap-4">
@@ -458,7 +459,7 @@ export default function DeliveryPorteiro() {
         </div>
 
         {/* Filter tabs */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+        <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>
           {([
             { key: "pendente", label: "Pendentes" },
             { key: "recebido", label: "Recebidos" },
@@ -488,7 +489,7 @@ export default function DeliveryPorteiro() {
           <button
             onClick={() => setShowReport(true)}
             style={{
-              marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px",
+              marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "#fff",
               color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
@@ -628,7 +629,7 @@ export default function DeliveryPorteiro() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: "12px",
                   padding: "10px 12px",
                   borderRadius: "10px",
                   background: "#f8fafc",
@@ -699,7 +700,7 @@ export default function DeliveryPorteiro() {
                   onClick={() => openRecebidoModal(d)}
                   style={{
                     width: "100%",
-                    padding: "12px",
+                    padding: "14px 16px",
                     borderRadius: "12px",
                     background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
                     border: "none",
@@ -710,7 +711,7 @@ export default function DeliveryPorteiro() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "8px",
+                    gap: "12px",
                   }}
                 >
                   <CheckCircle2 className="w-5 h-5" />
@@ -970,7 +971,7 @@ export default function DeliveryPorteiro() {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: "8px",
+                    gap: "12px",
                   }}
                 >
                   <Camera className="w-8 h-8" style={{ color: "#94a3b8" }} />
@@ -999,7 +1000,7 @@ export default function DeliveryPorteiro() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "8px",
+                gap: "12px",
               }}
             >
               <CheckCircle2 className="w-5 h-5" />
@@ -1092,7 +1093,7 @@ export default function DeliveryPorteiro() {
             {/* Servico */}
             <div>
               <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Servico *</span>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
                 {Object.entries(SERVICOS).map(([key, sv]) => (
                   <button
                     key={key} type="button" onClick={() => setFormServico(key)}
@@ -1192,7 +1193,7 @@ export default function DeliveryPorteiro() {
                 background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
                 border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                 cursor: "pointer", opacity: formSaving ? 0.7 : 1,
-                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               }}
             >
               <Truck className="w-5 h-5" />

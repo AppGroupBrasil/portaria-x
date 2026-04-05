@@ -313,7 +313,7 @@ export default function SindicoQRConfig() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "8px",
+            gap: "12px",
             transition: "all 0.3s",
           }}
         >

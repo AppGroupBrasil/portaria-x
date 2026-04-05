@@ -216,7 +216,7 @@ export default function MasterUsuarios() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, color: p.text }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="h-16 flex items-center gap-3" style={{ paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/dashboard")} className="p-2">
             <ArrowLeft className="w-6 h-6" />
@@ -301,7 +301,7 @@ export default function MasterUsuarios() {
       {/* Edit Form */}
       {showForm && (
         <div className="pb-4" style={{ paddingLeft: "1rem", paddingRight: "1rem" }}>
-          <div className="rounded-xl border border-sky-500/30 p-4 space-y-3">
+          <div className="rounded-xl border border-sky-500/30 p-4 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground">Editar Usuário</h3>
               <button onClick={() => setShowForm(false)}>

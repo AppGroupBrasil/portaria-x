@@ -39,7 +39,7 @@ export default function Cadastros() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ backgroundColor: "#ffffff" }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="h-16 flex items-center gap-3" style={{ paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/dashboard")} className="p-2">
             <ChevronLeft className="w-6 h-6" />

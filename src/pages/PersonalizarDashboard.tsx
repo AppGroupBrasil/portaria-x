@@ -304,7 +304,7 @@ export default function PersonalizarDashboard() {
 
         {/* ═══ Dashboard Section ═══ */}
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
             <Grip className="w-5 h-5" style={{ color: "#003580" }} />
             <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>
               Dashboard Principal
@@ -323,7 +323,7 @@ export default function PersonalizarDashboard() {
 
         {/* ═══ Bottom Bar Section ═══ */}
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
             <Grip className="w-5 h-5" style={{ color: "#003580" }} />
             <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>
               Barra Inferior
@@ -344,7 +344,7 @@ export default function PersonalizarDashboard() {
         {/* ═══ Hidden Section ═══ */}
         {hiddenIds.length > 0 && (
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
               <EyeOff className="w-5 h-5" style={{ color: "#94a3b8" }} />
               <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>
                 Ocultos
@@ -376,7 +376,7 @@ export default function PersonalizarDashboard() {
             width: "100%", padding: "14px", borderRadius: "14px",
             background: saved ? "#10b981" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
             color: "#fff", fontWeight: 700, fontSize: "15px",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
             cursor: "pointer", border: "none", transition: "all 0.3s",
           }}
         >

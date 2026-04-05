@@ -555,7 +555,7 @@ export default function AdminFeaturesConfig() {
 
         {/* Summary + bulk actions */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Settings className="w-4 h-4" style={{ color: currentTab.color }} />
             <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
               {enabledCount} de {currentTab.features.length} ativas
@@ -592,7 +592,7 @@ export default function AdminFeaturesConfig() {
           <>
             {/* ══ SECTION: Funções Padrão ══ */}
             <div style={{ marginBottom: "0.5rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", padding: "0 4px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px", padding: "0 4px" }}>
                 <Star className="w-4 h-4" style={{ color: currentTab.color }} />
                 <span style={{ fontSize: "13px", fontWeight: 700, color: currentTab.color, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                   Funções Padrão
@@ -610,7 +610,7 @@ export default function AdminFeaturesConfig() {
             {extraFeatures.length > 0 && (
               <div style={{ marginTop: "1rem" }}>
                 <div style={{
-                  display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", padding: "10px 14px",
+                  display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px", padding: "10px 14px",
                   borderRadius: "12px",
                   background: isDark ? "rgba(139,92,246,0.08)" : "rgba(139,92,246,0.05)",
                   border: `1px dashed ${isDark ? "rgba(139,92,246,0.3)" : "rgba(139,92,246,0.25)"}`,

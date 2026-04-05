@@ -246,7 +246,7 @@ export default function VisitanteQRCode() {
     >
       <div style={{ textAlign: "center", maxWidth: "400px", padding: "40px" }}>
         {/* Small logo */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }} />
           <span style={{ fontSize: "13px", fontWeight: "700", color: "#003580", letterSpacing: "3px", textTransform: "uppercase" }}>Portaria X</span>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }} />
@@ -424,7 +424,7 @@ export default function VisitanteQRCode() {
               <p style={{ fontSize: "10px", letterSpacing: "3px", textTransform: "uppercase", color: "#0ea5e9", margin: "2px 0 0", fontWeight: "600" }}>Smart Access Platform</p>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 14px", borderRadius: "20px", border: "1px solid rgba(99,102,241,0.3)", background: "rgba(99,102,241,0.08)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "6px 14px", borderRadius: "20px", border: "1px solid rgba(99,102,241,0.3)", background: "rgba(99,102,241,0.08)" }}>
             <Zap style={{ width: 14, height: 14, color: "#818cf8" }} />
             <span style={{ fontSize: "10px", fontWeight: "700", color: "#818cf8", letterSpacing: "1px", textTransform: "uppercase" }}>Tech</span>
           </div>
@@ -445,7 +445,7 @@ export default function VisitanteQRCode() {
           <div style={{ flexShrink: 0, textAlign: "center" }}>
             <div style={{ display: "inline-block", padding: "3px", borderRadius: "20px", background: "linear-gradient(135deg, #0ea5e9, #6366f1, #a855f7)" }}>
               <div style={{ padding: "18px", background: "#0c1222", borderRadius: "18px" }}>
-                <div style={{ padding: "12px", background: "#fff", borderRadius: "12px" }}>
+                <div style={{ padding: "14px 16px", background: "#fff", borderRadius: "12px" }}>
                   <img src={qrCodeUrl} alt="QR Code" style={{ width: "200px", height: "200px" }} />
                 </div>
               </div>
@@ -630,7 +630,7 @@ export default function VisitanteQRCode() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 print:hidden" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
+      <header className="sticky top-0 z-40 print:hidden" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <ArrowLeft className="w-5 h-5" />

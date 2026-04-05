@@ -343,7 +343,7 @@ export default function LivroProtocolo() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div style={{ flex: 1 }}>
-            <h1 style={{ fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: "8px" }}>
+            <h1 style={{ fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: "12px" }}>
               <BookOpen className="w-5 h-5" /> Livro de Protocolo
             </h1>
             <p style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }}>Registro de encomendas, entregas e retiradas</p>
@@ -398,7 +398,7 @@ export default function LivroProtocolo() {
         {successMsg && (
           <div style={{
             background: "#dcfce7", border: "1px solid #86efac", borderRadius: "12px",
-            padding: "12px 16px", display: "flex", alignItems: "center", gap: "8px",
+            padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px",
             color: "#166534", fontSize: "14px", fontWeight: 600,
           }}>
             <CheckCircle2 className="w-5 h-5" /> {successMsg}
@@ -410,7 +410,7 @@ export default function LivroProtocolo() {
           <button
             onClick={() => { setShowForm(!showForm); if (!showForm) resetForm(); }}
             style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               flex: 1, padding: "14px", borderRadius: "14px", border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1",
               background: showForm ? "#ef4444" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
               color: "#fff", fontSize: "15px", fontWeight: 700, cursor: "pointer",
@@ -421,7 +421,7 @@ export default function LivroProtocolo() {
           <button
             onClick={() => setShowReport(true)}
             style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "#fff",
               color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
@@ -457,7 +457,7 @@ export default function LivroProtocolo() {
             {/* Tipo selector */}
             <div>
               <span style={labelStyle}>Tipo de Registro *</span>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div style={{ display: "flex", gap: "12px" }}>
                 {[
                   { v: "encomenda", l: "Encomenda", icon: "📦" },
                   { v: "entrega", l: "Entrega", icon: "🚚" },
@@ -564,7 +564,7 @@ export default function LivroProtocolo() {
                   {audioData ? (
                     <div style={{
                       display: "flex", alignItems: "center", gap: "10px",
-                      padding: "12px", borderRadius: "12px", border: "1px solid #e2e8f0",
+                      padding: "14px 16px", borderRadius: "12px", border: "1px solid #e2e8f0",
                       background: "#f8fafc",
                     }}>
                       <button onClick={playAudio} disabled={isPlayingAudio} style={{
@@ -649,14 +649,14 @@ export default function LivroProtocolo() {
               ) : (
                 <div style={{ display: "flex", gap: "10px" }}>
                   <button onClick={openCamera} style={{
-                    flex: 1, padding: "12px", borderRadius: "12px", border: "2px dashed #cbd5e1",
+                    flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
                     alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
                   }}>
                     <Camera className="w-6 h-6" /> Camera
                   </button>
                   <button onClick={() => fileInputRef.current?.click()} style={{
-                    flex: 1, padding: "12px", borderRadius: "12px", border: "2px dashed #cbd5e1",
+                    flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
                     alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
                   }}>
@@ -692,7 +692,7 @@ export default function LivroProtocolo() {
         )}
 
         {/* ═══════════ FILTERS ═══════════ */}
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
           {[
             { v: "todas", l: "Todos" },
             { v: "encomenda", l: "Encomendas" },
@@ -796,7 +796,7 @@ export default function LivroProtocolo() {
                       display: "flex", flexDirection: "column", gap: "10px", paddingTop: "12px",
                     }}>
                       {/* Protocol + Date */}
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                         <div>
                           <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PROTOCOLO</span>
                           <p style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1", margin: "2px 0 0" }}>{e.protocolo}</p>
@@ -809,7 +809,7 @@ export default function LivroProtocolo() {
 
                       {/* Type-specific info */}
                       {e.tipo === "encomenda" && (
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                           {e.deixada_por && (
                             <div>
                               <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>DEIXADA POR</span>
@@ -833,7 +833,7 @@ export default function LivroProtocolo() {
                               <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.o_que_e}</p>
                             </div>
                           )}
-                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                             {e.entregue_para && (
                               <div>
                                 <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>ENTREGUE PARA</span>
@@ -851,7 +851,7 @@ export default function LivroProtocolo() {
                       )}
 
                       {e.tipo === "retirada" && (
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                           {e.retirada_por && (
                             <div>
                               <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>RETIRADA POR</span>
@@ -926,7 +926,7 @@ export default function LivroProtocolo() {
                       <button
                         onClick={(ev) => { ev.stopPropagation(); gerarPdfLivroProtocolo(e, user?.condominio_nome); }}
                         style={{
-                          display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                          display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                           width: "100%", padding: "10px", borderRadius: "10px", border: "none",
                           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                           color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer",

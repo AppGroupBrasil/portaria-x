@@ -582,7 +582,7 @@ export default function RegistroRonda() {
       </div>
 
       {/* Stats bar */}
-      <div style={{ display: "flex", gap: "8px", padding: "12px 20px", background: "#f8fafc" }}>
+      <div style={{ display: "flex", gap: "12px", padding: "12px 20px", background: "#f8fafc" }}>
         <div
           style={{
             flex: 1,
@@ -663,7 +663,7 @@ export default function RegistroRonda() {
           onClick={() => setTab("scan")}
           style={{
             flex: 1,
-            padding: "12px",
+            padding: "14px 16px",
             fontSize: "13px",
             fontWeight: 700,
             border: "none",
@@ -683,7 +683,7 @@ export default function RegistroRonda() {
           onClick={() => setTab("historico")}
           style={{
             flex: 1,
-            padding: "12px",
+            padding: "14px 16px",
             fontSize: "13px",
             fontWeight: 700,
             border: "none",
@@ -802,7 +802,7 @@ export default function RegistroRonda() {
                 <MapPin style={{ width: 14, height: 14, color: p.text }} />
                 Pontos de Ronda — Checklist
               </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {activeCheckpoints.length === 0 ? (
                   <p style={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569", textAlign: "center", padding: "24px" }}>
                     Nenhum ponto de ronda configurado pelo síndico.
@@ -886,7 +886,7 @@ export default function RegistroRonda() {
                   <div
                     key={obs.id}
                     style={{
-                      padding: "12px",
+                      padding: "14px 16px",
                       borderRadius: "14px",
                       border: "1.5px solid #e5e7eb",
                       background: "#fafbfc",
@@ -916,7 +916,7 @@ export default function RegistroRonda() {
                     />
 
                     {/* Audio controls */}
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                       {recordingId === obs.id ? (
                         /* Recording in progress */
                         <>
@@ -1007,7 +1007,7 @@ export default function RegistroRonda() {
           </div>
         ) : (
           /* ═══ HISTORY TAB ═══ */
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {registros.length === 0 ? (
               <div style={{ textAlign: "center", padding: "48px 24px" }}>
                 <Clock style={{ width: 48, height: 48, color: "#d1d5db", margin: "0 auto 12px" }} />

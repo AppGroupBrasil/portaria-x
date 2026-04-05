@@ -227,7 +227,7 @@ export default function CentroComando() {
 
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-3">
+          <div className="text-center flex flex-col gap-4">
             <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto" />
             <p className="text-sm text-muted-foreground">Carregando centro de comando...</p>
           </div>

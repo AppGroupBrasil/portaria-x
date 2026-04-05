@@ -480,7 +480,7 @@ export default function PortariaEstouChegando() {
                   <p className="text-sm" style={{ color: p.text }}>Nenhum morador se aproximando no momento.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="flex flex-col gap-4">
                   {events.map((ev) => (
                     <div
                       key={ev.id}

@@ -246,7 +246,7 @@ export default function SindicoFeaturesConfig() {
       <main style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem", paddingBottom: "8rem" }}>
         {/* Info + bulk actions */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Settings className="w-4 h-4" style={{ color: currentTab.color }} />
             <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
               {enabledCount} de {currentTab.features.length} ativas

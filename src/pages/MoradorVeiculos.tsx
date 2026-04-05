@@ -510,13 +510,13 @@ export default function MoradorVeiculos() {
                   </div>
 
                   {/* Approve / Deny buttons */}
-                  <div style={{ display: "flex", gap: "8px" }}>
+                  <div style={{ display: "flex", gap: "12px" }}>
                     <button
                       onClick={() => handleRespondVehicle(v.id, "aprovar")}
                       disabled={respondingId === v.id && respondingId !== v.id}
                       style={{
-                        flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                        padding: "12px", borderRadius: "12px",
+                        flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                        padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
                         border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                         cursor: "pointer", boxShadow: "0 2px 8px rgba(34,197,94,0.3)",
@@ -528,8 +528,8 @@ export default function MoradorVeiculos() {
                     <button
                       onClick={() => handleRespondVehicle(v.id, "negar")}
                       style={{
-                        flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                        padding: "12px", borderRadius: "12px",
+                        flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                        padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                         border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                         cursor: "pointer", boxShadow: "0 2px 8px rgba(239,68,68,0.3)",

@@ -134,7 +134,7 @@ export default function MoradorCorrespondencias() {
           "✅ Confirme retirada direto no app",
         ]} />
         {/* Filters */}
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div style={{ display: "flex", gap: "12px" }}>
           {[
             { v: "pendente", l: "Pendentes" },
             { v: "retirada", l: "Retiradas" },

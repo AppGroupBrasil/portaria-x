@@ -370,7 +370,7 @@ export default function MoradorAutorizacoes() {
 
       {/* Type selector buttons */}
       {!showForm && (
-        <div style={{ padding: "12px 24px", display: "flex", gap: "8px" }}>
+        <div style={{ padding: "12px 24px", display: "flex", gap: "12px" }}>
           <button
             onClick={() => { setShowForm(true); setFormType("simples"); setError(""); }}
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
@@ -393,7 +393,7 @@ export default function MoradorAutorizacoes() {
       {/* ═══ Pending Visitors from Portaria ═══ */}
       {pendingVisitors.length > 0 && (
         <div style={{ padding: "0 24px 12px" }}>
-          <h3 style={{ fontWeight: 700, fontSize: "14px", color: "#fbbf24", marginBottom: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+          <h3 style={{ fontWeight: 700, fontSize: "14px", color: "#fbbf24", marginBottom: "10px", display: "flex", alignItems: "center", gap: "12px" }}>
             <AlertCircle className="w-4 h-4" style={{ color: "#f59e0b" }} />
             Solicitações da Portaria ({pendingVisitors.length})
           </h3>
@@ -445,17 +445,18 @@ export default function MoradorAutorizacoes() {
                   </p>
                 )}
 
-                <div style={{ display: "flex", gap: "8px" }}>
+                <div style={{ display: "flex", gap: "12px" }}>
                   <button
                     onClick={() => handleRespondVisitor(v.id, "liberado")}
                     disabled={respondingVisitorId === v.id}
                     style={{
-                      flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                      padding: "12px", borderRadius: "12px",
+                      flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                      padding: "14px 16px", borderRadius: "12px",
                       background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
                       border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                       cursor: "pointer", boxShadow: "0 2px 8px rgba(34,197,94,0.3)",
                       opacity: respondingVisitorId === v.id ? 0.6 : 1,
+                      minHeight: "48px",
                     }}
                   >
                     {respondingVisitorId === v.id ? (
@@ -469,12 +470,13 @@ export default function MoradorAutorizacoes() {
                     onClick={() => handleRespondVisitor(v.id, "recusado")}
                     disabled={respondingVisitorId === v.id}
                     style={{
-                      flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                      padding: "12px", borderRadius: "12px",
+                      flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                      padding: "14px 16px", borderRadius: "12px",
                       background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
                       border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                       cursor: "pointer", boxShadow: "0 2px 8px rgba(239,68,68,0.3)",
                       opacity: respondingVisitorId === v.id ? 0.6 : 1,
+                      minHeight: "48px",
                     }}
                   >
                     {respondingVisitorId === v.id ? (
@@ -516,7 +518,7 @@ export default function MoradorAutorizacoes() {
             </button>
           </div>
         ) : (
-          <div className="space-y-3 pt-2">
+          <div className="flex flex-col gap-4 pt-2">
             {auths.map((a) => {
               const st = statusStyle(a.status);
               return (

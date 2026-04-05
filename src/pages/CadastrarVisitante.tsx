@@ -845,12 +845,14 @@ export default function CadastrarVisitante() {
             onClick={() => setShowConfig(true)}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
             title="Configuração"
+            style={{ width: 40, height: 40 }}
           >
             <Settings className="w-5 h-5" />
           </button>
           <button
             onClick={() => { setShowForm(true); setError(""); setSelectedMoradorId(""); setMoradores([]); setManualAutorizou(false); }}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
+            style={{ width: 40, height: 40 }}
           >
             <UserPlus className="w-5 h-5" />
           </button>
@@ -930,7 +932,7 @@ export default function CadastrarVisitante() {
 
       {/* Camera Embed — toggle + live feed */}
       <div style={{ padding: "0 24px 8px" }}>
-        <span style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 500, color: "#64748b" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", fontSize: "13px", fontWeight: 500, color: "#64748b" }}>
           <input
             type="checkbox"
             checked={showCameraEmbed}
@@ -956,7 +958,7 @@ export default function CadastrarVisitante() {
                 marginTop: "6px",
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
+                gap: "12px",
                 padding: "6px 12px",
                 borderRadius: "10px",
                 background: "#f0fdf4",
@@ -979,7 +981,7 @@ export default function CadastrarVisitante() {
       )}
 
       {/* Search */}
-      <div style={{ padding: "0 24px 8px", display: "flex", gap: "8px", alignItems: "center" }}>
+      <div style={{ padding: "0 24px 8px", display: "flex", gap: "12px", alignItems: "center" }}>
         <div className="flex items-center gap-2 h-10 rounded-lg border border-border bg-card" style={{ paddingLeft: "16px", paddingRight: "12px", flex: 1 }}>
           <Search className="w-4 h-4 text-muted-foreground shrink-0" />
           <input
@@ -993,7 +995,7 @@ export default function CadastrarVisitante() {
         <button
           onClick={() => setShowReport(true)}
           style={{
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", gap: "12px",
             padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
             background: "#fff",
             color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
@@ -1005,7 +1007,7 @@ export default function CadastrarVisitante() {
       </div>
 
       {/* Filter tabs */}
-      <div style={{ padding: "0 24px 12px", display: "flex", gap: "8px", overflowX: "auto" }}>
+      <div style={{ padding: "0 24px 12px", display: "flex", gap: "12px", overflowX: "auto" }}>
         {filterTabs.map((tab) => (
           <button
             key={tab.key}
@@ -1111,7 +1113,7 @@ export default function CadastrarVisitante() {
 
             <button
               onClick={() => setShowConfig(false)}
-              className="w-full h-11 rounded-xl text-white font-bold text-sm mt-5"
+              className="w-full h-16 rounded-xl text-white font-bold text-sm mt-5"
               style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}
             >
               Salvar Configuração
@@ -1380,7 +1382,7 @@ export default function CadastrarVisitante() {
                 <button
                   onClick={handleSubmit}
                   disabled={saving}
-                  className="w-full h-14 rounded-xl text-white font-bold text-base transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
+                  className="w-full h-16 rounded-xl text-white font-bold text-base transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
                   style={{ backgroundColor: "#25d366" }}
                 >
                   {saving ? (
@@ -1568,7 +1570,7 @@ export default function CadastrarVisitante() {
                         </span>
                       </div>
                     </div>
-                    <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
+                    <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
                       {gateEnabled && v.status === "liberado" && (
                         <button
                           onClick={() => handleOpenGate(v.nome)}

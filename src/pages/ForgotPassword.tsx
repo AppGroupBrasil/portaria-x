@@ -142,7 +142,7 @@ export default function ForgotPassword() {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "8px",
+    gap: "12px",
     transition: "opacity 0.2s",
   };
   const btnOutline: React.CSSProperties = {
@@ -154,7 +154,7 @@ export default function ForgotPassword() {
   const errorBox: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "12px",
     padding: "12px 14px",
     background: "rgba(239,68,68,0.08)",
     border: "1px solid rgba(239,68,68,0.2)",
@@ -192,7 +192,7 @@ export default function ForgotPassword() {
   };
 
   const stepIndicator = (
-    <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "28px" }}>
+    <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginBottom: "28px" }}>
       {(["request", "verify", "reset", "success"] as Step[]).map((s, i) => (
         <div
           key={s}
@@ -254,7 +254,7 @@ export default function ForgotPassword() {
         {step === "request" && (
           <form onSubmit={handleRequest}>
             {/* Tabs */}
-            <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+            <div style={{ display: "flex", gap: "12px", marginBottom: "8px" }}>
               <button type="button" style={tabBtn(type === "email")} onClick={() => { setType("email"); setIdentifier(""); setError(""); }}>
                 <Mail style={{ width: "16px", height: "16px" }} /> E-mail
               </button>
@@ -321,7 +321,7 @@ export default function ForgotPassword() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: "12px",
                   padding: "12px 14px",
                   background: "rgba(45,51,84,0.08)",
                   border: "1px solid rgba(45,51,84,0.2)",
@@ -493,7 +493,7 @@ export default function ForgotPassword() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "8px",
+                gap: "12px",
                 width: "100%",
                 height: "44px",
                 borderRadius: "14px",

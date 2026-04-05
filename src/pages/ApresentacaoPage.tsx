@@ -108,7 +108,7 @@ export default function ApresentacaoPage() {
         flexWrap: "wrap", gap: "12px",
       }}>
         <button onClick={() => navigate(-1)} style={{
-          display: "flex", alignItems: "center", gap: "8px",
+          display: "flex", alignItems: "center", gap: "12px",
           background: "transparent", border: "none", color: "#003580",
           fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
@@ -180,7 +180,7 @@ export default function ApresentacaoPage() {
               padding: "16px 32px", borderRadius: "14px",
               border: "2px solid #003580", background: "#ffffff",
               color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
-              display: "flex", alignItems: "center", gap: "8px",
+              display: "flex", alignItems: "center", gap: "12px",
               textDecoration: "none",
             }}
           >
@@ -194,7 +194,7 @@ export default function ApresentacaoPage() {
               padding: "16px 32px", borderRadius: "14px",
               border: "2px solid #ffffff", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
               color: "#ffffff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
-              display: "flex", alignItems: "center", gap: "8px",
+              display: "flex", alignItems: "center", gap: "12px",
               textDecoration: "none",
             }}
           >
@@ -375,7 +375,7 @@ export default function ApresentacaoPage() {
               { emoji: "♾️", text: "Recorrência por toda vida" },
             ].map((item) => (
               <div key={item.text} style={{
-                display: "flex", alignItems: "center", gap: "8px",
+                display: "flex", alignItems: "center", gap: "12px",
                 background: "#ffffff", border: "1.5px solid #e2e8f0",
                 borderRadius: "12px", padding: "14px 20px",
                 fontSize: "14px", fontWeight: 600, color: "#003580",
@@ -487,7 +487,7 @@ export default function ApresentacaoPage() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {planFeatures.map((f) => (
-                  <div key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#003580" }}>
+                  <div key={f} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "13px", color: "#003580" }}>
                     <Check style={{ width: "15px", height: "15px", color: "#10b981", flexShrink: 0 }} /> {f}
                   </div>
                 ))}

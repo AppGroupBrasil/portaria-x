@@ -398,7 +398,7 @@ export default function PorteiroQRScanner() {
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {visitor.visitante.documento && (
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
                       <FileText className="w-4 h-4" style={{ color: "#6b7280", flexShrink: 0 }} />
                       <div>
                         <p style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 700 }}>DOCUMENTO</p>
@@ -407,7 +407,7 @@ export default function PorteiroQRScanner() {
                     </div>
                   )}
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
                     <Calendar className="w-4 h-4" style={{ color: "#6b7280", flexShrink: 0 }} />
                     <div>
                       <p style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 700 }}>PERÍODO AUTORIZADO</p>
@@ -417,7 +417,7 @@ export default function PorteiroQRScanner() {
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
                     <User className="w-4 h-4" style={{ color: "#6b7280", flexShrink: 0 }} />
                     <div>
                       <p style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 700 }}>MORADOR RESPONSÁVEL</p>
@@ -428,7 +428,7 @@ export default function PorteiroQRScanner() {
                   </div>
 
                   {visitor.visitante.observacoes && (
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", padding: "10px 14px", background: "#fffbeb", borderRadius: "10px", border: "1px solid #fde68a" }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", padding: "10px 14px", background: "#fffbeb", borderRadius: "10px", border: "1px solid #fde68a" }}>
                       <AlertTriangle className="w-4 h-4" style={{ color: "#d97706", flexShrink: 0, marginTop: "2px" }} />
                       <div>
                         <p style={{ fontSize: "11px", color: "#92400e", fontWeight: 700 }}>OBSERVAÇÕES</p>
@@ -445,7 +445,7 @@ export default function PorteiroQRScanner() {
                     style={{
                       width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                       background: "#25d366", color: p.text, fontWeight: 700, fontSize: "15px",
-                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
                     <MessageCircle className="w-5 h-5" /> Avisar Morador (WhatsApp)
@@ -461,7 +461,7 @@ export default function PorteiroQRScanner() {
                       color: notifiedInApp ? "#166534" : "#6366f1",
                       fontWeight: 700, fontSize: "15px",
                       cursor: notifiedInApp ? "default" : "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
                     {notifiedInApp ? (
@@ -477,7 +477,7 @@ export default function PorteiroQRScanner() {
                       width: "100%", padding: "14px", borderRadius: "12px",
                       border: "2px solid #d1d5db", background: "#fff",
                       color: "#6b7280", fontWeight: 700, fontSize: "15px", cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
                     <Scan className="w-5 h-5" /> Escanear Outro QR
@@ -495,7 +495,7 @@ export default function PorteiroQRScanner() {
                     padding: "14px 28px", borderRadius: "12px", border: "none",
                     background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                     color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
-                    display: "inline-flex", alignItems: "center", gap: "8px",
+                    display: "inline-flex", alignItems: "center", gap: "12px",
                   }}
                 >
                   <Scan className="w-5 h-5" /> Tentar Novamente
@@ -562,7 +562,7 @@ export default function PorteiroQRScanner() {
             style={{ padding: "24px 24px 120px" }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-              <h2 style={{ fontWeight: 800, fontSize: "18px", color: "#374151", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h2 style={{ fontWeight: 800, fontSize: "18px", color: "#374151", display: "flex", alignItems: "center", gap: "12px" }}>
                 <MessageCircle className="w-5 h-5" style={{ color: "#25d366" }} /> Avisar Morador
               </h2>
               <button onClick={() => setShowWhatsAppModal(false)} style={{ background: "none", border: "none", fontSize: "24px", color: "#9ca3af", cursor: "pointer" }}>×</button>
@@ -597,14 +597,14 @@ export default function PorteiroQRScanner() {
                 background: whatsappNumber.trim() ? "#25d366" : "#d1d5db",
                 color: p.text, fontWeight: 700, fontSize: "16px",
                 cursor: whatsappNumber.trim() ? "pointer" : "not-allowed", marginTop: "16px",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               }}
             >
               <MessageCircle className="w-5 h-5" /> Enviar Aviso pelo WhatsApp
             </button>
 
             {visitor && (
-              <div style={{ marginTop: "16px", background: "#f8fafc", borderRadius: "10px", padding: "12px", border: "1px solid #e5e7eb" }}>
+              <div style={{ marginTop: "16px", background: "#f8fafc", borderRadius: "10px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
                 <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>Prévia da mensagem:</p>
                 <p style={{ fontSize: "12px", color: "#374151", lineHeight: 1.5 }}>
                   🔔 AVISO DE CHEGADA<br />

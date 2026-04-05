@@ -326,7 +326,7 @@ export default function MasterWhatsAppDashboard() {
                 onClick={saveGlobalConfig}
                 disabled={savingGlobal}
                 style={{
-                  padding: "12px",
+                  padding: "14px 16px",
                   borderRadius: 12,
                   border: "none",
                   background: savedGlobal ? "#16a34a" : "#25d366",

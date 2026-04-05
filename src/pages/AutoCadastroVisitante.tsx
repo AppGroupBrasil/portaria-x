@@ -253,7 +253,7 @@ export default function AutoCadastroVisitante() {
               onClick={capturePhoto}
               disabled={!cameraReady}
               className="rounded-full bg-white flex items-center justify-center transition-opacity"
-              style={{ border: "4px solid rgba(255,255,255,0.5)", opacity: cameraReady ? 1 : 0.4, padding: "16px 32px", gap: "8px" }}
+              style={{ border: "4px solid rgba(255,255,255,0.5)", opacity: cameraReady ? 1 : 0.4, padding: "16px 32px", gap: "12px" }}
             >
               <Camera className="w-6 h-6 text-gray-800" />
               <span className="text-gray-800 font-bold text-sm">Clique aqui para tirar foto</span>

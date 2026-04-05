@@ -511,7 +511,7 @@ export default function MoradorQRVisitante() {
               {viewQR.documento && <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>Doc: {viewQR.documento}</p>}
               {viewQR.parentesco && <p style={{ fontSize: "13px", color: "#6b7280" }}>Parentesco: {viewQR.parentesco}</p>}
 
-              <div style={{ margin: "20px 0", background: "#f8fafc", borderRadius: "12px", padding: "12px", border: "1px solid #e5e7eb" }}>
+              <div style={{ margin: "20px 0", background: "#f8fafc", borderRadius: "12px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
                 <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>VÁLIDO DE</p>
                 <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{viewQR.dataInicio} às {viewQR.horaInicio}</p>
                 <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginTop: "8px", marginBottom: "4px" }}>ATÉ</p>
@@ -537,7 +537,7 @@ export default function MoradorQRVisitante() {
                 style={{
                   flex: 1, padding: "14px", borderRadius: "12px", border: "none",
                   background: "#25d366", color: p.text, fontWeight: 700, fontSize: "14px",
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 }}
               >
                 <Share2 className="w-5 h-5" /> Enviar por WhatsApp
@@ -726,7 +726,7 @@ export default function MoradorQRVisitante() {
                   background: isDark ? (isFormValid() ? 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08))' : 'rgba(255,255,255,0.04)') : (isFormValid() ? '#003580' : '#e2e8f0'),
                   color: isDark ? p.text : (isFormValid() ? '#ffffff' : '#94a3b8'), fontWeight: 700, fontSize: "16px",
                   cursor: isFormValid() ? "pointer" : "not-allowed",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                   marginTop: "8px",
                 }}
               >

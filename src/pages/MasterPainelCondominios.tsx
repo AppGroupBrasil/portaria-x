@@ -242,7 +242,7 @@ export default function MasterPainelCondominios() {
       {/* Header */}
       <header
         className="sticky top-0 z-40"
-        style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, padding: "1rem 1.5rem", color: p.text }}
+        style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, padding: "1rem 1.5rem", color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}
       >
         <div className="flex items-center gap-4">
           <button
@@ -320,7 +320,7 @@ export default function MasterPainelCondominios() {
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div
             style={{
-              display: "flex", alignItems: "center", gap: "8px",
+              display: "flex", alignItems: "center", gap: "12px",
               background: isDark ? "#ffffff" : "var(--color-card, #fff)", borderRadius: "12px",
               padding: "0 14px", height: "44px", border: isDark ? "none" : p.btnBorder,
             }}
@@ -338,7 +338,7 @@ export default function MasterPainelCondominios() {
             />
           </div>
 
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex", gap: "12px" }}>
             <div style={{ flex: 1, position: "relative" }}>
               <select
                 value={filterPagamento}
@@ -476,7 +476,7 @@ export default function MasterPainelCondominios() {
                           }}>Bloqueado</span>
                         )}
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "2px", flexWrap: "wrap" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "2px", flexWrap: "wrap" }}>
                         <span style={{ fontSize: "11px", color: isDark ? "#475569" : "#64748b" }}>
                           <Users style={{ width: "10px", height: "10px", display: "inline", marginRight: "2px" }} />
                           {condo.total_users}
@@ -538,7 +538,7 @@ export default function MasterPainelCondominios() {
                       )}
 
                       {/* CNPJ / Location */}
-                      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", fontSize: "11px", color: "#64748b" }}>
+                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", fontSize: "11px", color: "#64748b" }}>
                         {condo.cnpj && <span>CNPJ: {condo.cnpj}</span>}
                         {condo.city && <span>📍 {condo.city}{condo.state ? ` - ${condo.state}` : ""}</span>}
                       </div>
@@ -547,7 +547,7 @@ export default function MasterPainelCondominios() {
                       {condo.bloqueado === 1 && condo.bloqueado_motivo && (
                         <div style={{
                           padding: "10px 14px", borderRadius: "10px", background: "#fef2f2",
-                          fontSize: "12px", color: "#991b1b", display: "flex", alignItems: "center", gap: "8px",
+                          fontSize: "12px", color: "#991b1b", display: "flex", alignItems: "center", gap: "12px",
                         }}>
                           <Ban style={{ width: "14px", height: "14px", flexShrink: 0 }} />
                           <div>
@@ -563,7 +563,7 @@ export default function MasterPainelCondominios() {
                       )}
 
                       {/* Action buttons */}
-                      <div style={{ display: "flex", gap: "8px" }}>
+                      <div style={{ display: "flex", gap: "12px" }}>
                         {/* Status Pagamento toggle */}
                         <button
                           onClick={() => handleTogglePagamento(condo)}
@@ -682,7 +682,7 @@ export default function MasterPainelCondominios() {
               <button
                 onClick={() => setShowBlockModal(null)}
                 style={{
-                  flex: 1, padding: "12px", borderRadius: "12px",
+                  flex: 1, padding: "14px 16px", borderRadius: "12px",
                   border: "2px solid #e2e8f0", background: "var(--color-card, #fff)",
                   fontWeight: 700, fontSize: "14px", cursor: "pointer",
                   color: "var(--color-foreground, #0f172a)",
@@ -694,7 +694,7 @@ export default function MasterPainelCondominios() {
                 onClick={() => handleBlock(showBlockModal)}
                 disabled={actionLoading === showBlockModal}
                 style={{
-                  flex: 1, padding: "12px", borderRadius: "12px", border: "none",
+                  flex: 1, padding: "14px 16px", borderRadius: "12px", border: "none",
                   background: "linear-gradient(135deg, #ef4444, #dc2626)",
                   fontWeight: 700, fontSize: "14px", cursor: "pointer", color: "#fff",
                   opacity: actionLoading === showBlockModal ? 0.7 : 1,
@@ -714,7 +714,7 @@ export default function MasterPainelCondominios() {
 function DetailItem({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
   return (
     <div style={{
-      display: "flex", alignItems: "center", gap: "8px",
+      display: "flex", alignItems: "center", gap: "12px",
       padding: "8px 10px", borderRadius: "10px", background: "#f8fafc",
     }}>
       <Icon style={{ width: "14px", height: "14px", color: "#94a3b8", flexShrink: 0 }} />

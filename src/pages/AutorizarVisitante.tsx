@@ -187,7 +187,7 @@ export default function AutorizarVisitante() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="flex flex-col gap-4">
             {visitor?.documento && (
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">Documento</span>
@@ -311,12 +311,12 @@ export default function AutorizarVisitante() {
       )}
 
       {/* Action buttons */}
-      <div style={{ padding: "24px", paddingBottom: "max(24px, calc(24px + env(safe-area-inset-bottom)))", marginTop: "auto" }}>
-        <div className="space-y-3">
+      <div style={{ padding: "20px 20px", paddingBottom: "max(20px, calc(20px + env(safe-area-inset-bottom)))", marginTop: "auto" }}>
+        <div className="flex flex-col gap-4">
           <button
             onClick={() => handleRespond("liberado")}
             disabled={responding}
-            className="w-full h-14 rounded-2xl text-white font-bold text-base flex items-center justify-center gap-3 disabled:opacity-50 transition-colors"
+            className="w-full h-16 rounded-2xl text-white font-bold text-base flex items-center justify-center gap-3 disabled:opacity-50 transition-colors"
             style={{ backgroundColor: "#16a34a" }}
           >
             {responding ? (
@@ -331,7 +331,7 @@ export default function AutorizarVisitante() {
           <button
             onClick={() => handleRespond("recusado")}
             disabled={responding}
-            className="w-full h-14 rounded-2xl text-white font-bold text-base flex items-center justify-center gap-3 disabled:opacity-50 transition-colors"
+            className="w-full h-16 rounded-2xl text-white font-bold text-base flex items-center justify-center gap-3 disabled:opacity-50 transition-colors"
             style={{ backgroundColor: "#dc2626" }}
           >
             {responding ? (

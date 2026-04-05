@@ -568,7 +568,7 @@ export default function AutorizacoesPrevias() {
                   <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#16a34a" }} />
                   AUTORIZAÇÕES ATIVAS ({activeAuths.length})
                 </h2>
-                <div className="space-y-3">
+                <div className="flex flex-col gap-4">
                   {activeAuths.map((a) => (
                     <AuthCard
                       key={a.id}

@@ -109,7 +109,7 @@ export default function ContratoPage() {
         <button
           onClick={() => navigate("/")}
           style={{
-            display: "flex", alignItems: "center", gap: "8px",
+            display: "flex", alignItems: "center", gap: "12px",
             background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.3)",
             borderRadius: "10px", padding: "8px 16px", color: "#fff",
             fontWeight: 600, fontSize: "14px", cursor: "pointer",
@@ -184,7 +184,7 @@ export default function ContratoPage() {
             doravante denominada simplesmente <strong>CONTRATADA</strong>.
           </p>
           <p style={{ marginTop: "16px" }}><strong>CONTRATANTE:</strong></p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px" }}>
             <FieldRow label="Condomínio / Razão Social" value={condo} onChange={setCondo} />
             <FieldRow label="CNPJ" value={cnpj} onChange={setCnpj} placeholder="00.000.000/0000-00" />
             <FieldRow label="Endereço" value={endereco} onChange={setEndereco} />
@@ -478,7 +478,7 @@ export default function ContratoPage() {
             {/* Vigência */}
             <div style={{ marginTop: "24px", padding: "16px", background: "#eff6ff", borderRadius: "10px", border: "1px solid #bfdbfe" }}>
               <p style={{ fontWeight: 700, color: "#003580", marginBottom: "8px" }}>DATA DE INÍCIO DA VIGÊNCIA</p>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <span style={{ fontSize: "14px" }}>A partir de:</span>
                 <input
                   type="text"
@@ -541,21 +541,21 @@ export default function ContratoPage() {
         padding: "0 24px",
       }}>
         <button onClick={handlePrint} style={{
-          display: "flex", alignItems: "center", gap: "8px",
+          display: "flex", alignItems: "center", gap: "12px",
           background: "#003580", border: "none", borderRadius: "12px",
           padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
           <Printer style={{ width: "18px", height: "18px" }} /> Imprimir Contrato
         </button>
         <button onClick={handleCopyLink} style={{
-          display: "flex", alignItems: "center", gap: "8px",
+          display: "flex", alignItems: "center", gap: "12px",
           background: "#fff", border: "2px solid #003580", borderRadius: "12px",
           padding: "14px 28px", color: "#003580", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
           <Share2 style={{ width: "18px", height: "18px" }} /> {copied ? "Link Copiado!" : "Compartilhar Link"}
         </button>
         <button onClick={handleShareWhatsApp} style={{
-          display: "flex", alignItems: "center", gap: "8px",
+          display: "flex", alignItems: "center", gap: "12px",
           background: "#25D366", border: "none", borderRadius: "12px",
           padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>

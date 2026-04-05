@@ -422,7 +422,7 @@ export default function ControleRondasSindico() {
           onClick={() => setTab("checkpoints")}
           style={{
             flex: 1,
-            padding: "12px",
+            padding: "14px 16px",
             fontSize: "13px",
             fontWeight: 700,
             border: "none",
@@ -442,7 +442,7 @@ export default function ControleRondasSindico() {
           onClick={() => setTab("schedules")}
           style={{
             flex: 1,
-            padding: "12px",
+            padding: "14px 16px",
             fontSize: "13px",
             fontWeight: 700,
             border: "none",
@@ -462,7 +462,7 @@ export default function ControleRondasSindico() {
           onClick={() => setTab("historico")}
           style={{
             flex: 1,
-            padding: "12px",
+            padding: "14px 16px",
             fontSize: "13px",
             fontWeight: 700,
             border: "none",
@@ -497,8 +497,8 @@ export default function ControleRondasSindico() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "8px",
-                padding: "12px",
+                gap: "12px",
+                padding: "14px 16px",
                 borderRadius: "14px",
                 border: "none",
                 background: "linear-gradient(135deg, #6366f1, #4f46e5)",
@@ -512,8 +512,8 @@ export default function ControleRondasSindico() {
             </button>
 
             {/* Filters */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", background: "#f8fafc", borderRadius: "14px", padding: "14px" }}>
-              <div style={{ display: "flex", gap: "8px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", background: "#f8fafc", borderRadius: "14px", padding: "14px" }}>
+              <div style={{ display: "flex", gap: "12px" }}>
                 <div style={{ flex: 1 }}>
                   <span style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", display: "block", marginBottom: "4px" }}>De</span>
                   <input type="date" value={filtroDataInicio} onChange={(e) => setFiltroDataInicio(e.target.value)}
@@ -538,7 +538,7 @@ export default function ControleRondasSindico() {
               const uniqueCheckpoints = new Set(filtered.map((r) => r.checkpoint_nome));
               return (
                 <>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
                     <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #dbeafe, #eff6ff)" }}>
                       <p style={{ fontSize: "24px", fontWeight: 800, color: "#003580" }}>{filtered.length}</p>
                       <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Registros</p>
@@ -554,7 +554,7 @@ export default function ControleRondasSindico() {
                   </div>
 
                   {/* Search filters */}
-                  <div style={{ display: "flex", gap: "8px" }}>
+                  <div style={{ display: "flex", gap: "12px" }}>
                     <div style={{ flex: 1, position: "relative" }}>
                       <Search style={{ width: 14, height: 14, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
                       <input
@@ -605,7 +605,7 @@ export default function ControleRondasSindico() {
                             </div>
 
                             {/* Info grid: funcionário, localização, data/hora */}
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", background: "#f8fafc", borderRadius: "10px", padding: "10px 12px" }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#f8fafc", borderRadius: "10px", padding: "10px 12px" }}>
                               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                 <User style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
                                 <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{r.funcionario_nome}</span>
@@ -691,7 +691,7 @@ export default function ControleRondasSindico() {
                       <MapPin style={{ width: 22, height: 22, color: "#fff" }} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                         <p style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a" }}>{cp.nome}</p>
                         {!cp.ativo && (
                           <span style={{ fontSize: "10px", fontWeight: 700, padding: "2px 8px", borderRadius: "6px", background: "#fef2f2", color: "#dc2626" }}>
@@ -943,7 +943,7 @@ export default function ControleRondasSindico() {
               )}
             </div>
 
-            <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
+            <div style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
               <button
                 onClick={() => handleDownloadQR(showQR)}
                 style={{
@@ -952,7 +952,7 @@ export default function ControleRondasSindico() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "6px",
-                  padding: "12px",
+                  padding: "14px 16px",
                   borderRadius: "12px",
                   border: "none",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
@@ -972,7 +972,7 @@ export default function ControleRondasSindico() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "6px",
-                  padding: "12px",
+                  padding: "14px 16px",
                   borderRadius: "12px",
                   border: "none",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
@@ -992,7 +992,7 @@ export default function ControleRondasSindico() {
       {/* ═══ Checkpoint Form Modal ═══ */}
       {showForm && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px" }}>
+          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px 24px 120px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
               <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>
                 {editingCheckpoint ? "Editar Ponto" : "Novo Ponto de Ronda"}
@@ -1070,7 +1070,7 @@ export default function ControleRondasSindico() {
 
       {showScheduleForm && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px" }}>
+          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px 24px 120px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
               <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>
                 {editingSchedule ? "Editar Horário" : "Novo Horário de Ronda"}
@@ -1144,7 +1144,7 @@ export default function ControleRondasSindico() {
                 <button
                   type="button"
                   onClick={() => setSchedForm({ ...schedForm, som_alerta: !schedForm.som_alerta })}
-                  style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}
                 >
                   {schedForm.som_alerta ? (
                     <ToggleRight style={{ width: 28, height: 28, color: "#003580" }} />

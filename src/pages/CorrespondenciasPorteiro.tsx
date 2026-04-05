@@ -394,7 +394,7 @@ export default function CorrespondenciasPorteiro() {
         {successMsg && (
           <div style={{
             background: "#dcfce7", border: "1px solid #86efac", borderRadius: "12px",
-            padding: "12px 16px", display: "flex", alignItems: "center", gap: "8px",
+            padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px",
             color: "#166534", fontSize: "14px", fontWeight: 600,
           }}>
             <CheckCircle2 className="w-5 h-5" /> {successMsg}
@@ -405,7 +405,7 @@ export default function CorrespondenciasPorteiro() {
         <button
           onClick={() => { setShowForm(!showForm); if (!showForm) resetForm(); }}
           style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
             width: "100%", padding: "14px", borderRadius: "14px", border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1",
             background: showForm ? "#ef4444" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
             color: "#fff", fontSize: "15px", fontWeight: 700, cursor: "pointer",
@@ -542,14 +542,14 @@ export default function CorrespondenciasPorteiro() {
               ) : (
                 <div style={{ display: "flex", gap: "10px" }}>
                   <button onClick={openCamera} style={{
-                    flex: 1, padding: "12px", borderRadius: "12px", border: "2px dashed #cbd5e1",
+                    flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
                     alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
                   }}>
                     <Camera className="w-6 h-6" /> Câmera
                   </button>
                   <button onClick={() => fileInputRef.current?.click()} style={{
-                    flex: 1, padding: "12px", borderRadius: "12px", border: "2px dashed #cbd5e1",
+                    flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
                     alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
                   }}>
@@ -576,7 +576,7 @@ export default function CorrespondenciasPorteiro() {
         )}
 
         {/* ═══════════ FILTERS / SEARCH ═══════════ */}
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
           {[
             { v: "pendente", l: "Pendentes" },
             { v: "retirada", l: "Retiradas" },
@@ -598,7 +598,7 @@ export default function CorrespondenciasPorteiro() {
           <button
             onClick={() => setShowReport(true)}
             style={{
-              marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px",
+              marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "#fff",
               color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
@@ -701,7 +701,7 @@ export default function CorrespondenciasPorteiro() {
                       padding: "0 16px 16px", borderTop: "1px solid #f1f5f9",
                       display: "flex", flexDirection: "column", gap: "10px", paddingTop: "12px",
                     }}>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                         <div>
                           <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PROTOCOLO</span>
                           <p style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1", margin: "2px 0 0" }}>{c.protocolo}</p>
@@ -749,7 +749,7 @@ export default function CorrespondenciasPorteiro() {
                         <button
                           onClick={(e) => { e.stopPropagation(); handleRetirar(c.id); }}
                           style={{
-                            width: "100%", padding: "12px", borderRadius: "12px", border: "none",
+                            width: "100%", padding: "14px 16px", borderRadius: "12px", border: "none",
                             background: "linear-gradient(135deg, #10b981, #059669)",
                             color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
                             marginTop: "4px",
@@ -763,7 +763,7 @@ export default function CorrespondenciasPorteiro() {
                       <button
                         onClick={(ev) => { ev.stopPropagation(); gerarPdfCorrespondencia(c, user?.condominio_nome); }}
                         style={{
-                          display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                          display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                           width: "100%", padding: "10px", borderRadius: "10px", border: "none",
                           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                           color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer",
@@ -847,8 +847,8 @@ export default function CorrespondenciasPorteiro() {
               <button
                 onClick={() => setWhatsappModal(null)}
                 style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                  padding: "12px", borderRadius: "12px",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+                  padding: "14px 16px", borderRadius: "12px",
                   background: "transparent", border: "1px solid #e2e8f0",
                   color: "#64748b", fontWeight: 600, fontSize: "14px",
                   cursor: "pointer", width: "100%",

@@ -160,7 +160,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros/moradores")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ChevronLeft className="w-6 h-6" />
@@ -289,7 +289,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
             </div>
             <button
               onClick={copyPrompt}
-              className="w-full h-11 gap-2 text-sm flex items-center justify-center rounded-lg font-semibold transition-all"
+              className="w-full h-16 gap-2 text-sm flex items-center justify-center rounded-lg font-semibold transition-all"
               style={{
                 backgroundColor: promptCopied ? "#16a34a" : p.accent,
                 color: promptCopied ? "#ffffff" : p.cardBg,

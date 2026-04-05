@@ -44,7 +44,7 @@ export default function PortariaVirtualTutorial() {
 
           {/* OPTION 1: Mini Smart Switch */}
           <div style={{ background: "#f0fdf4", borderRadius: "12px", padding: "16px", border: "2px solid #16a34a" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
               <span style={{ background: "#16a34a", color: p.text, fontWeight: 800, fontSize: "13px", padding: "4px 10px", borderRadius: "6px" }}>OPCAO 1 — RECOMENDADA</span>
             </div>
             <p style={{ fontWeight: 800, fontSize: "16px", color: "#166534", marginBottom: "4px" }}>Mini Smart Switch (Tasmota)</p>
@@ -52,13 +52,13 @@ export default function PortariaVirtualTutorial() {
               Interruptor inteligente <strong>compacto e completo</strong> — WiFi + rele + alimentacao tudo em 1 peca.
               So liga 2 fios no motor e pronto!
             </p>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "12px", border: "1px solid #d1fae5", marginBottom: "8px" }}>
+            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px 16px", border: "1px solid #d1fae5", marginBottom: "8px" }}>
               <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>
                 <ShoppingCart className="w-4 h-4 inline-block mr-1" style={{ verticalAlign: "-2px", color: "#16a34a" }} />
                 1 x Mini Smart Switch WiFi
               </p>
               <p style={{ fontSize: "13px", color: "#16a34a", fontWeight: 700, marginTop: "4px" }}>R$20~35</p>
-              <div style={{ display: "flex", gap: "8px", marginTop: "6px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "12px", marginTop: "6px", flexWrap: "wrap" }}>
                 {[
                   { loja: "Mercado Livre", url: "https://lista.mercadolivre.com.br/mini-smart-switch-wifi" },
                   { loja: "Shopee", url: "https://shopee.com.br/search?keyword=mini%20smart%20switch%20wifi" },
@@ -78,7 +78,7 @@ export default function PortariaVirtualTutorial() {
 
           {/* OPTION 2: ESP32 */}
           <div style={{ background: "#f9fafb", borderRadius: "12px", padding: "16px", border: "1px solid #d1d5db" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
               <span style={{ background: "#6b7280", color: p.text, fontWeight: 800, fontSize: "13px", padding: "4px 10px", borderRadius: "6px" }}>OPCAO 2 — ALTERNATIVA</span>
             </div>
             <p style={{ fontWeight: 800, fontSize: "16px", color: "#374151", marginBottom: "4px" }}>ESP32 DevKit + Modulo Rele</p>
@@ -133,7 +133,7 @@ export default function PortariaVirtualTutorial() {
 
           <div style={{ background: "#fff", borderRadius: "12px", padding: "16px", border: "2px solid #0ea5e9" }}>
             <p style={{ fontWeight: 700, color: "#0c4a6e", marginBottom: "10px" }}>COMO TESTAR:</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[
                 "Pegue seu celular e va ate o motor do portao",
                 "Conecte no WiFi do condominio",
@@ -141,7 +141,7 @@ export default function PortariaVirtualTutorial() {
                 "Se o site abriu = WiFi OK! Pode prosseguir.",
                 "Se NAO abriu = precisa de um repetidor de WiFi (R$50~80)",
               ].map((txt, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
                   <span style={{
                     width: "24px", height: "24px", borderRadius: "50%",
                     background: i === 4 ? "#fef2f2" : "#f0fdf4",
@@ -157,7 +157,7 @@ export default function PortariaVirtualTutorial() {
             </div>
           </div>
 
-          <div style={{ background: "#fffbeb", borderRadius: "8px", padding: "12px", border: "1px solid #fde68a" }}>
+          <div style={{ background: "#fffbeb", borderRadius: "8px", padding: "14px 16px", border: "1px solid #fde68a" }}>
             <p style={{ fontSize: "13px", color: "#92400e" }}>
               <strong>DICA:</strong> Se nao tem WiFi no condominio, o sindico pode contratar internet so
               para a portaria. Um plano basico de 50 megas (R$70/mes) ja e suficiente.
@@ -219,7 +219,7 @@ export default function PortariaVirtualTutorial() {
               <p style={{ fontSize: "14px", color: "#374151" }}>
                 O Mini Smart Switch tem bornes marcados <strong>S1</strong> e <strong>S2</strong>. Ligue assim:
               </p>
-              <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div style={{ background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #bbf7d0" }}>
                   <p style={{ fontWeight: 700, color: "#16a34a" }}>FIO 1: Borne S1 do Switch → Borne FECHA do Motor</p>
                 </div>
@@ -250,7 +250,7 @@ export default function PortariaVirtualTutorial() {
             </div>
           </div>
 
-          <div style={{ background: "#ecfdf5", borderRadius: "8px", padding: "12px", border: "1px solid #a7f3d0", textAlign: "center" }}>
+          <div style={{ background: "#ecfdf5", borderRadius: "8px", padding: "14px 16px", border: "1px solid #a7f3d0", textAlign: "center" }}>
             <p style={{ fontWeight: 800, fontSize: "15px", color: "#16a34a" }}>
               PRONTO! Pule direto para o Passo 8 (Testar pelo App)
             </p>
@@ -285,7 +285,7 @@ export default function PortariaVirtualTutorial() {
               'Ache o parafuso marcado "FECHA" (ou "FC" ou "CLOSE")',
               'Ache o parafuso marcado "COM" (ou "COMUM" ou "COMMON")',
             ].map((txt, i) => (
-              <div key={i} style={{ background: "#fff", borderRadius: "8px", padding: "12px", border: "1px solid #e5e7eb", display: "flex", alignItems: "flex-start", gap: "10px" }}>
+              <div key={i} style={{ background: "#fff", borderRadius: "8px", padding: "14px 16px", border: "1px solid #e5e7eb", display: "flex", alignItems: "flex-start", gap: "10px" }}>
                 <span style={{
                   width: "28px", height: "28px", borderRadius: "50%",
                   background: "#f59e0b", color: p.text,
@@ -299,7 +299,7 @@ export default function PortariaVirtualTutorial() {
             ))}
           </div>
 
-          <div style={{ background: "#fef2f2", borderRadius: "8px", padding: "12px", border: "1px solid #fecaca" }}>
+          <div style={{ background: "#fef2f2", borderRadius: "8px", padding: "14px 16px", border: "1px solid #fecaca" }}>
             <p style={{ fontSize: "13px", color: "#991b1b" }}>
               <strong>IMPORTANTE:</strong> Nao desconecte nenhum fio que ja esta no motor!
               Voce so vai ADICIONAR fios novos. Todo mundo que ja usa o controle remoto continua usando normal.
@@ -333,8 +333,8 @@ export default function PortariaVirtualTutorial() {
                 { de: "Pino 5V do ESP32", para: "Pino VCC do Rele", cor: "#f59e0b", corNome: "FIO AMARELO (ou qualquer cor)" },
                 { de: "Pino GND do ESP32", para: "Pino GND do Rele", cor: "#111827", corNome: "FIO PRETO (ou qualquer cor)" },
               ].map((fio, i) => (
-                <div key={i} style={{ background: "#faf5ff", borderRadius: "8px", padding: "12px", border: "1px solid #e9d5ff" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div key={i} style={{ background: "#faf5ff", borderRadius: "8px", padding: "14px 16px", border: "1px solid #e9d5ff" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                     <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: fio.cor, display: "flex", alignItems: "center", justifyContent: "center", color: p.text, fontWeight: 700, fontSize: "14px", flexShrink: 0 }}>
                       {i + 1}
                     </div>
@@ -354,7 +354,7 @@ export default function PortariaVirtualTutorial() {
             </p>
           </div>
 
-          <div style={{ background: "#f0fdf4", borderRadius: "8px", padding: "12px", border: "1px solid #bbf7d0" }}>
+          <div style={{ background: "#f0fdf4", borderRadius: "8px", padding: "14px 16px", border: "1px solid #bbf7d0" }}>
             <p style={{ fontSize: "13px", color: "#166534" }}>
               <strong>DICA:</strong> O fio jumper e aquele fiozinho com uma pontinha de plastico.
               Voce so ENCAIXA na ponta do ESP32. Nao precisa apertar parafuso nem soldar.
@@ -407,7 +407,7 @@ export default function PortariaVirtualTutorial() {
             </div>
           </div>
 
-          <div style={{ background: "#fffbeb", borderRadius: "8px", padding: "12px", border: "1px solid #fde68a" }}>
+          <div style={{ background: "#fffbeb", borderRadius: "8px", padding: "14px 16px", border: "1px solid #fde68a" }}>
             <p style={{ fontSize: "13px", color: "#92400e" }}>
               <strong>ATENCAO:</strong> Nao desconecte nenhum fio que ja estava ligado no motor!
               Os fios do controle remoto continuam onde estavam. Voce so ADICIONA 2 fios novos.
@@ -572,7 +572,7 @@ export default function PortariaVirtualTutorial() {
             <ArrowLeft className="w-6 h-6" />
           </button>
           <div style={{ flex: 1 }}>
-            <h1 style={{ fontSize: "18px", fontWeight: 700, color: p.text, display: "flex", alignItems: "center", gap: "8px", margin: 0 }}>
+            <h1 style={{ fontSize: "18px", fontWeight: 700, color: p.text, display: "flex", alignItems: "center", gap: "12px", margin: 0 }}>
               <DoorOpen className="w-5 h-5" /> Portaria Virtual — Tutorial
             </h1>
             <p style={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569", margin: 0, marginTop: "2px" }}>

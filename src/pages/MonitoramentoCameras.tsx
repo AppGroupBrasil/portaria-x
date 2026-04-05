@@ -209,7 +209,7 @@ export default function MonitoramentoCameras() {
         {(error || !camera.url_stream) && (
           <div style={{
             position: "absolute", inset: 0, display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center", gap: "8px",
+            alignItems: "center", justifyContent: "center", gap: "12px",
             background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
           }}>
             <div style={{
@@ -302,11 +302,11 @@ export default function MonitoramentoCameras() {
               <ArrowLeft className="w-5 h-5" style={{ color: "#fff" }} />
             </button>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <Monitor className="w-5 h-5" style={{ color: "#6366f1" }} />
                 <span style={{ fontWeight: 700, fontSize: "16px", color: "#fff" }}>Monitoramento</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "2px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "2px" }}>
                 <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontVariantNumeric: "tabular-nums" }}>
                   <Clock className="w-3 h-3 inline" style={{ verticalAlign: "-1px", marginRight: "4px" }} />
                   {currentTime.toLocaleTimeString("pt-BR")}
@@ -574,7 +574,7 @@ export default function MonitoramentoCameras() {
                 {selectedCamera.localizacao ? ` · ${selectedCamera.localizacao}` : ""}
               </p>
             </div>
-            <div style={{ display: "flex", gap: "8px" }}>
+            <div style={{ display: "flex", gap: "12px" }}>
               <button
                 onClick={() => {
                   const el = document.documentElement;
@@ -624,7 +624,7 @@ export default function MonitoramentoCameras() {
             padding: "16px",
             display: "flex", alignItems: "center", justifyContent: "space-between",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <div style={{
                 width: "10px", height: "10px", borderRadius: "50%",
                 background: "#ef4444", boxShadow: "0 0 8px #ef4444",

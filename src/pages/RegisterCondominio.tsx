@@ -316,7 +316,7 @@ export default function RegisterCondominio() {
                   border: "none", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                   color: "white", fontWeight: 700, fontSize: "15px",
                   cursor: "pointer", display: "flex", alignItems: "center",
-                  justifyContent: "center", gap: "8px",
+                  justifyContent: "center", gap: "12px",
                 }}
               >
                 Entrar no Painel

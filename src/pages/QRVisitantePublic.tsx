@@ -80,7 +80,7 @@ export default function QRVisitantePublic() {
         {data.visitor_parentesco && <p style={{ fontSize: "13px", color: "#6b7280" }}>Parentesco: {data.visitor_parentesco}</p>}
 
         {/* Validity */}
-        <div style={{ margin: "20px 0", background: "#f8fafc", borderRadius: "12px", padding: "12px", border: "1px solid #e5e7eb" }}>
+        <div style={{ margin: "20px 0", background: "#f8fafc", borderRadius: "12px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
           <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>VÁLIDO DE</p>
           <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{data.data_inicio} às {data.hora_inicio}</p>
           <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginTop: "8px", marginBottom: "4px" }}>ATÉ</p>

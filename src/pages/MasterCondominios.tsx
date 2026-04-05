@@ -289,7 +289,7 @@ export default function MasterCondominios() {
       )}
 
       {/* List */}
-      <main className="flex-1 pb-6 space-y-3" style={{ paddingLeft: "24px", paddingRight: "24px" }}>
+      <main className="flex-1 pb-6 flex flex-col gap-4" style={{ paddingLeft: "24px", paddingRight: "24px" }}>
         {loading && (
           <div className="flex justify-center py-8">
             <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
