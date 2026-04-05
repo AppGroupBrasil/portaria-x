@@ -72,6 +72,13 @@ export default function MinhaConta() {
     setTimeout(() => setError(""), 5000);
   };
 
+  const formatPhone = (val: string) => {
+    const digits = val.replaceAll(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits.length ? `(${digits}` : "";
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
   // ── Save profile ──
   const handleSaveProfile = async () => {
     if (!name.trim()) { showError("Nome é obrigatório."); return; }
@@ -266,7 +273,7 @@ export default function MinhaConta() {
               <span style={labelStyle}>
                 <Phone className="w-3.5 h-3.5" /> WhatsApp
               </span>
-              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
+              <input type="tel" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))}
                 placeholder="(11) 99999-9999" style={inputStyle} />
             </div>
 

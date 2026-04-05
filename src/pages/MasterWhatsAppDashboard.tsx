@@ -184,6 +184,13 @@ export default function MasterWhatsAppDashboard() {
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const formatPhone = (val: string) => {
+    const digits = val.replaceAll(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits.length ? `(${digits}` : "";
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
   const inputStyle: React.CSSProperties = {
     padding: "10px 12px",
     borderRadius: 10,
@@ -290,7 +297,7 @@ export default function MasterWhatsAppDashboard() {
                 <input
                   type="tel"
                   value={globalSource}
-                  onChange={e => setGlobalSource(e.target.value)}
+                  onChange={e => setGlobalSource(formatPhone(e.target.value))}
                   placeholder="15557952901"
                   style={inputStyle}
                 />
@@ -354,7 +361,7 @@ export default function MasterWhatsAppDashboard() {
                   <input
                     type="tel"
                     value={testPhone}
-                    onChange={e => setTestPhone(e.target.value)}
+                    onChange={e => setTestPhone(formatPhone(e.target.value))}
                     placeholder="Número para teste (ex: 5511999999999)"
                     style={{ ...inputStyle, flex: 1 }}
                   />
