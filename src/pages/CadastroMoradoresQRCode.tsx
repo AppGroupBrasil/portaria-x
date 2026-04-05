@@ -241,7 +241,7 @@ export default function CadastroMoradoresQRCode() {
                 {/* Link display */}
                 <div className="w-full rounded-lg" style={{ padding: "12px 16px", backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                   <p className="text-xs mb-1" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "#64748b" }}>Link embutido:</p>
-                  <p className="text-[11px] break-all font-mono" style={{ color: isDark ? "#ffffff" : "#003580" }}>
+                  <p className="text-[11px] break-all font-mono" style={{ color: isDark ? "#ffffff" : "#003580", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     {link}
                   </p>
                 </div>

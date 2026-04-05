@@ -433,10 +433,10 @@ export default function SindicoAccessConfig() {
                 <Info className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p style={{ fontWeight: 700, fontSize: 14, color: "#ffffff", marginBottom: 6 }}>
+                <p style={{ fontWeight: 700, fontSize: 14, color: "#ffffff", marginBottom: 6, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                   💡 Como funciona: 1 dispositivo = várias portas
                 </p>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", lineHeight: 1.6 }}>
+                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", lineHeight: 1.6, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                   Um <strong>smart switch de 4 canais</strong> (ex: SONOFF 4CH) possui <strong>4 relês independentes</strong> dentro de um único aparelho.
                   Cada canal controla um ponto de acesso diferente (portão, fechadura, etc.).
                   Selecione o dispositivo e o <strong>canal correspondente</strong> em cada ponto abaixo.
@@ -445,7 +445,7 @@ export default function SindicoAccessConfig() {
                   {["Canal 1 → Portão Veicular", "Canal 2 → Portão Pedestre", "Canal 3 → Bloco", "Canal 4 → Academia"].map((t) => (
                     <span key={t} style={{
                       fontSize: 11, fontWeight: 600, color: "#ffffff",
-                      background: "rgba(0,98,209,0.3)", borderRadius: 8, padding: "4px 10px",
+                      background: "rgba(0,98,209,0.3)", borderRadius: 8, padding: "4px 10px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal"
                     }}>{t}</span>
                   ))}
                 </div>
@@ -474,7 +474,7 @@ export default function SindicoAccessConfig() {
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-semibold truncate" style={{ color: "#ffffff" }}>{ap.name}</p>
+                          <p className="font-semibold truncate" style={{ color: "#ffffff", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{ap.name}</p>
                           {ap.is_custom ? (
                             <span className="text-[10px] bg-purple-500/10 text-purple-500 px-2 py-0.5 rounded-full font-medium">
                               PERSONALIZADO
@@ -482,10 +482,10 @@ export default function SindicoAccessConfig() {
                           ) : null}
                         </div>
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${ap.device_id ? "bg-white/15 text-white" : "bg-orange-500/20 text-orange-400"}`}>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${ap.device_id ? "bg-white/15 text-white" : "bg-orange-500/20 text-orange-400"}`} style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                             {ap.device_id ? (ap.channel !== null && ap.channel !== undefined ? `Canal ${ap.channel + 1}` : "Dispositivo vinculado") : "Sem dispositivo"}
                           </span>
-                          <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+                          <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.6)", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                             {ap.pulse_duration}ms · {roles.map(r => r === "morador" ? "Morad." : r === "funcionario" ? "Func." : "Sínd.").join(", ")}
                           </span>
                         </div>

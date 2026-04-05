@@ -476,10 +476,10 @@ export default function SindicoWhatsAppConfig() {
                   </div>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: 13, color: isOn ? p.text : p.textMuted, transition: "color 0.2s" }}>
+                    <div style={{ fontWeight: 600, fontSize: 13, color: isOn ? p.text : p.textMuted, transition: "color 0.2s", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       {nt.label}
                     </div>
-                    <div style={{ fontSize: 11, color: p.textMuted, marginTop: 1 }}>
+                    <div style={{ fontSize: 11, color: p.textMuted, marginTop: 1, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       {nt.description}
                     </div>
                   </div>

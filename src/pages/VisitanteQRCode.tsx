@@ -70,7 +70,7 @@ export default function VisitanteQRCode() {
         <p style={{ fontSize: "14px", color: "#64748b", marginTop: "4px" }}>Sistema de Controle de Acesso</p>
       </div>
       <div style={{ textAlign: "center", marginBottom: "32px" }}>
-        <h2 style={{ fontSize: "22px", fontWeight: "700", color: "#1e293b" }}>{condominioNome}</h2>
+        <h2 style={{ fontSize: "22px", fontWeight: "700", color: "#1e293b", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{condominioNome}</h2>
       </div>
       <div style={{ textAlign: "center", marginBottom: "32px" }}>
         <div style={{ display: "inline-block", padding: "20px", border: "3px solid #003580", borderRadius: "20px" }}>
@@ -78,8 +78,8 @@ export default function VisitanteQRCode() {
         </div>
       </div>
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
-        <h3 style={{ fontSize: "20px", fontWeight: "700", color: "#1e293b", marginBottom: "12px" }}>Cadastro de Visitante</h3>
-        <p style={{ fontSize: "15px", color: "#475569", lineHeight: "1.6", maxWidth: "400px", margin: "0 auto" }}>
+        <h3 style={{ fontSize: "20px", fontWeight: "700", color: "#1e293b", marginBottom: "12px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Cadastro de Visitante</h3>
+        <p style={{ fontSize: "15px", color: "#475569", lineHeight: "1.6", maxWidth: "400px", margin: "0 auto", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
           Aponte a câmera do seu celular para o QR Code acima para realizar o cadastro de visitante de forma rápida e prática.
         </p>
       </div>
@@ -88,8 +88,8 @@ export default function VisitanteQRCode() {
           <div key={s.n} style={{ display: "flex", gap: "16px", alignItems: "flex-start", marginBottom: "16px" }}>
             <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "700", fontSize: "14px", flexShrink: 0 }}>{s.n}</div>
             <div>
-              <p style={{ fontSize: "14px", fontWeight: "600", color: "#1e293b" }}>{s.title}</p>
-              <p style={{ fontSize: "13px", color: "#64748b" }}>{s.desc}</p>
+              <p style={{ fontSize: "14px", fontWeight: "600", color: "#1e293b", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.title}</p>
+              <p style={{ fontSize: "13px", color: "#64748b", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.desc}</p>
             </div>
           </div>
         ))}
@@ -136,7 +136,7 @@ export default function VisitanteQRCode() {
 
           {/* Right: Steps */}
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontSize: "22px", fontWeight: "800", color: "#003580", marginBottom: "8px", marginTop: 0 }}>Cadastro de Visitante</h3>
+            <h3 style={{ fontSize: "22px", fontWeight: "800", color: "#003580", marginBottom: "8px", marginTop: 0, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Cadastro de Visitante</h3>
             <p style={{ fontSize: "14px", color: "#64748b", marginBottom: "28px", lineHeight: "1.5" }}>
               Siga os passos abaixo para registrar sua visita de forma rápida e segura.
             </p>
@@ -212,7 +212,7 @@ export default function VisitanteQRCode() {
 
         {/* Title */}
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <h3 style={{ fontSize: "20px", fontWeight: "700", color: "#f1f5f9", marginBottom: "8px" }}>Cadastro de Visitante</h3>
+          <h3 style={{ fontSize: "20px", fontWeight: "700", color: "#f1f5f9", marginBottom: "8px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Cadastro de Visitante</h3>
           <p style={{ fontSize: "14px", color: "#94a3b8", lineHeight: "1.6", maxWidth: "420px", margin: "0 auto" }}>
             Aponte a câmera do seu celular para o QR Code e registre sua visita em segundos.
           </p>
@@ -335,7 +335,7 @@ export default function VisitanteQRCode() {
         {/* Condo name - centered card */}
         <div style={{ textAlign: "center", margin: "0 auto 36px", maxWidth: "480px", padding: "20px 32px", background: "#fff", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
           <p style={{ fontSize: "10px", letterSpacing: "3px", textTransform: "uppercase", color: "#94a3b8", margin: "0 0 6px", fontWeight: "600" }}>Condomínio</p>
-          <h2 style={{ fontSize: "22px", fontWeight: "800", color: "#1e293b", margin: 0 }}>{condominioNome}</h2>
+          <h2 style={{ fontSize: "22px", fontWeight: "800", color: "#1e293b", margin: 0, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{condominioNome}</h2>
         </div>
 
         {/* QR Code - platinum frame */}
@@ -350,7 +350,7 @@ export default function VisitanteQRCode() {
 
         {/* Title */}
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <h3 style={{ fontSize: "20px", fontWeight: "800", color: "#1e293b", marginBottom: "8px" }}>Cadastro de Visitante</h3>
+          <h3 style={{ fontSize: "20px", fontWeight: "800", color: "#1e293b", marginBottom: "8px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Cadastro de Visitante</h3>
           <p style={{ fontSize: "14px", color: "#64748b", lineHeight: "1.6", maxWidth: "400px", margin: "0 auto" }}>
             Acesso rápido e seguro ao condomínio via QR Code.
           </p>
@@ -362,8 +362,8 @@ export default function VisitanteQRCode() {
             <div key={s.n} style={{ flex: 1, background: "#fff", borderRadius: "14px", padding: "20px 16px", textAlign: "center", border: "1px solid #e2e8f0", boxShadow: "0 2px 12px rgba(0,0,0,0.03)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: i === 0 ? "linear-gradient(90deg, #64748b, #94a3b8)" : i === 1 ? "linear-gradient(90deg, #94a3b8, #cbd5e1)" : "linear-gradient(90deg, #cbd5e1, #e2e8f0)" }} />
               <div style={{ width: 40, height: 40, borderRadius: "12px", background: "linear-gradient(135deg, #64748b, #475569)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", fontSize: "16px", margin: "0 auto 12px" }}>{s.n}</div>
-              <p style={{ fontSize: "13px", fontWeight: "700", color: "#1e293b", margin: "0 0 4px" }}>{s.title}</p>
-              <p style={{ fontSize: "11px", color: "#94a3b8", margin: 0, lineHeight: "1.4" }}>{s.desc}</p>
+              <p style={{ fontSize: "13px", fontWeight: "700", color: "#1e293b", margin: "0 0 4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.title}</p>
+              <p style={{ fontSize: "11px", color: "#94a3b8", margin: 0, lineHeight: "1.4", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -455,8 +455,8 @@ export default function VisitanteQRCode() {
 
           {/* Right info */}
           <div style={{ flex: 1 }}>
-            <h3 style={{ fontSize: "22px", fontWeight: "800", color: "#f1f5f9", marginBottom: "8px", marginTop: 0 }}>Cadastro de Visitante</h3>
-            <p style={{ fontSize: "13px", color: "#94a3b8", lineHeight: "1.6", marginBottom: "24px" }}>
+            <h3 style={{ fontSize: "22px", fontWeight: "800", color: "#f1f5f9", marginBottom: "8px", marginTop: 0, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Cadastro de Visitante</h3>
+            <p style={{ fontSize: "13px", color: "#94a3b8", lineHeight: "1.6", marginBottom: "24px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
               Acesso inteligente e automatizado. Escaneie o QR Code para iniciar o procedimento de entrada.
             </p>
 
@@ -465,8 +465,8 @@ export default function VisitanteQRCode() {
               <div key={s.n} style={{ display: "flex", gap: "12px", alignItems: "flex-start", marginBottom: "16px" }}>
                 <div style={{ width: 34, height: 34, borderRadius: "10px", background: `linear-gradient(135deg, ${i === 0 ? "#0ea5e9" : i === 1 ? "#6366f1" : "#a855f7"}, ${i === 0 ? "#0284c7" : i === 1 ? "#4f46e5" : "#9333ea"})`, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", fontSize: "14px", flexShrink: 0, boxShadow: `0 2px 12px ${i === 0 ? "rgba(14,165,233,0.3)" : i === 1 ? "rgba(99,102,241,0.3)" : "rgba(168,85,247,0.3)"}` }}>{s.n}</div>
                 <div style={{ flex: 1, paddingBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#f1f5f9", margin: 0 }}>{s.title}</p>
-                  <p style={{ fontSize: "12px", color: "#64748b", margin: "3px 0 0" }}>{s.desc}</p>
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#f1f5f9", margin: 0, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.title}</p>
+                  <p style={{ fontSize: "12px", color: "#64748b", margin: "3px 0 0", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.desc}</p>
                 </div>
               </div>
             ))}
@@ -555,15 +555,15 @@ export default function VisitanteQRCode() {
                 <CheckCircle2 style={{ width: 24, height: 24, color: "#fff" }} />
               </div>
             </div>
-            <p style={{ fontSize: "12px", fontWeight: "700", color: "#0f2847", marginTop: "20px", letterSpacing: "1px" }}>QR CODE DE ACESSO</p>
-            <p style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Válido para cadastro de visitantes</p>
+            <p style={{ fontSize: "12px", fontWeight: "700", color: "#0f2847", marginTop: "20px", letterSpacing: "1px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>QR CODE DE ACESSO</p>
+            <p style={{ fontSize: "10px", color: "#64748b", marginTop: "2px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Válido para cadastro de visitantes</p>
           </div>
 
           {/* Right column - Instructions */}
           <div style={{ flex: 1 }}>
             <div style={{ borderLeft: "3px solid #b8860b", paddingLeft: "20px", marginBottom: "24px" }}>
-              <h3 style={{ fontSize: "20px", fontWeight: "800", color: "#0f2847", margin: "0 0 6px" }}>Procedimento de Cadastro</h3>
-              <p style={{ fontSize: "13px", color: "#64748b", lineHeight: "1.6", margin: 0 }}>
+              <h3 style={{ fontSize: "20px", fontWeight: "800", color: "#0f2847", margin: "0 0 6px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>Procedimento de Cadastro</h3>
+              <p style={{ fontSize: "13px", color: "#64748b", lineHeight: "1.6", margin: 0, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                 Siga o protocolo abaixo para realizar o registro de visitante conforme as normas do condomínio.
               </p>
             </div>
@@ -573,8 +573,8 @@ export default function VisitanteQRCode() {
               <div key={s.n} style={{ display: "flex", gap: "16px", alignItems: "flex-start", marginBottom: "18px" }}>
                 <div style={{ width: 36, height: 36, borderRadius: "4px", background: i === 0 ? "#0f2847" : "#f1f5f9", color: i === 0 ? "#daa520" : "#0f2847", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", fontSize: "16px", flexShrink: 0, border: i !== 0 ? "1px solid #e2e8f0" : "none" }}>{s.n}</div>
                 <div style={{ flex: 1, paddingBottom: "14px", borderBottom: "1px solid #f1f5f9" }}>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1e293b", margin: 0 }}>{s.title}</p>
-                  <p style={{ fontSize: "12px", color: "#64748b", margin: "4px 0 0" }}>{s.desc}</p>
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1e293b", margin: 0, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.title}</p>
+                  <p style={{ fontSize: "12px", color: "#64748b", margin: "4px 0 0", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{s.desc}</p>
                 </div>
               </div>
             ))}

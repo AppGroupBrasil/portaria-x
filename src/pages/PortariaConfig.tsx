@@ -211,11 +211,11 @@ export default function PortariaConfig() {
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <ShieldAlert className="w-4 h-4" style={{ color: vehicleUniqueAccess ? "#0284c7" : "#94a3b8" }} />
-                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a" }}>
+                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       Acesso único por placa
                     </p>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px" }}>
+                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     Só permitir o cadastro de uma nova autorização para um veículo quando não houver
                     nenhuma autorização ativa para a mesma placa.
                   </p>
@@ -245,11 +245,11 @@ export default function PortariaConfig() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <Hash className="w-4 h-4" style={{ color: vehicleLimitPerApt ? "#0284c7" : "#94a3b8" }} />
-                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a" }}>
+                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       Limitar veículos por apartamento
                     </p>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px" }}>
+                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     Limitar a quantidade de veículos com autorizações ativas por apartamento.
                   </p>
 
@@ -320,11 +320,11 @@ export default function PortariaConfig() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <Clock className="w-4 h-4" style={{ color: maxAuthDaysEnabled ? "#d97706" : "#94a3b8" }} />
-                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a" }}>
+                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       Prazo máximo de autorização
                     </p>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px" }}>
+                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     Autorizações prévias e automáticas de visitantes e veículos expiram automaticamente após o prazo definido.
                   </p>
 
@@ -404,7 +404,7 @@ export default function PortariaConfig() {
                     {requireFields[key] && <CheckCircle2 className="w-3.5 h-3.5" style={{ color: p.text }} />}
                   </div>
                   <Icon className="w-4 h-4" style={{ color: requireFields[key] ? "#7c3aed" : "#94a3b8", flexShrink: 0 }} />
-                  <p style={{ fontWeight: 600, fontSize: "13px", color: "#0f172a" }}>{label}</p>
+                  <p style={{ fontWeight: 600, fontSize: "13px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{label}</p>
                   {requireFields[key] && (
                     <span style={{ marginLeft: "auto", fontSize: "11px", fontWeight: 700, color: "#7c3aed", background: "#ede9fe", padding: "2px 8px", borderRadius: "6px" }}>Obrigatório</span>
                   )}
@@ -421,11 +421,11 @@ export default function PortariaConfig() {
               disabled={saving}
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
-                padding: "14px", borderRadius: "14px", width: "100%",
+                padding: "14px 16px", borderRadius: "14px", width: "100%", minHeight: "48px",
                 background: saved
                   ? "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)"
                   : "#003580",
-                border: "none", color: p.text, fontWeight: 700, fontSize: "15px",
+                border: "none", color: "#ffffff", fontWeight: 700, fontSize: "15px",
                 cursor: saving ? "not-allowed" : "pointer",
                 opacity: saving ? 0.7 : 1,
                 transition: "all 0.3s",

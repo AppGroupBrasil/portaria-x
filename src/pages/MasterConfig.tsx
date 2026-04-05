@@ -148,7 +148,7 @@ export default function MasterConfig() {
                           ) : (
                             <ToggleLeft className="w-8 h-8 text-muted-foreground" />
                           )}
-                          <span className={`text-xs font-medium ${boolValue ? "text-sky-400" : "text-muted-foreground"}`}>
+                          <span className={`text-xs font-medium ${boolValue ? "text-sky-400" : "text-muted-foreground"}`} style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                             {boolValue ? "Ativado" : "Desativado"}
                           </span>
                         </button>
@@ -160,6 +160,7 @@ export default function MasterConfig() {
                             setEditedValues((prev) => ({ ...prev, [config.key]: e.target.value }))
                           }
                           className="w-full h-9 px-3 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                          style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}
                         />
                       )}
                     </div>
