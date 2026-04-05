@@ -1280,17 +1280,36 @@ export default function VeiculosPorteiro() {
                   </p>
                 </div>
                 {v.morador_phone && (
-                  <button
-                    onClick={() => callMorador(v.morador_phone!)}
-                    style={{
-                      display: "flex", alignItems: "center", gap: "6px",
-                      padding: "8px 14px", borderRadius: "10px",
-                      background: "#dcfce7", border: "none",
-                      color: "#15803d", fontWeight: 600, fontSize: "12px", cursor: "pointer",
-                    }}
-                  >
-                    <Phone className="w-3.5 h-3.5" /> Ligar
-                  </button>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <button
+                      onClick={() => callMorador(v.morador_phone!)}
+                      style={{
+                        display: "flex", alignItems: "center", gap: "6px",
+                        padding: "8px 14px", borderRadius: "10px",
+                        background: "#dcfce7", border: "none",
+                        color: "#15803d", fontWeight: 600, fontSize: "12px", cursor: "pointer",
+                      }}
+                    >
+                      <Phone className="w-3.5 h-3.5" /> Ligar
+                    </button>
+                    <button
+                      onClick={() => {
+                        const fullPhone = (v.morador_phone || "").replace(/\D/g, "");
+                        const waUrl = fullPhone.startsWith("55")
+                          ? `https://wa.me/${fullPhone}`
+                          : `https://wa.me/55${fullPhone}`;
+                        globalThis.open(waUrl, "_blank");
+                      }}
+                      style={{
+                        display: "flex", alignItems: "center", gap: "6px",
+                        padding: "8px 14px", borderRadius: "10px",
+                        background: "#25d366", border: "none",
+                        color: "#ffffff", fontWeight: 600, fontSize: "12px", cursor: "pointer",
+                      }}
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                    </button>
+                  </div>
                 )}
               </div>
 
