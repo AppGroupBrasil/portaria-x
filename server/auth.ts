@@ -266,6 +266,22 @@ router.post("/register/morador", async (req, res) => {
       return;
     }
 
+    if (condominioId) {
+      const blockCount = db.prepare("SELECT COUNT(*) as count FROM blocks WHERE condominio_id = ?").get(condominioId) as { count: number };
+      if (!blockCount || blockCount.count === 0) {
+        sendError(res, 400, ERROR_CODES.AUTH_REQUIRED_FIELDS, "Este condomínio ainda não possui blocos cadastrados. Solicite ao síndico que cadastre um bloco primeiro.");
+        return;
+      }
+
+      if (block?.trim()) {
+        const blockExists = db.prepare("SELECT id FROM blocks WHERE condominio_id = ? AND name = ?").get(condominioId, block.trim());
+        if (!blockExists) {
+          sendError(res, 400, ERROR_CODES.AUTH_REQUIRED_FIELDS, "Bloco não encontrado neste condomínio.");
+          return;
+        }
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Check if auto-cadastro requires approval for this condomínio

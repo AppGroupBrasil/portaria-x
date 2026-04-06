@@ -50,6 +50,12 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       res.status(400).json({ error: "Selecione um condomínio." });
       return;
     }
+    const blockCount = db.prepare("SELECT COUNT(*) as count FROM blocks WHERE condominio_id = ?").get(condoId) as { count: number };
+    if (!blockCount || blockCount.count === 0) {
+      res.status(400).json({ error: "Cadastre primeiro pelo menos um bloco para liberar o cadastro dos moradores depois." });
+      return;
+    }
+
     const blocoExists = db.prepare("SELECT id FROM blocks WHERE condominio_id = ? AND name = ?").get(condoId, bloco);
     if (!blocoExists) {
       res.status(400).json({ error: "Bloco não encontrado neste condomínio." });
@@ -301,6 +307,13 @@ router.post("/importar", authorize("master", "administradora", "sindico"), async
 
     const user = getAuthenticatedUser(req.user);
     const condoId = user.condominio_id || null;
+    if (condoId) {
+      const blockCount = db.prepare("SELECT COUNT(*) as count FROM blocks WHERE condominio_id = ?").get(condoId) as { count: number };
+      if (!blockCount || blockCount.count === 0) {
+        res.status(400).json({ error: "Cadastre primeiro pelo menos um bloco para liberar o cadastro dos moradores depois." });
+        return;
+      }
+    }
     const defaultPassword = await bcrypt.hash("1234", 10); // Senha padrão para importação
     let imported = 0;
     let errors = 0;

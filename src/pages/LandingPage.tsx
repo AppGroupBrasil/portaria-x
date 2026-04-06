@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const WHATSAPP_NUMBER = "5511933284364";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Olá! Gostaria de saber mais sobre o Portaria X.")}`;
+const SHOW_PREMIUM_LANDING = false; // alterar para true quando quiser reexibir os módulos premium na landing
 
 /* ─── Theme palettes ─── */
 const themes = {
@@ -63,7 +64,9 @@ type ThemeColors = (typeof themes)[keyof typeof themes];
 const FAQS = [
   { q: "Preciso instalar algo no celular?", a: "Não! O sistema funciona 100% no navegador — basta acessar o link. Funciona em qualquer celular, tablet ou computador." },
   { q: "Quanto tempo leva para implantar?", a: "O cadastro leva 5 minutos. Os moradores se cadastram via link ou QR Code. Em 24h o condomínio já está operando." },
-  { q: "A Portaria Virtual precisa de obra?", a: "Não. O módulo IoT usa ESP32 + relé, instalação simples sem fio. Funciona com qualquer portão elétrico." },
+  SHOW_PREMIUM_LANDING
+    ? { q: "A Portaria Virtual precisa de obra?", a: "Não. O módulo IoT usa ESP32 + relé, instalação simples sem fio. Funciona com qualquer portão elétrico." }
+    : { q: "Preciso cadastrar os moradores manualmente?", a: "Não. Você pode cadastrar manualmente, por link, QR Code ou importação em lote por planilha." },
   { q: "Posso cancelar quando quiser?", a: "Sim, sem fidelidade e sem multa. Cancele a qualquer momento pelo painel." },
   { q: "Preciso de uma função específica?", a: "Desenvolvemos para você sem nenhum custo adicional! Fale conosco pelo WhatsApp." },
 ];
@@ -178,13 +181,12 @@ const baseFeatures = [
   "Estou Chegando (GPS)",
   "Livro de Protocolo Digital",
   "Espelho de Portaria",
-  "Monitoramento de Câmeras (CFTV)",
   "Controle de Rondas",
   "Relatórios em PDF e Gráficos",
   "Configuração de Features",
   "App do Morador completo",
   "Multi-perfil (5 níveis)",
-  "Integração com WhatsApp",
+  "Integração com WhatsApp com mensagens ilimitadas",
   "Suporte por WhatsApp",
 ];
 
@@ -192,14 +194,14 @@ const allPlanFeatures = [...baseFeatures];
 
 const plans = [
   {
-    name: "Plano",
+    name: "Plano até 299 unidades",
     price: "199",
     color: "#6366f1",
     features: baseFeatures,
     popular: false,
   },
   {
-    name: "Plano",
+    name: "Plano acima de 300 unidades",
     price: "299",
     color: "#0ea5e9",
     features: allPlanFeatures,
@@ -233,7 +235,26 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
         </div>
       )}
 
-      <h3 style={{ fontWeight: 800, fontSize: "20px", color: "#003580", marginBottom: "20px" }}>{plan.name}</h3>
+      <h3 style={{ fontWeight: 800, fontSize: "20px", color: "#003580", marginBottom: "12px" }}>{plan.name}</h3>
+
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          marginBottom: "16px",
+          padding: "8px 12px",
+          borderRadius: "999px",
+          background: "linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)",
+          border: "1px solid #22c55e",
+          color: "#166534",
+          fontSize: "12px",
+          fontWeight: 800,
+        }}
+      >
+        <MessageCircle style={{ width: "14px", height: "14px" }} />
+        Integrado ao WhatsApp com mensagens ilimitadas em todos os planos*
+      </div>
 
       <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginBottom: "8px" }}>
         <span style={{ fontSize: "14px", color: "#003580" }}>R$</span>
@@ -252,6 +273,10 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
           </div>
         ))}
       </div>
+
+      <p style={{ fontSize: "11px", color: "#336699", lineHeight: 1.5, marginBottom: "20px" }}>
+        * Sujeito ao uso responsável da plataforma e às políticas de envio do WhatsApp.
+      </p>
 
       <button
         onClick={onNavigate}
@@ -381,7 +406,9 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
       </h1>
 
       <p className="fade-up fade-up-d2" style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)", color: t.text3, maxWidth: "600px", lineHeight: 1.7, marginBottom: "40px" }}>
-        Visitantes, veículos, correspondências, delivery, protocolo digital e portaria virtual — tudo em um só sistema. <strong style={{ color: t.text1 }}>Funciona no celular, tablet e computador.</strong>
+        {SHOW_PREMIUM_LANDING
+          ? <>Visitantes, veículos, correspondências, delivery, protocolo digital e portaria virtual — tudo em um só sistema. <strong style={{ color: t.text1 }}>Funciona no celular, tablet e computador.</strong></>
+          : <>Visitantes, veículos, correspondências, delivery e protocolo digital — tudo em um só sistema. <strong style={{ color: t.text1 }}>Funciona no celular, tablet e computador.</strong></>}
       </p>
 
       <div className="fade-up fade-up-d3" style={{ display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
@@ -417,11 +444,17 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
 
       {/* Highlight features */}
       <div className="fade-up" style={{ marginTop: "48px", display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
-        {[
-          { icon: Fingerprint, text: "Biometria Facial", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
-          { icon: DoorOpen, text: "Portaria Virtual (IoT)", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
-          { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
-        ].map((b) => (
+        {(SHOW_PREMIUM_LANDING
+          ? [
+              { icon: Fingerprint, text: "Biometria Facial", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
+              { icon: Bell, text: "Alertas em Tempo Real", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+              { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+            ]
+          : [
+              { icon: QrCode, text: "QR Code para Visitantes", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
+              { icon: Navigation, text: "Estou Chegando", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+              { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+            ]).map((b) => (
           <div key={b.text} style={{
             display: "flex", alignItems: "center", gap: "10px",
             background: b.bg, border: `2px solid ${b.border}`,
@@ -530,7 +563,7 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
               <Building2 style={{ width: "32px", height: "32px", color: "#ffffff" }} />
             </div>
             <span style={{ fontSize: "18px", fontWeight: 800, color: "#ffffff" }}>{demoLoading === "sindico" ? "Carregando..." : "Síndico"}</span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Gestão completa do condomínio, configurações, relatórios e câmeras</span>
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Gestão completa do condomínio, configurações e relatórios</span>
             <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "13px" }}>
               Explorar <ArrowRight style={{ width: "14px", height: "14px" }} />
             </div>
@@ -1384,9 +1417,9 @@ export default function LandingPage() {
       <StartUsingBanner mode={mode} />
       <DemoSection demoLoading={demoLoading} onDemoLogin={handleDemoLogin} />
       <FeaturesSection mode={mode} t={t} onNavigate={navigate} onOpenTutorial={setActiveTutorial} />
-      <PremiumFeaturesSection mode={mode} t={t} onNavigate={navigate} onOpenTutorial={setActiveTutorial} />
+      {SHOW_PREMIUM_LANDING && <PremiumFeaturesSection mode={mode} t={t} onNavigate={navigate} onOpenTutorial={setActiveTutorial} />}
       <PresentationSection mode={mode} onNavigate={navigate} />
-      <IntegrationsSection mode={mode} t={t} onNavigate={navigate} />
+      {SHOW_PREMIUM_LANDING && <IntegrationsSection mode={mode} t={t} onNavigate={navigate} />}
       <PlansSection mode={mode} t={t} onNavigate={navigate} />
       <CustomDevCtaSection />
       <FaqSection openFaq={openFaq} onToggleFaq={(i) => setOpenFaq(openFaq === i ? null : i)} />

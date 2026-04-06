@@ -34,6 +34,7 @@ export default function RegisterMorador() {
   const condominioId = state?.condominioId ?? 0;
   const condominioName = state?.condominioName ?? "";
   const condoBlocks = state?.blocks ?? [];
+  const hasBlocks = condoBlocks.length > 0;
 
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
@@ -90,6 +91,7 @@ export default function RegisterMorador() {
   };
 
   const validateStep1 = () => {
+    if (!hasBlocks) return "Este condomínio ainda não possui blocos cadastrados. Solicite ao síndico que cadastre um bloco primeiro.";
     if (!name.trim()) return "Informe seu nome.";
     if (phone && phone.replaceAll(/\D/g, "").length < 10) return "WhatsApp inválido.";
     return null;
@@ -266,6 +268,13 @@ export default function RegisterMorador() {
         {/* Form Card */}
         <div className="glass rounded-2xl p-6 shadow-2xl shadow-black/20">
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "19px" }}>
+            {!hasBlocks && (
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm animate-fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>Este condomínio ainda não possui blocos cadastrados. Solicite ao síndico que cadastre um bloco primeiro para liberar seu cadastro.</span>
+              </div>
+            )}
+
             {step === 1 && (
               <>
                 {/* Nome */}
@@ -299,9 +308,10 @@ export default function RegisterMorador() {
                     ) : (
                       <Input
                         id="block"
-                        placeholder="Ex: A"
-                        value={block}
-                        onChange={(e) => setBlock(e.target.value)}
+                        placeholder="Aguardando cadastro de bloco"
+                        value=""
+                        readOnly
+                        disabled
                       />
                     )}
                   </div>
@@ -454,12 +464,12 @@ export default function RegisterMorador() {
                 </Button>
               )}
               {step === 1 ? (
-                <Button type="button" onClick={handleNext} className="w-full">
-                  Continuar
+                <Button type="button" onClick={handleNext} className="w-full" disabled={!hasBlocks}>
+                  {hasBlocks ? "Continuar" : "Cadastre um bloco primeiro"}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               ) : (
-                <Button type="submit" disabled={isLoading} className="flex-1">
+                <Button type="submit" disabled={isLoading || !hasBlocks} className="flex-1">
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />

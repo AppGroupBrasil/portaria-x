@@ -91,6 +91,7 @@ export default function CadastroMoradores() {
   const [blocos, setBlocos] = useState<Bloco[]>([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const hasBlocos = blocos.length > 0;
 
   // Edit state
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -244,13 +245,55 @@ export default function CadastroMoradores() {
           <p className="text-base" style={{ color: isDark ? "#ffffff" : undefined }}>
             Escolha a forma de cadastro dos moradores:
           </p>
+
+          {!hasBlocos && (
+            <div
+              className="rounded-2xl border px-4 py-3 animate-fade-in"
+              style={{
+                background: isDark ? "rgba(245, 158, 11, 0.12)" : "#fff7ed",
+                borderColor: isDark ? "rgba(245, 158, 11, 0.35)" : "#fdba74",
+              }}
+            >
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 shrink-0" style={{ color: "#f59e0b", marginTop: 2 }} />
+                <div style={{ flex: 1 }}>
+                  <p className="text-sm font-semibold" style={{ color: isDark ? "#ffffff" : "#9a3412" }}>
+                    Cadastro de moradores desabilitado
+                  </p>
+                  <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.78)" : "#7c2d12", marginTop: 4 }}>
+                    Cadastre primeiro pelo menos um <strong>bloco</strong> para liberar o cadastro dos moradores depois.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate("/cadastros/blocos")}
+                  style={{
+                    borderRadius: 10,
+                    padding: "0.55rem 0.8rem",
+                    border: "none",
+                    background: "#003580",
+                    color: "#ffffff",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  Cadastrar bloco
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-start justify-between" style={{ gap: "2.5rem" }}>
             {metodos.map((item, index) => (
               <button
                 key={item.id}
-                onClick={() => navigate(item.route)}
-                className="flex flex-col items-center gap-3 hover:opacity-80 active:scale-[0.95] transition-all duration-150 animate-fade-in"
+                type="button"
+                disabled={!hasBlocos}
+                onClick={() => hasBlocos && navigate(item.route)}
+                className={`flex flex-col items-center gap-3 transition-all duration-150 animate-fade-in ${hasBlocos ? "hover:opacity-80 active:scale-[0.95]" : "cursor-not-allowed opacity-50"}`}
                 style={{ animationDelay: `${index * 0.04}s` }}
+                title={!hasBlocos ? "Cadastre um bloco primeiro" : item.description}
               >
                 <div className="w-16 h-16 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", border: "2px solid #ffffff" }}>
                   <item.icon className="w-8 h-8 text-white" strokeWidth={1.5} />

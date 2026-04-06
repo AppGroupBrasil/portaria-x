@@ -56,6 +56,7 @@ export default function CadastroMoradoresManual() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [modalData, setModalData] = useState<{ nome: string; bloco: string; unidade: string; perfil: string; email: string } | null>(null);
+  const hasBlocos = blocos.length > 0;
 
   // Carregar blocos cadastrados
   useEffect(() => {
@@ -81,6 +82,7 @@ export default function CadastroMoradoresManual() {
   };
 
   const validate = () => {
+    if (!hasBlocos) return "Cadastre primeiro pelo menos um bloco para liberar o cadastro dos moradores depois.";
     if (!nome.trim()) return "Informe o nome completo.";
     if (!bloco) return "Selecione o bloco.";
     if (!unidade.trim()) return "Informe a unidade/apto.";
@@ -188,7 +190,43 @@ export default function CadastroMoradoresManual() {
       <main className="flex-1" style={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1.5rem", paddingBottom: "3.5rem" }}>
         <div>
           <div className="rounded-2xl">
+            {!hasBlocos && (
+              <div
+                className="mb-4 rounded-2xl border px-4 py-3 animate-fade-in"
+                style={{
+                  background: isDark ? "rgba(245, 158, 11, 0.12)" : "#fff7ed",
+                  borderColor: isDark ? "rgba(245, 158, 11, 0.35)" : "#fdba74",
+                }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: isDark ? "#ffffff" : "#9a3412" }}>
+                      Cadastro manual indisponível
+                    </p>
+                    <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.78)" : "#7c2d12", marginTop: 4 }}>
+                      Cadastre primeiro um <strong>bloco</strong> para liberar o cadastro de moradores depois.
+                    </p>
+                  </div>
+                  <Button type="button" variant="outline" onClick={() => navigate("/cadastros/blocos")}>
+                    Cadastrar bloco
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <fieldset
+                disabled={!hasBlocos || isLoading}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  border: "none",
+                  padding: 0,
+                  margin: 0,
+                  opacity: !hasBlocos ? 0.6 : 1,
+                }}
+              >
               {/* Condomínio (administradora/master) */}
               {(user?.role === "administradora" || user?.role === "master") && condominios.length > 0 && (
                 <div style={{ marginBottom: "19px" }}>
@@ -242,13 +280,14 @@ export default function CadastroMoradoresManual() {
                     <div>
                       <Input
                         id="bloco"
-                        placeholder="Ex: Bloco A, Torre 1..."
-                        value={bloco}
-                        onChange={(e) => setBloco(e.target.value)}
+                        placeholder="Cadastre um bloco primeiro"
+                        value=""
+                        readOnly
+                        disabled
                         style={{ paddingLeft: "19px" }}
                       />
                       <p className="text-[11px] text-amber-400" style={{ marginTop: "4px" }}>
-                        Nenhum bloco cadastrado.
+                        Nenhum bloco cadastrado. Vá em <strong>Blocos</strong> antes de cadastrar moradores.
                       </p>
                     </div>
                   )}
@@ -372,6 +411,8 @@ export default function CadastroMoradoresManual() {
                 </div>
               </div>
 
+              </fieldset>
+
               {/* Error Modal */}
               {error && (
                 <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
@@ -388,17 +429,17 @@ export default function CadastroMoradoresManual() {
                 </div>
               )}
 
-
-
               {/* Submit */}
               <Button
                 type="submit"
                 className="w-full h-12 font-semibold"
-                disabled={isLoading}
+                disabled={isLoading || !hasBlocos}
                 style={isDark ? { marginTop: "1rem", backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : { marginTop: "1rem" }}
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                ) : !hasBlocos ? (
+                  "Cadastre um bloco primeiro"
                 ) : (
                   "Cadastrar Morador"
                 )}

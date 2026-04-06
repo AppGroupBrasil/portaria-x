@@ -51,12 +51,12 @@ const planFeatures = [
   "Estou Chegando (GPS)", "Livro de Protocolo Digital", "Espelho de Portaria",
   "Monitoramento de Câmeras (CFTV)", "Controle de Rondas", "Relatórios em PDF e Gráficos",
   "Configuração de Features", "App do Morador completo", "Multi-perfil (5 níveis)",
-  "Integração com WhatsApp", "Suporte por WhatsApp",
+  "Integração com WhatsApp com mensagens ilimitadas", "Suporte por WhatsApp",
 ];
 
 const plans = [
-  { name: "Plano", price: "199" },
-  { name: "Plano", price: "299" },
+  { name: "Plano até 299 unidades", price: "199" },
+  { name: "Plano acima de 300 unidades", price: "299" },
 ];
 
 const faqs = [
@@ -313,7 +313,9 @@ export default function ApresentacaoPage() {
           <Cpu style={{ width: "20px", height: "20px", color: "#7c3aed" }} />
           <div>
             <h3 style={{ fontWeight: 800, fontSize: "16px", color: "#7c3aed", margin: 0 }}>Módulos Extras</h3>
-            <p style={{ fontSize: "12px", color: "#8b5cf6", margin: 0 }}>Funcionalidades adicionais contratadas à parte — {extraFeatures.length} módulos</p>
+            <p style={{ fontSize: "12px", color: "#8b5cf6", margin: 0 }}>
+              Funcionalidades extras em preparação — <strong>DISPONÍVEL EM BREVE</strong>
+            </p>
           </div>
         </div>
 
@@ -325,6 +327,21 @@ export default function ApresentacaoPage() {
                 border: "1.5px solid #e2e8f0", borderRadius: "14px", padding: "22px",
                 display: "flex", flexDirection: "column", position: "relative",
               }}>
+
+                <div style={{
+                  position: "absolute",
+                  top: 14,
+                  right: 14,
+                  background: "#f59e0b",
+                  color: "#ffffff",
+                  borderRadius: "999px",
+                  padding: "4px 10px",
+                  fontSize: "10px",
+                  fontWeight: 800,
+                  letterSpacing: "0.3px",
+                }}>
+                  DISPONÍVEL EM BREVE
+                </div>
 
                 <div style={{
                   width: "40px", height: "40px", borderRadius: "10px",

@@ -5,8 +5,8 @@ import { useState } from "react";
 const WHATSAPP_NUMBER = "5511933284364";
 
 const PLANS = [
-  { id: "plan199", label: "Plano R$199", price: 199 },
-  { id: "plan299", label: "Plano R$299", price: 299 },
+  { id: "plan199", label: "Plano até 299 unidades", price: 199 },
+  { id: "plan299", label: "Plano acima de 300 unidades", price: 299 },
 ];
 
 const INPUT_STYLE: React.CSSProperties = {
@@ -231,20 +231,11 @@ export default function ContratoPage() {
             <li>Configuração de Features por condomínio</li>
             <li>App do Morador completo</li>
             <li>Multi-perfil com 5 níveis de acesso</li>
-            <li>Integração com WhatsApp</li>
+            <li>Integração com WhatsApp com mensagens ilimitadas</li>
             <li>Suporte técnico por WhatsApp</li>
           </ul>
 
-          <p style={{ fontWeight: 800, color: "#7c3aed", marginTop: "20px", marginBottom: "8px", fontSize: "15px" }}>
-            Funcionalidades Premium:
-          </p>
-          <ul style={{ paddingLeft: "24px" }}>
-            <li>Monitoramento de Câmeras CFTV (RTSP) com grade multi-câmera</li>
-            <li>Controle de Veículos com OCR (leitura de placa pelo celular)</li>
-            <li>Portaria Virtual (IoT) — abertura de portões pelo app com ESP32 + relé</li>
-            <li>Leitura de Placa Veicular por Câmera IP</li>
-            <li>Biometria Facial por Câmera IP</li>
-          </ul>
+
         </Section>
 
         {/* Cláusula 3 */}
