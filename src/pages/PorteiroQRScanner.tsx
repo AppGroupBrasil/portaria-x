@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import jsQR from "jsqr";
 import {
   ArrowLeft,
   QrCode,
@@ -30,7 +31,7 @@ interface VisitorPayload {
   visitante: {
     nome: string;
     documento: string;
-    foto: string | null;
+    foto?: string | null;
     parentesco: string;
     observacoes: string;
   };
@@ -92,6 +93,8 @@ export default function PorteiroQRScanner() {
   const streamRef = useRef<MediaStream | null>(null);
   const scanIntervalRef = useRef<number | null>(null);
 
+  const scanningRef = useRef(false);
+
   // Start camera
   useEffect(() => {
     if (mode === "scan" && !showManualInput) {
@@ -99,6 +102,31 @@ export default function PorteiroQRScanner() {
     }
     return () => stopCamera();
   }, [mode, showManualInput]);
+
+  const scanFrame = useCallback(() => {
+    if (!scanningRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas || video.readyState !== video.HAVE_ENOUGH_DATA) {
+      requestAnimationFrame(scanFrame);
+      return;
+    }
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) { requestAnimationFrame(scanFrame); return; }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+
+    if (code && code.data) {
+      scanningRef.current = false;
+      processQRData(code.data);
+      return;
+    }
+    requestAnimationFrame(scanFrame);
+  }, []);
 
   const startCamera = async () => {
     try {
@@ -108,6 +136,10 @@ export default function PorteiroQRScanner() {
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        videoRef.current.onloadedmetadata = () => {
+          scanningRef.current = true;
+          requestAnimationFrame(scanFrame);
+        };
       }
     } catch {
       // Camera not available — show manual input fallback
@@ -116,6 +148,7 @@ export default function PorteiroQRScanner() {
   };
 
   const stopCamera = () => {
+    scanningRef.current = false;
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;

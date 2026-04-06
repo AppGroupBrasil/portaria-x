@@ -83,6 +83,8 @@ function saveVisitors(list: VisitorQR[]) {
 }
 
 function generateQRData(visitor: VisitorQR, morador: { nome?: string; block?: string; unit?: string; condominio_nome?: string }) {
+  // NOTE: foto is excluded from QR payload because base64 images are too large
+  // for QR codes (max ~4KB). The photo is still stored and shown in the app.
   const payload = {
     type: "PORTARIAX_VISITOR",
     v: 1,
@@ -90,7 +92,6 @@ function generateQRData(visitor: VisitorQR, morador: { nome?: string; block?: st
     visitante: {
       nome: visitor.nome,
       documento: visitor.documento,
-      foto: visitor.foto,
       parentesco: visitor.parentesco,
       observacoes: visitor.observacoes,
     },

@@ -2,7 +2,6 @@
 import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import crypto from "crypto";
-import { emailPreAuthEntradaConfirmada, emailPreAuthAutoCadastro } from "./emailService.js";
 import { notifyPortariaWhatsApp, notifyUserWhatsApp } from "./whatsappService.js";
 
 const router = Router();
@@ -240,18 +239,6 @@ router.post("/auto-cadastro/:token", (req: Request, res: Response) => {
 
     const updated = db.prepare("SELECT * FROM pre_authorizations WHERE token = ?").get(req.params.token);
 
-    // 📧 Email: notify morador about auto-cadastro completion
-    if (auth.morador_id) {
-      emailPreAuthAutoCadastro({
-        condominioId: auth.condominio_id,
-        moradorId: auth.morador_id,
-        moradorName: auth.morador_name,
-        visitanteNome: visitante_nome || auth.visitante_nome,
-        bloco: auth.bloco,
-        apartamento: auth.apartamento,
-      }).catch((err) => console.error("[EMAIL] Erro pré-auth auto-cadastro:", err));
-    }
-
     res.json(updated);
   } catch (err: any) {
     console.error("Erro em preAuthorizations :", err);
@@ -285,18 +272,8 @@ router.post("/:id/confirmar-entrada", authenticate, authorize("master", "adminis
 
     const updated = db.prepare("SELECT * FROM pre_authorizations WHERE id = ?").get(req.params.id);
 
-    // 📧 Email: notify morador about entry confirmation
+    // WhatsApp: notify morador about visitor entry confirmation
     if (auth.morador_id) {
-      emailPreAuthEntradaConfirmada({
-        condominioId: auth.condominio_id,
-        moradorId: auth.morador_id,
-        moradorName: auth.morador_name,
-        visitanteNome: auth.visitante_nome,
-        bloco: auth.bloco,
-        apartamento: auth.apartamento,
-      }).catch((err) => console.error("[EMAIL] Erro pré-auth entrada:", err));
-
-      // WhatsApp: notify morador about visitor entry confirmation
       notifyUserWhatsApp(
         auth.condominio_id,
         "whatsapp_notify_pre_authorization",

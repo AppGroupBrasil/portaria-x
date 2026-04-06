@@ -233,7 +233,7 @@ export default function DeliveryPorteiro() {
   const fetchDeliveries = async () => {
     try {
       const url = filter !== "todas" ? `${API}?status=${filter}` : API;
-      const res = await fetch(url, {  });
+      const res = await apiFetch(url);
       if (res.ok) {
         const data = await res.json();
         setDeliveries(data);
@@ -248,6 +248,14 @@ export default function DeliveryPorteiro() {
   useEffect(() => {
     setLoading(true);
     fetchDeliveries();
+  }, [filter]);
+
+  // Auto-refresh deliveries every 15 seconds so porteiro sees new entries from moradores
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchDeliveries();
+    }, 15_000);
+    return () => clearInterval(interval);
   }, [filter]);
 
   const getServicoInfo = (s: string) => SERVICOS[s] || SERVICOS["outro"];

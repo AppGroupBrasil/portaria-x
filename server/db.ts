@@ -778,11 +778,8 @@ export function cleanupExpiredAuthorizations(): number {
         console.log(`[CLEANUP] Auto-cancel ${autoCancelResult.changes} ve\u00EDculo(s) cond\u00F4minio ${cfg.condominio_id} (hor\u00E1rio ${cfg.value})`);
         total += autoCancelResult.changes;
 
-        // Notify moradores via Push + Email (lazy import to avoid circular dep)
-        Promise.all([
-          import("./pushService.js"),
-          import("./emailService.js"),
-        ]).then(([{ sendPushToUser }, { emailVeiculoEncerrado }]) => {
+        // Notify moradores via Push (lazy import to avoid circular dep)
+        import("./pushService.js").then(({ sendPushToUser }) => {
           for (const v of affectedVehicles) {
             if (!v.morador_id) continue;
             // Push notification
@@ -791,15 +788,6 @@ export function cleanupExpiredAuthorizations(): number {
               body: `Sua autoriza\u00E7\u00E3o para o ve\u00EDculo ${v.placa} (${v.bloco} - Apt ${v.apartamento}) foi encerrada automaticamente. Refa\u00E7a pelo app se precisar.`,
               data: { type: "vehicle_cancelled", vehicleId: String(v.id) },
             }).catch(() => {});
-            // Email
-            emailVeiculoEncerrado({
-              condominioId: cfg.condominio_id,
-              moradorId: v.morador_id,
-              bloco: v.bloco,
-              apartamento: v.apartamento,
-              placa: v.placa,
-              motivo: "encerrada automaticamente (hor\u00E1rio limite)",
-            }).catch((err: any) => console.error("[EMAIL] Erro ve\u00EDculo encerrado:", err));
           }
         }).catch((err) => console.error("[CLEANUP] Erro ao notificar moradores:", err));
       }

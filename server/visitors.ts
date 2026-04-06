@@ -3,7 +3,7 @@ import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import crypto from "crypto";
 import { captureSnapshotForCondominio } from "./cameraSnapshot.js";
-import { emailVisitantePendente, emailVisitanteRespondido } from "./emailService.js";
+import { emailVisitantePendente } from "./emailService.js";
 import { notifyWhatsApp, notifyPortariaWhatsApp } from "./whatsappService.js";
 
 const router = Router();
@@ -141,17 +141,6 @@ router.post("/auth/:token/respond", (req: Request, res: Response) => {
     }
 
     db.prepare("UPDATE visitors SET status = ?, responded_at = datetime('now') WHERE token = ?").run(action, req.params.token);
-
-    // 📧 Email: notify about visitor response
-    if (visitor.bloco && visitor.apartamento) {
-      emailVisitanteRespondido({
-        condominioId: visitor.condominio_id,
-        bloco: visitor.bloco,
-        apartamento: visitor.apartamento,
-        visitanteNome: visitor.nome,
-        status: action,
-      }).catch((err) => console.error("[EMAIL] Erro visitante respondido:", err));
-    }
 
     const updated = db.prepare("SELECT id, nome, documento, foto, bloco, apartamento, status FROM visitors WHERE token = ?").get(req.params.token);
     res.json(updated);

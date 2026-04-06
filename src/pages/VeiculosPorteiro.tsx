@@ -144,7 +144,7 @@ export default function VeiculosPorteiro() {
   const fetchVehicles = async () => {
     try {
       const url = filter !== "todas" ? `${API}?status=${filter}` : API;
-      const res = await fetch(url, {  });
+      const res = await apiFetch(url);
       if (res.ok) setVehicles(await res.json());
     } catch (err) {
       console.error(err);

@@ -3,7 +3,6 @@ import db from "./db.js";
 import { authenticate } from "./middleware.js";
 import crypto from "crypto";
 import { captureSnapshotForCondominio } from "./cameraSnapshot.js";
-import { emailVeiculoPendenteAprovacao, emailVeiculoRespondido, emailVeiculoEncerrado } from "./emailService.js";
 import { notifyPortariaWhatsApp, notifyUserWhatsApp } from "./whatsappService.js";
 import { sendPushToUser } from "./pushService.js";
 
@@ -250,20 +249,6 @@ router.post("/portaria-cadastro", authenticate, (req: Request, res: Response) =>
       foto_placa || null
     );
 
-    // 📧 Email: notify morador about vehicle pending approval
-    if (user.condominio_id) {
-      emailVeiculoPendenteAprovacao({
-        condominioId: user.condominio_id,
-        moradorId: morador?.id,
-        bloco,
-        apartamento,
-        placa: placa.toUpperCase(),
-        modelo: modelo || undefined,
-        cor: cor || undefined,
-        motoristaNome: motorista_nome || undefined,
-        token,
-      }).catch((err) => console.error("[EMAIL] Erro veículo pendente:", err));
-
       // WhatsApp: notify morador about pending vehicle approval
       if (morador?.id) {
         notifyUserWhatsApp(
@@ -273,7 +258,6 @@ router.post("/portaria-cadastro", authenticate, (req: Request, res: Response) =>
           `🚗 Veículo ${placa.toUpperCase()} cadastrado pela portaria para Bloco ${bloco} Apt ${apartamento}. Aguardando sua aprovação.`
         );
       }
-    }
 
     res.status(201).json({
       id: result.lastInsertRowid,
@@ -348,16 +332,6 @@ router.post("/aprovar/:token", (req: Request, res: Response) => {
         WHERE token = ?
       `).run(today, today, morador_observacao || null, req.params.token);
 
-      // 📧 Email: vehicle approved
-      emailVeiculoRespondido({
-        condominioId: vehicle.condominio_id,
-        moradorId: vehicle.morador_id || undefined,
-        bloco: vehicle.bloco,
-        apartamento: vehicle.apartamento,
-        placa: vehicle.placa,
-        status: "ativa",
-      }).catch((err) => console.error("[EMAIL] Erro veículo aprovado:", err));
-
       res.json({ message: "Acesso aprovado com sucesso!" });
     } else {
       db.prepare(`
@@ -366,16 +340,6 @@ router.post("/aprovar/:token", (req: Request, res: Response) => {
             morador_observacao = ?
         WHERE token = ?
       `).run(morador_observacao || null, req.params.token);
-
-      // 📧 Email: vehicle denied
-      emailVeiculoRespondido({
-        condominioId: vehicle.condominio_id,
-        moradorId: vehicle.morador_id || undefined,
-        bloco: vehicle.bloco,
-        apartamento: vehicle.apartamento,
-        placa: vehicle.placa,
-        status: "negada",
-      }).catch((err) => console.error("[EMAIL] Erro veículo negado:", err));
 
       res.json({ message: "Acesso negado." });
     }
@@ -645,7 +609,7 @@ router.post("/cancelar-dia", authenticate, (req: Request, res: Response) => {
         AND data_fim = ?
     `).run(user.condominio_id, today);
 
-    // Notify each morador whose authorization was cancelled (Push + Email)
+    // Notify each morador whose authorization was cancelled (Push)
     for (const v of affected) {
       if (!v.morador_id) continue;
       // Push notification
@@ -654,15 +618,6 @@ router.post("/cancelar-dia", authenticate, (req: Request, res: Response) => {
         body: `Sua autoriza\u00E7\u00E3o para o ve\u00EDculo ${v.placa} (${v.bloco} - Apt ${v.apartamento}) foi encerrada. Refa\u00E7a pelo app se precisar.`,
         data: { type: "vehicle_cancelled", vehicleId: String(v.id) },
       }).catch(() => {});
-      // Email
-      emailVeiculoEncerrado({
-        condominioId: user.condominio_id!,
-        moradorId: v.morador_id,
-        bloco: v.bloco,
-        apartamento: v.apartamento,
-        placa: v.placa,
-        motivo: "encerrada pela portaria",
-      }).catch((err) => console.error("[EMAIL] Erro ve\u00EDculo encerrado:", err));
     }
 
     res.json({ message: `${result.changes} liberação(ões) do dia encerrada(s).`, count: result.changes });

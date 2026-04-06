@@ -62,7 +62,7 @@ export default function MoradorDelivery() {
 
   const fetchDeliveries = async () => {
     try {
-      const res = await fetch(API, {  });
+      const res = await apiFetch(API);
       if (res.ok) {
         const data = await res.json();
         setDeliveries(data);
@@ -98,7 +98,7 @@ export default function MoradorDelivery() {
     if (!servico) return;
     setSubmitting(true);
     try {
-      const res = await fetch(API, {
+      const res = await apiFetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

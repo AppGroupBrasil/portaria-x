@@ -1,54 +1,46 @@
 /**
  * ═══════════════════════════════════════════════════════════
- * EMAIL SERVICE — Amazon SES (Simple Email Service)
+ * EMAIL SERVICE — Gmail SMTP via Nodemailer
  * Centralized service for sending transactional emails.
  * ═══════════════════════════════════════════════════════════
  */
 
-import { SESClient, SendEmailCommand, SendRawEmailCommand } from "@aws-sdk/client-ses";
+import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 import db from "./db.js";
-import crypto from "crypto";
 
 // ─── Configuration ───
-const AWS_REGION = process.env.AWS_SES_REGION || "sa-east-1";
-const FROM_EMAIL = process.env.SES_FROM_EMAIL || "naoresponda@portariax.com.br";
-const FROM_NAME = process.env.SES_FROM_NAME || "Portaria X";
+const SMTP_USER = process.env.SMTP_USER || "";
+const SMTP_PASS = process.env.SMTP_PASS || "";
+const FROM_EMAIL = process.env.SMTP_FROM_EMAIL || SMTP_USER;
+const FROM_NAME = process.env.SMTP_FROM_NAME || "Portaria X";
 const APP_URL = process.env.APP_URL || "https://portariax.com.br";
 
-let sesClient: SESClient | null = null;
-let sesInitialized = false;
+let transporter: Transporter | null = null;
 
-function initSES() {
-  if (sesInitialized) return;
-
-  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-
-  if (!accessKeyId || !secretAccessKey) {
-    console.warn("⚠️  AWS SES credentials not found. Email sending disabled.");
-    console.warn("   Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env");
-    sesInitialized = true;
+function initSmtp() {
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.warn("⚠️  Gmail SMTP credentials not found. Email sending disabled.");
+    console.warn("   Set SMTP_USER and SMTP_PASS in .env");
     return;
   }
 
   try {
-    sesClient = new SESClient({
-      region: AWS_REGION,
-      credentials: {
-        accessKeyId,
-        secretAccessKey,
+    transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASS,
       },
     });
-    sesInitialized = true;
-    console.log(`  📧 Amazon SES initialized (region: ${AWS_REGION}, from: ${FROM_EMAIL})`);
+    console.log(`  📧 Gmail SMTP initialized (from: ${FROM_EMAIL})`);
   } catch (err) {
-    console.error("SES init error:", err);
-    sesInitialized = true;
+    console.error("SMTP init error:", err);
   }
 }
 
 // Initialize on module load
-initSES();
+initSmtp();
 
 // ─── Base HTML Layout ───
 function emailLayout(title: string, bodyContent: string): string {
@@ -136,9 +128,9 @@ function alertBox(text: string, type: "info" | "warning" | "success" | "danger" 
   return `<div style="background:${c.bg};border-left:4px solid ${c.border};padding:12px 16px;border-radius:4px;margin:16px 0;color:${c.text};font-size:14px;">${text}</div>`;
 }
 
-// ─── Core send function (with anti-spam headers) ───
+// ─── Core send function ───
 async function sendEmail(to: string | string[], subject: string, htmlBody: string): Promise<boolean> {
-  if (!sesClient) return false;
+  if (!transporter) return false;
 
   const toAddresses = Array.isArray(to) ? to : [to];
 
@@ -146,45 +138,14 @@ async function sendEmail(to: string | string[], subject: string, htmlBody: strin
   const validEmails = toAddresses.filter((e) => e && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
   if (validEmails.length === 0) return false;
 
-  // Generate unique Message-ID for deliverability
-  const messageId = `${crypto.randomUUID()}@portariax.com.br`;
-
-  // Build raw email with anti-spam headers
-  const boundary = `----=_Part_${crypto.randomUUID().replace(/-/g, "")}`;
-  const rawEmail = [
-    `From: ${FROM_NAME} <${FROM_EMAIL}>`,
-    `To: ${validEmails.join(", ")}`,
-    `Subject: =?UTF-8?B?${Buffer.from(subject).toString("base64")}?=`,
-    `Message-ID: <${messageId}>`,
-    `Date: ${new Date().toUTCString()}`,
-    `MIME-Version: 1.0`,
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
-    `X-Mailer: PortariaX/1.0`,
-    `X-Priority: 3`,
-    ``,
-    `--${boundary}`,
-    `Content-Type: text/plain; charset=UTF-8`,
-    `Content-Transfer-Encoding: base64`,
-    ``,
-    Buffer.from(htmlToPlainText(subject, htmlBody)).toString("base64"),
-    ``,
-    `--${boundary}`,
-    `Content-Type: text/html; charset=UTF-8`,
-    `Content-Transfer-Encoding: base64`,
-    ``,
-    Buffer.from(htmlBody).toString("base64"),
-    ``,
-    `--${boundary}--`,
-  ].join("\r\n");
-
   try {
-    await sesClient.send(
-      new SendRawEmailCommand({
-        Source: `${FROM_NAME} <${FROM_EMAIL}>`,
-        Destinations: validEmails,
-        RawMessage: { Data: new TextEncoder().encode(rawEmail) },
-      })
-    );
+    await transporter.sendMail({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: validEmails.join(", "),
+      subject,
+      text: htmlToPlainText(subject, htmlBody),
+      html: htmlBody,
+    });
     return true;
   } catch (err: any) {
     console.error(`[EMAIL] Erro ao enviar para ${validEmails.join(", ")}:`, err.message || err);
@@ -358,34 +319,6 @@ export async function emailVisitantePendente(data: {
   await sendEmail(email, `👤 Visitante aguardando autorização — ${condo}`, emailLayout("Visitante na Portaria", body));
 }
 
-/** Notify morador: visitor authorized/rejected */
-export async function emailVisitanteRespondido(data: {
-  condominioId: number;
-  bloco: string;
-  apartamento: string;
-  visitanteNome: string;
-  status: "liberado" | "recusado";
-}): Promise<void> {
-  const email = getMoradorEmailByUnit(data.condominioId, data.bloco, data.apartamento);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-  const isApproved = data.status === "liberado";
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">O visitante <strong>${data.visitanteNome}</strong> foi <strong>${isApproved ? "autorizado" : "recusado"}</strong>.</p>
-    ${alertBox(
-      isApproved
-        ? "✅ O visitante foi liberado para entrar no condomínio."
-        : "❌ A entrada do visitante foi negada.",
-      isApproved ? "success" : "danger"
-    )}
-  `;
-
-  const emoji = isApproved ? "✅" : "❌";
-  await sendEmail(email, `${emoji} Visitante ${data.status} — ${condo}`, emailLayout("Status do Visitante", body));
-}
-
 // ──────────────────────────────────────────
 // 3. DELIVERIES (Entregas iFood, etc.)
 // ──────────────────────────────────────────
@@ -418,106 +351,6 @@ export async function emailDeliveryRecebido(data: {
   `;
 
   await sendEmail(email, `🛵 Delivery recebido na portaria — ${condo}`, emailLayout("Delivery Recebido", body));
-}
-
-// ──────────────────────────────────────────
-// 4. VEÍCULOS
-// ──────────────────────────────────────────
-
-/** Notify morador: vehicle needs approval (registered by porteiro) */
-export async function emailVeiculoPendenteAprovacao(data: {
-  condominioId: number;
-  moradorId?: number;
-  bloco: string;
-  apartamento: string;
-  placa: string;
-  modelo?: string;
-  cor?: string;
-  motoristaNome?: string;
-  token: string;
-}): Promise<void> {
-  const email = data.moradorId
-    ? getMoradorEmail(data.moradorId)
-    : getMoradorEmailByUnit(data.condominioId, data.bloco, data.apartamento);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">A portaria do <strong>${condo}</strong> registrou um veículo que precisa da sua aprovação.</p>
-    ${infoTable(
-      infoRow("Placa", data.placa) +
-      infoRow("Modelo", data.modelo) +
-      infoRow("Cor", data.cor) +
-      infoRow("Motorista", data.motoristaNome) +
-      infoRow("Destino", `Bloco ${data.bloco} - Apto ${data.apartamento}`)
-    )}
-    ${actionButton("✅ Aprovar / ❌ Negar", `${APP_URL}/aprovar-veiculo/${data.token}`, "#16a34a")}
-  `;
-
-  await sendEmail(email, `🚗 Veículo aguardando aprovação — ${condo}`, emailLayout("Veículo na Portaria", body));
-}
-
-/** Notify morador: vehicle approved/denied */
-export async function emailVeiculoRespondido(data: {
-  condominioId: number;
-  moradorId?: number;
-  bloco: string;
-  apartamento: string;
-  placa: string;
-  status: "ativa" | "negada";
-}): Promise<void> {
-  const email = data.moradorId
-    ? getMoradorEmail(data.moradorId)
-    : getMoradorEmailByUnit(data.condominioId, data.bloco, data.apartamento);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-  const isApproved = data.status === "ativa";
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">O veículo de placa <strong>${data.placa}</strong> foi <strong>${isApproved ? "aprovado" : "negado"}</strong>.</p>
-    ${alertBox(
-      isApproved
-        ? "✅ O veículo foi autorizado a entrar no condomínio."
-        : "❌ A entrada do veículo foi negada.",
-      isApproved ? "success" : "danger"
-    )}
-  `;
-
-  const emoji = isApproved ? "✅" : "❌";
-  await sendEmail(email, `${emoji} Veículo ${isApproved ? "aprovado" : "negado"} — ${condo}`, emailLayout("Status do Veículo", body));
-}
-
-/** Notify morador: vehicle authorization was closed/cancelled */
-export async function emailVeiculoEncerrado(data: {
-  condominioId: number;
-  moradorId?: number;
-  bloco: string;
-  apartamento: string;
-  placa: string;
-  motivo?: string;
-}): Promise<void> {
-  const email = data.moradorId
-    ? getMoradorEmail(data.moradorId)
-    : getMoradorEmailByUnit(data.condominioId, data.bloco, data.apartamento);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-  const motivo = data.motivo || "encerrada pela portaria";
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">A autorização do veículo de placa <strong>${data.placa}</strong> para o <strong>Bloco ${data.bloco} - Apto ${data.apartamento}</strong> foi <strong>${motivo}</strong>.</p>
-    ${alertBox("⚠️ Se precisar, refaça sua liberação pelo aplicativo.", "warning")}
-    ${infoTable(
-      infoRow("Placa", data.placa) +
-      infoRow("Destino", `Bloco ${data.bloco} - Apto ${data.apartamento}`) +
-      infoRow("Motivo", motivo)
-    )}
-    ${actionButton("Acessar Portaria X", APP_URL, "#3b82f6")}
-  `;
-
-  await sendEmail(email, `⚠️ Liberação de veículo encerrada — ${condo}`, emailLayout("Liberação de Veículo Encerrada", body));
 }
 
 // ──────────────────────────────────────────
@@ -581,62 +414,6 @@ export async function emailBoasVindasSindico(data: {
 // ──────────────────────────────────────────
 // 6. PRÉ-AUTORIZAÇÕES
 // ──────────────────────────────────────────
-
-/** Notify morador: pre-authorized visitor arrived (entry confirmed) */
-export async function emailPreAuthEntradaConfirmada(data: {
-  condominioId: number;
-  moradorId: number;
-  moradorName: string;
-  visitanteNome: string;
-  bloco: string;
-  apartamento: string;
-}): Promise<void> {
-  const email = getMoradorEmail(data.moradorId);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">Olá <strong>${data.moradorName}</strong>,</p>
-    <p style="color:#475569;font-size:15px;">Seu visitante pré-autorizado chegou ao <strong>${condo}</strong>.</p>
-    ${infoTable(
-      infoRow("Visitante", data.visitanteNome) +
-      infoRow("Destino", `Bloco ${data.bloco} - Apto ${data.apartamento}`) +
-      infoRow("Horário", new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }))
-    )}
-    ${alertBox("✅ A entrada foi confirmada pela portaria.", "success")}
-  `;
-
-  await sendEmail(email, `✅ Visitante pré-autorizado chegou — ${condo}`, emailLayout("Visitante Chegou", body));
-}
-
-/** Notify morador: visitor completed self-registration */
-export async function emailPreAuthAutoCadastro(data: {
-  condominioId: number;
-  moradorId: number;
-  moradorName: string;
-  visitanteNome: string;
-  bloco: string;
-  apartamento: string;
-}): Promise<void> {
-  const email = getMoradorEmail(data.moradorId);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">Olá <strong>${data.moradorName}</strong>,</p>
-    <p style="color:#475569;font-size:15px;">O visitante <strong>${data.visitanteNome}</strong> completou o auto-cadastro da pré-autorização no <strong>${condo}</strong>.</p>
-    ${infoTable(
-      infoRow("Visitante", data.visitanteNome) +
-      infoRow("Destino", `Bloco ${data.bloco} - Apto ${data.apartamento}`)
-    )}
-    ${alertBox("O visitante preencheu seus dados e estará pronto para entrada quando chegar.", "info")}
-    ${actionButton("Ver Autorizações", APP_URL)}
-  `;
-
-  await sendEmail(email, `📋 Visitante completou auto-cadastro — ${condo}`, emailLayout("Auto-Cadastro Completo", body));
-}
 
 // ──────────────────────────────────────────
 // 7. RONDAS
@@ -771,35 +548,6 @@ export async function emailContaCriada(data: {
   `;
 
   await sendEmail(data.email, `🏢 Sua conta no Portaria X — ${data.condominioNome}`, emailLayout("Conta Criada", body));
-}
-
-// ──────────────────────────────────────────
-// 11. CÂMERAS — Offline alert
-// ──────────────────────────────────────────
-
-/** Notify sindico: camera went offline */
-export async function emailCameraOffline(data: {
-  condominioId: number;
-  cameraNome: string;
-  cameraSetor: string;
-}): Promise<void> {
-  const email = getSindicoEmail(data.condominioId);
-  if (!email) return;
-
-  const condo = getCondominioName(data.condominioId);
-
-  const body = `
-    <p style="color:#475569;font-size:15px;">Uma câmera do <strong>${condo}</strong> está <strong style="color:#ef4444;">offline</strong>.</p>
-    ${infoTable(
-      infoRow("Câmera", data.cameraNome) +
-      infoRow("Setor", data.cameraSetor) +
-      infoRow("Horário", new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }))
-    )}
-    ${alertBox("📹 Verifique a conexão e o estado da câmera.", "danger")}
-    ${actionButton("Ver Câmeras", APP_URL)}
-  `;
-
-  await sendEmail(email, `📹 Câmera offline — ${condo}`, emailLayout("Câmera Offline", body));
 }
 
 // ──────────────────────────────────────────
