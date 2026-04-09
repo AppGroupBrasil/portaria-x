@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import TutorialButton, { FlowPortaria, FlowMorador, TSection, TStep, TBullet } from "@/components/TutorialButton";
@@ -20,12 +20,12 @@ import {
   Hourglass,
   Ban,
   Copy,
-  ExternalLink,
   Loader2,
   FileText,
   Download,
   Settings,
   KeyRound,
+  ShieldCheck,
 } from "lucide-react";
 import PlateReader from "@/components/PlateReader";
 import CameraPlateReader from "@/components/CameraPlateReader";
@@ -37,10 +37,94 @@ import { apiFetch } from "@/lib/api";
 import { getConfigBoolean } from "@/lib/featureFlags";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
-import { ShieldCheck } from "lucide-react";
 
 const API = "/api/vehicle-authorizations";
 const API_BASE = "/api";
+
+function appendVehicleDetail(lines: string[], label: string, value: string | null | undefined) {
+  if (value?.trim()) {
+    lines.push(`${label}: ${value}`);
+  }
+}
+
+function buildVehicleApprovalMessage(placa: string, modelo: string, cor: string, motorista: string, approvalUrl: string) {
+  const lines = [
+    "*Solicitacao de Acesso de Veiculo*",
+    "",
+    "A portaria esta solicitando autorizacao para o acesso do seguinte veiculo:",
+    "",
+    `Placa: *${placa.toUpperCase()}*`,
+  ];
+
+  appendVehicleDetail(lines, "Modelo", modelo);
+  appendVehicleDetail(lines, "Cor", cor);
+  appendVehicleDetail(lines, "Motorista", motorista);
+
+  lines.push(
+    "",
+    "Por favor, clique no link abaixo para *aprovar* ou *negar* o acesso:",
+    approvalUrl,
+  );
+
+  return lines.join("\n");
+}
+
+function buildVehicleExitMessage(vehicle: VehicleAuth) {
+  const lines = [
+    "*Solicitacao de Saida de Veiculo*",
+    "",
+    `Placa: *${vehicle.placa}*`,
+  ];
+
+  appendVehicleDetail(lines, "Modelo", vehicle.modelo);
+  appendVehicleDetail(lines, "Cor", vehicle.cor);
+  appendVehicleDetail(lines, "Motorista", vehicle.motorista_nome);
+
+  lines.push(
+    "",
+    "O veiculo acima esta solicitando autorizacao para *sair* do condominio.",
+    `O veiculo placa *${vehicle.placa}* esta autorizado a sair?`,
+  );
+
+  return lines.join("\n");
+}
+
+function getTabButtonStyle(isSelected: boolean, isDark: boolean) {
+  const activeBackground = isDark ? "#fff" : "#003580";
+  const inactiveBackground = isDark ? "rgba(255,255,255,0.15)" : "#e2e8f0";
+  const activeColor = isDark ? "#0284c7" : "#fff";
+  const inactiveColor = isDark ? "rgba(255,255,255,0.8)" : "#475569";
+
+  return {
+    padding: "6px 16px",
+    borderRadius: "20px",
+    border: "none",
+    background: isSelected ? activeBackground : inactiveBackground,
+    color: isSelected ? activeColor : inactiveColor,
+    fontWeight: 600,
+    fontSize: "12px",
+    cursor: "pointer",
+  } as const;
+}
+
+function getConfigCardStyle(
+  enabled: boolean,
+  isDark: boolean,
+  activeLight: string,
+  activeDark: string,
+  activeBorderLight: string,
+  activeBorderDark: string,
+) {
+  const activeBackground = isDark ? activeDark : activeLight;
+  const inactiveBackground = isDark ? "rgba(255,255,255,0.05)" : "#f8fafc";
+  const activeBorder = `1px solid ${isDark ? activeBorderDark : activeBorderLight}`;
+  const inactiveBorder = `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`;
+
+  return {
+    background: enabled ? activeBackground : inactiveBackground,
+    border: enabled ? activeBorder : inactiveBorder,
+  };
+}
 
 interface Block {
   id: number;
@@ -143,7 +227,7 @@ export default function VeiculosPorteiro() {
 
   const fetchVehicles = async () => {
     try {
-      const url = filter !== "todas" ? `${API}?status=${filter}` : API;
+      const url = filter === "todas" ? API : `${API}?status=${filter}`;
       const res = await apiFetch(url);
       if (res.ok) setVehicles(await res.json());
     } catch (err) {
@@ -177,6 +261,24 @@ export default function VeiculosPorteiro() {
       } catch {}
     })();
   }, []);
+
+  useEffect(() => {
+    if (!showSettings && !whatsappModal?.show) return undefined;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+
+      if (whatsappModal?.show) {
+        setWhatsappModal(null);
+        return;
+      }
+
+      setShowSettings(false);
+    };
+
+    globalThis.addEventListener("keydown", handleEscape);
+    return () => globalThis.removeEventListener("keydown", handleEscape);
+  }, [showSettings, whatsappModal]);
 
   const toggleUniquePlate = async () => {
     const newVal = !uniquePlateEnabled;
@@ -376,26 +478,25 @@ export default function VeiculosPorteiro() {
       const approvalUrl = `${APP_ORIGIN}/veiculo/aprovar/${data.token}`;
       const cleanPhone = phone ? phone.replaceAll(/\D/g, "") : "";
       const fullPhone = cleanPhone && !cleanPhone.startsWith("55") ? `55${cleanPhone}` : cleanPhone;
-      const msg =
-        `*Solicitacao de Acesso de Veiculo*\n\n` +
-        `A portaria esta solicitando autorizacao para o acesso do seguinte veiculo:\n\n` +
-        `Placa: *${placa.toUpperCase()}*\n` +
-        `${modelo ? `Modelo: ${modelo}\n` : ""}` +
-        `${cor ? `Cor: ${cor}\n` : ""}` +
-        `${motorista ? `Motorista: ${motorista}\n` : ""}` +
-        `\nPor favor, clique no link abaixo para *aprovar* ou *negar* o acesso:\n` +
-        `${approvalUrl}`;
+      const msg = buildVehicleApprovalMessage(placa, modelo, cor, motorista, approvalUrl);
       const waUrl = fullPhone
         ? `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`
         : `https://wa.me/?text=${encodeURIComponent(msg)}`;
 
-      // Auto-open WhatsApp
-      globalThis.open(waUrl, "_blank");
+      setWhatsappModal({
+        show: true,
+        waUrl,
+        approvalUrl,
+        moradorName: data.morador_name || "Morador",
+        moradorPhone: fullPhone,
+        placaRegistrada: placa.toUpperCase(),
+      });
 
       resetForm();
       setShowForm(false);
       fetchVehicles();
     } catch (err: any) {
+      console.error(err);
       setFormError("Erro de conexão.");
     } finally {
       setSaving(false);
@@ -447,14 +548,7 @@ export default function VeiculosPorteiro() {
     if (!v.morador_phone) return null;
     const phone = v.morador_phone.replaceAll(/\D/g, "");
     const fullPhone = phone.startsWith("55") ? phone : `55${phone}`;
-    const msg =
-      `*Solicitacao de Saida de Veiculo*\n\n` +
-      `Placa: *${v.placa}*\n` +
-      `${v.modelo ? `Modelo: ${v.modelo}\n` : ""}` +
-      `${v.cor ? `Cor: ${v.cor}\n` : ""}` +
-      `${v.motorista_nome ? `Motorista: ${v.motorista_nome}\n` : ""}` +
-      `\nO veiculo acima esta solicitando autorizacao para *sair* do condominio.\n` +
-      `O veiculo placa *${v.placa}* esta autorizado a sair?`;
+    const msg = buildVehicleExitMessage(v);
     return `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
   };
 
@@ -603,16 +697,7 @@ export default function VeiculosPorteiro() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              style={{
-                padding: "6px 16px", borderRadius: "20px", border: "none",
-                background: filter === tab.key
-                  ? (isDark ? "#fff" : "#003580")
-                  : (isDark ? "rgba(255,255,255,0.15)" : "#e2e8f0"),
-                color: filter === tab.key
-                  ? (isDark ? "#0284c7" : "#fff")
-                  : (isDark ? "rgba(255,255,255,0.8)" : "#475569"),
-                fontWeight: 600, fontSize: "12px", cursor: "pointer",
-              }}
+              style={getTabButtonStyle(filter === tab.key, isDark)}
             >
               {tab.label}
             </button>
@@ -650,10 +735,11 @@ export default function VeiculosPorteiro() {
           display: "flex", alignItems: "center", justifyContent: "center",
           padding: "20px", overflowY: "auto",
         }}
-          onClick={() => setShowSettings(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Configurações de veículos"
         >
           <div
-            onClick={(e) => e.stopPropagation()}
             style={{
               background: isDark ? "#1e293b" : "#fff",
               borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "400px",
@@ -680,12 +766,7 @@ export default function VeiculosPorteiro() {
             <div style={{
               display: "flex", alignItems: "center", gap: "12px",
               padding: "14px 16px", borderRadius: "12px",
-              background: uniquePlateEnabled
-                ? (isDark ? "rgba(34,197,94,0.12)" : "#f0fdf4")
-                : (isDark ? "rgba(255,255,255,0.05)" : "#f8fafc"),
-              border: uniquePlateEnabled
-                ? "1px solid " + (isDark ? "rgba(34,197,94,0.3)" : "#bbf7d0")
-                : "1px solid " + (isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"),
+              ...getConfigCardStyle(uniquePlateEnabled, isDark, "#f0fdf4", "rgba(34,197,94,0.12)", "#bbf7d0", "rgba(34,197,94,0.3)"),
             }}>
               <ShieldCheck className="w-5 h-5" style={{ color: uniquePlateEnabled ? "#16a34a" : "#94a3b8", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
@@ -720,12 +801,7 @@ export default function VeiculosPorteiro() {
             <div style={{
               display: "flex", alignItems: "center", gap: "12px",
               padding: "14px 16px", borderRadius: "12px",
-              background: autoCancelTime
-                ? (isDark ? "rgba(234,88,12,0.12)" : "#fff7ed")
-                : (isDark ? "rgba(255,255,255,0.05)" : "#f8fafc"),
-              border: autoCancelTime
-                ? "1px solid " + (isDark ? "rgba(234,88,12,0.3)" : "#fed7aa")
-                : "1px solid " + (isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"),
+              ...getConfigCardStyle(Boolean(autoCancelTime), isDark, "#fff7ed", "rgba(234,88,12,0.12)", "#fed7aa", "rgba(234,88,12,0.3)"),
             }}>
               <Clock className="w-5 h-5" style={{ color: autoCancelTime ? "#ea580c" : "#94a3b8", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
@@ -781,12 +857,7 @@ export default function VeiculosPorteiro() {
             <div style={{
               display: "flex", alignItems: "center", gap: "12px",
               padding: "14px 16px", borderRadius: "12px",
-              background: limitPerAptEnabled
-                ? (isDark ? "rgba(59,130,246,0.12)" : "#eff6ff")
-                : (isDark ? "rgba(255,255,255,0.05)" : "#f8fafc"),
-              border: limitPerAptEnabled
-                ? "1px solid " + (isDark ? "rgba(59,130,246,0.3)" : "#bfdbfe")
-                : "1px solid " + (isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"),
+              ...getConfigCardStyle(limitPerAptEnabled, isDark, "#eff6ff", "rgba(59,130,246,0.12)", "#bfdbfe", "rgba(59,130,246,0.3)"),
             }}>
               <Car className="w-5 h-5" style={{ color: limitPerAptEnabled ? "#2563eb" : "#94a3b8", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
@@ -883,62 +954,76 @@ export default function VeiculosPorteiro() {
                 { name: "Bloco", required: true, fixed: true },
                 { name: "Apartamento", required: true, fixed: true },
                 { name: "Observação", required: reqObservacao, fixed: false, key: "vehicle_require_observacao", setter: setReqObservacao, state: reqObservacao },
-              ].map((field) => (
-                <div
+              ].map((field) => {
+                const rowBackground = field.required
+                  ? (isDark ? "rgba(217,119,6,0.15)" : "#fffbeb")
+                  : (isDark ? "rgba(255,255,255,0.05)" : "#f8fafc");
+                const rowBorder = field.required
+                  ? `1px solid ${isDark ? "rgba(217,119,6,0.3)" : "#fde68a"}`
+                  : `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`;
+                const labelColor = field.required
+                  ? (isDark ? "#fbbf24" : "#92400e")
+                  : (isDark ? "#cbd5e1" : "#475569");
+                const statusLabel = field.fixed && field.required
+                  ? "Sempre obrigatório"
+                  : field.required
+                  ? "Obrigatório ✓"
+                  : "Opcional";
+                const statusLabelStyle = field.required
+                  ? {
+                      marginLeft: "auto",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: "#d97706",
+                      background: isDark ? "rgba(217,119,6,0.2)" : "#fef3c7",
+                      padding: "2px 8px",
+                      borderRadius: "6px",
+                    }
+                  : {
+                      marginLeft: "auto",
+                      fontSize: "11px",
+                      fontWeight: 500,
+                      color: isDark ? "#64748b" : "#94a3b8",
+                    };
+
+                return (
+                <button
+                  type="button"
                   key={field.name}
-                  onClick={() => !field.fixed && field.key && toggleRequiredField(field.key, field.state!, field.setter!)}
+                  onClick={() => {
+                    if (!field.fixed && field.key && field.setter) {
+                      toggleRequiredField(field.key, Boolean(field.state), field.setter);
+                    }
+                  }}
+                  disabled={field.fixed}
                   style={{
                     display: "flex", alignItems: "center", gap: "10px",
                     padding: "10px 14px", borderRadius: "10px",
                     cursor: field.fixed ? "default" : "pointer",
-                    background: field.required
-                      ? (isDark ? "rgba(217,119,6,0.15)" : "#fffbeb")
-                      : (isDark ? "rgba(255,255,255,0.05)" : "#f8fafc"),
-                    border: field.required
-                      ? "1px solid " + (isDark ? "rgba(217,119,6,0.3)" : "#fde68a")
-                      : "1px solid " + (isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"),
+                    background: rowBackground,
+                    border: rowBorder,
                     transition: "all 0.2s",
+                    width: "100%",
+                    textAlign: "left",
+                    opacity: field.fixed ? 1 : undefined,
                   }}
                 >
                   {field.required ? (
                     <KeyRound className="w-4 h-4" style={{ color: "#d97706", flexShrink: 0 }} />
                   ) : (
-                    <div style={{ width: "16px", height: "16px", borderRadius: "4px", flexShrink: 0, border: "2px solid " + (isDark ? "#475569" : "#cbd5e1") }} />
+                    <span style={{ width: "16px", height: "16px", borderRadius: "4px", flexShrink: 0, border: `2px solid ${isDark ? "#475569" : "#cbd5e1"}`, display: "inline-block" }} />
                   )}
                   <span style={{
                     fontSize: "14px", fontWeight: field.required ? 700 : 500,
-                    color: field.required
-                      ? (isDark ? "#fbbf24" : "#92400e")
-                      : (isDark ? "#cbd5e1" : "#475569"),
+                    color: labelColor,
                   }}>
                     {field.name}
                   </span>
-                  {field.fixed && field.required ? (
-                    <span style={{
-                      marginLeft: "auto", fontSize: "11px", fontWeight: 700,
-                      color: "#d97706", background: isDark ? "rgba(217,119,6,0.2)" : "#fef3c7",
-                      padding: "2px 8px", borderRadius: "6px",
-                    }}>
-                      Sempre obrigatório
-                    </span>
-                  ) : field.required ? (
-                    <span style={{
-                      marginLeft: "auto", fontSize: "11px", fontWeight: 700,
-                      color: "#d97706", background: isDark ? "rgba(217,119,6,0.2)" : "#fef3c7",
-                      padding: "2px 8px", borderRadius: "6px",
-                    }}>
-                      Obrigatório ✓
-                    </span>
-                  ) : (
-                    <span style={{
-                      marginLeft: "auto", fontSize: "11px", fontWeight: 500,
-                      color: isDark ? "#64748b" : "#94a3b8",
-                    }}>
-                      Opcional
-                    </span>
-                  )}
-                </div>
-              ))}
+                  <span style={statusLabelStyle}>
+                    {statusLabel}
+                  </span>
+                </button>
+              );})}
             </div>
           </div>
         </div>
@@ -1536,7 +1621,7 @@ export default function VeiculosPorteiro() {
         <div style={{
           position: "fixed", inset: 0, zIndex: 60, background: "rgba(0,0,0,0.5)",
           display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
-        }}>
+        }} role="dialog" aria-modal="true" aria-label="Notificação via WhatsApp">
           <div style={{
             background: "#fff", borderRadius: "20px", padding: "24px",
             width: "100%", maxWidth: "400px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
@@ -1555,7 +1640,7 @@ export default function VeiculosPorteiro() {
                 </div>
                 <div>
                   <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>Cadastro Realizado!</h3>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>Envie a notificação via WhatsApp</p>
+                  <p style={{ fontSize: "12px", color: "#64748b" }}>Revise o link e envie a notificação</p>
                 </div>
               </div>
               <button onClick={() => setWhatsappModal(null)} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
@@ -1575,6 +1660,11 @@ export default function VeiculosPorteiro() {
               <p style={{ fontSize: "12px", color: "#16a34a", marginTop: "4px" }}>
                 Aguardando aprovação de <strong>{whatsappModal.moradorName}</strong>
               </p>
+              {whatsappModal.moradorPhone && (
+                <p style={{ fontSize: "11px", color: "#15803d", marginTop: "4px" }}>
+                  WhatsApp: {whatsappModal.moradorPhone}
+                </p>
+              )}
             </div>
 
             {/* Approval link */}
@@ -1607,6 +1697,18 @@ export default function VeiculosPorteiro() {
 
             {/* Buttons */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <button
+                onClick={() => { navigator.clipboard.writeText(whatsappModal.approvalUrl); }}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
+                  padding: "12px", borderRadius: "12px", background: "#eef2ff",
+                  border: "1px solid #c7d2fe", color: "#4338ca", fontWeight: 700, fontSize: "14px",
+                  cursor: "pointer", width: "100%",
+                }}
+              >
+                <Copy className="w-4 h-4" />
+                Copiar link de aprovação
+              </button>
               <button
                 onClick={() => { globalThis.open(whatsappModal.waUrl, "_blank"); }}
                 style={{

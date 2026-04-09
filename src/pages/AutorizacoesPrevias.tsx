@@ -48,13 +48,41 @@ interface PreAuth {
   created_at: string;
 }
 
-interface FaceDescriptorEntry {
-  id: number;
-  visitante_nome: string;
-  face_descriptor: number[];
-}
-
 const API = "/api";
+
+type FaceMatchResult = { id: number; nome: string; distance: number } | null;
+
+function getFaceScannerBanner(match: FaceMatchResult, noMatch: boolean, scanning: boolean) {
+  if (match) {
+    return {
+      backgroundColor: "rgba(22, 163, 74, 0.9)",
+      icon: <CheckCircle2 className="w-4 h-4" />,
+      label: `Visitante identificado: ${match.nome}`,
+    };
+  }
+
+  if (noMatch) {
+    return {
+      backgroundColor: "rgba(220, 38, 38, 0.9)",
+      icon: <XCircle className="w-4 h-4" />,
+      label: "Nenhuma correspondência encontrada",
+    };
+  }
+
+  if (scanning) {
+    return {
+      backgroundColor: "rgba(99, 102, 241, 0.85)",
+      icon: <Loader2 className="w-3.5 h-3.5 animate-spin" />,
+      label: "Escaneando rosto... Posicione o visitante na câmera",
+    };
+  }
+
+  return {
+    backgroundColor: "rgba(99, 102, 241, 0.85)",
+    icon: <Camera className="w-3.5 h-3.5" />,
+    label: "Iniciando câmera...",
+  };
+}
 
 export default function AutorizacoesPrevias() {
   const { isDark, p } = useTheme();
@@ -70,13 +98,28 @@ export default function AutorizacoesPrevias() {
   // Face recognition matching (server-side)
   const [showFaceScanner, setShowFaceScanner] = useState(false);
   const [faceScanning, setFaceScanning] = useState(false);
-  const [faceLoading, setFaceLoading] = useState(false);
-  const [faceMatch, setFaceMatch] = useState<{ id: number; nome: string; distance: number } | null>(null);
+  const [faceMatch, setFaceMatch] = useState<FaceMatchResult>(null);
   const [faceNoMatch, setFaceNoMatch] = useState(false);
   const scanVideoRef = useRef<HTMLVideoElement>(null);
   const scanCanvasRef = useRef<HTMLCanvasElement>(null);
   const scanStreamRef = useRef<MediaStream | null>(null);
   const scanIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const scanTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearFaceScannerTimeout = () => {
+    if (scanTimeoutRef.current) {
+      clearTimeout(scanTimeoutRef.current);
+      scanTimeoutRef.current = null;
+    }
+  };
+
+  const scheduleFaceScannerClose = (delayMs: number) => {
+    clearFaceScannerTimeout();
+    scanTimeoutRef.current = setTimeout(() => {
+      stopFaceScannerStream();
+      setShowFaceScanner(false);
+    }, delayMs);
+  };
 
   const fetchAuths = async () => {
     try {
@@ -118,6 +161,7 @@ export default function AutorizacoesPrevias() {
 
   // ─── Face Recognition Functions (server-side) ────────────────────
   const startFaceScanner = async () => {
+    clearFaceScannerTimeout();
     setShowFaceScanner(true);
     setFaceMatch(null);
     setFaceNoMatch(false);
@@ -185,21 +229,15 @@ export default function AutorizacoesPrevias() {
               nome: data.preAuth.visitante_nome,
               distance: data.distance,
             });
-            setTimeout(() => {
-              stopFaceScannerStream();
-              setShowFaceScanner(false);
-            }, 1500);
-          } else if (data.error && data.error.includes("rosto")) {
+            scheduleFaceScannerClose(1500);
+          } else if (data.error?.includes("rosto")) {
             // Nenhum rosto detectado, continuar
             startFaceCapture();
           } else {
             // Não encontrou match
             setFaceScanning(false);
             setFaceNoMatch(true);
-            setTimeout(() => {
-              stopFaceScannerStream();
-              setShowFaceScanner(false);
-            }, 2000);
+            scheduleFaceScannerClose(2000);
           }
         } catch (err) {
           console.error("Face matching error:", err);
@@ -209,16 +247,14 @@ export default function AutorizacoesPrevias() {
     }, 500);
 
     // Timeout after 20s
-    setTimeout(() => {
+    clearFaceScannerTimeout();
+    scanTimeoutRef.current = setTimeout(() => {
       if (scanIntervalRef.current) {
         clearInterval(scanIntervalRef.current);
         scanIntervalRef.current = null;
         setFaceScanning(false);
         setFaceNoMatch(true);
-        setTimeout(() => {
-          stopFaceScannerStream();
-          setShowFaceScanner(false);
-        }, 2000);
+        scheduleFaceScannerClose(2000);
       }
     }, 20000);
   };
@@ -232,6 +268,7 @@ export default function AutorizacoesPrevias() {
       scanStreamRef.current.getTracks().forEach((t) => t.stop());
       scanStreamRef.current = null;
     }
+    clearFaceScannerTimeout();
     setFaceScanning(false);
   };
 
@@ -321,6 +358,91 @@ export default function AutorizacoesPrevias() {
 
   const activeAuths = auths.filter((a) => a.status === "ativa" && !isExpired(a));
   const otherAuths = auths.filter((a) => a.status !== "ativa" || isExpired(a));
+  const faceScannerBanner = getFaceScannerBanner(faceMatch, faceNoMatch, faceScanning);
+  const recognitionStrength = faceMatch && (1 - faceMatch.distance) >= 0.55 ? "✅ Excelente" : "✔ Suficiente";
+  let listContent: React.ReactNode;
+
+  if (loading) {
+    listContent = (
+      <div className="flex justify-center py-12">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  } else if (auths.length === 0) {
+    listContent = (
+      <div className="text-center py-16">
+        <ShieldCheck className="w-12 h-12 mx-auto mb-3" style={{ color: p.textDim }} />
+        <p className="text-sm" style={{ color: p.text }}>Nenhuma autorização encontrada</p>
+        <p className="text-xs mt-1" style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b" }}>
+          As autorizações são criadas pelos moradores
+        </p>
+      </div>
+    );
+  } else {
+    listContent = (
+      <>
+        {activeAuths.length > 0 && (
+          <div className="mb-4">
+            <h2 className="text-xs font-bold text-foreground mb-2 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#16a34a" }} />
+              AUTORIZAÇÕES ATIVAS ({activeAuths.length})
+            </h2>
+            <div className="flex flex-col gap-4">
+              {activeAuths.map((a) => (
+                <AuthCard
+                  key={a.id}
+                  auth={a}
+                  isWithinSchedule={isWithinSchedule(a)}
+                  confirming={confirming === a.id}
+                  onConfirm={() => handleConfirmEntry(a)}
+                  formatDate={formatDate}
+                  highlighted={faceMatch?.id === a.id}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {otherAuths.length > 0 && filter !== "ativa" && (
+          <div>
+            <h2 className="text-xs font-bold text-muted-foreground mb-2">HISTÓRICO</h2>
+            <div className="space-y-2">
+              {otherAuths.map((a) => {
+                const st = statusStyle(a.status);
+                return (
+                  <div
+                    key={a.id}
+                    className="rounded-xl border border-border"
+                    style={{ padding: "12px 14px", opacity: 0.7 }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{a.visitante_nome}</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {a.morador_name} · {a.bloco} Apt {a.apartamento} · {formatDate(a.data_inicio)}
+                        </p>
+                      </div>
+                      <span
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                        style={{ color: st.color, backgroundColor: `${st.color}15` }}
+                      >
+                        {st.label}
+                      </span>
+                    </div>
+                    {a.status === "utilizada" && a.entrada_confirmada_at && (
+                      <p className="text-[10px] mt-1" style={{ color: "#2d3354" }}>
+                        Entrada: {new Date(a.entrada_confirmada_at).toLocaleString("pt-BR")}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
@@ -393,44 +515,10 @@ export default function AutorizacoesPrevias() {
             />
             <div
               className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-2 py-2.5 text-white text-xs font-bold"
-              style={{
-                backgroundColor: faceMatch
-                  ? "rgba(22, 163, 74, 0.9)"
-                  : faceNoMatch
-                  ? "rgba(220, 38, 38, 0.9)"
-                  : faceLoading
-                  ? "rgba(99, 102, 241, 0.85)"
-                  : faceScanning
-                  ? "rgba(99, 102, 241, 0.85)"
-                  : "rgba(99, 102, 241, 0.85)",
-              }}
+              style={{ backgroundColor: faceScannerBanner.backgroundColor }}
             >
-              {faceLoading ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Carregando reconhecimento facial...
-                </>
-              ) : faceMatch ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4" />
-                  Visitante identificado: {faceMatch.nome}
-                </>
-              ) : faceNoMatch ? (
-                <>
-                  <XCircle className="w-4 h-4" />
-                  Nenhuma correspondência encontrada
-                </>
-              ) : faceScanning ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Escaneando rosto... Posicione o visitante na câmera
-                </>
-              ) : (
-                <>
-                  <Camera className="w-3.5 h-3.5" />
-                  Iniciando câmera...
-                </>
-              )}
+              {faceScannerBanner.icon}
+              {faceScannerBanner.label}
             </div>
             <button
               onClick={stopFaceScanner}
@@ -452,7 +540,7 @@ export default function AutorizacoesPrevias() {
           <div className="flex-1">
             <p className="text-sm font-bold" style={{ color: "#16a34a" }}>Visitante Identificado por Biometria</p>
             <p className="text-xs text-muted-foreground">
-              <strong>{faceMatch.nome}</strong> — Reconhecimento: {(1 - faceMatch.distance) >= 0.55 ? "✅ Excelente" : "✔ Suficiente"}
+              <strong>{faceMatch.nome}</strong> — Reconhecimento: {recognitionStrength}
             </p>
           </div>
           <button onClick={() => setFaceMatch(null)} className="text-xs underline" style={{ color: "#16a34a" }}>
@@ -547,83 +635,7 @@ export default function AutorizacoesPrevias() {
 
       {/* List */}
       <main className="flex-1 overflow-y-auto" style={{ padding: "8px 24px 100px" }}>
-        {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : auths.length === 0 ? (
-          <div className="text-center py-16">
-            <ShieldCheck className="w-12 h-12 mx-auto mb-3" style={{ color: p.textDim }} />
-            <p className="text-sm" style={{ color: p.text }}>Nenhuma autorização encontrada</p>
-            <p className="text-xs mt-1" style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b" }}>
-              As autorizações são criadas pelos moradores
-            </p>
-          </div>
-        ) : (
-          <>
-            {/* Active authorizations */}
-            {activeAuths.length > 0 && (
-              <div className="mb-4">
-                <h2 className="text-xs font-bold text-foreground mb-2 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#16a34a" }} />
-                  AUTORIZAÇÕES ATIVAS ({activeAuths.length})
-                </h2>
-                <div className="flex flex-col gap-4">
-                  {activeAuths.map((a) => (
-                    <AuthCard
-                      key={a.id}
-                      auth={a}
-                      isWithinSchedule={isWithinSchedule(a)}
-                      confirming={confirming === a.id}
-                      onConfirm={() => handleConfirmEntry(a)}
-                      formatDate={formatDate}
-                      highlighted={faceMatch?.id === a.id}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Other authorizations */}
-            {otherAuths.length > 0 && filter !== "ativa" && (
-              <div>
-                <h2 className="text-xs font-bold text-muted-foreground mb-2">HISTÓRICO</h2>
-                <div className="space-y-2">
-                  {otherAuths.map((a) => {
-                    const st = statusStyle(a.status);
-                    return (
-                      <div
-                        key={a.id}
-                        className="rounded-xl border border-border"
-                        style={{ padding: "12px 14px", opacity: 0.7 }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-medium text-foreground">{a.visitante_nome}</p>
-                            <p className="text-[10px] text-muted-foreground">
-                              {a.morador_name} · {a.bloco} Apt {a.apartamento} · {formatDate(a.data_inicio)}
-                            </p>
-                          </div>
-                          <span
-                            className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                            style={{ color: st.color, backgroundColor: `${st.color}15` }}
-                          >
-                            {st.label}
-                          </span>
-                        </div>
-                        {a.status === "utilizada" && a.entrada_confirmada_at && (
-                          <p className="text-[10px] mt-1" style={{ color: "#2d3354" }}>
-                            Entrada: {new Date(a.entrada_confirmada_at).toLocaleString("pt-BR")}
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </>
-        )}
+        {listContent}
       </main>
     </div>
   );
@@ -637,20 +649,29 @@ function AuthCard({
   onConfirm,
   formatDate,
   highlighted,
-}: {
+}: Readonly<{
   auth: PreAuth;
   isWithinSchedule: boolean;
   confirming: boolean;
   onConfirm: () => void;
   formatDate: (d: string) => string;
   highlighted?: boolean;
-}) {
+}>) {
+  const cardBorder = highlighted || isWithinSchedule ? "2px solid #16a34a" : "2px solid #e5e7eb";
+  let cardBackground = "#fff";
+
+  if (highlighted) {
+    cardBackground = "#dcfce7";
+  } else if (isWithinSchedule) {
+    cardBackground = "#f0fdf4";
+  }
+
   return (
     <div
       className={`rounded-xl overflow-hidden ${highlighted ? "ring-4 ring-green-400 ring-offset-2" : ""}`}
       style={{
-        border: highlighted ? "2px solid #16a34a" : isWithinSchedule ? "2px solid #16a34a" : "2px solid #e5e7eb",
-        backgroundColor: highlighted ? "#dcfce7" : isWithinSchedule ? "#f0fdf4" : "#fff",
+        border: cardBorder,
+        backgroundColor: cardBackground,
       }}
     >
       {/* Top bar */}

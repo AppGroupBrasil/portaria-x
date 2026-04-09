@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import {
   Shield, UserPlus, Car, Package, Truck, BookOpen, DoorOpen, Camera,
   ShieldCheck, Users, Building2, ChevronRight, Check, Star,
-  ArrowRight, Phone, MessageCircle, Zap, Lock, Eye, Fingerprint,
+  ArrowRight, MessageCircle, Zap, Lock, Eye, Fingerprint,
   Bell, QrCode, FileText, Wifi, Sun, Moon, Code2,
   Monitor, Route, ScanLine, BarChart3, Cog, Navigation,
-  Cpu, Signal, Globe, Wrench, Play,
+  Cpu, Signal, Globe, Wrench, Play, Download,
 } from "lucide-react";
 import LandingTutorialModal from "@/components/LandingTutorialModal";
 import { BRANDS, INTEGRATION_LABELS } from "@/lib/deviceLibrary";
@@ -59,6 +59,11 @@ const themes = {
 } as const;
 
 type ThemeColors = (typeof themes)[keyof typeof themes];
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
 
 /* ─── FAQ data ─── */
 const FAQS = [
@@ -485,6 +490,32 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
 }
 
 function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installing, setInstalling] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+
+    globalThis.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => globalThis.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!installPrompt) {
+      alert("Se o navegador não mostrar a instalação automática, abra o menu do navegador e escolha 'Instalar app' ou 'Adicionar à tela inicial'.");
+      return;
+    }
+
+    setInstalling(true);
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+    setInstalling(false);
+  };
+
   return (
     <section style={{ background: mode === "dark" ? "#ffffff" : "#003580", padding: "60px 24px", transition: "background 0.4s" }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "40px" }}>
@@ -509,8 +540,30 @@ function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
             <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.07l2.834 1.639a1 1 0 0 1 0 1.448l-2.834 1.639-2.532-2.532 2.532-2.194zM5.864 2.658L16.8 8.99l-2.302 2.302-8.635-8.635z"/></svg>
           </div>
           <div style={{ textAlign: "center" }}>
-            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", color: mode === "dark" ? "#64748b" : "rgba(255,255,255,0.7)", textTransform: "uppercase", marginBottom: "2px" }}>DISPONÍVEL NO</p>
-            <p style={{ fontSize: "16px", fontWeight: 700, color: mode === "dark" ? "#003580" : "#ffffff" }}>Google Play</p>
+            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", color: mode === "dark" ? "#64748b" : "rgba(255,255,255,0.7)", textTransform: "uppercase", marginBottom: "6px" }}>INSTALAR APP</p>
+            <button
+              onClick={handleInstallApp}
+              disabled={installing}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                minWidth: "170px",
+                padding: "12px 20px",
+                borderRadius: "12px",
+                border: `2px solid ${mode === "dark" ? "#16a34a" : "#ffffff"}`,
+                background: mode === "dark" ? "#16a34a" : "rgba(255,255,255,0.12)",
+                color: "#ffffff",
+                fontSize: "15px",
+                fontWeight: 800,
+                cursor: installing ? "wait" : "pointer",
+                boxShadow: "0 8px 24px rgba(34,197,94,0.24)",
+              }}
+            >
+              <Download style={{ width: "16px", height: "16px" }} />
+              {installing ? "Instalando..." : "Instalar app"}
+            </button>
           </div>
         </div>
 
@@ -1288,65 +1341,6 @@ function AppsSection() {
             </div>
             <span style={{ fontWeight: 700, fontSize: "14px", color: "#003580" }}>Manutenção X</span>
             <span style={{ fontSize: "12px", color: "#336699" }}>manutencaox.com.br</span>
-          </a>
-        </div>
-
-        {/* ─── SEJA NOSSO SÓCIO ─── */}
-        <div style={{
-          marginTop: "48px", padding: "48px 32px", borderRadius: "20px",
-          background: "linear-gradient(135deg, #001533 0%, #002a66 40%, #003580 70%, #004aad 100%)",
-          textAlign: "center",
-        }}>
-          <h3 style={{
-            fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 900,
-            color: "#ffffff", marginBottom: "24px", lineHeight: 1.3,
-          }}>
-            Gostou dos nossos sistemas?<br />
-            <span style={{ color: "#25D366" }}>Seja nosso sócio</span> e tenha ganhos de até <span style={{ color: "#25D366" }}>50%</span> em recorrência.
-          </h3>
-
-          <div style={{
-            display: "flex", gap: "20px", justifyContent: "center",
-            flexWrap: "wrap", marginBottom: "28px",
-          }}>
-            {[
-              { emoji: "🚀", text: "1 Aplicativo novo lançado todo mês*" },
-              { emoji: "🎨", text: "1 Aplicativo 100% customizado ao seu gosto" },
-              { emoji: "♾️", text: "Recorrência por toda vida" },
-            ].map((item) => (
-              <div key={item.text} style={{
-                display: "flex", alignItems: "center", gap: "10px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1.5px solid rgba(255,255,255,0.15)",
-                borderRadius: "14px", padding: "16px 24px",
-                fontSize: "15px", fontWeight: 600, color: "#ffffff",
-              }}>
-                <span style={{ fontSize: "24px" }}>{item.emoji}</span>
-                {item.text}
-              </div>
-            ))}
-          </div>
-
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Olá! Gostaria de saber mais sobre a parceria e ser sócio do Portaria X.")}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: "10px",
-              background: "#25D366", color: "#ffffff",
-              padding: "16px 36px", borderRadius: "14px",
-              fontSize: "17px", fontWeight: 800,
-              textDecoration: "none", cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; e.currentTarget.style.boxShadow = "0 6px 30px rgba(37,211,102,0.6)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(37,211,102,0.4)"; }}
-          >
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-            Entre em contato e saiba mais
           </a>
         </div>
 

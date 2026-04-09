@@ -1,15 +1,29 @@
 import Database from "better-sqlite3";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// In production, use /app/data/ (Docker volume) for persistence
-// In development, use project root
-const dbPath = process.env.NODE_ENV === "production"
-  ? path.join("/app", "data", "data.db")
-  : path.join(__dirname, "..", "data.db");
+function resolveDataDir(): string {
+  if (process.env.DB_DIR?.trim()) {
+    return process.env.DB_DIR;
+  }
+
+  const dockerDataDir = path.join("/app", "data");
+  if (process.env.NODE_ENV === "production" && fs.existsSync(dockerDataDir)) {
+    return dockerDataDir;
+  }
+
+  return path.join(__dirname, "..");
+}
+
+const dataDir = resolveDataDir();
+const dbPath = process.env.DB_PATH?.trim()
+  ? process.env.DB_PATH
+  : path.join(dataDir, "data.db");
+
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
 const db = new Database(dbPath);
 
@@ -639,9 +653,9 @@ try {
 }
 
 // ─── Database Backup ───
-const backupDir = process.env.NODE_ENV === "production"
-  ? path.join("/app", "data", "backups")
-  : path.join(__dirname, "..", "backups");
+const backupDir = process.env.BACKUP_DIR?.trim()
+  ? process.env.BACKUP_DIR
+  : path.join(dataDir, "backups");
 
 export function performBackup(): string | null {
   try {
@@ -649,7 +663,7 @@ export function performBackup(): string | null {
       fs.mkdirSync(backupDir, { recursive: true });
     }
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    const timestamp = new Date().toISOString().replaceAll(/[:.]/g, "-").slice(0, 19);
     const backupPath = path.join(backupDir, `data-${timestamp}.db`);
 
     // Use SQLite's backup API via better-sqlite3
