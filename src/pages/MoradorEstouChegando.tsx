@@ -43,13 +43,18 @@ interface VehicleOption {
   cor: string;
 }
 
-type TrackingStatus = "idle" | "connecting" | "active" | "notified" | "confirmed" | "error";
+type TrackingStatus = "idle" | "connecting" | "active" | "notified" | "tracking" | "error";
 
 const STORAGE_KEY_ENABLED = "estou_chegando_enabled";
 const STORAGE_KEY_VEHICLE = "estou_chegando_vehicle";
 const STORAGE_KEY_RADIUS = "estou_chegando_radius";
 const STORAGE_KEY_VEHICLE_TYPE = "estou_chegando_vehicle_type";
 const STORAGE_KEY_AUTO_GATE = "estou_chegando_auto_gate";
+
+function hasConfiguredCoordinates(latitude: unknown, longitude: unknown): boolean {
+  return typeof latitude === "number" && Number.isFinite(latitude)
+    && typeof longitude === "number" && Number.isFinite(longitude);
+}
 
 export default function MoradorEstouChegando() {
   const { isDark, p } = useTheme();
@@ -100,6 +105,8 @@ export default function MoradorEstouChegando() {
   const watchIdRef = useRef<number | null>(null);
   const autoEnabledRef = useRef(autoEnabled);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastFallbackNotifyAtRef = useRef<number>(0);
+  const confirmedEventIdRef = useRef<number | null>(null);
 
   // Keep ref in sync for closures
   useEffect(() => { autoEnabledRef.current = autoEnabled; }, [autoEnabled]);
@@ -122,23 +129,13 @@ export default function MoradorEstouChegando() {
       // Restore saved vehicle or default to first
       const savedPlaca = localStorage.getItem(STORAGE_KEY_VEHICLE);
       const found = vehicles.find((v: VehicleOption) => v.placa === savedPlaca);
-      setSelectedVehicle(found || vehicles[0] || null);
+      const initialVehicle = found || vehicles[0] || null;
+      setSelectedVehicle(initialVehicle);
+      if (initialVehicle?.placa) {
+        localStorage.setItem(STORAGE_KEY_VEHICLE, initialVehicle.placa);
+      }
       setConfigLoading(false);
     }).catch(() => setConfigLoading(false));
-  }, []);
-
-  // ─── Check for active event on load ───
-  useEffect(() => {
-    apiFetch("/api/estou-chegando/my-active")
-      .then(r => r.ok ? r.json() : null)
-      .then(ev => {
-        if (ev) {
-          setEventId(ev.id);
-          setStatus("notified");
-          setDistance(ev.distance_meters);
-        }
-      })
-      .catch(() => {});
   }, []);
 
   // ─── Confirmation sound ───
@@ -158,6 +155,69 @@ export default function MoradorEstouChegando() {
       });
     } catch {}
   }, []);
+
+  const syncArrivalStatus = useCallback((event: any) => {
+    if (!event) return;
+
+    setDistance(event.distance_meters ?? null);
+
+    if (event.status === "tracking") {
+      if (confirmedEventIdRef.current !== event.id) {
+        confirmedEventIdRef.current = event.id;
+        setStatus("tracking");
+        playConfirmationSound();
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      }
+      setEventId(event.id);
+      return;
+    }
+
+    confirmedEventIdRef.current = null;
+    setEventId(event.id);
+    setStatus("notified");
+  }, [playConfirmationSound]);
+
+  // ─── Check for active event on load + polling fallback ───
+  useEffect(() => {
+    if (!autoEnabled) {
+      confirmedEventIdRef.current = null;
+      if (status !== "idle" || eventId !== null || distance !== null || direction !== null) {
+        setStatus("idle");
+        setEventId(null);
+        setDistance(null);
+        setDirection(null);
+      }
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadMyArrivalStatus = () => {
+      apiFetch("/api/estou-chegando/my-active")
+        .then(r => r.ok ? r.json() : null)
+        .then(ev => {
+          if (!isMounted) return;
+          if (ev) {
+            syncArrivalStatus(ev);
+            return;
+          }
+
+          if (status === "notified") {
+            setStatus("active");
+            setEventId(null);
+          }
+        })
+        .catch(() => {});
+    };
+
+    loadMyArrivalStatus();
+    const intervalId = setInterval(loadMyArrivalStatus, 3000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [autoEnabled, direction, distance, eventId, status, syncArrivalStatus]);
 
   // ─── WebSocket connection ───
   const connectWs = useCallback(() => {
@@ -182,26 +242,38 @@ export default function MoradorEstouChegando() {
             break;
           case "status":
             setDistance(msg.distance);
-            setDirection(msg.status === "approaching" ? "approaching" : "leaving");
+            setDirection(
+              msg.status === "approaching"
+                ? "approaching"
+                : msg.status === "leaving"
+                ? "leaving"
+                : null
+            );
+            if (msg.status === "arrived") {
+              setStatus("active");
+              setEventId(null);
+            } else if (msg.status === "tracking" && status === "connecting") {
+              setStatus("active");
+            }
             break;
           case "notified":
             setStatus("notified");
             setEventId(msg.event_id);
             setDistance(msg.distance);
             break;
-          case "arrival-confirmed":
-            setStatus("confirmed");
+          case "arrival-tracking-started":
+            confirmedEventIdRef.current = msg.event_id;
+            setStatus("tracking");
+            setEventId(msg.event_id);
             playConfirmationSound();
             if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            // Auto-reset after 10s to resume tracking
-            setTimeout(() => {
-              setStatus("active");
-              setEventId(null);
-              setDistance(null);
-            }, 10000);
             break;
           case "feature-disabled":
             setErrorMsg("Funcionalidade desativada pelo síndico.");
+            autoEnabledRef.current = false;
+            localStorage.setItem(STORAGE_KEY_ENABLED, "false");
+            setAutoEnabled(false);
+            stopTracking();
             setStatus("error");
             break;
           case "outside-schedule":
@@ -233,6 +305,108 @@ export default function MoradorEstouChegando() {
     ws.onerror = () => setWsConnected(false);
   }, [playConfirmationSound]);
 
+  const notifyViaHttpFallback = useCallback(async (payload: Record<string, unknown>) => {
+    const now = Date.now();
+    if (now - lastFallbackNotifyAtRef.current < 3000) return;
+    lastFallbackNotifyAtRef.current = now;
+
+    try {
+      const res = await apiFetch("/api/estou-chegando/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+      if (data?.status === "notified") {
+        setStatus("notified");
+        setEventId(data.event_id ?? null);
+        setDistance(data.distance ?? null);
+      } else if (data?.status === "updated" || data?.status === "out_of_range" || data?.status === "tracking") {
+        setStatus("active");
+        setDistance(data.distance ?? null);
+        setDirection(data.direction === "approaching" ? "approaching" : data.direction === "leaving" ? "leaving" : null);
+      } else if (data?.status === "leaving") {
+        setStatus("active");
+        setDistance(data.distance ?? null);
+        setDirection("leaving");
+      } else if (data?.status === "arrived") {
+        setStatus("active");
+        setEventId(null);
+        setDistance(0);
+        setDirection(null);
+      }
+    } catch {}
+  }, []);
+
+  const cancelActiveArrivalViaHttp = useCallback(async (knownEventId?: number | null) => {
+    let activeEventId = knownEventId ?? eventId;
+
+    if (!activeEventId) {
+      try {
+        const response = await apiFetch("/api/estou-chegando/my-active");
+        if (!response.ok) return;
+
+        const activeEvent = await response.json();
+        activeEventId = ["approaching", "tracking"].includes(activeEvent?.status) ? activeEvent.id : null;
+      } catch {
+        return;
+      }
+    }
+
+    if (!activeEventId) return;
+
+    try {
+      await apiFetch(`/api/estou-chegando/cancel/${activeEventId}`, {
+        method: "POST",
+      });
+    } catch {}
+  }, [eventId]);
+
+  const dispatchLocationUpdate = useCallback((latitude: number, longitude: number) => {
+    if (!autoEnabledRef.current || !config?.enabled) {
+      return;
+    }
+
+    const ws = wsRef.current;
+    const vt = localStorage.getItem(STORAGE_KEY_VEHICLE_TYPE) || "proprio";
+    const savedPlaca = localStorage.getItem(STORAGE_KEY_VEHICLE) || selectedVehicle?.placa || "";
+    const selectedOwnVehicle = myVehicles.find((vehicle) => vehicle.placa === savedPlaca) || selectedVehicle;
+    const vehicleData = vt === "proprio"
+      ? {
+          vehicle_plate: savedPlaca,
+          vehicle_model: selectedOwnVehicle?.modelo || "",
+          vehicle_color: selectedOwnVehicle?.cor || "",
+        }
+      : {
+          vehicle_plate: uberPlate,
+          vehicle_model: uberModel,
+          vehicle_color: uberColor,
+          driver_name: driverName,
+        };
+
+    const payload = {
+      latitude,
+      longitude,
+      vehicle_type: vt,
+      radius_meters: Number.parseInt(localStorage.getItem(STORAGE_KEY_RADIUS) || "200"),
+      auto_open_gate: localStorage.getItem(STORAGE_KEY_AUTO_GATE) === "true",
+      ...vehicleData,
+    };
+
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({
+        type: "location-update",
+        ...payload,
+      }));
+      return;
+    }
+
+    void notifyViaHttpFallback(payload);
+  }, [config?.enabled, driverName, myVehicles, notifyViaHttpFallback, selectedVehicle, uberColor, uberModel, uberPlate]);
+
   // ─── Start GPS tracking ───
   const startTracking = useCallback(() => {
     setErrorMsg(null);
@@ -245,35 +419,20 @@ export default function MoradorEstouChegando() {
       return;
     }
 
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        dispatchLocationUpdate(pos.coords.latitude, pos.coords.longitude);
+      },
+      () => {
+        setErrorMsg("Erro ao obter localização. Verifique as permissões de GPS.");
+        setStatus("error");
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+    );
+
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        const ws = wsRef.current;
-        if (ws?.readyState !== WebSocket.OPEN) return;
-
-        const vt = localStorage.getItem(STORAGE_KEY_VEHICLE_TYPE) || "proprio";
-        const savedPlaca = localStorage.getItem(STORAGE_KEY_VEHICLE) || "";
-        const vehicleData = vt === "proprio"
-          ? {
-              vehicle_plate: savedPlaca,
-              vehicle_model: "",
-              vehicle_color: "",
-            }
-          : {
-              vehicle_plate: uberPlate,
-              vehicle_model: uberModel,
-              vehicle_color: uberColor,
-              driver_name: driverName,
-            };
-
-        ws.send(JSON.stringify({
-          type: "location-update",
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-          vehicle_type: vt,
-          radius_meters: Number.parseInt(localStorage.getItem(STORAGE_KEY_RADIUS) || "200"),
-          auto_open_gate: localStorage.getItem(STORAGE_KEY_AUTO_GATE) === "true",
-          ...vehicleData,
-        }));
+        dispatchLocationUpdate(pos.coords.latitude, pos.coords.longitude);
       },
       (err) => {
         setErrorMsg("Erro ao obter localização. Verifique as permissões de GPS.");
@@ -281,10 +440,12 @@ export default function MoradorEstouChegando() {
       },
       { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 }
     );
-  }, [connectWs, uberPlate, uberModel, uberColor, driverName]);
+  }, [connectWs, dispatchLocationUpdate]);
 
   // ─── Stop tracking ───
   const stopTracking = useCallback(() => {
+    const activeEventId = eventId;
+
     if (reconnectTimerRef.current) {
       clearTimeout(reconnectTimerRef.current);
       reconnectTimerRef.current = null;
@@ -295,8 +456,10 @@ export default function MoradorEstouChegando() {
     }
     const ws = wsRef.current;
     if (ws?.readyState === WebSocket.OPEN) {
-      if (eventId) ws.send(JSON.stringify({ type: "cancel-arrival" }));
+      if (activeEventId) ws.send(JSON.stringify({ type: "cancel-arrival" }));
       ws.close();
+    } else if (activeEventId) {
+      void cancelActiveArrivalViaHttp(activeEventId);
     }
     wsRef.current = null;
     setWsConnected(false);
@@ -304,7 +467,8 @@ export default function MoradorEstouChegando() {
     setDistance(null);
     setDirection(null);
     setEventId(null);
-  }, [eventId]);
+    confirmedEventIdRef.current = null;
+  }, [cancelActiveArrivalViaHttp, eventId]);
 
   // ─── Auto-start when enabled + config loaded ───
   useEffect(() => {
@@ -313,9 +477,21 @@ export default function MoradorEstouChegando() {
     }
   }, [autoEnabled, config, configLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (configLoading || config?.enabled !== false) {
+      return;
+    }
+
+    autoEnabledRef.current = false;
+    localStorage.setItem(STORAGE_KEY_ENABLED, "false");
+    setAutoEnabled(false);
+    stopTracking();
+  }, [config?.enabled, configLoading, stopTracking]);
+
   // ─── Toggle auto-tracking ───
   const toggleAutoTracking = () => {
     const next = !autoEnabled;
+    autoEnabledRef.current = next;
     setAutoEnabled(next);
     localStorage.setItem(STORAGE_KEY_ENABLED, String(next));
     if (next) {
@@ -380,7 +556,7 @@ export default function MoradorEstouChegando() {
     );
   }
 
-  if (config && (!config.latitude || !config.longitude)) {
+  if (config && !hasConfiguredCoordinates(config.latitude, config.longitude)) {
     return (
       <div style={{ minHeight: '100dvh', background: isDark ? "linear-gradient(180deg, #001533 0%, #002254 25%, #003580 55%, #004aad 100%)" : "#f0f4f8", display: 'flex', flexDirection: 'column' }}>
         <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)" }}>
@@ -621,13 +797,13 @@ export default function MoradorEstouChegando() {
           </div>
         )}
 
-        {status === "confirmed" && (
+        {status === "tracking" && (
           <div style={{ borderRadius: 20, padding: '1.5rem', textAlign: 'center', background: 'linear-gradient(135deg, #10b981, #059669)', color: isDark ? '#fff' : "#1e293b", boxShadow: '0 8px 32px rgba(16,185,129,0.25)' }}>
             <div style={{ width: 56, height: 56, borderRadius: 18, background: 'rgba(255,255,255,0.2)', border: isDark ? '1.5px solid rgba(255,255,255,0.3)' : '1.5px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
               <Check className="w-7 h-7" />
             </div>
-            <p style={{ fontSize: '1.1rem', fontWeight: 800 }}>Chegada Confirmada!</p>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem', marginTop: '0.25rem' }}>A portaria confirmou sua chegada.</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 800 }}>Portaria Acompanhando</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem', marginTop: '0.25rem' }}>Sua chegada está sendo acompanhada no mapa até a portaria.</p>
           </div>
         )}
 
@@ -639,7 +815,7 @@ export default function MoradorEstouChegando() {
               </div>
               <div>
                 <p style={{ fontWeight: 700, color: isDark ? '#fff' : "#1e293b" }}>Portaria Notificada!</p>
-                <p style={{ color: isDark ? '#93c5fd' : "#1e293b", fontSize: '0.875rem' }}>Aguardando confirmação...</p>
+                <p style={{ color: isDark ? '#93c5fd' : "#1e293b", fontSize: '0.875rem' }}>Aguardando portaria iniciar o acompanhamento...</p>
               </div>
             </div>
             {distance !== null && (

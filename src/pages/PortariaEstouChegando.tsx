@@ -28,8 +28,11 @@ import {
   Building,
   Loader2,
   History,
+  Download,
+  FileText,
+  BarChart3,
 } from "lucide-react";
-import { CircleF, GoogleMap, InfoWindowF, LoadScriptNext, MarkerF } from "@react-google-maps/api";
+import { CircleF, GoogleMap, InfoWindowF, LoadScriptNext, MarkerF, PolylineF } from "@react-google-maps/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 
@@ -52,7 +55,87 @@ interface ArrivalEvent {
   radius_meters: number;
   status: string;
   created_at: string;
+  confirmed_at?: string | null;
+  cancelled_at?: string | null;
+  arrived_at?: string | null;
   vehicles?: { placa: string; modelo: string; cor: string }[];
+}
+
+function sortArrivalEvents(items: ArrivalEvent[]): ArrivalEvent[] {
+  const statusOrder: Record<string, number> = {
+    approaching: 0,
+    tracking: 1,
+    confirmed: 2,
+    arrived: 3,
+    cancelled: 4,
+  };
+
+  return [...items].sort((left, right) => {
+    const orderDiff = (statusOrder[left.status] ?? 99) - (statusOrder[right.status] ?? 99);
+    if (orderDiff !== 0) return orderDiff;
+    return new Date(right.created_at).getTime() - new Date(left.created_at).getTime();
+  });
+}
+
+function getEventStatusMeta(status: string) {
+  switch (status) {
+    case "approaching":
+      return { label: "No raio", tone: "#059669", background: "rgba(16,185,129,0.12)" };
+    case "tracking":
+      return { label: "Acompanhando", tone: "#2563eb", background: "rgba(37,99,235,0.12)" };
+    case "confirmed":
+      return { label: "Confirmado", tone: "#7c3aed", background: "rgba(124,58,237,0.12)" };
+    case "arrived":
+      return { label: "Entrou", tone: "#0f766e", background: "rgba(15,118,110,0.12)" };
+    case "cancelled":
+      return { label: "Cancelado", tone: "#dc2626", background: "rgba(220,38,38,0.12)" };
+    default:
+      return { label: status, tone: "#a16207", background: "rgba(161,98,7,0.12)" };
+  }
+}
+
+function downloadHistoryCsv(rows: ArrivalEvent[]) {
+  const header = [
+    "ID",
+    "Morador",
+    "Bloco",
+    "Apartamento",
+    "Status",
+    "DistanciaMetros",
+    "Placa",
+    "TipoVeiculo",
+    "CriadoEm",
+    "ConfirmadoEm",
+    "EntrouEm",
+    "CanceladoEm",
+  ];
+
+  const lines = rows.map((row) => [
+    row.id,
+    row.morador_name,
+    row.bloco || "",
+    row.apartamento || "",
+    row.status,
+    row.distance_meters ?? "",
+    row.vehicle_plate || "",
+    row.vehicle_type || "",
+    row.created_at || "",
+    row.confirmed_at || "",
+    row.arrived_at || "",
+    row.cancelled_at || "",
+  ]);
+
+  const csv = [header, ...lines]
+    .map((line) => line.map((value) => `"${String(value ?? "").replaceAll('"', '""')}"`).join(","))
+    .join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `estou-chegando-relatorio-${new Date().toISOString().slice(0, 10)}.csv`;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }
 
 function hasValidCoordinates(lat: number | null | undefined, lng: number | null | undefined): lat is number {
@@ -86,10 +169,22 @@ export default function PortariaEstouChegando() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [confirmedIds, setConfirmedIds] = useState<Set<number>>(new Set());
   const [selectedMarker, setSelectedMarker] = useState<string | number | null>(null);
+  const [trackingMessage, setTrackingMessage] = useState<string | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+
+  const loadActiveEvents = useCallback(() => {
+    apiFetch("/api/estou-chegando/active")
+      .then((r) => r.ok ? r.json() : [])
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setEvents(sortArrivalEvents(data));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // ─── Alert sound ───
   const playAlertSound = useCallback(() => {
@@ -120,6 +215,12 @@ export default function PortariaEstouChegando() {
       .catch(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    loadActiveEvents();
+    const intervalId = setInterval(loadActiveEvents, 5000);
+    return () => clearInterval(intervalId);
+  }, [loadActiveEvents]);
+
   // ─── WebSocket connection ───
   useEffect(() => {
     const token = getToken();
@@ -137,14 +238,20 @@ export default function PortariaEstouChegando() {
         const msg = JSON.parse(ev.data);
         switch (msg.type) {
           case "active-events":
-            setEvents(msg.events || []);
+            setEvents(sortArrivalEvents(msg.events || []));
+            break;
+
+          case "tracking-started":
+            setEvents((prev) => {
+              const next = prev.filter((event) => event.id !== msg.event.id);
+              return sortArrivalEvents([msg.event, ...next]);
+            });
             break;
 
           case "arrival-notification":
             setEvents(prev => {
-              const exists = prev.find(e => e.id === msg.event.id);
-              if (exists) return prev;
-              return [msg.event, ...prev];
+              const next = prev.filter((event) => event.id !== msg.event.id);
+              return sortArrivalEvents([msg.event, ...next]);
             });
             playAlertSound();
             // Vibrate
@@ -152,15 +259,24 @@ export default function PortariaEstouChegando() {
             break;
 
           case "location-update":
-            setEvents(prev => prev.map(e =>
+            setEvents(prev => sortArrivalEvents(prev.map(e =>
               e.id === msg.event_id
-                ? { ...e, latitude: msg.latitude, longitude: msg.longitude, distance_meters: msg.distance }
+                ? { ...e, latitude: msg.latitude, longitude: msg.longitude, distance_meters: msg.distance, status: msg.status || e.status }
                 : e
-            ));
+            )));
             break;
 
-          case "arrival-confirmed-broadcast":
+          case "arrival-tracking-broadcast":
             setConfirmedIds(prev => new Set(prev).add(msg.event_id));
+            setEvents((prev) => sortArrivalEvents(prev.map((event) =>
+              event.id === msg.event_id
+                ? { ...event, status: "tracking", confirmed_at: new Date().toISOString() }
+                : event
+            )));
+            break;
+
+          case "arrival-completed":
+            setEvents((prev) => prev.filter((event) => event.id !== msg.event_id));
             break;
 
           case "arrival-cancelled":
@@ -183,11 +299,12 @@ export default function PortariaEstouChegando() {
     ws.onerror = () => setWsConnected(false);
 
     return () => { ws.close(); };
-  }, [playAlertSound]);
+  }, [loadActiveEvents, playAlertSound]);
 
   // ─── Confirm arrival ───
   const confirmArrival = useCallback((eventId: number) => {
     if (confirmedIds.has(eventId)) return;
+    const event = events.find((item) => item.id === eventId);
     const ws = wsRef.current;
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "confirm-arrival", event_id: eventId }));
@@ -195,16 +312,37 @@ export default function PortariaEstouChegando() {
     // Also via REST as fallback
     apiFetch(`/api/estou-chegando/confirm/${eventId}`, { method: "POST" }).catch(() => {});
     setConfirmedIds(prev => new Set(prev).add(eventId));
-  }, [confirmedIds]);
+    setEvents((prev) => sortArrivalEvents(prev.map((item) =>
+      item.id === eventId
+        ? { ...item, status: "tracking", confirmed_at: new Date().toISOString() }
+        : item
+    )));
+    setSelectedMarker(eventId);
+    setTrackingMessage(event
+      ? `Acompanhar chegada de ${event.morador_name} no mapa até a portaria.`
+      : "Acompanhar chegada do morador no mapa até a portaria.");
+  }, [confirmedIds, events]);
+
+  useEffect(() => {
+    if (!trackingMessage) return;
+    const timeoutId = setTimeout(() => setTrackingMessage(null), 5000);
+    return () => clearTimeout(timeoutId);
+  }, [trackingMessage]);
 
   // ─── Load history ───
   const loadHistory = useCallback(() => {
     setHistoryLoading(true);
-    apiFetch("/api/estou-chegando/history?limit=30")
+    apiFetch("/api/estou-chegando/history?limit=200")
       .then(r => r.ok ? r.json() : [])
-      .then(data => { setHistory(data); setHistoryLoading(false); })
+      .then(data => { setHistory(sortArrivalEvents(data)); setHistoryLoading(false); })
       .catch(() => setHistoryLoading(false));
   }, []);
+
+  const sortedEvents = sortArrivalEvents(events);
+  const totalHistory = history.length;
+  const confirmedHistory = history.filter((event) => event.status === "confirmed").length;
+  const arrivedHistory = history.filter((event) => event.status === "arrived").length;
+  const cancelledHistory = history.filter((event) => event.status === "cancelled").length;
 
   const condoLat = config?.latitude || DEFAULT_MAP_CENTER.lat;
   const condoLng = config?.longitude || DEFAULT_MAP_CENTER.lng;
@@ -252,9 +390,9 @@ export default function PortariaEstouChegando() {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <span style={{ fontWeight: 700, fontSize: 18 }}>Estou Chegando</span>
-            {events.length > 0 && (
+            {sortedEvents.length > 0 && (
               <span className="bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
-                {events.length}
+                {sortedEvents.length}
               </span>
             )}
           </div>
@@ -346,7 +484,50 @@ export default function PortariaEstouChegando() {
         {showHistory ? (
           /* ═══ History view ═══ */
           <div className="flex-1 overflow-y-auto" style={{ padding: "1rem 1.5rem" }}>
-            <h3 className="text-sm font-bold text-foreground mb-3">Histórico de Chegadas</h3>
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h3 className="text-sm font-bold text-foreground">Histórico de Chegadas</h3>
+                <p className="text-xs text-muted-foreground mt-1">Resumo e relatório dos acompanhamentos realizados.</p>
+              </div>
+              <button
+                onClick={() => downloadHistoryCsv(history)}
+                disabled={history.length === 0}
+                className="rounded-xl px-3 py-2 text-xs font-bold flex items-center gap-2"
+                style={{
+                  background: history.length === 0 ? "#cbd5e1" : "linear-gradient(135deg, #1d4ed8, #2563eb)",
+                  color: "#ffffff",
+                  opacity: history.length === 0 ? 0.7 : 1,
+                }}
+              >
+                <Download className="w-4 h-4" />
+                Exportar CSV
+              </button>
+            </div>
+
+            <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
+              {[
+                { label: "Total", value: totalHistory, icon: FileText, color: "#1d4ed8", bg: "rgba(29,78,216,0.12)" },
+                { label: "Confirmados", value: confirmedHistory, icon: Check, color: "#059669", bg: "rgba(5,150,105,0.12)" },
+                { label: "Entraram", value: arrivedHistory, icon: BarChart3, color: "#0f766e", bg: "rgba(15,118,110,0.12)" },
+                { label: "Cancelados", value: cancelledHistory, icon: History, color: "#dc2626", bg: "rgba(220,38,38,0.12)" },
+              ].map((card) => {
+                const Icon = card.icon;
+                return (
+                  <div key={card.label} className="rounded-2xl border border-border" style={{ padding: "14px 16px", background: p.cardBg }}>
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: p.textDim }}>{card.label}</p>
+                        <p className="text-2xl font-black" style={{ color: p.text }}>{card.value}</p>
+                      </div>
+                      <div className="rounded-xl" style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: card.bg, color: card.color }}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
             {historyLoading ? (
               <div className="flex justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -364,12 +545,14 @@ export default function PortariaEstouChegando() {
                           {ev.bloco && `Bloco ${ev.bloco}`} {ev.apartamento && `Apt ${ev.apartamento}`}
                         </p>
                       </div>
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        ev.status === "confirmed" ? "bg-emerald-500/10 text-emerald-500" :
-                        ev.status === "cancelled" ? "bg-red-500/10 text-red-500" :
-                        "bg-amber-500/10 text-amber-500"
-                      }`}>
-                        {ev.status === "confirmed" ? "Confirmado" : ev.status === "cancelled" ? "Cancelado" : "Pendente"}
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full font-medium"
+                        style={{
+                          background: getEventStatusMeta(ev.status).background,
+                          color: getEventStatusMeta(ev.status).tone,
+                        }}
+                      >
+                        {getEventStatusMeta(ev.status).label}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -377,6 +560,13 @@ export default function PortariaEstouChegando() {
                       {ev.vehicle_plate && ` · ${ev.vehicle_plate}`}
                       {ev.vehicle_type === "uber_taxi" && " · Uber/Táxi"}
                     </p>
+                    {(ev.confirmed_at || ev.arrived_at || ev.cancelled_at) && (
+                      <p className="text-[11px] mt-1" style={{ color: p.textDim }}>
+                        {ev.confirmed_at && `Confirmado: ${new Date(ev.confirmed_at).toLocaleString("pt-BR")}`}
+                        {ev.arrived_at && `${ev.confirmed_at ? " · " : ""}Entrou: ${new Date(ev.arrived_at).toLocaleString("pt-BR")}`}
+                        {ev.cancelled_at && `${(ev.confirmed_at || ev.arrived_at) ? " · " : ""}Cancelado: ${new Date(ev.cancelled_at).toLocaleString("pt-BR")}`}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -406,6 +596,25 @@ export default function PortariaEstouChegando() {
                         mapRef.current = null;
                       }}
                     >
+                      {sortedEvents.some((event) => event.status === "tracking") && sortedEvents.map((event) => {
+                        if (event.status !== "tracking" || !hasValidCoordinates(event.latitude, event.longitude)) {
+                          return null;
+                        }
+
+                        return (
+                          <PolylineF
+                            key={`route-${event.id}`}
+                            path={[{ lat: event.latitude, lng: event.longitude }, condoPosition]}
+                            options={{
+                              strokeColor: "#2563eb",
+                              strokeOpacity: 0.9,
+                              strokeWeight: 4,
+                              geodesic: true,
+                            }}
+                          />
+                        );
+                      })}
+
                       <MarkerF
                         position={condoPosition}
                         icon={condoMarkerIcon}
@@ -414,7 +623,7 @@ export default function PortariaEstouChegando() {
                       />
                       {selectedMarker === "condo" && (
                         <InfoWindowF position={condoPosition} onCloseClick={() => setSelectedMarker(null)}>
-                          <strong>{user?.condominio_nome || "Condomínio"}</strong>
+                          <strong>Portaria do condomínio</strong>
                         </InfoWindowF>
                       )}
 
@@ -430,7 +639,7 @@ export default function PortariaEstouChegando() {
                         }}
                       />
 
-                      {events.map((ev) => {
+                      {sortedEvents.map((ev) => {
                         if (!hasValidCoordinates(ev.latitude, ev.longitude)) return null;
 
                         const eventPosition = { lat: ev.latitude, lng: ev.longitude };
@@ -474,18 +683,43 @@ export default function PortariaEstouChegando() {
 
             {/* ═══ Events list ═══ */}
             <div className="flex-1 overflow-y-auto" style={{ padding: "1rem 1.5rem" }}>
-              {events.length === 0 ? (
+              {trackingMessage && (
+                <div
+                  className="mb-4 rounded-2xl border"
+                  style={{
+                    padding: "14px 16px",
+                    background: "rgba(37,99,235,0.12)",
+                    borderColor: "rgba(37,99,235,0.25)",
+                    color: "#1d4ed8",
+                  }}
+                >
+                  <p className="text-sm font-bold">Acompanhar chegada do morador</p>
+                  <p className="text-xs mt-1">{trackingMessage}</p>
+                </div>
+              )}
+
+              {sortedEvents.length === 0 ? (
                 <div className="text-center py-8">
                   <Navigation className="w-10 h-10 mx-auto mb-3" style={{ color: p.textDim }} />
                   <p className="text-sm" style={{ color: p.text }}>Nenhum morador se aproximando no momento.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  {events.map((ev) => (
+                  {sortedEvents.map((ev) => {
+                    const statusMeta = getEventStatusMeta(ev.status);
+                    const canConfirm = ev.status === "approaching" && !confirmedIds.has(ev.id);
+                    const isTracking = ev.status === "tracking" || confirmedIds.has(ev.id);
+
+                    return (
                     <div
                       key={ev.id}
                       className="bg-card rounded-2xl p-4 border-2 border-emerald-500/30 animate-fade-in"
-                      style={{ boxShadow: "0 0 20px rgba(16, 185, 129, 0.1)" }}
+                      style={{
+                        borderColor: ev.status === "approaching" ? "rgba(16,185,129,0.3)" : "rgba(59,130,246,0.25)",
+                        boxShadow: ev.status === "approaching"
+                          ? "0 0 20px rgba(16, 185, 129, 0.1)"
+                          : "0 0 18px rgba(37, 99, 235, 0.08)",
+                      }}
                     >
                       <div className="flex items-start gap-3">
                         {/* Avatar or icon */}
@@ -537,29 +771,47 @@ export default function PortariaEstouChegando() {
 
                           {/* Distance badge */}
                           <div className="flex items-center gap-2 mt-2">
-                            <span className="bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1" style={{ background: statusMeta.background, color: statusMeta.tone }}>
                               <MapPin className="w-3 h-3" />
                               {Math.round(ev.distance_meters)}m
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: statusMeta.background, color: statusMeta.tone }}>
+                              {statusMeta.label}
                             </span>
                             <span className="text-[10px] text-muted-foreground">
                               {new Date(ev.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                             </span>
                           </div>
+
+                          <p className="text-[11px] mt-2" style={{ color: p.textDim }}>
+                            {isTracking
+                              ? "Portaria acompanhando a chegada no mapa até a portaria."
+                              : "Morador dentro do raio configurado e aguardando acompanhamento da portaria."}
+                          </p>
                         </div>
                       </div>
 
                       {/* Confirm button */}
                       <button
                         onClick={() => confirmArrival(ev.id)}
-                        disabled={confirmedIds.has(ev.id)}
+                        disabled={!canConfirm}
                         className="w-full mt-3 py-2.5 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95"
-                        style={{ background: confirmedIds.has(ev.id) ? "linear-gradient(135deg, #ef4444, #dc2626)" : "linear-gradient(135deg, #10b981, #059669)", opacity: confirmedIds.has(ev.id) ? 0.9 : 1 }}
+                        style={{
+                          background: isTracking
+                            ? "linear-gradient(135deg, #2563eb, #1d4ed8)"
+                            : canConfirm
+                            ? "linear-gradient(135deg, #10b981, #059669)"
+                            : "linear-gradient(135deg, #94a3b8, #64748b)",
+                          opacity: canConfirm || isTracking ? 1 : 0.88,
+                        }}
                       >
                         <Check className="w-5 h-5" />
-                        {confirmedIds.has(ev.id) ? "AVISO ENVIADO" : "CONFIRMAR CHEGADA"}
+                        {isTracking
+                          ? "ACOMPANHANDO CHEGADA DO MORADOR"
+                          : "ACOMPANHAR CHEGADA"}
                       </button>
                     </div>
-                  ))}
+                  );})}
                 </div>
               )}
             </div>

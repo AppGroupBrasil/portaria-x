@@ -42,6 +42,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/ws/estou-chegando": {
+        target: "ws://localhost:3001",
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

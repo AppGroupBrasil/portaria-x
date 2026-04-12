@@ -31,8 +31,9 @@ export const APP_ORIGIN: string =
 
 /**
  * Build a WebSocket URL.
- * In dev, the backend serves WebSocket endpoints directly on port 3001:
- *   /ws/estou-chegando  → port 3001
+ * In dev, the frontend connects to the Vite origin and relies on the dev proxy
+ * to forward WebSocket traffic to the backend. This avoids mixed-content
+ * failures when Vite runs on HTTPS locally.
  * In prod / Capacitor, same origin or API_BASE.
  */
 export function buildWsUrl(path: string): string {
@@ -44,10 +45,9 @@ export function buildWsUrl(path: string): string {
   const hostname = globalThis.window.location.hostname;
   const port = globalThis.window.location.port;
 
-  // Dev: Vite runs on 5173 while the backend serves HTTP + WS on 3001.
+  // Dev: connect to Vite itself and let the proxy forward the WS connection.
   if (port && port !== "80" && port !== "443" && port !== "3001") {
-    const wsPort = path.includes("estou-chegando") ? "3001" : "3002";
-    return `${proto}//${hostname}:${wsPort}${path}`;
+    return `${proto}//${hostname}:${port}${path}`;
   }
 
   // Prod: same-origin

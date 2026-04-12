@@ -105,6 +105,8 @@ app.use(cors({
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
+const isProduction = process.env.NODE_ENV === "production";
+
 // Rate limiting global — 200 req/min por IP
 const globalLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -112,6 +114,7 @@ const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Muitas requisições. Tente novamente em 1 minuto." },
+  skip: () => !isProduction,
 });
 app.use("/api", globalLimiter);
 
@@ -122,6 +125,7 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Muitas tentativas de login. Tente novamente em 15 minutos." },
+  skip: () => !isProduction,
   keyGenerator: (req) => {
     // Limita por IP + email para evitar lockout coletivo
     const email = req.body?.email?.toLowerCase?.() || "";

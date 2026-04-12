@@ -24,6 +24,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isBlocked, setIsBlocked] = useState(false);
 
+  const getFriendlyErrorMessage = (rawMessage: string) => rawMessage.replace(/^\[[A-Z0-9_]+\]\s*/, "");
+
   // Show blocked message if user was redirected here after being blocked
   useEffect(() => {
     const blockedMsg = localStorage.getItem("blocked_message");
@@ -49,7 +51,7 @@ export default function Login() {
       await login(email, password);
       navigate("/dashboard");
     } catch (err: any) {
-      const msg = err.message || "Erro ao fazer login.";
+      const msg = getFriendlyErrorMessage(err?.message || "Erro ao fazer login.");
       setError(msg);
       if (msg.toLowerCase().includes("bloqueado")) setIsBlocked(true);
     } finally {

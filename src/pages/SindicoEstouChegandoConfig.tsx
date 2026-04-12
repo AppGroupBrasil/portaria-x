@@ -39,6 +39,11 @@ function buildMarkerIcon(fillColor: string): google.maps.Symbol | undefined {
   };
 }
 
+function hasConfiguredCoordinates(latitude: unknown, longitude: unknown): boolean {
+  return typeof latitude === "number" && Number.isFinite(latitude)
+    && typeof longitude === "number" && Number.isFinite(longitude);
+}
+
 export default function SindicoEstouChegandoConfig() {
   const { p } = useTheme();
   const navigate = useNavigate();
@@ -118,7 +123,10 @@ export default function SindicoEstouChegandoConfig() {
     );
   }
 
-  const mapCenter = latitude && longitude ? { lat: latitude, lng: longitude } : DEFAULT_MAP_CENTER;
+  const selectedCondoPosition = hasConfiguredCoordinates(latitude, longitude)
+    ? { lat: latitude as number, lng: longitude as number }
+    : null;
+  const mapCenter = selectedCondoPosition ?? DEFAULT_MAP_CENTER;
   const markerIcon = buildMarkerIcon("#ef4444");
 
   return (
@@ -341,15 +349,15 @@ export default function SindicoEstouChegandoConfig() {
                     setLongitude(latLng.lng());
                   }}
                 >
-                  {latitude && longitude && (
+                  {selectedCondoPosition && (
                     <>
                       <MarkerF
-                        position={{ lat: latitude, lng: longitude }}
+                        position={selectedCondoPosition}
                         icon={markerIcon}
                         label={{ text: "C", color: "#ffffff", fontWeight: "700" }}
                       />
                       <CircleF
-                        center={{ lat: latitude, lng: longitude }}
+                        center={selectedCondoPosition}
                         radius={radiusDefault}
                         options={{
                           strokeColor: "#2563eb",
@@ -370,9 +378,9 @@ export default function SindicoEstouChegandoConfig() {
             )}
           </div>
 
-          {latitude && longitude && (
+          {selectedCondoPosition && (
             <p className="text-xs mt-2" style={{ color: p.textSecondary }}>
-              📍 {latitude.toFixed(6)}, {longitude.toFixed(6)}
+              📍 {selectedCondoPosition.lat.toFixed(6)}, {selectedCondoPosition.lng.toFixed(6)}
             </p>
           )}
         </div>

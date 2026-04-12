@@ -427,10 +427,23 @@ db.exec(`
     radius_meters INTEGER NOT NULL DEFAULT 200,
     confirmed_by INTEGER REFERENCES users(id),
     confirmed_at TEXT,
+    gate_auto_opened_at TEXT,
     cancelled_at TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 `);
+
+try {
+  db.prepare("SELECT arrived_at FROM estou_chegando_events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE estou_chegando_events ADD COLUMN arrived_at TEXT");
+}
+
+try {
+  db.prepare("SELECT gate_auto_opened_at FROM estou_chegando_events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE estou_chegando_events ADD COLUMN gate_auto_opened_at TEXT");
+}
 
 // Migration: add latitude/longitude to condominios
 try {

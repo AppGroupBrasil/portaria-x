@@ -27,6 +27,11 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number): numb
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+function hasValidCoordinates(latitude: unknown, longitude: unknown): boolean {
+  return typeof latitude === "number" && Number.isFinite(latitude)
+    && typeof longitude === "number" && Number.isFinite(longitude);
+}
+
 // ─── Check if current time is within the active schedule ──
 function isWithinSchedule(inicio: string | null, fim: string | null): boolean {
   if (!inicio || !fim) return true; // No schedule = always active
@@ -45,6 +50,7 @@ function isWithinSchedule(inicio: string | null, fim: string | null): boolean {
 
 // In-memory map of last known distance per morador (for direction detection)
 const lastDistances = new Map<number, { distance: number; timestamp: number }>();
+const ENTRY_COMPLETION_DISTANCE_METERS = 10;
 
 // ────────────────────────────────────────────────────────────
 // GET /api/estou-chegando/config — Get condominio schedule + location config
@@ -133,7 +139,7 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
     }
 
     const { latitude, longitude, vehicle_type, vehicle_plate, vehicle_model, vehicle_color, driver_name, radius_meters } = req.body;
-    if (!latitude || !longitude) {
+    if (!hasValidCoordinates(latitude, longitude)) {
       res.status(400).json({ error: "Coordenadas obrigatórias." });
       return;
     }
@@ -162,7 +168,7 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
 
     // 3) Get condominium location
     const condo = db.prepare("SELECT latitude, longitude FROM condominios WHERE id = ?").get(user.condominio_id) as any;
-    if (!condo?.latitude || !condo?.longitude) {
+    if (!hasValidCoordinates(condo?.latitude, condo?.longitude)) {
       res.status(400).json({ error: "Localização do condomínio não configurada." });
       return;
     }
@@ -170,6 +176,32 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
     // 4) Calculate distance
     const distance = haversine(latitude, longitude, condo.latitude, condo.longitude);
     const effectiveRadius = radius_meters || 200;
+
+    const roundedDistance = Math.max(0, Math.round(distance));
+    const displayDistance = distance <= ENTRY_COMPLETION_DISTANCE_METERS ? 0 : roundedDistance;
+
+    const existingEvent = db.prepare(
+      `SELECT id, status FROM estou_chegando_events
+       WHERE morador_id = ? AND status IN ('approaching', 'tracking')
+         AND created_at > datetime('now', '-30 minutes')
+       ORDER BY created_at DESC LIMIT 1`
+    ).get(user.id) as { id: number; status: string } | undefined;
+
+    if (existingEvent && distance <= ENTRY_COMPLETION_DISTANCE_METERS) {
+      db.prepare(
+        "UPDATE estou_chegando_events SET status = 'arrived', latitude = ?, longitude = ?, distance_meters = 0, arrived_at = datetime('now') WHERE id = ?"
+      ).run(latitude, longitude, existingEvent.id);
+
+      lastDistances.delete(user.id);
+
+      res.json({
+        status: "arrived",
+        event_id: existingEvent.id,
+        distance: 0,
+        message: "Morador entrou no condomínio.",
+      });
+      return;
+    }
 
     // 5) Direction detection — only notify when APPROACHING
     const lastEntry = lastDistances.get(user.id);
@@ -186,7 +218,7 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
       // Morador is LEAVING — do NOT notify portaria
       res.json({
         status: "leaving",
-        distance: Math.round(distance),
+        distance: displayDistance,
         message: "Afastando-se do condomínio. Sem notificação.",
       });
       return;
@@ -196,30 +228,32 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
     if (distance > effectiveRadius) {
       res.json({
         status: "out_of_range",
-        distance: Math.round(distance),
+        distance: displayDistance,
         radius: effectiveRadius,
         direction: "approaching",
-        message: `Ainda fora do raio (${Math.round(distance)}m / ${effectiveRadius}m).`,
+        message: `Ainda fora do raio (${displayDistance}m / ${effectiveRadius}m).`,
       });
       return;
     }
 
-    // 7) Check if there's already an active event for this morador (avoid duplicates)
-    const existingEvent = db.prepare(
-      "SELECT id FROM estou_chegando_events WHERE morador_id = ? AND status = 'approaching' AND created_at > datetime('now', '-10 minutes')"
-    ).get(user.id) as any;
-
     if (existingEvent) {
-      // Update position of existing event
+      const nextStatus = existingEvent.status === "tracking" ? "tracking" : "approaching";
+
       db.prepare(
-        "UPDATE estou_chegando_events SET latitude = ?, longitude = ?, distance_meters = ? WHERE id = ?"
-      ).run(latitude, longitude, Math.round(distance), existingEvent.id);
+        "UPDATE estou_chegando_events SET status = ?, latitude = ?, longitude = ?, distance_meters = ?, radius_meters = ? WHERE id = ?"
+      ).run(nextStatus, latitude, longitude, displayDistance, effectiveRadius, existingEvent.id);
+
+      const vehicles = db.prepare(
+        "SELECT placa, modelo, cor FROM vehicle_authorizations WHERE morador_id = ? AND status = 'ativa' ORDER BY created_at DESC LIMIT 3"
+      ).all(user.id) as any[];
 
       res.json({
         status: "updated",
         event_id: existingEvent.id,
-        distance: Math.round(distance),
+        distance: displayDistance,
         direction: "approaching",
+        tracking: nextStatus === "tracking",
+        vehicles,
       });
       return;
     }
@@ -235,7 +269,7 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
       user.condominio_id, user.id, user.name, user.block, user.unit,
       vehicle_type || "proprio", vehicle_plate || null, vehicle_model || null,
       vehicle_color || null, driver_name || null,
-      latitude, longitude, Math.round(distance), effectiveRadius
+      latitude, longitude, displayDistance, effectiveRadius
     );
 
     const eventId = result.lastInsertRowid;
@@ -248,12 +282,12 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
     // Send push notification to portaria staff
     sendPushToPortaria(user.condominio_id!, {
       title: "🚗 Morador Chegando!",
-      body: `${user.name} (${user.block || ""}/${user.unit || ""}) está se aproximando — ${Math.round(distance)}m`,
+      body: `${user.name} (${user.block || ""}/${user.unit || ""}) está se aproximando — ${displayDistance}m`,
       data: {
         type: "estou-chegando",
         event_id: String(eventId),
         morador_name: user.name,
-        distance: String(Math.round(distance)),
+        distance: String(displayDistance),
       },
       channelId: "portariax_arrival",
       sound: "arrival_alert",
@@ -263,13 +297,13 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
     notifyPortariaWhatsApp(
       user.condominio_id!,
       "whatsapp_notify_estou_chegando",
-      `🚗 ${user.name} (${user.block || ""}/${user.unit || ""}) está se aproximando — ${Math.round(distance)}m`
+      `🚗 ${user.name} (${user.block || ""}/${user.unit || ""}) está se aproximando — ${displayDistance}m`
     );
 
     res.json({
       status: "notified",
       event_id: eventId,
-      distance: Math.round(distance),
+      distance: displayDistance,
       direction: "approaching",
       vehicles,
       message: "Portaria notificada!",
@@ -298,7 +332,7 @@ router.post("/confirm/:id", authenticate, authorize("funcionario", "sindico", "a
     }
 
     db.prepare(
-      "UPDATE estou_chegando_events SET status = 'confirmed', confirmed_by = ?, confirmed_at = datetime('now') WHERE id = ?"
+      "UPDATE estou_chegando_events SET status = 'tracking', confirmed_by = ?, confirmed_at = datetime('now') WHERE id = ?"
     ).run(user.id, eventId);
 
     res.json({ success: true, event_id: eventId });
@@ -354,7 +388,7 @@ router.get("/active", authenticate, authorize("funcionario", "sindico", "adminis
       SELECT e.*, u.phone as morador_phone, u.avatar_url as morador_avatar
       FROM estou_chegando_events e
       LEFT JOIN users u ON u.id = e.morador_id
-      WHERE e.condominio_id = ? AND e.status = 'approaching'
+      WHERE e.condominio_id = ? AND e.status IN ('approaching', 'tracking')
         AND e.created_at > datetime('now', '-30 minutes')
       ORDER BY e.created_at DESC
     `).all(user.condominio_id);
@@ -412,7 +446,7 @@ router.get("/my-active", authenticate, async (req: Request, res: Response) => {
     const user = req.user!;
     const event = db.prepare(`
       SELECT * FROM estou_chegando_events 
-      WHERE morador_id = ? AND status = 'approaching'
+      WHERE morador_id = ? AND status IN ('approaching', 'tracking')
         AND created_at > datetime('now', '-30 minutes')
       ORDER BY created_at DESC LIMIT 1
     `).get(user.id);

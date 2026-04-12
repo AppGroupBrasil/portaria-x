@@ -48,6 +48,8 @@ const portariaPool = new Map<number, ArrivalWsClient[]>();    // condominioId �
 
 // Last known distance per moradorId (for direction detection via WS)
 const wsLastDistances = new Map<number, number>();
+const ENTRY_COMPLETION_DISTANCE_METERS = 10;
+const AUTO_GATE_COOLDOWN_MINUTES = 5;
 
 function parseCookie(cookieHeader: string | undefined, name: string): string | null {
   if (!cookieHeader) return null;
@@ -81,6 +83,11 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number): numb
   const dLon = toRad(lon2 - lon1);
   const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function hasValidCoordinates(latitude: unknown, longitude: unknown): boolean {
+  return typeof latitude === "number" && Number.isFinite(latitude)
+    && typeof longitude === "number" && Number.isFinite(longitude);
 }
 
 /** Check if current time is within active schedule */
@@ -189,7 +196,7 @@ export function initArrivalWebSocket(server?: Server) {
               SELECT e.*, u.phone as morador_phone, u.avatar_url as morador_avatar
               FROM estou_chegando_events e
               LEFT JOIN users u ON u.id = e.morador_id
-              WHERE e.condominio_id = ? AND e.status = 'approaching'
+              WHERE e.condominio_id = ? AND e.status IN ('approaching', 'tracking')
                 AND e.created_at > datetime('now', '-30 minutes')
               ORDER BY e.created_at DESC
             `).all(authUser.condominio_id!);
@@ -201,7 +208,7 @@ export function initArrivalWebSocket(server?: Server) {
           case "location-update": {
             if (!client || client.type !== "morador") return;
             const { latitude, longitude, vehicle_type, vehicle_plate, vehicle_model, vehicle_color, driver_name, radius_meters, auto_open_gate } = msg;
-            if (!latitude || !longitude) return;
+            if (!hasValidCoordinates(latitude, longitude)) return;
 
             // Check feature enabled
             const enabledRow = db.prepare("SELECT value FROM condominio_config WHERE condominio_id = ? AND key = 'estou_chegando_enabled'").get(client.condominioId) as any;
@@ -218,13 +225,32 @@ export function initArrivalWebSocket(server?: Server) {
 
             // Get condominium location
             const condo = db.prepare("SELECT latitude, longitude FROM condominios WHERE id = ?").get(client.condominioId) as any;
-            if (!condo?.latitude || !condo?.longitude) {
+            if (!hasValidCoordinates(condo?.latitude, condo?.longitude)) {
               wsSend(client, { type: "error", message: "Localização do condomínio não configurada." });
               return;
             }
 
             const distance = haversine(latitude, longitude, condo.latitude, condo.longitude);
             const effectiveRadius = radius_meters || 200;
+            const displayDistance = distance <= ENTRY_COMPLETION_DISTANCE_METERS ? 0 : Math.max(0, Math.round(distance));
+
+            const existing = db.prepare(
+              `SELECT id, status FROM estou_chegando_events
+               WHERE morador_id = ? AND status = 'approaching'
+                 AND created_at > datetime('now', '-30 minutes')
+               ORDER BY created_at DESC LIMIT 1`
+            ).get(client.userId) as { id: number; status: string } | undefined;
+
+            if (existing && distance <= ENTRY_COMPLETION_DISTANCE_METERS) {
+              db.prepare(
+                "UPDATE estou_chegando_events SET status = 'arrived', latitude = ?, longitude = ?, distance_meters = 0, arrived_at = datetime('now') WHERE id = ?"
+              ).run(latitude, longitude, existing.id);
+
+              wsLastDistances.delete(client.userId);
+              broadcastToPortaria(client.condominioId, { type: "arrival-completed", event_id: existing.id, morador_id: client.userId });
+              wsSend(client, { type: "status", status: "arrived", distance: 0 });
+              return;
+            }
 
             // Direction detection — only notify on APPROACHING
             const prevDistance = wsLastDistances.get(client.userId);
@@ -237,19 +263,23 @@ export function initArrivalWebSocket(server?: Server) {
             }
 
             // Send distance status to morador
-            wsSend(client, { type: "status", status: "approaching", distance: Math.round(distance), radius: effectiveRadius });
+            wsSend(client, {
+              type: "status",
+              status: "approaching",
+              distance: displayDistance,
+              radius: effectiveRadius,
+            });
 
-            if (distance > effectiveRadius) return; // Still outside radius
-
-            // Check existing event
-            const existing = db.prepare(
-              "SELECT id FROM estou_chegando_events WHERE morador_id = ? AND status = 'approaching' AND created_at > datetime('now', '-10 minutes')"
-            ).get(client.userId) as any;
+            if (distance > effectiveRadius) {
+              return;
+            }
 
             if (existing) {
+              const nextStatus = existing.status === "tracking" ? "tracking" : "approaching";
+
               // Update position
-              db.prepare("UPDATE estou_chegando_events SET latitude = ?, longitude = ?, distance_meters = ? WHERE id = ?")
-                .run(latitude, longitude, Math.round(distance), existing.id);
+              db.prepare("UPDATE estou_chegando_events SET status = ?, latitude = ?, longitude = ?, distance_meters = ?, radius_meters = ? WHERE id = ?")
+                .run(nextStatus, latitude, longitude, displayDistance, effectiveRadius, existing.id);
 
               // Broadcast updated position to portaria
               broadcastToPortaria(client.condominioId, {
@@ -257,7 +287,8 @@ export function initArrivalWebSocket(server?: Server) {
                 event_id: existing.id,
                 morador_id: client.userId,
                 latitude, longitude,
-                distance: Math.round(distance),
+                distance: displayDistance,
+                status: nextStatus,
               });
               return;
             }
@@ -268,12 +299,12 @@ export function initArrivalWebSocket(server?: Server) {
                 (condominio_id, morador_id, morador_name, bloco, apartamento, status, 
                  vehicle_type, vehicle_plate, vehicle_model, vehicle_color, driver_name,
                  latitude, longitude, distance_meters, radius_meters)
-              VALUES (?, ?, ?, ?, ?, 'approaching', ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `).run(
               client.condominioId, authUser.id, authUser.name, authUser.block, authUser.unit,
-              vehicle_type || "proprio", vehicle_plate || null, vehicle_model || null,
+              "approaching", vehicle_type || "proprio", vehicle_plate || null, vehicle_model || null,
               vehicle_color || null, driver_name || null,
-              latitude, longitude, Math.round(distance), effectiveRadius
+              latitude, longitude, displayDistance, effectiveRadius
             );
 
             const eventId = Number(result.lastInsertRowid);
@@ -285,31 +316,44 @@ export function initArrivalWebSocket(server?: Server) {
 
             const newEvent = db.prepare("SELECT * FROM estou_chegando_events WHERE id = ?").get(eventId) as any;
 
-            // Notify portaria with sound (WebSocket)
             broadcastToPortaria(client.condominioId, {
               type: "arrival-notification",
               event: { ...newEvent, morador_phone: authUser.phone, morador_avatar: (authUser as any).avatar_url, vehicles },
             });
 
-            // Also send push notification to portaria staff (in case app is in background)
             sendPushToPortaria(client.condominioId, {
               title: "🚗 Morador Chegando!",
-              body: `${authUser.name} (${authUser.block || ""}/${authUser.unit || ""}) está se aproximando — ${Math.round(distance)}m`,
+              body: `${authUser.name} (${authUser.block || ""}/${authUser.unit || ""}) está se aproximando — ${displayDistance}m`,
               data: {
                 type: "estou-chegando",
                 event_id: String(eventId),
                 morador_name: authUser.name,
-                distance: String(Math.round(distance)),
+                distance: String(displayDistance),
               },
               channelId: "portariax_arrival",
               sound: "arrival_alert",
             }).catch(() => {});
 
-            wsSend(client, { type: "notified", event_id: eventId, distance: Math.round(distance) });
+            wsSend(client, { type: "notified", event_id: eventId, distance: displayDistance });
 
             // ─── Auto-open vehicular gate if morador enabled it ───
             if (auto_open_gate) {
               try {
+                const recentAutoOpen = db.prepare(
+                  `SELECT id, gate_auto_opened_at
+                   FROM estou_chegando_events
+                   WHERE morador_id = ?
+                     AND gate_auto_opened_at IS NOT NULL
+                     AND gate_auto_opened_at > datetime('now', ?)
+                   ORDER BY gate_auto_opened_at DESC
+                   LIMIT 1`
+                ).get(client.userId, `-${AUTO_GATE_COOLDOWN_MINUTES} minutes`) as { id: number; gate_auto_opened_at: string } | undefined;
+
+                if (recentAutoOpen) {
+                  console.log(`  [Estou Chegando] Auto-open skipped for ${authUser.name}: cooldown active (${recentAutoOpen.gate_auto_opened_at})`);
+                  break;
+                }
+
                 // Find vehicular gate access point
                 const vehicularAp = db.prepare(
                   `SELECT * FROM gate_access_points 
@@ -344,6 +388,12 @@ export function initArrivalWebSocket(server?: Server) {
                     const openResult = await pulseDevice(client.condominioId!, creds, ap.device_id, duration, ap.channel);
                     console.log(`  [Estou Chegando] Auto-open gate for ${authUser.name}: ${ap.name} → ${openResult.success ? 'OK' : openResult.error}`);
 
+                    if (openResult.success) {
+                      db.prepare(
+                        "UPDATE estou_chegando_events SET gate_auto_opened_at = datetime('now') WHERE id = ? AND gate_auto_opened_at IS NULL"
+                      ).run(eventId);
+                    }
+
                     // Log the action
                     db.prepare(
                       `INSERT INTO gate_logs (condominio_id, user_id, user_name, action, details, created_at)
@@ -377,18 +427,18 @@ export function initArrivalWebSocket(server?: Server) {
             if (!event) return;
 
             db.prepare(
-              "UPDATE estou_chegando_events SET status = 'confirmed', confirmed_by = ?, confirmed_at = datetime('now') WHERE id = ?"
+              "UPDATE estou_chegando_events SET status = 'tracking', confirmed_by = ?, confirmed_at = datetime('now') WHERE id = ?"
             ).run(client.userId, eventId2);
 
             // Notify the morador
             const moradorClient = moradorPool.get(event.morador_id);
             if (moradorClient) {
-              wsSend(moradorClient, { type: "arrival-confirmed", event_id: eventId2, confirmed_by: authUser.name });
+              wsSend(moradorClient, { type: "arrival-tracking-started", event_id: eventId2, confirmed_by: authUser.name });
             }
 
             // Broadcast to all portaria clients
             broadcastToPortaria(client.condominioId, {
-              type: "arrival-confirmed-broadcast", event_id: eventId2,
+              type: "arrival-tracking-broadcast", event_id: eventId2,
             });
             break;
           }
@@ -397,7 +447,7 @@ export function initArrivalWebSocket(server?: Server) {
           case "cancel-arrival": {
             if (!client || client.type !== "morador") return;
             const cancelEvent = db.prepare(
-              "SELECT id FROM estou_chegando_events WHERE morador_id = ? AND status = 'approaching' AND created_at > datetime('now', '-10 minutes')"
+              "SELECT id FROM estou_chegando_events WHERE morador_id = ? AND status IN ('tracking', 'approaching') AND created_at > datetime('now', '-30 minutes')"
             ).get(client.userId) as any;
             if (!cancelEvent) return;
 

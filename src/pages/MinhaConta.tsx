@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   User,
+  Car,
   Phone,
   Mail,
   Building2,
@@ -18,6 +19,7 @@ import {
   Loader2,
   Palette,
   Check,
+  ChevronRight,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
@@ -148,11 +150,6 @@ export default function MinhaConta() {
     color: "#0f172a", outline: "none", boxSizing: "border-box",
   };
 
-  const readOnlyStyle: React.CSSProperties = {
-    ...inputStyle,
-    background: "#f1f5f9", color: "#64748b", cursor: "default",
-  };
-
   const labelStyle: React.CSSProperties = {
     fontWeight: 600, fontSize: "13px", color: "#475569", marginBottom: "6px",
     display: "flex", alignItems: "center", gap: "6px",
@@ -242,6 +239,54 @@ export default function MinhaConta() {
                   placeholder="Ex: 101" style={inputStyle} />
               </div>
             </div>
+          </div>
+        )}
+
+        {isMorador && (
+          <div style={{
+            background: "#fff", borderRadius: "16px", padding: "20px",
+            border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", marginBottom: "8px" }}>
+              <div>
+                <h2 style={{
+                  fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: "0 0 4px",
+                  display: "flex", alignItems: "center", gap: "12px",
+                }}>
+                  <Car className="w-4 h-4" style={{ color: "#003580" }} />
+                  Meus Veículos
+                </h2>
+                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>
+                  Acesse o cadastro dos seus veículos próprios
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate("/morador/veiculos")}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "12px",
+                padding: "16px",
+                borderRadius: "14px",
+                border: "1px solid #bfdbfe",
+                background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+                color: "#1d4ed8",
+                cursor: "pointer",
+              }}
+            >
+              <div style={{ textAlign: "left" }}>
+                <p style={{ fontSize: "14px", fontWeight: 700, color: "#1e3a8a", margin: 0 }}>
+                  Cadastrar ou editar veículos
+                </p>
+                <p style={{ fontSize: "12px", color: "#475569", margin: "4px 0 0" }}>
+                  Placa, modelo, cor e dados de acesso do veículo
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
         )}
 
