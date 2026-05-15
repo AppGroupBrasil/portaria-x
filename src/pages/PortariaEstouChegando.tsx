@@ -387,7 +387,7 @@ export default function PortariaEstouChegando() {
         <div className="flex items-center justify-between" style={{ padding: "1rem 1.5rem", height: "4rem" }}>
           <div className="flex items-center gap-3">
             <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-6 h-6" />
             </button>
             <span style={{ fontWeight: 700, fontSize: 18 }}>Estou Chegando</span>
             {sortedEvents.length > 0 && (
@@ -410,14 +410,14 @@ export default function PortariaEstouChegando() {
                 <TStep n={5}>Se o morador veio de <strong>Uber/Taxi</strong>, voce vera o nome do motorista e a placa do veiculo de transporte</TStep>
                 <TStep n={6}>Quando o morador chegar, toque em <strong>"Confirmar Chegada"</strong> — ele recebe vibracao + som de confirmacao no celular</TStep>
                 <TStep n={7}>O evento e registrado no <strong>historico</strong> com horario de notificacao e confirmacao</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Status atualizado em tempo real (Rastreando → Notificado → Confirmado) e recebe alertas sonoros/vibracao.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Status atualizado em tempo real (Rastreando → Notificado → Confirmado) e recebe alertas sonoros/vibracao.</p>
               </FlowPortaria>
               <FlowMorador>
                 <TStep n={1}>O morador abre o app e toca em <strong>"Estou Chegando"</strong></TStep>
                 <TStep n={2}>Seleciona o veiculo (proprio ou Uber/Taxi) e ativa o rastreamento GPS</TStep>
                 <TStep n={3}>Conforme se aproxima do condominio, o sistema detecta a <strong>direcao</strong> (aproximando vs afastando)</TStep>
                 <TStep n={4}>Quando entra no raio configurado <strong>se aproximando</strong>, o alerta chega automaticamente para voce</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Importante:</strong> O sistema so envia alerta quando o morador esta VINDO em direcao ao condominio. Se ele estiver saindo, nao notifica.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Importante:</strong> O sistema so envia alerta quando o morador esta VINDO em direcao ao condominio. Se ele estiver saindo, nao notifica.</p>
               </FlowMorador>
               <TSection icon={<span>🗺️</span>} title="MAPA INTERATIVO">
                 <TBullet><strong>Marcador vermelho</strong> — Posicao do condominio (centro do mapa)</TBullet>
@@ -448,15 +448,15 @@ export default function PortariaEstouChegando() {
               onClick={() => setSoundEnabled(!soundEnabled)}
               className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
             >
-              {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5 text-red-300" />}
+              {soundEnabled ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6 text-red-300" />}
             </button>
             <button
               onClick={() => { setShowHistory(!showHistory); if (!showHistory) loadHistory(); }}
               className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
             >
-              <History className="w-5 h-5" />
+              <History className="w-6 h-6" />
             </button>
-            {wsConnected ? <Wifi className="w-4 h-4 text-emerald-400" /> : <WifiOff className="w-4 h-4 text-red-400" />}
+            {wsConnected ? <Wifi className="w-5 h-5 text-emerald-400" /> : <WifiOff className="w-5 h-5 text-red-400" />}
           </div>
         </div>
       </header>
@@ -473,7 +473,7 @@ export default function PortariaEstouChegando() {
       {/* Schedule info */}
       {config && (
         <div className="flex items-center gap-2 bg-card border-b border-border" style={{ padding: "0.5rem 1.5rem" }}>
-          <Clock className="w-4 h-4 text-muted-foreground" />
+          <Clock className="w-5 h-5 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">
             Ativo: {config.horario_inicio} — {config.horario_fim}
           </span>
@@ -499,7 +499,7 @@ export default function PortariaEstouChegando() {
                   opacity: history.length === 0 ? 0.7 : 1,
                 }}
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-5 h-5" />
                 Exportar CSV
               </button>
             </div>
@@ -520,7 +520,7 @@ export default function PortariaEstouChegando() {
                         <p className="text-2xl font-black" style={{ color: p.text }}>{card.value}</p>
                       </div>
                       <div className="rounded-xl" style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: card.bg, color: card.color }}>
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-6 h-6" />
                       </div>
                     </div>
                   </div>
@@ -530,7 +530,7 @@ export default function PortariaEstouChegando() {
 
             {historyLoading ? (
               <div className="flex justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                <Loader2 className="w-7 h-7 animate-spin text-primary" />
               </div>
             ) : history.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">Nenhum registro encontrado.</p>
@@ -727,7 +727,7 @@ export default function PortariaEstouChegando() {
                           {ev.morador_avatar ? (
                             <img src={ev.morador_avatar} className="w-12 h-12 rounded-full object-cover" alt="" />
                           ) : (
-                            <User className="w-6 h-6 text-emerald-500" />
+                            <User className="w-7 h-7 text-emerald-500" />
                           )}
                         </div>
 
@@ -737,7 +737,7 @@ export default function PortariaEstouChegando() {
                           <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
                             {ev.bloco && (
                               <span className="flex items-center gap-1">
-                                <Building className="w-3 h-3" />
+                                <Building className="w-4 h-4" />
                                 Bloco {ev.bloco}
                               </span>
                             )}
@@ -746,7 +746,7 @@ export default function PortariaEstouChegando() {
 
                           {/* Vehicle info */}
                           <div className="flex items-center gap-2 mt-2">
-                            <Car className="w-4 h-4 text-primary" />
+                            <Car className="w-5 h-5 text-primary" />
                             {ev.vehicle_type === "uber_taxi" ? (
                               <span className="text-xs text-foreground">
                                 <span className="bg-amber-500/20 text-amber-600 px-1.5 py-0.5 rounded font-bold text-[10px]">UBER/TÁXI</span>
@@ -772,7 +772,7 @@ export default function PortariaEstouChegando() {
                           {/* Distance badge */}
                           <div className="flex items-center gap-2 mt-2">
                             <span className="px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1" style={{ background: statusMeta.background, color: statusMeta.tone }}>
-                              <MapPin className="w-3 h-3" />
+                              <MapPin className="w-4 h-4" />
                               {Math.round(ev.distance_meters)}m
                             </span>
                             <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: statusMeta.background, color: statusMeta.tone }}>
@@ -805,7 +805,7 @@ export default function PortariaEstouChegando() {
                           opacity: canConfirm || isTracking ? 1 : 0.88,
                         }}
                       >
-                        <Check className="w-5 h-5" />
+                        <Check className="w-6 h-6" />
                         {isTracking
                           ? "ACOMPANHANDO CHEGADA DO MORADOR"
                           : "ACOMPANHAR CHEGADA"}

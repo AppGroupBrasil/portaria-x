@@ -122,9 +122,9 @@ export default function Login() {
                 className="h-12 rounded-xl pr-4"
                 style={{
                   outline: "none",
-                  background: "#ffffff",
+                  background: "var(--color-card, #fff)",
                   border: "1px solid rgba(255,255,255,0.25)",
-                  color: "#1e293b",
+                  color: "var(--card-foreground)",
                   paddingLeft: 19,
                 }}
               />
@@ -157,9 +157,9 @@ export default function Login() {
                   style={{
                     outline: "none",
                     paddingLeft: 19,
-                    background: "#ffffff",
+                    background: "var(--color-card, #fff)",
                     border: "1px solid rgba(255,255,255,0.25)",
-                    color: "#1e293b",
+                    color: "var(--card-foreground)",
                   }}
                   autoComplete="current-password"
                 />
@@ -170,9 +170,9 @@ export default function Login() {
                   style={{ color: "#003580" }}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeOff className="w-6 h-6" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-6 h-6" />
                   )}
                 </button>
               </div>
@@ -189,9 +189,9 @@ export default function Login() {
                 }}
               >
                 {isBlocked ? (
-                  <Shield className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                  <Shield className="w-6 h-6 shrink-0 mt-0.5" style={{ color: "#f87171" }} />
                 ) : (
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "#f87171" }} />
                 )}
                 <div>
                   {isBlocked && (
@@ -217,7 +217,7 @@ export default function Login() {
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-6 h-6 animate-spin" />
                     Entrando...
                   </span>
                 ) : (
@@ -277,7 +277,7 @@ export default function Login() {
               className="w-full rounded-xl font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"
               style={{
                 height: "46px",
-                background: "#ffffff",
+                background: "var(--color-card, #fff)",
                 border: "1px solid rgba(255,255,255,0.25)",
                 color: "#2563eb",
               }}

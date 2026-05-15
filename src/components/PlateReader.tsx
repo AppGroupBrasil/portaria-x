@@ -229,11 +229,11 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
           display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
           padding: "14px", borderRadius: "12px", width: "100%",
           background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-          border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
+          border: "none", color: "#fff", fontWeight: 700, fontSize: "16px",
           cursor: "pointer",
         }}
       >
-        <Camera className="w-5 h-5" />
+        <Camera className="w-6 h-6" />
         LER PLACA PELO CELULAR
       </button>
 
@@ -249,11 +249,11 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
             display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 2,
           }}>
             <h3 style={{ color: "#fff", fontWeight: 700, fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
-              <ScanLine className="w-5 h-5" style={{ color: "#a5b4fc" }} />
+              <ScanLine className="w-6 h-6" style={{ color: "#a5b4fc" }} />
               Leitura de Placa
             </h3>
             <button onClick={handleClose} style={{ background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%", width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-              <X className="w-5 h-5" style={{ color: "#fff" }} />
+              <X className="w-6 h-6" style={{ color: "#fff" }} />
             </button>
           </div>
 
@@ -268,7 +268,7 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                   border: "3px dashed #a5b4fc", borderRadius: "12px",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <span style={{ color: "#a5b4fc", fontSize: "12px", fontWeight: 600, background: "rgba(0,0,0,0.5)", padding: "4px 10px", borderRadius: "8px" }}>
+                  <span style={{ color: "#a5b4fc", fontSize: "13px", fontWeight: 600, background: "rgba(0,0,0,0.5)", padding: "4px 10px", borderRadius: "8px" }}>
                     Posicione a placa aqui
                   </span>
                 </div>
@@ -285,8 +285,8 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                 background: "rgba(255,255,255,0.05)", border: "2px dashed rgba(255,255,255,0.2)",
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px",
               }}>
-                <Camera className="w-10 h-10" style={{ color: "#64748b" }} />
-                <p style={{ color: "#94a3b8", fontSize: "13px" }}>Câmera não disponível</p>
+                <Camera className="w-10 h-10" style={{ color: "var(--muted-foreground)" }} />
+                <p style={{ color: "#94a3b8", fontSize: "14px" }}>Câmera não disponível</p>
               </div>
             )}
           </div>
@@ -294,8 +294,8 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
           {/* Processing indicator */}
           {processing && (
             <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-              <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#a5b4fc" }} />
-              <p style={{ color: "#a5b4fc", fontSize: "14px", fontWeight: 600 }}>Lendo placa... {progress}%</p>
+              <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#a5b4fc" }} />
+              <p style={{ color: "#a5b4fc", fontSize: "15px", fontWeight: 600 }}>Lendo placa... {progress}%</p>
               <div style={{ width: "200px", height: "6px", borderRadius: "3px", background: "rgba(255,255,255,0.1)" }}>
                 <div style={{ width: `${progress}%`, height: "100%", borderRadius: "3px", background: "linear-gradient(90deg, #6366f1, #a5b4fc)", transition: "width 0.3s" }} />
               </div>
@@ -327,13 +327,13 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                     caretColor: "#f59e0b",
                   }}
                 />
-                <Pencil className="w-4 h-4" style={{ color: "#92400e", opacity: 0.6, flexShrink: 0 }} />
+                <Pencil className="w-5 h-5" style={{ color: "#92400e", opacity: 0.6, flexShrink: 0 }} />
               </div>
-              <p style={{ color: "#86efac", fontSize: "13px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <CheckCircle2 className="w-4 h-4" />
+              <p style={{ color: "#86efac", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <CheckCircle2 className="w-5 h-5" />
                 Placa identificada!
               </p>
-              <p style={{ color: "#94a3b8", fontSize: "11px", marginTop: "-4px" }}>
+              <p style={{ color: "#94a3b8", fontSize: "12px", marginTop: "-4px" }}>
                 Toque na placa para corrigir se necessário
               </p>
             </div>
@@ -342,7 +342,7 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
           {/* Error */}
           {error && !processing && (
             <div style={{ marginTop: "20px", padding: "12px 20px", borderRadius: "12px", background: "rgba(239,68,68,0.15)", maxWidth: "400px" }}>
-              <p style={{ color: "#fca5a5", fontSize: "13px", textAlign: "center" }}>{error}</p>
+              <p style={{ color: "#fca5a5", fontSize: "14px", textAlign: "center" }}>{error}</p>
             </div>
           )}
 
@@ -359,7 +359,7 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                   boxShadow: "0 4px 15px rgba(99,102,241,0.4)",
                 }}
               >
-                <Camera className="w-5 h-5" />
+                <Camera className="w-6 h-6" />
                 Capturar
               </button>
             )}
@@ -372,10 +372,10 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                     flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                     padding: "14px", borderRadius: "14px",
                     background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-                    color: "#fff", fontWeight: 600, fontSize: "14px", cursor: "pointer",
+                    color: "#fff", fontWeight: 600, fontSize: "15px", cursor: "pointer",
                   }}
                 >
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-5 h-5" />
                   Tentar Novamente
                 </button>
                 <button
@@ -384,11 +384,11 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                     flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                     padding: "14px", borderRadius: "14px",
                     background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                    border: "none", color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+                    border: "none", color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
                     boxShadow: "0 4px 15px rgba(34,197,94,0.3)",
                   }}
                 >
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-5 h-5" />
                   Usar Placa
                 </button>
               </>
@@ -401,10 +401,10 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
                   flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                   padding: "14px", borderRadius: "14px",
                   background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-                  border: "none", color: "#fff", fontWeight: 600, fontSize: "14px", cursor: "pointer",
+                  border: "none", color: "#fff", fontWeight: 600, fontSize: "15px", cursor: "pointer",
                 }}
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-5 h-5" />
                 Tentar Novamente
               </button>
             )}
@@ -417,7 +417,7 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
             disabled={processing}
             style={{
               marginTop: "12px", background: "none", border: "none",
-              color: "#94a3b8", fontSize: "13px", cursor: "pointer",
+              color: "#94a3b8", fontSize: "14px", cursor: "pointer",
               textDecoration: "underline",
             }}
           >

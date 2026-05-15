@@ -121,7 +121,7 @@ export default function SignaturePad({
         display: "flex", alignItems: "center", justifyContent: "space-between",
         marginBottom: "8px",
       }}>
-        <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b" }}>
+        <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)" }}>
           {label}
         </span>
         {hasDrawn && (
@@ -131,7 +131,7 @@ export default function SignaturePad({
             style={{
               display: "flex", alignItems: "center", gap: "4px",
               background: "none", border: "none", color: "#ef4444",
-              fontSize: "12px", fontWeight: 600, cursor: "pointer",
+              fontSize: "13px", fontWeight: 600, cursor: "pointer",
             }}
           >
             <Eraser className="w-3.5 h-3.5" /> Limpar
@@ -141,7 +141,7 @@ export default function SignaturePad({
 
       <div style={{
         border: "2px dashed #cbd5e1", borderRadius: "12px",
-        overflow: "hidden", background: "#fff", touchAction: "none",
+        overflow: "hidden", background: "var(--color-card, #fff)", touchAction: "none",
       }}>
         <canvas
           ref={canvasRef}
@@ -163,7 +163,7 @@ export default function SignaturePad({
           <div style={{
             position: "relative", top: `-${height / 2 + 10}px`,
             textAlign: "center", pointerEvents: "none",
-            color: "#94a3b8", fontSize: "13px", fontWeight: 500,
+            color: "#94a3b8", fontSize: "14px", fontWeight: 500,
           }}>
             Assine aqui com o dedo ou mouse
           </div>

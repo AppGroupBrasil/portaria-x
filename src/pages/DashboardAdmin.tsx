@@ -143,7 +143,7 @@ export default function DashboardAdmin() {
         <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "4rem", gap: 16 }}>
           <div className="flex items-center gap-4" style={{ minWidth: 0 }}>
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder, flexShrink: 0 }}>
-              <Building2 style={{ width: 22, height: 22, color: p.text }} />
+              <Building2 style={{ width: 26, height: 26, color: p.text }} />
             </div>
             <div style={{ minWidth: 0 }}>
               <span
@@ -165,7 +165,7 @@ export default function DashboardAdmin() {
                 {user?.name || "Administradora"}
               </span>
               <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: p.textDim, marginTop: 6, flexWrap: "wrap" }}>
-                <Shield className="w-4 h-4" />
+                <Shield className="w-5 h-5" />
                 {getRoleLabel(user?.role || "administradora")}
               </span>
             </div>
@@ -173,11 +173,11 @@ export default function DashboardAdmin() {
           <div className="flex items-center gap-3" style={{ flexShrink: 0 }}>
             <ThemePicker />
             <button className="flex items-center justify-center relative" style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
-              <Bell className="w-6 h-6" style={{ color: p.text }} />
+              <Bell className="w-7 h-7" style={{ color: p.text }} />
               <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-emerald-400 rounded-full" />
             </button>
             <button className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }} onClick={handleLogout}>
-              <LogOut className="w-6 h-6" style={{ color: p.text }} />
+              <LogOut className="w-7 h-7" style={{ color: p.text }} />
             </button>
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function DashboardAdmin() {
           ].map((s) => (
             <button type="button" key={s.label} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, ...gradientBorder }}>
               <span className="text-2xl sm:text-3xl font-extrabold text-white">{s.value}</span>
-              <span className="font-medium uppercase tracking-wider text-center text-white" style={{ fontSize: "11px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word" }}>{s.label}</span>
+              <span className="font-medium uppercase tracking-wider text-center text-white" style={{ fontSize: "12px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word" }}>{s.label}</span>
             </button>
           ))}
           {/* Liberações card */}
@@ -229,7 +229,7 @@ export default function DashboardAdmin() {
             </span>
             <span
               className="font-medium uppercase tracking-wider text-white"
-              style={{ fontSize: "14px", marginTop: "0.35rem" }}
+              style={{ fontSize: "15px", marginTop: "0.35rem" }}
             >
               Liberações
             </span>
@@ -403,7 +403,7 @@ export default function DashboardAdmin() {
               style={{ minWidth: 52, padding: "0 4px" }}
             >
               <div className="p-2 rounded-xl transition-all duration-200">
-                <item.icon className="w-5 h-5" style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }} />
+                <item.icon className="w-6 h-6" style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }} />
               </div>
               <span style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }}>{item.label}</span>
             </button>

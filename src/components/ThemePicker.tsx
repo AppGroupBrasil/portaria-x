@@ -49,7 +49,7 @@ export default function ThemePicker() {
           position: "relative",
         }}
       >
-        <Palette style={{ width: 20, height: 20, color: p.text }} />
+        <Palette style={{ width: 24, height: 24, color: p.text }} />
         {/* Active swatch dot */}
         <div
           style={{
@@ -146,7 +146,7 @@ export default function ThemePicker() {
                     transition: "border 0.15s",
                   }}
                 >
-                  {isActive && <Check style={{ width: 14, height: 14, color: t.id === "light" ? "#003580" : "#fff" }} />}
+                  {isActive && <Check style={{ width: 18, height: 18, color: t.id === "light" ? "#003580" : "#fff" }} />}
                 </div>
                 {/* Label */}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -200,7 +200,7 @@ export default function ThemePicker() {
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
               >
-                <RefreshCw style={{ width: 14, height: 14 }} />
+                <RefreshCw style={{ width: 18, height: 18 }} />
                 Aplicar Tema
               </button>
               <p style={{ fontSize: 10, color: p.textMuted, textAlign: "center", margin: "6px 0 2px", lineHeight: 1.3 }}>

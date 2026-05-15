@@ -11,7 +11,7 @@ const PLANS = [
 
 const INPUT_STYLE: React.CSSProperties = {
   border: "none", borderBottom: "2px solid #003580", background: "transparent",
-  padding: "4px 2px", fontSize: "15px", color: "#003580", fontWeight: 600,
+  padding: "4px 2px", fontSize: "16px", color: "#003580", fontWeight: 600,
   outline: "none", width: "100%", fontFamily: "inherit",
 };
 
@@ -25,7 +25,7 @@ function today() {
 function FieldRow({ label, value, onChange, placeholder }: Readonly<{ label: string; value: string; onChange: (v: string) => void; placeholder?: string }>) {
   return (
     <div>
-      <span style={{ fontSize: "12px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</span>
+      <span style={{ fontSize: "13px", fontWeight: 700, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</span>
       <input
         type="text"
         value={value}
@@ -41,9 +41,9 @@ function SignatureBlock({ label, name, detail }: Readonly<{ label: string; name:
   return (
     <div style={{ textAlign: "center" }}>
       <div style={{ borderBottom: "2px solid #1e293b", marginBottom: "8px", paddingBottom: "48px" }} />
-      <p style={{ fontWeight: 800, fontSize: "14px", color: "#003580", marginBottom: "2px" }}>{label}</p>
-      <p style={{ fontSize: "14px", color: "#1e293b", fontWeight: 600 }}>{name}</p>
-      <p style={{ fontSize: "13px", color: "#64748b" }}>{detail}</p>
+      <p style={{ fontWeight: 800, fontSize: "15px", color: "#003580", marginBottom: "2px" }}>{label}</p>
+      <p style={{ fontSize: "15px", color: "var(--card-foreground)", fontWeight: 600 }}>{name}</p>
+      <p style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>{detail}</p>
     </div>
   );
 }
@@ -112,7 +112,7 @@ export default function ContratoPage() {
             display: "flex", alignItems: "center", gap: "12px",
             background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.3)",
             borderRadius: "10px", padding: "8px 16px", color: "#fff",
-            fontWeight: 600, fontSize: "14px", cursor: "pointer",
+            fontWeight: 600, fontSize: "15px", cursor: "pointer",
           }}
         >
           <ArrowLeft style={{ width: "16px", height: "16px" }} /> Voltar
@@ -123,7 +123,7 @@ export default function ContratoPage() {
             display: "flex", alignItems: "center", gap: "6px",
             background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.3)",
             borderRadius: "10px", padding: "8px 16px", color: "#fff",
-            fontWeight: 600, fontSize: "14px", cursor: "pointer",
+            fontWeight: 600, fontSize: "15px", cursor: "pointer",
           }}>
             <Printer style={{ width: "16px", height: "16px" }} /> Imprimir / PDF
           </button>
@@ -131,7 +131,7 @@ export default function ContratoPage() {
             display: "flex", alignItems: "center", gap: "6px",
             background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.3)",
             borderRadius: "10px", padding: "8px 16px", color: "#fff",
-            fontWeight: 600, fontSize: "14px", cursor: "pointer",
+            fontWeight: 600, fontSize: "15px", cursor: "pointer",
           }}>
             <Copy style={{ width: "16px", height: "16px" }} /> {copied ? "Copiado!" : "Copiar Link"}
           </button>
@@ -139,7 +139,7 @@ export default function ContratoPage() {
             display: "flex", alignItems: "center", gap: "6px",
             background: "#25D366", border: "none",
             borderRadius: "10px", padding: "8px 16px", color: "#fff",
-            fontWeight: 600, fontSize: "14px", cursor: "pointer",
+            fontWeight: 600, fontSize: "15px", cursor: "pointer",
           }}>
             <MessageCircle style={{ width: "16px", height: "16px" }} /> WhatsApp
           </button>
@@ -149,10 +149,10 @@ export default function ContratoPage() {
       {/* ═══ Contract Content ═══ */}
       <div className="contract-container" style={{
         maxWidth: "900px", margin: "40px auto", padding: "60px 48px",
-        background: "#ffffff", borderRadius: "16px",
+        background: "var(--color-card, #fff)", borderRadius: "16px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
         border: "1px solid rgba(0,53,128,0.1)",
-        lineHeight: 1.8, color: "#1e293b", fontSize: "15px",
+        lineHeight: 1.8, color: "var(--card-foreground)", fontSize: "16px",
       }}>
 
         {/* Header */}
@@ -168,7 +168,7 @@ export default function ContratoPage() {
           <h1 style={{ fontSize: "28px", fontWeight: 900, color: "#003580", marginBottom: "8px", letterSpacing: "-0.5px" }}>
             CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE SOFTWARE
           </h1>
-          <p style={{ fontSize: "14px", color: "#64748b" }}>
+          <p style={{ fontSize: "15px", color: "var(--muted-foreground)" }}>
             Modelo de Contrato — Portaria X
           </p>
         </div>
@@ -213,7 +213,7 @@ export default function ContratoPage() {
             dispositivos móveis, compreendendo:
           </p>
 
-          <p style={{ fontWeight: 800, color: "#003580", marginTop: "20px", marginBottom: "8px", fontSize: "15px" }}>
+          <p style={{ fontWeight: 800, color: "#003580", marginTop: "20px", marginBottom: "8px", fontSize: "16px" }}>
             Funcionalidades Incluídas no Plano:
           </p>
           <ul style={{ paddingLeft: "24px" }}>
@@ -263,11 +263,11 @@ export default function ContratoPage() {
                   </div>
                 )}
                 <p style={{ fontWeight: 800, fontSize: "16px", color: "#003580" }}>Plano</p>
-                <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "8px" }}>{plan.label}</p>
+                <p style={{ fontSize: "14px", color: "var(--muted-foreground)", marginBottom: "8px" }}>{plan.label}</p>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: "2px" }}>
-                  <span style={{ fontSize: "13px", color: "#003580" }}>R$</span>
+                  <span style={{ fontSize: "14px", color: "#003580" }}>R$</span>
                   <span style={{ fontSize: "36px", fontWeight: 900, color: "#003580", lineHeight: 1 }}>{plan.price}</span>
-                  <span style={{ fontSize: "13px", color: "#003580" }}>/mês</span>
+                  <span style={{ fontSize: "14px", color: "#003580" }}>/mês</span>
                 </div>
               </button>
             ))}
@@ -419,14 +419,14 @@ export default function ContratoPage() {
             {condo && (
               <div style={{ marginBottom: "20px", padding: "16px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
                 <p style={{ fontWeight: 700, color: "#003580", marginBottom: "4px" }}>CONTRATANTE</p>
-                <p style={{ fontSize: "14px" }}><strong>{condo}</strong>{cnpj ? ` — CNPJ: ${cnpj}` : ""}</p>
-                {endereco && <p style={{ fontSize: "13px", color: "#64748b" }}>{endereco}{numero ? `, ${numero}` : ""}{bairro ? ` — ${bairro}` : ""}{cidadeUf ? ` — ${cidadeUf}` : ""}{cep ? ` — CEP: ${cep}` : ""}</p>}
-                {sindico && <p style={{ fontSize: "13px", color: "#64748b" }}>Representante: {sindico}{cpfSindico ? ` (CPF: ${cpfSindico})` : ""}</p>}
+                <p style={{ fontSize: "15px" }}><strong>{condo}</strong>{cnpj ? ` — CNPJ: ${cnpj}` : ""}</p>
+                {endereco && <p style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>{endereco}{numero ? `, ${numero}` : ""}{bairro ? ` — ${bairro}` : ""}{cidadeUf ? ` — ${cidadeUf}` : ""}{cep ? ` — CEP: ${cep}` : ""}</p>}
+                {sindico && <p style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>Representante: {sindico}{cpfSindico ? ` (CPF: ${cpfSindico})` : ""}</p>}
               </div>
             )}
 
             {/* Plano */}
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "14px" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "15px" }}>
               <thead>
                 <tr style={{ background: "#f1f5f9" }}>
                   <th style={{ textAlign: "left", padding: "12px 16px", fontWeight: 700, color: "#003580", borderBottom: "2px solid #e2e8f0" }}>Serviço</th>
@@ -438,7 +438,7 @@ export default function ContratoPage() {
                   <tr>
                     <td style={{ padding: "12px 16px", borderBottom: "1px solid #e2e8f0" }}>
                       <strong>Plano — {planObj.label}</strong>
-                      <br /><span style={{ fontSize: "12px", color: "#64748b" }}>Todas as funcionalidades inclusas (Cláusula 2ª)</span>
+                      <br /><span style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Todas as funcionalidades inclusas (Cláusula 2ª)</span>
                     </td>
                     <td style={{ padding: "12px 16px", borderBottom: "1px solid #e2e8f0", textAlign: "right", fontWeight: 700, color: "#003580" }}>
                       R$ {planObj.price},00
@@ -456,7 +456,7 @@ export default function ContratoPage() {
               </tbody>
               <tfoot>
                 <tr style={{ background: "#003580" }}>
-                  <td style={{ padding: "14px 16px", fontWeight: 800, color: "#fff", fontSize: "15px" }}>
+                  <td style={{ padding: "14px 16px", fontWeight: 800, color: "#fff", fontSize: "16px" }}>
                     TOTAL MENSAL
                   </td>
                   <td style={{ padding: "14px 16px", textAlign: "right", fontWeight: 900, color: "#fff", fontSize: "20px" }}>
@@ -470,7 +470,7 @@ export default function ContratoPage() {
             <div style={{ marginTop: "24px", padding: "16px", background: "#eff6ff", borderRadius: "10px", border: "1px solid #bfdbfe" }}>
               <p style={{ fontWeight: 700, color: "#003580", marginBottom: "8px" }}>DATA DE INÍCIO DA VIGÊNCIA</p>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <span style={{ fontSize: "14px" }}>A partir de:</span>
+                <span style={{ fontSize: "15px" }}>A partir de:</span>
                 <input
                   type="text"
                   value={dataInicio}
@@ -479,7 +479,7 @@ export default function ContratoPage() {
                   style={{ ...INPUT_STYLE, width: "130px", textAlign: "center", fontSize: "16px", fontWeight: 800, color: "#003580" }}
                 />
               </div>
-              <p style={{ fontSize: "13px", color: "#64748b", marginTop: "8px" }}>
+              <p style={{ fontSize: "14px", color: "var(--muted-foreground)", marginTop: "8px" }}>
                 Vencimento mensal: dia <strong>{diaVenc || "___"}</strong> de cada mês • Forma de pagamento: boleto, PIX ou cartão
               </p>
             </div>
@@ -488,12 +488,12 @@ export default function ContratoPage() {
 
         {/* Assinaturas */}
         <div style={{ marginTop: "60px", borderTop: "2px solid #e2e8f0", paddingTop: "40px" }}>
-          <p style={{ textAlign: "center", color: "#64748b", fontSize: "14px", marginBottom: "48px" }}>
+          <p style={{ textAlign: "center", color: "var(--muted-foreground)", fontSize: "15px", marginBottom: "48px" }}>
             E por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias
             de igual teor e forma, na presença de 2 (duas) testemunhas.
           </p>
 
-          <p style={{ textAlign: "center", color: "#64748b", fontSize: "14px", marginBottom: "48px" }}>
+          <p style={{ textAlign: "center", color: "var(--muted-foreground)", fontSize: "15px", marginBottom: "48px" }}>
             São Paulo, {dataInicio ? <strong style={{ color: "#003580" }}>{dataInicio}</strong> : "_____ de ___________________ de _________"}.
           </p>
 
@@ -534,21 +534,21 @@ export default function ContratoPage() {
         <button onClick={handlePrint} style={{
           display: "flex", alignItems: "center", gap: "12px",
           background: "#003580", border: "none", borderRadius: "12px",
-          padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
+          padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
         }}>
           <Printer style={{ width: "18px", height: "18px" }} /> Imprimir Contrato
         </button>
         <button onClick={handleCopyLink} style={{
           display: "flex", alignItems: "center", gap: "12px",
-          background: "#fff", border: "2px solid #003580", borderRadius: "12px",
-          padding: "14px 28px", color: "#003580", fontWeight: 700, fontSize: "15px", cursor: "pointer",
+          background: "var(--color-card, #fff)", border: "2px solid #003580", borderRadius: "12px",
+          padding: "14px 28px", color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
         }}>
           <Share2 style={{ width: "18px", height: "18px" }} /> {copied ? "Link Copiado!" : "Compartilhar Link"}
         </button>
         <button onClick={handleShareWhatsApp} style={{
           display: "flex", alignItems: "center", gap: "12px",
           background: "#25D366", border: "none", borderRadius: "12px",
-          padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
+          padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
         }}>
           <MessageCircle style={{ width: "18px", height: "18px" }} /> Enviar via WhatsApp
         </button>
@@ -571,7 +571,7 @@ function Section({ n, title, children }: Readonly<{ n: string; title: string; ch
           display: "inline-flex", alignItems: "center", justifyContent: "center",
           width: "32px", height: "32px", borderRadius: "8px",
           background: "linear-gradient(135deg, #0062d1, #001d4a)",
-          color: "#fff", fontSize: "13px", fontWeight: 800, flexShrink: 0,
+          color: "#fff", fontSize: "14px", fontWeight: 800, flexShrink: 0,
         }}>
           {n}
         </span>

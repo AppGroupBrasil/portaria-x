@@ -170,12 +170,12 @@ export default function CadastroCameras() {
   const getSetorLabel = (value: string) => SETORES.find((s) => s.value === value)?.label || value;
 
   const labelStyle: React.CSSProperties = {
-    fontWeight: 600, fontSize: "13px", color: isDark ? "#cbd5e1" : "#374151",
+    fontWeight: 600, fontSize: "14px", color: isDark ? "#cbd5e1" : "#374151",
     marginBottom: "6px", display: "block",
   };
 
   const inputStyle: React.CSSProperties = {
-    width: "100%", padding: "10px 14px", borderRadius: "10px", fontSize: "14px",
+    width: "100%", padding: "10px 14px", borderRadius: "10px", fontSize: "15px",
     border: `1.5px solid ${isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`,
     background: isDark ? "rgba(255,255,255,0.05)" : "#fff",
     color: p.textHeading,
@@ -204,7 +204,7 @@ export default function CadastroCameras() {
         <div className="flex items-center justify-between" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <div className="flex items-center gap-3">
             <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowLeft className="w-7 h-7" />
             </button>
             <div>
               <span style={{ fontWeight: 700, fontSize: 18 }} className="block">Cadastro de Câmeras</span>
@@ -226,7 +226,7 @@ export default function CadastroCameras() {
               <TStep n={5}>Configure <strong>usuário e senha</strong> da câmera se necessário (algumas câmeras exigem autenticação)</TStep>
               <TStep n={6}>Clique em <strong>"Testar Conexão"</strong> para verificar se a câmera responde</TStep>
               <TStep n={7}>Se o teste passar, clique em <strong>"Salvar"</strong></TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 A câmera salva aparece automaticamente na tela de Monitoramento de Câmeras.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 A câmera salva aparece automaticamente na tela de Monitoramento de Câmeras.</p>
             </TSection>
             <TSection icon={<span>🔧</span>} title="GERENCIANDO CÂMERAS">
               <TBullet><strong>Editar</strong> — Altere nome, setor, URL ou credenciais da câmera</TBullet>
@@ -254,7 +254,7 @@ export default function CadastroCameras() {
             onClick={openNew}
             className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
           >
-            <Plus className="w-6 h-6" />
+            <Plus className="w-7 h-7" />
           </button>
         </div>
       </header>
@@ -272,7 +272,7 @@ export default function CadastroCameras() {
             <p style={{ fontSize: "16px", fontWeight: 600, color: p.textSecondary, marginBottom: "8px" }}>
               Nenhuma câmera cadastrada
             </p>
-            <p style={{ fontSize: "13px", color: p.textMuted, marginBottom: "24px" }}>
+            <p style={{ fontSize: "14px", color: p.textMuted, marginBottom: "24px" }}>
               Cadastre as câmeras do condomínio para começar o monitoramento
             </p>
             <button
@@ -280,10 +280,10 @@ export default function CadastroCameras() {
               style={{
                 padding: "12px 28px", borderRadius: "12px", border: "none",
                 background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", color: "#fff",
-                fontWeight: 600, fontSize: "14px", cursor: "pointer",
+                fontWeight: 600, fontSize: "15px", cursor: "pointer",
               }}
             >
-              <Plus className="w-4 h-4 inline mr-2" style={{ verticalAlign: "-2px" }} />
+              <Plus className="w-5 h-5 inline mr-2" style={{ verticalAlign: "-2px" }} />
               Cadastrar Câmera
             </button>
           </div>
@@ -308,29 +308,29 @@ export default function CadastroCameras() {
                     display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                   }}
                 >
-                  <Video className="w-5 h-5" style={{ color: camera.ativa ? "#fff" : "#94a3b8" }} />
+                  <Video className="w-6 h-6" style={{ color: camera.ativa ? "#fff" : "#94a3b8" }} />
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: "14px", fontWeight: 700, color: p.textHeading }}>
+                  <p style={{ fontSize: "15px", fontWeight: 700, color: p.textHeading }}>
                     {camera.nome}
                   </p>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "2px" }}>
                     <span style={{
-                      fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px",
+                      fontSize: "12px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px",
                       background: isDark ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.08)",
                       color: "#6366f1",
                     }}>
                       {getSetorLabel(camera.setor)}
                     </span>
                     {camera.localizacao && (
-                      <span style={{ fontSize: "11px", color: p.textMuted, display: "flex", alignItems: "center", gap: "3px" }}>
-                        <MapPin className="w-3 h-3" /> {camera.localizacao}
+                      <span style={{ fontSize: "12px", color: p.textMuted, display: "flex", alignItems: "center", gap: "3px" }}>
+                        <MapPin className="w-4 h-4" /> {camera.localizacao}
                       </span>
                     )}
                   </div>
                   {camera.ip && (
-                    <p style={{ fontSize: "11px", color: p.textMuted, marginTop: "4px" }}>
+                    <p style={{ fontSize: "12px", color: p.textMuted, marginTop: "4px" }}>
                       {camera.protocolo}://{camera.ip}{camera.porta ? `:${camera.porta}` : ""}
                     </p>
                   )}
@@ -349,8 +349,8 @@ export default function CadastroCameras() {
                     title={camera.ativa ? "Desativar" : "Ativar"}
                   >
                     {camera.ativa
-                      ? <Wifi className="w-4 h-4" style={{ color: "#10b981" }} />
-                      : <WifiOff className="w-4 h-4" style={{ color: "#ef4444" }} />}
+                      ? <Wifi className="w-5 h-5" style={{ color: "#10b981" }} />
+                      : <WifiOff className="w-5 h-5" style={{ color: "#ef4444" }} />}
                   </button>
                   <button
                     onClick={() => openEdit(camera)}
@@ -360,7 +360,7 @@ export default function CadastroCameras() {
                       cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
                     }}
                   >
-                    <Pencil className="w-4 h-4" style={{ color: p.textSecondary }} />
+                    <Pencil className="w-5 h-5" style={{ color: p.textSecondary }} />
                   </button>
                   <button
                     onClick={() => handleDelete(camera.id)}
@@ -372,8 +372,8 @@ export default function CadastroCameras() {
                     }}
                   >
                     {deleting === camera.id
-                      ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#ef4444" }} />
-                      : <Trash2 className="w-4 h-4" style={{ color: "#ef4444" }} />}
+                      ? <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#ef4444" }} />
+                      : <Trash2 className="w-5 h-5" style={{ color: "#ef4444" }} />}
                   </button>
                 </div>
               </div>
@@ -406,7 +406,7 @@ export default function CadastroCameras() {
                 {editingId ? "Editar Câmera" : "Nova Câmera"}
               </h2>
               <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
-                <X className="w-6 h-6" style={{ color: p.textSecondary }} />
+                <X className="w-7 h-7" style={{ color: p.textSecondary }} />
               </button>
             </div>
 
@@ -470,7 +470,7 @@ export default function CadastroCameras() {
                   value={form.url_stream || ""}
                   onChange={(e) => setForm({ ...form, url_stream: e.target.value })}
                 />
-                <p style={{ fontSize: "11px", color: p.textMuted, marginTop: "4px" }}>
+                <p style={{ fontSize: "12px", color: p.textMuted, marginTop: "4px" }}>
                   URL completa do stream da câmera (MJPEG, HLS ou snapshot)
                 </p>
               </div>
@@ -543,16 +543,16 @@ export default function CadastroCameras() {
                     ? "#2d3354"
                     : isDark ? "rgba(255,255,255,0.06)" : "#e2e8f0",
                   color: form.nome.trim() ? "#fff" : "#94a3b8",
-                  fontWeight: 700, fontSize: "15px", cursor: form.nome.trim() ? "pointer" : "not-allowed",
+                  fontWeight: 700, fontSize: "16px", cursor: form.nome.trim() ? "pointer" : "not-allowed",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                   marginTop: "2.4rem",
                 }}
               >
                 {saving ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
                   <>
-                    <Save className="w-5 h-5" />
+                    <Save className="w-6 h-6" />
                     {editingId ? "Salvar Alterações" : "Cadastrar Câmera"}
                   </>
                 )}

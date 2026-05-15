@@ -146,7 +146,7 @@ export default function CadastroMoradoresManual() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros/moradores")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18 }}>Cadastro Manual</span>
           <div style={{ marginLeft: "auto" }}>
@@ -163,7 +163,7 @@ export default function CadastroMoradoresManual() {
                 <TStep n={6}>Informe o <strong>e-mail</strong> — será o login do morador no app</TStep>
                 <TStep n={7}>Defina uma <strong>senha de 6 dígitos</strong> — o morador usará para entrar no app</TStep>
                 <TStep n={8}>Clique em <strong>"Cadastrar"</strong> para finalizar</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 Após o cadastro, o morador já pode acessar o app com e-mail + senha.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 Após o cadastro, o morador já pode acessar o app com e-mail + senha.</p>
               </TSection>
               <TSection icon={<span>📱</span>} title="CAMPOS DO FORMULÁRIO">
                 <TBullet><strong>Nome completo *</strong> — Nome e sobrenome do morador</TBullet>
@@ -384,12 +384,12 @@ export default function CadastroMoradoresManual() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors hover:text-[#003580]"
-                      style={{ color: "#64748b" }}
+                      style={{ color: "var(--muted-foreground)" }}
                     >
                       {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
+                        <EyeOff className="w-5 h-5" />
                       ) : (
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-5 h-5" />
                       )}
                     </button>
                   </div>
@@ -418,13 +418,13 @@ export default function CadastroMoradoresManual() {
                 <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
                   <button type="button" onClick={() => setError("")} style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", border: "none", cursor: "pointer", width: "100%" }} aria-label="Fechar modal" />
                   <dialog open className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
-                    <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
+                    <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-6 h-6" /></button>
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                       <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />
                     </div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Atenção</h2>
                     <p style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", marginBottom: 28, lineHeight: 1.5 }}>{error}</p>
-                    <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "#ffffff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
+                    <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "var(--color-card, #fff)", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
                   </dialog>
                 </div>
               )}
@@ -437,7 +437,7 @@ export default function CadastroMoradoresManual() {
                 style={isDark ? { marginTop: "1rem", backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : { marginTop: "1rem" }}
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                  <div className="w-6 h-6 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                 ) : !hasBlocos ? (
                   "Cadastre um bloco primeiro"
                 ) : (
@@ -477,7 +477,7 @@ export default function CadastroMoradoresManual() {
               onClick={() => setModalData(null)}
               style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
 
             {/* Icon */}
@@ -531,7 +531,7 @@ export default function CadastroMoradoresManual() {
                 onClick={() => { setModalData(null); navigate("/cadastros/moradores"); }}
                 style={{
                   flex: 1, height: 46, borderRadius: 12,
-                  border: "none", background: "#ffffff",
+                  border: "none", background: "var(--color-card, #fff)",
                   color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer",
                 }}
               >

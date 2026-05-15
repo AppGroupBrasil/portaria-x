@@ -139,8 +139,8 @@ const CameraEmbed = forwardRef<CameraEmbedRef, CameraEmbedProps>(
             border: "1px solid rgba(255,255,255,0.08)",
           }}
         >
-          <Camera style={{ width: 28, height: 28, color: "#334155" }} />
-          <span style={{ fontSize: "12px", color: "#475569" }}>Sem câmeras configuradas</span>
+          <Camera style={{ width: 28, height: 28, color: "var(--card-foreground)" }} />
+          <span style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Sem câmeras configuradas</span>
         </div>
       );
     }
@@ -183,7 +183,7 @@ const CameraEmbed = forwardRef<CameraEmbedRef, CameraEmbedProps>(
           )}
           {cam && cam.tipo_stream !== "mjpeg" && cam.tipo_stream !== "snapshot" && cam.tipo_stream !== "hls" && (
             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Camera style={{ width: 32, height: 32, color: "#334155" }} />
+              <Camera style={{ width: 32, height: 32, color: "var(--card-foreground)" }} />
             </div>
           )}
 
@@ -233,7 +233,7 @@ const CameraEmbed = forwardRef<CameraEmbedRef, CameraEmbedProps>(
                     onClick={() => setCurrentIdx((i) => (i - 1 + cameras.length) % cameras.length)}
                     style={btnStyle}
                   >
-                    <ChevronLeft style={{ width: 14, height: 14 }} />
+                    <ChevronLeft style={{ width: 18, height: 18 }} />
                   </button>
                   <span style={{ fontSize: 10, color: "#94a3b8", margin: "0 2px" }}>
                     {(currentIdx % cameras.length) + 1}/{cameras.length}
@@ -242,7 +242,7 @@ const CameraEmbed = forwardRef<CameraEmbedRef, CameraEmbedProps>(
                     onClick={() => setCurrentIdx((i) => (i + 1) % cameras.length)}
                     style={btnStyle}
                   >
-                    <ChevronRight style={{ width: 14, height: 14 }} />
+                    <ChevronRight style={{ width: 18, height: 18 }} />
                   </button>
                 </>
               )}
@@ -258,16 +258,16 @@ const CameraEmbed = forwardRef<CameraEmbedRef, CameraEmbedProps>(
                   }}
                   title="Capturar snapshot"
                 >
-                  <Disc style={{ width: 14, height: 14, color: recording ? "#fff" : "#94a3b8" }} />
+                  <Disc style={{ width: 18, height: 18, color: recording ? "#fff" : "#94a3b8" }} />
                 </button>
               )}
 
               {/* Expand/collapse */}
               <button onClick={() => setExpanded(!expanded)} style={btnStyle} title={expanded ? "Reduzir" : "Expandir"}>
                 {expanded ? (
-                  <Minimize2 style={{ width: 14, height: 14 }} />
+                  <Minimize2 style={{ width: 18, height: 18 }} />
                 ) : (
-                  <Maximize2 style={{ width: 14, height: 14 }} />
+                  <Maximize2 style={{ width: 18, height: 18 }} />
                 )}
               </button>
             </div>

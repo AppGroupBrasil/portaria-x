@@ -306,16 +306,16 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
           border: "2px solid rgba(14,165,233,0.4)",
           color: "#fff",
           fontWeight: 700,
-          fontSize: "14px",
+          fontSize: "15px",
           cursor: "pointer",
         }}
       >
-        <Camera className="w-5 h-5" style={{ color: "#0ea5e9" }} />
+        <Camera className="w-6 h-6" style={{ color: "#0ea5e9" }} />
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <span>LER PLACA DA CÂMERA IP</span>
-          <span style={{ fontSize: "10px", fontWeight: 400, opacity: 0.7 }}>(necessário integração de câmeras locais)</span>
+          <span style={{ fontSize: "12px", fontWeight: 400, opacity: 0.7 }}>(necessário integração de câmeras locais)</span>
         </div>
-        <Zap className="w-4 h-4" style={{ color: "#f59e0b" }} />
+        <Zap className="w-5 h-5" style={{ color: "#f59e0b" }} />
       </button>
 
       {/* Modal */}
@@ -358,7 +358,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                 gap: "8px",
               }}
             >
-              <ScanLine className="w-5 h-5" style={{ color: "#0ea5e9" }} />
+              <ScanLine className="w-6 h-6" style={{ color: "#0ea5e9" }} />
               Leitura de Placa — Câmera
             </h3>
             <button
@@ -375,7 +375,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                 cursor: "pointer",
               }}
             >
-              <X className="w-5 h-5" style={{ color: "#fff" }} />
+              <X className="w-6 h-6" style={{ color: "#fff" }} />
             </button>
           </div>
 
@@ -386,12 +386,12 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                 style={{
                   padding: "40px",
                   textAlign: "center",
-                  color: "#64748b",
+                  color: "var(--muted-foreground)",
                 }}
               >
-                <Camera className="w-12 h-12 mx-auto mb-3" style={{ color: "#334155" }} />
-                <p style={{ fontSize: "14px" }}>Nenhuma câmera configurada.</p>
-                <p style={{ fontSize: "12px", marginTop: "4px" }}>
+                <Camera className="w-12 h-12 mx-auto mb-3" style={{ color: "var(--card-foreground)" }} />
+                <p style={{ fontSize: "15px" }}>Nenhuma câmera configurada.</p>
+                <p style={{ fontSize: "13px", marginTop: "4px" }}>
                   Configure câmeras em Síndico &gt; Câmeras
                 </p>
               </div>
@@ -426,12 +426,12 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                         color: "#fff",
                       }}
                     >
-                      <ChevronLeft style={{ width: 16, height: 16 }} />
+                      <ChevronLeft style={{ width: 20, height: 20 }} />
                     </button>
                     <span
                       style={{
                         color: "#94a3b8",
-                        fontSize: "13px",
+                        fontSize: "14px",
                         fontWeight: 600,
                       }}
                     >
@@ -452,7 +452,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                         color: "#fff",
                       }}
                     >
-                      <ChevronRight style={{ width: 16, height: 16 }} />
+                      <ChevronRight style={{ width: 20, height: 20 }} />
                     </button>
                   </div>
                 )}
@@ -486,7 +486,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                       justifyContent: "center",
                     }}
                   >
-                    <Camera style={{ width: 40, height: 40, color: "#334155" }} />
+                    <Camera style={{ width: 40, height: 40, color: "var(--card-foreground)" }} />
                   </div>
                 )}
 
@@ -509,7 +509,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                   <span
                     style={{
                       color: "#0ea5e9",
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 600,
                       background: "rgba(0,0,0,0.6)",
                       padding: "3px 10px",
@@ -558,7 +558,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                 boxShadow: "0 4px 15px rgba(14,165,233,0.4)",
               }}
             >
-              <ScanLine className="w-5 h-5" />
+              <ScanLine className="w-6 h-6" />
               Capturar e Ler Placa
             </button>
           )}
@@ -575,13 +575,13 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
               }}
             >
               <Loader2
-                className="w-6 h-6 animate-spin"
+                className="w-7 h-7 animate-spin"
                 style={{ color: "#0ea5e9" }}
               />
               <p
                 style={{
                   color: "#0ea5e9",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   fontWeight: 600,
                 }}
               >
@@ -662,20 +662,20 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                   }}
                 />
                 <Pencil
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                   style={{ color: "#92400e", opacity: 0.6, flexShrink: 0 }}
                 />
               </div>
 
-              <p style={{ color: "#86efac", fontSize: "13px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <CheckCircle2 className="w-4 h-4" />
+              <p style={{ color: "#86efac", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <CheckCircle2 className="w-5 h-5" />
                 Placa identificada!
               </p>
 
               {/* Vehicle data card */}
               {searchingVehicle && (
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#94a3b8", fontSize: "13px" }}>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#94a3b8", fontSize: "14px" }}>
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   Buscando veículo no sistema...
                 </div>
               )}
@@ -708,7 +708,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                         <span
                           style={{
                             fontWeight: 800,
-                            fontSize: "14px",
+                            fontSize: "15px",
                             color: statusLabel(vehicleData.status).color,
                             letterSpacing: "1px",
                           }}
@@ -716,7 +716,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                           {statusLabel(vehicleData.status).label}
                         </span>
                         {vehicleData.data_fim && (
-                          <span style={{ fontSize: "11px", color: "#94a3b8" }}>
+                          <span style={{ fontSize: "12px", color: "#94a3b8" }}>
                             Válido até: {vehicleData.data_fim}
                           </span>
                         )}
@@ -726,10 +726,10 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                       <div style={{ padding: "14px 16px", display: "flex", flexDirection: "column", gap: "10px" }}>
                         {vehicleData.modelo && (
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <Car className="w-4 h-4" style={{ color: "#0ea5e9", flexShrink: 0 }} />
+                            <Car className="w-5 h-5" style={{ color: "#0ea5e9", flexShrink: 0 }} />
                             <div>
-                              <span style={{ color: "#64748b", fontSize: "11px" }}>Veículo</span>
-                              <p style={{ color: "#fff", fontSize: "15px", fontWeight: 600 }}>
+                              <span style={{ color: "var(--muted-foreground)", fontSize: "12px" }}>Veículo</span>
+                              <p style={{ color: "#fff", fontSize: "16px", fontWeight: 600 }}>
                                 {vehicleData.modelo}
                                 {vehicleData.cor ? ` — ${vehicleData.cor}` : ""}
                               </p>
@@ -739,10 +739,10 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
 
                         {vehicleData.motorista_nome && (
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <User className="w-4 h-4" style={{ color: "#0ea5e9", flexShrink: 0 }} />
+                            <User className="w-5 h-5" style={{ color: "#0ea5e9", flexShrink: 0 }} />
                             <div>
-                              <span style={{ color: "#64748b", fontSize: "11px" }}>Motorista</span>
-                              <p style={{ color: "#fff", fontSize: "15px", fontWeight: 600 }}>
+                              <span style={{ color: "var(--muted-foreground)", fontSize: "12px" }}>Motorista</span>
+                              <p style={{ color: "#fff", fontSize: "16px", fontWeight: 600 }}>
                                 {vehicleData.motorista_nome}
                               </p>
                             </div>
@@ -751,10 +751,10 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
 
                         {vehicleData.morador_name && (
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <User className="w-4 h-4" style={{ color: "#22c55e", flexShrink: 0 }} />
+                            <User className="w-5 h-5" style={{ color: "#22c55e", flexShrink: 0 }} />
                             <div>
-                              <span style={{ color: "#64748b", fontSize: "11px" }}>Morador</span>
-                              <p style={{ color: "#fff", fontSize: "15px", fontWeight: 600 }}>
+                              <span style={{ color: "var(--muted-foreground)", fontSize: "12px" }}>Morador</span>
+                              <p style={{ color: "#fff", fontSize: "16px", fontWeight: 600 }}>
                                 {vehicleData.morador_name}
                               </p>
                             </div>
@@ -763,10 +763,10 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
 
                         {(vehicleData.bloco || vehicleData.apartamento) && (
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <MapPin className="w-4 h-4" style={{ color: "#f59e0b", flexShrink: 0 }} />
+                            <MapPin className="w-5 h-5" style={{ color: "#f59e0b", flexShrink: 0 }} />
                             <div>
-                              <span style={{ color: "#64748b", fontSize: "11px" }}>Endereço</span>
-                              <p style={{ color: "#fff", fontSize: "15px", fontWeight: 600 }}>
+                              <span style={{ color: "var(--muted-foreground)", fontSize: "12px" }}>Endereço</span>
+                              <p style={{ color: "#fff", fontSize: "16px", fontWeight: 600 }}>
                                 {vehicleData.bloco && `Bloco ${vehicleData.bloco}`}
                                 {vehicleData.apartamento && ` — Apto ${vehicleData.apartamento}`}
                               </p>
@@ -784,12 +784,12 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                         gap: "10px",
                       }}
                     >
-                      <AlertTriangle className="w-5 h-5" style={{ color: "#f59e0b", flexShrink: 0 }} />
+                      <AlertTriangle className="w-6 h-6" style={{ color: "#f59e0b", flexShrink: 0 }} />
                       <div>
-                        <p style={{ color: "#fca5a5", fontWeight: 700, fontSize: "14px" }}>
+                        <p style={{ color: "#fca5a5", fontWeight: 700, fontSize: "15px" }}>
                           Veículo NÃO cadastrado
                         </p>
-                        <p style={{ color: "#94a3b8", fontSize: "12px", marginTop: "2px" }}>
+                        <p style={{ color: "#94a3b8", fontSize: "13px", marginTop: "2px" }}>
                           Esta placa não possui autorização ativa no sistema.
                         </p>
                       </div>
@@ -808,7 +808,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                     background: "rgba(14,165,233,0.15)",
                     border: "1px solid rgba(14,165,233,0.3)",
                     color: "#38bdf8",
-                    fontSize: "13px",
+                    fontSize: "14px",
                     fontWeight: 600,
                     cursor: "pointer",
                   }}
@@ -830,7 +830,7 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                 maxWidth: "400px",
               }}
             >
-              <p style={{ color: "#fca5a5", fontSize: "13px", textAlign: "center" }}>
+              <p style={{ color: "#fca5a5", fontSize: "14px", textAlign: "center" }}>
                 {error}
               </p>
             </div>
@@ -862,11 +862,11 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                     border: "1px solid rgba(255,255,255,0.2)",
                     color: "#fff",
                     fontWeight: 600,
-                    fontSize: "14px",
+                    fontSize: "15px",
                     cursor: "pointer",
                   }}
                 >
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-5 h-5" />
                   Nova Captura
                 </button>
                 <button
@@ -883,12 +883,12 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                     border: "none",
                     color: "#fff",
                     fontWeight: 700,
-                    fontSize: "14px",
+                    fontSize: "15px",
                     cursor: "pointer",
                     boxShadow: "0 4px 15px rgba(34,197,94,0.3)",
                   }}
                 >
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-5 h-5" />
                   Usar Placa
                 </button>
               </>
@@ -909,11 +909,11 @@ export default function CameraPlateReader({ onPlateDetected, onVehicleFound }: C
                   border: "none",
                   color: "#fff",
                   fontWeight: 600,
-                  fontSize: "14px",
+                  fontSize: "15px",
                   cursor: "pointer",
                 }}
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-5 h-5" />
                 Tentar Novamente
               </button>
             )}

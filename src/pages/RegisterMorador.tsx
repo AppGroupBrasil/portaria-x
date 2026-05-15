@@ -212,7 +212,7 @@ export default function RegisterMorador() {
                 className="w-full h-12 rounded-xl text-white text-base font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-[0.98]"
                 style={{ backgroundColor: "#25D366" }}
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-6 h-6" />
                 Solicitar via WhatsApp
               </button>
               <button
@@ -272,7 +272,7 @@ export default function RegisterMorador() {
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "19px" }}>
             {!hasBlocks && (
               <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                 <span>Este condomínio ainda não possui blocos cadastrados. Solicite ao síndico que cadastre um bloco primeiro para liberar seu cadastro.</span>
               </div>
             )}
@@ -419,7 +419,7 @@ export default function RegisterMorador() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
@@ -447,7 +447,7 @@ export default function RegisterMorador() {
             {/* Error */}
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                <AlertCircle className="w-5 h-5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -461,26 +461,26 @@ export default function RegisterMorador() {
                   onClick={() => { setStep(1); setError(""); }}
                   className="flex-1"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="w-5 h-5" />
                   Voltar
                 </Button>
               )}
               {step === 1 ? (
                 <Button type="button" onClick={handleNext} className="w-full" disabled={!hasBlocks}>
                   {hasBlocks ? "Continuar" : "Cadastre um bloco primeiro"}
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-5 h-5" />
                 </Button>
               ) : (
                 <Button type="submit" disabled={isLoading || !hasBlocks} className="flex-1">
                   {isLoading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       Criando...
                     </>
                   ) : (
                     <>
                       Criar conta
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-5 h-5" />
                     </>
                   )}
                 </Button>

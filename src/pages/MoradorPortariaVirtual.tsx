@@ -482,7 +482,7 @@ export default function MoradorPortariaVirtual() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', height: '4.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button onClick={() => navigate(-1)} style={{ padding: '0.625rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer' }}>
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowLeft className="w-7 h-7" />
             </button>
             <div>
               <span style={{ fontWeight: 800, fontSize: '1.125rem', color: isDark ? '#fff' : "#1e293b", display: 'block' }}>Portaria Virtual</span>
@@ -490,7 +490,7 @@ export default function MoradorPortariaVirtual() {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Shield className="w-5 h-5" style={{ color: isDark ? 'rgba(255,255,255,0.4)' : "#94a3b8" }} />
+            <Shield className="w-6 h-6" style={{ color: isDark ? 'rgba(255,255,255,0.4)' : "#94a3b8" }} />
             <span style={{ fontSize: '0.75rem', color: isDark ? 'rgba(255,255,255,0.4)' : "#94a3b8", fontWeight: 700, letterSpacing: '0.05em' }}>PORTARIA X</span>
           </div>
         </div>
@@ -511,12 +511,12 @@ export default function MoradorPortariaVirtual() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <HelpCircle style={{ width: 22, height: 22, color: '#fff' }} />
+              <HelpCircle style={{ width: 26, height: 26, color: '#fff' }} />
               <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#fff' }}>Como funciona?</span>
             </div>
             {showHelp
-              ? <ChevronUp style={{ width: 20, height: 20, color: '#fff' }} />
-              : <ChevronDown style={{ width: 20, height: 20, color: '#fff' }} />}
+              ? <ChevronUp style={{ width: 24, height: 24, color: '#fff' }} />
+              : <ChevronDown style={{ width: 24, height: 24, color: '#fff' }} />}
           </button>
           {showHelp && (
             <div style={{
@@ -542,7 +542,7 @@ export default function MoradorPortariaVirtual() {
           border: isDark ? '1px solid rgba(245,158,11,0.25)' : '1px solid #fde68a',
           display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
         }}>
-          <AlertTriangle style={{ width: 22, height: 22, color: '#f59e0b', flexShrink: 0, marginTop: 2 }} />
+          <AlertTriangle style={{ width: 26, height: 26, color: '#f59e0b', flexShrink: 0, marginTop: 2 }} />
           <div style={{ fontSize: '0.82rem', lineHeight: 1.5, color: isDark ? '#fde68a' : '#92400e' }}>
             <p style={{ fontWeight: 700, marginBottom: 4 }}>⚡ Segurança da Instalação</p>
             <p style={{ margin: '2px 0' }}>• O módulo IoT deve estar conectado à <strong>botoeira do motor</strong>, nunca direto na alimentação do motor.</p>
@@ -559,7 +559,7 @@ export default function MoradorPortariaVirtual() {
             border: isDark ? '1px solid rgba(59,130,246,0.25)' : '1px solid #bfdbfe',
             display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
           }}>
-            <ScanFace style={{ width: 24, height: 24, color: '#3b82f6', flexShrink: 0, marginTop: 2 }} />
+            <ScanFace style={{ width: 28, height: 28, color: '#3b82f6', flexShrink: 0, marginTop: 2 }} />
             <div style={{ flex: 1 }}>
               <p style={{ fontWeight: 700, fontSize: '0.88rem', color: isDark ? '#93c5fd' : '#1e40af', marginBottom: 6 }}>
                 Cadastre seu rosto para abrir portões
@@ -577,7 +577,7 @@ export default function MoradorPortariaVirtual() {
                   display: 'flex', alignItems: 'center', gap: 8,
                 }}
               >
-                <ScanFace style={{ width: 16, height: 16 }} /> Cadastrar Meu Rosto
+                <ScanFace style={{ width: 20, height: 20 }} /> Cadastrar Meu Rosto
               </button>
             </div>
           </div>
@@ -589,7 +589,7 @@ export default function MoradorPortariaVirtual() {
             border: isDark ? '1px solid rgba(16,185,129,0.2)' : '1px solid #a7f3d0',
             display: 'flex', gap: '0.75rem', alignItems: 'center',
           }}>
-            <CheckCircle2 style={{ width: 18, height: 18, color: '#10b981', flexShrink: 0 }} />
+            <CheckCircle2 style={{ width: 22, height: 22, color: '#10b981', flexShrink: 0 }} />
             <span style={{ fontSize: '0.82rem', fontWeight: 600, color: isDark ? '#6ee7b7' : '#065f46' }}>
               Rosto cadastrado — toque em um portão e faça a selfie para abrir
             </span>
@@ -609,7 +609,7 @@ export default function MoradorPortariaVirtual() {
                 background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <Car style={{ width: 20, height: 20, color: '#fff' }} />
+                <Car style={{ width: 24, height: 24, color: '#fff' }} />
               </div>
               <div>
                 <p style={{ fontWeight: 700, fontSize: '0.95rem', color: isDark ? '#c7d2fe' : '#3730a3' }}>
@@ -626,7 +626,7 @@ export default function MoradorPortariaVirtual() {
             {/* Plate lookup result */}
             {plateLoading && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: '0.75rem', padding: '0.75rem', borderRadius: 12, background: isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc' }}>
-                <Loader2 style={{ width: 18, height: 18, color: isDark ? '#a5b4fc' : '#6366f1', animation: 'spin 1s linear infinite' }} />
+                <Loader2 style={{ width: 22, height: 22, color: isDark ? '#a5b4fc' : '#6366f1', animation: 'spin 1s linear infinite' }} />
                 <span style={{ fontSize: '0.85rem', color: isDark ? '#c7d2fe' : '#4338ca' }}>Consultando placa...</span>
               </div>
             )}
@@ -645,8 +645,8 @@ export default function MoradorPortariaVirtual() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: plateResult.vehicle ? 10 : 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     {plateResult.authorized
-                      ? <CheckCircle2 style={{ width: 18, height: 18, color: '#10b981' }} />
-                      : <XCircle style={{ width: 18, height: 18, color: '#ef4444' }} />}
+                      ? <CheckCircle2 style={{ width: 22, height: 22, color: '#10b981' }} />
+                      : <XCircle style={{ width: 22, height: 22, color: '#ef4444' }} />}
                     <span style={{
                       fontWeight: 800, fontSize: '1.05rem', fontFamily: 'monospace', letterSpacing: '0.08em',
                       color: isDark ? '#fff' : '#1e293b',
@@ -716,9 +716,9 @@ export default function MoradorPortariaVirtual() {
                     }}
                   >
                     {plateOpening ? (
-                      <><Loader2 style={{ width: 18, height: 18, animation: 'spin 1s linear infinite' }} /> Abrindo...</>
+                      <><Loader2 style={{ width: 22, height: 22, animation: 'spin 1s linear infinite' }} /> Abrindo...</>
                     ) : (
-                      <><DoorOpen style={{ width: 18, height: 18 }} /> Abrir Portão Veicular</>
+                      <><DoorOpen style={{ width: 22, height: 22 }} /> Abrir Portão Veicular</>
                     )}
                   </button>
                 )}
@@ -733,8 +733,8 @@ export default function MoradorPortariaVirtual() {
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                       {plateOpenResult.success
-                        ? <CheckCircle2 style={{ width: 18, height: 18, color: '#10b981' }} />
-                        : <XCircle style={{ width: 18, height: 18, color: '#ef4444' }} />}
+                        ? <CheckCircle2 style={{ width: 22, height: 22, color: '#10b981' }} />
+                        : <XCircle style={{ width: 22, height: 22, color: '#ef4444' }} />}
                       <span style={{ fontWeight: 700, fontSize: '0.88rem', color: plateOpenResult.success ? (isDark ? '#6ee7b7' : '#065f46') : (isDark ? '#fca5a5' : '#dc2626') }}>
                         {plateOpenResult.message}
                       </span>
@@ -905,7 +905,7 @@ export default function MoradorPortariaVirtual() {
                               flex: 1, aspectRatio: "1", display: "flex", flexDirection: "column",
                               alignItems: "center", justifyContent: "center", gap: 4,
                               borderRadius: 14, border: "1.5px solid #fff", cursor: "pointer",
-                              background: "#fff", color: "#003580",
+                              background: "var(--color-card, #fff)", color: "#003580",
                               fontSize: 14, fontWeight: 700, transition: "all 0.2s",
                             }}
                           >
@@ -930,9 +930,9 @@ export default function MoradorPortariaVirtual() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
               }}
             >
-              <History className="w-5 h-5" />
+              <History className="w-6 h-6" />
               Meus Acionamentos
-              {showLogs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              {showLogs ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
 
             {showLogs && (
@@ -951,7 +951,7 @@ export default function MoradorPortariaVirtual() {
                           {log.details || "—"}
                         </p>
                       </div>
-                      <span style={{ fontSize: '10px', color: isDark ? '#7dd3fc' : '#475569', flexShrink: 0 }}>{formatDate(log.created_at)}</span>
+                      <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', flexShrink: 0 }}>{formatDate(log.created_at)}</span>
                     </div>
                   ))
                 )}

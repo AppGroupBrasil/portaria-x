@@ -164,9 +164,9 @@ export default function MasterCondominios() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="px-4 h-16 flex items-center gap-3">
           <button onClick={() => navigate("/dashboard")} className="p-1">
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <Building2 className="w-5 h-5" />
+          <Building2 className="w-6 h-6" />
           <span className="font-semibold text-sm">Gestão de Condomínios</span>
           <TutorialButton title="Gestão de Condomínios">
             <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
@@ -180,7 +180,7 @@ export default function MasterCondominios() {
               <TStep n={5}>Informe o <strong>número de unidades</strong> (total de apartamentos/casas)</TStep>
               <TStep n={6}>Vincule uma <strong>administradora</strong> (opcional — pode vincular depois)</TStep>
               <TStep n={7}>Clique em <strong>"Cadastrar"</strong> para salvar</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: p.textSecondary }}>👉 Após cadastrar, vincule um síndico para que ele configure o condomínio (blocos, moradores, funcionários).</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: p.textSecondary }}>👉 Após cadastrar, vincule um síndico para que ele configure o condomínio (blocos, moradores, funcionários).</p>
             </TSection>
             <TSection icon={<span>🔧</span>} title="GERENCIANDO CONDOMÍNIOS">
               <TBullet><strong>Editar</strong> — Altere nome, endereço, CNPJ ou número de unidades</TBullet>
@@ -201,7 +201,7 @@ export default function MasterCondominios() {
             onClick={handleNew}
             className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -209,7 +209,7 @@ export default function MasterCondominios() {
       {/* Search */}
       <div style={{ padding: "12px 24px", marginBottom: "8px" }}>
         <div className="flex items-center gap-2 h-10 rounded-lg border" style={{ paddingLeft: "16px", paddingRight: "12px", background: p.cardBg, borderColor: p.divider }}>
-          <Search className="w-4 h-4 shrink-0" style={{ color: p.textMuted }} />
+          <Search className="w-5 h-5 shrink-0" style={{ color: p.textMuted }} />
           <input
             type="text"
             placeholder="Buscar por nome ou CNPJ..."
@@ -230,7 +230,7 @@ export default function MasterCondominios() {
                 {editingId ? "Editar Condomínio" : "Novo Condomínio"}
               </h3>
               <button onClick={() => setShowForm(false)}>
-                <X className="w-4 h-4 text-muted-foreground" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
             {error && <p className="text-xs text-red-400">{error}</p>}
@@ -293,7 +293,7 @@ export default function MasterCondominios() {
       <main className="flex-1 pb-6 flex flex-col gap-4" style={{ paddingLeft: "24px", paddingRight: "24px" }}>
         {loading && (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-7 h-7 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
         {!loading && filtered.length === 0 && (
@@ -309,7 +309,7 @@ export default function MasterCondominios() {
                 style={{ paddingLeft: "16px", paddingRight: "12px", paddingTop: "24px", paddingBottom: "24px", gap: "16px", background: "transparent", border: "none" }}
               >
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: p.btnGrad }}>
-                  <Building2 className="w-5 h-5 text-white" />
+                  <Building2 className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate" style={{ color: p.textAccent }}>{c.name}</p>
@@ -349,24 +349,24 @@ export default function MasterCondominios() {
                   {expandedStats ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-3">
                       <div className="flex flex-col items-center">
-                        <Users className="w-4 h-4 text-emerald-400 mb-1" />
+                        <Users className="w-5 h-5 text-emerald-400 mb-1" />
                         <span className="text-sm font-bold" style={{ color: p.textAccent }}>{expandedStats.moradores}</span>
                         <span className="text-[9px]" style={{ color: p.textMuted }}>Moradores</span>
                       </div>
                       <div className="flex flex-col items-center">
-                        <Layers className="w-4 h-4 text-amber-400 mb-1" />
+                        <Layers className="w-5 h-5 text-amber-400 mb-1" />
                         <span className="text-sm font-bold" style={{ color: p.textAccent }}>{expandedStats.blocos}</span>
                         <span className="text-[9px]" style={{ color: p.textMuted }}>Blocos</span>
                       </div>
                       <div className="flex flex-col items-center">
-                        <Briefcase className="w-4 h-4 text-purple-400 mb-1" />
+                        <Briefcase className="w-5 h-5 text-purple-400 mb-1" />
                         <span className="text-sm font-bold" style={{ color: p.textAccent }}>{expandedStats.funcionarios}</span>
                         <span className="text-[9px]" style={{ color: p.textMuted }}>Funcionários</span>
                       </div>
                     </div>
                   ) : (
                     <div className="flex justify-center py-3">
-                      <div className="w-4 h-4 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
                     </div>
                   )}
                   <p className="text-[10px] mt-2 text-center" style={{ color: p.textSecondary }}>

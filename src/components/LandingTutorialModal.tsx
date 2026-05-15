@@ -6,7 +6,7 @@ const flowBoxStyle = (bg: string, border: string): React.CSSProperties => ({
   background: bg, borderRadius: "12px", padding: "14px", border: `2px solid ${border}`, marginBottom: "10px",
 });
 const flowHeaderStyle = (color: string): React.CSSProperties => ({
-  display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "13px", color, marginBottom: "8px", flexWrap: "wrap",
+  display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "14px", color, marginBottom: "8px", flexWrap: "wrap",
 });
 
 function FlowPortaria({ children }: { children: ReactNode }) {
@@ -17,7 +17,7 @@ function FlowPortaria({ children }: { children: ReactNode }) {
         <ArrowRight style={{ width: "14px", height: "14px" }} />
         <User style={{ width: "16px", height: "16px" }} /> MORADOR RECEBE
       </div>
-      <div style={{ fontSize: "13px", color: "#374151", lineHeight: 1.7 }}>{children}</div>
+      <div style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7 }}>{children}</div>
     </div>
   );
 }
@@ -29,28 +29,28 @@ function FlowMorador({ children }: { children: ReactNode }) {
         <ArrowRight style={{ width: "14px", height: "14px" }} />
         <Building style={{ width: "16px", height: "16px" }} /> PORTARIA RECEBE
       </div>
-      <div style={{ fontSize: "13px", color: "#374151", lineHeight: 1.7 }}>{children}</div>
+      <div style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7 }}>{children}</div>
     </div>
   );
 }
 function S({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
   return (
     <div style={{ marginBottom: "16px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "14px", color: "#1e293b", marginBottom: "8px" }}>{icon}{title}</div>
-      <div style={{ fontSize: "13px", color: "#475569", lineHeight: 1.7 }}>{children}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "15px", color: "var(--card-foreground)", marginBottom: "8px" }}>{icon}{title}</div>
+      <div style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.7 }}>{children}</div>
     </div>
   );
 }
 function St({ n, children }: { n: number; children: ReactNode }) {
   return (
     <div style={{ display: "flex", gap: "10px", marginBottom: "6px" }}>
-      <span style={{ width: "22px", height: "22px", borderRadius: "50%", background: "#6366f1", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 800, flexShrink: 0, marginTop: "1px" }}>{n}</span>
-      <span style={{ fontSize: "13px", color: "#374151", lineHeight: 1.6 }}>{children}</span>
+      <span style={{ width: "22px", height: "22px", borderRadius: "50%", background: "#6366f1", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 800, flexShrink: 0, marginTop: "1px" }}>{n}</span>
+      <span style={{ fontSize: "14px", color: "#374151", lineHeight: 1.6 }}>{children}</span>
     </div>
   );
 }
 function B({ children }: { children: ReactNode }) {
-  return <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, margin: "3px 0", paddingLeft: "8px" }}>• {children}</p>;
+  return <p style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.6, margin: "3px 0", paddingLeft: "8px" }}>• {children}</p>;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -70,13 +70,13 @@ const tutorials: Record<string, ReactNode> = {
         <St n={4}>Informa o <strong>documento</strong> (RG ou CPF) — opcional</St>
         <St n={5}>Tira uma <strong>foto do visitante</strong> com a camera do celular (opcional mas recomendado)</St>
         <St n={6}>Clica em <strong>"Registrar Entrada"</strong> — sistema salva com data, hora e porteiro</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> No app dele, aparece a notificacao de visitante e o registro na lista de visitas recebidas.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> No app dele, aparece a notificacao de visitante e o registro na lista de visitas recebidas.</p>
       </FlowPortaria>
       <FlowMorador>
         <St n={1}>Morador cria uma <strong>autorizacao previa</strong> no app (nome, data, horario)</St>
         <St n={2}>Visitante chega na portaria e porteiro <strong>busca a autorizacao</strong></St>
         <St n={3}>Porteiro confirma a identidade e <strong>libera a entrada</strong> com um toque</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria ve:</strong> O visitante ja aparece pre-autorizado na lista — so precisa confirmar e registrar a entrada.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria ve:</strong> O visitante ja aparece pre-autorizado na lista — so precisa confirmar e registrar a entrada.</p>
       </FlowMorador>
       <S icon={<span>🔧</span>} title="FUNCOES DISPONIVEIS">
         <B><strong>Foto do visitante</strong> — Tire foto com a camera do celular para registro de seguranca</B>
@@ -105,7 +105,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={2}>Preenche <strong>nome do visitante</strong>, data e horario da visita</St>
         <St n={3}>Envia a autorizacao — pode adicionar CPF e veiculo (opcional)</St>
         <St n={4}>A autorizacao e <strong>enviada automaticamente</strong> para a portaria</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria ve:</strong> A autorizacao aparece com status "Ativa" e todos os dados do visitante.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria ve:</strong> A autorizacao aparece com status "Ativa" e todos os dados do visitante.</p>
       </FlowMorador>
       <FlowPortaria>
         <St n={1}>Visitante chega na portaria e se identifica</St>
@@ -113,7 +113,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={3}>Confirma que a autorizacao esta <strong>ativa e dentro do horario</strong></St>
         <St n={4}>Toca em <strong>"Confirmar Entrada"</strong> para liberar o visitante</St>
         <St n={5}>O sistema registra a entrada com data, hora e porteiro responsavel</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> No app, o status muda para "Utilizada" com a data e hora da entrada.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> No app, o status muda para "Utilizada" com a data e hora da entrada.</p>
       </FlowPortaria>
       <S icon={<span>🔍</span>} title="STATUS DAS AUTORIZACOES">
         <B><strong style={{ color: "#16a34a" }}>Ativa</strong> — Visitante autorizado e pode entrar</B>
@@ -139,7 +139,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={1}>Morador abre o app e vai em <strong>"Meus Veiculos"</strong></St>
         <St n={2}>Cadastra o veiculo com <strong>placa, modelo, cor e tipo</strong></St>
         <St n={3}>O veiculo chega na sua tela com status <strong>"Pendente"</strong></St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Sua acao:</strong> Revise os dados. Se estiver correto, toque em <strong>"Aprovar"</strong>.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Sua acao:</strong> Revise os dados. Se estiver correto, toque em <strong>"Aprovar"</strong>.</p>
       </FlowMorador>
       <FlowPortaria>
         <St n={1}>Veiculo chega no portao do condominio</St>
@@ -147,7 +147,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={3}>O sistema mostra se o veiculo e <strong>autorizado</strong> (verde) ou <strong>desconhecido</strong> (vermelho)</St>
         <St n={4}>Se autorizado, toque em <strong>"Registrar Entrada"</strong> e abra o portao</St>
         <St n={5}>Na saida, toque em <strong>"Registrar Saida"</strong></St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Historico de entradas e saidas com data e hora.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Historico de entradas e saidas com data e hora.</p>
       </FlowPortaria>
       <S icon={<span>🔧</span>} title="FUNCOES DISPONIVEIS">
         <B><strong>Camera LPR (OCR)</strong> — Aponte a camera para a placa e o sistema le automaticamente</B>
@@ -176,7 +176,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={5}>Informe a <strong>origem</strong>: Correios, Mercado Livre, Amazon, Shopee, etc.</St>
         <St n={6}>Tire uma <strong>foto do pacote</strong> (opcional mas recomendado)</St>
         <St n={7}>Toque em <strong>"Registrar"</strong> — sistema envia <strong>WhatsApp automatico</strong></St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Recebe WhatsApp + aparece no app com status "Aguardando retirada" e a foto.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Recebe WhatsApp + aparece no app com status "Aguardando retirada" e a foto.</p>
       </FlowPortaria>
       <FlowMorador>
         <St n={1}>Morador recebe a notificacao e vai ate a portaria</St>
@@ -211,7 +211,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={5}>Informa o <strong>tipo</strong>: Comida, Pacote, Documento</St>
         <St n={6}>Tira <strong>foto da entrega</strong> (opcional)</St>
         <St n={7}>Toca em <strong>"Registrar"</strong> — notifica o morador automaticamente</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Notificacao no WhatsApp + aparece no app com "Aguardando retirada".</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Notificacao no WhatsApp + aparece no app com "Aguardando retirada".</p>
       </FlowPortaria>
       <FlowMorador>
         <St n={1}>Morador pode avisar antecipado: <strong>"Estou esperando um iFood"</strong></St>
@@ -249,7 +249,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={4}>Tire uma <strong>foto</strong> como comprovante visual (opcional)</St>
         <St n={5}><strong>Assine digitalmente</strong> desenhando com o dedo na tela</St>
         <St n={6}>Toque em <strong>"Registrar"</strong> — sistema salva com data, hora e seu nome</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Sindico/Administradora ve:</strong> No Espelho da Portaria, todos os registros com fotos e assinaturas.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Sindico/Administradora ve:</strong> No Espelho da Portaria, todos os registros com fotos e assinaturas.</p>
       </FlowPortaria>
       <S icon={<span>🔧</span>} title="FUNCOES DISPONIVEIS">
         <B><strong>Assinatura digital</strong> — Desenhe na tela do celular</B>
@@ -366,7 +366,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={4}>Defina a <strong>data e horário de validade</strong></St>
         <St n={5}>O sistema gera o <strong>QR Code automaticamente</strong></St>
         <St n={6}>Toque em <strong>"Compartilhar"</strong> para enviar por WhatsApp</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Na portaria:</strong> Porteiro escaneia o QR Code e libera a entrada com um toque.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Na portaria:</strong> Porteiro escaneia o QR Code e libera a entrada com um toque.</p>
       </FlowMorador>
       <S icon={<span>📱</span>} title="COMO O VISITANTE USA">
         <St n={1}>Recebe o QR Code por <strong>WhatsApp</strong></St>
@@ -395,7 +395,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={3}>Defina a <strong>data e horário</strong> previsto</St>
         <St n={4}>Adicione <strong>CPF e veículo</strong> (opcional)</St>
         <St n={5}>Toque em <strong>"Enviar"</strong> — vai automaticamente para a portaria</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> A autorização com status "Ativa". Quando o visitante chegar, libera com um toque.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> A autorização com status "Ativa". Quando o visitante chegar, libera com um toque.</p>
       </FlowMorador>
       <S icon={<span>🔍</span>} title="STATUS">
         <B><strong style={{ color: "#16a34a" }}>Ativa</strong> — Aguardando chegada</B>
@@ -424,7 +424,7 @@ const tutorials: Record<string, ReactNode> = {
         <St n={4}>Selecione o <strong>tipo</strong>: Carro, Moto, Van, Bicicleta</St>
         <St n={5}>Toque em <strong>"Cadastrar"</strong></St>
         <St n={6}>Status fica <strong>"Pendente"</strong> até o porteiro aprovar</St>
-        <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria:</strong> Revisa e aprova. Após aprovado, autorizado permanentemente.</p>
+        <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria:</strong> Revisa e aprova. Após aprovado, autorizado permanentemente.</p>
       </FlowMorador>
       <S icon={<span>⭐</span>} title="DICAS IMPORTANTES">
         <B>Cadastre <strong>todos os veículos da família</strong></B>
@@ -663,7 +663,7 @@ export default function LandingTutorialModal({ featureTitle, onClose }: Props) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: "20px",
+          background: "var(--color-card, #fff)", borderRadius: "20px",
           maxWidth: "480px", width: "100%",
           maxHeight: "85vh", overflow: "auto",
           boxShadow: "0 25px 60px rgba(0,0,0,0.3)",
@@ -678,7 +678,7 @@ export default function LandingTutorialModal({ featureTitle, onClose }: Props) {
           position: "sticky", top: 0, zIndex: 2,
         }}>
           <div>
-            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
+            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", fontWeight: 700, textTransform: "uppercase", margin: 0 }}>
               Tutorial
             </p>
             <h2 style={{ fontSize: "17px", fontWeight: 800, color: "#fff", margin: "4px 0 0" }}>

@@ -275,11 +275,11 @@ export default function MoradorQRVisitante() {
       <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ display: 'flex', alignItems: 'center', padding: '18px 24px', height: '4rem', gap: '0.75rem' }}>
           <button onClick={() => navigate(-1)} style={{ padding: '0.5rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-7 h-7" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 style={{ fontWeight: 800, fontSize: '1.125rem', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
-              <QrCode className="w-5 h-5" /> QR Code de Visitante
+              <QrCode className="w-6 h-6" /> QR Code de Visitante
             </h1>
             <p style={{ fontSize: '0.75rem', color: isDark ? '#93c5fd' : "#475569", margin: 0 }}>Gere autorizações com QR Code</p>
           </div>
@@ -294,7 +294,7 @@ export default function MoradorQRVisitante() {
               <TStep n={4}>Defina a <strong>data e horário de validade</strong> (até quando o QR Code funciona)</TStep>
               <TStep n={5}>O sistema gera o <strong>QR Code automaticamente</strong></TStep>
               <TStep n={6}>Toque em <strong>"Compartilhar"</strong> para enviar por WhatsApp ao visitante</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Na portaria:</strong> O porteiro escaneia o QR Code com o app, vê todos os dados (nome, morador, bloco, horário) e libera a entrada com um toque.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Na portaria:</strong> O porteiro escaneia o QR Code com o app, vê todos os dados (nome, morador, bloco, horário) e libera a entrada com um toque.</p>
             </FlowMorador>
             <TSection icon={<span>🔧</span>} title="FUNÇÕES DISPONÍVEIS">
               <TBullet><strong>Compartilhar via WhatsApp</strong> — Envie o QR Code diretamente para o visitante por WhatsApp</TBullet>
@@ -341,7 +341,7 @@ export default function MoradorQRVisitante() {
               background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)',
               color: isDark ? '#fff' : "#1e293b",
               fontWeight: 700,
-              fontSize: '15px',
+              fontSize: "16px",
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -351,7 +351,7 @@ export default function MoradorQRVisitante() {
               transition: 'all 0.2s',
             }}
           >
-            <Plus className="w-5 h-5" /> Novo
+            <Plus className="w-6 h-6" /> Novo
           </button>
         )}
 
@@ -364,7 +364,7 @@ export default function MoradorQRVisitante() {
             <p style={{ fontWeight: 700, fontSize: '18px', color: isDark ? '#fff' : "#1e293b", marginTop: '16px' }}>
               Nenhuma autorização criada
             </p>
-            <p style={{ fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginTop: '8px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", marginTop: '8px', lineHeight: 1.6 }}>
               Crie QR Codes para seus visitantes. O porteiro poderá escanear e verificar todas as informações.
             </p>
             <button
@@ -377,14 +377,14 @@ export default function MoradorQRVisitante() {
                 background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)',
                 color: isDark ? '#fff' : "#1e293b",
                 fontWeight: 700,
-                fontSize: '15px',
+                fontSize: "16px",
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
               }}
             >
-              <Plus className="w-5 h-5" /> Criar QR Code
+              <Plus className="w-6 h-6" /> Criar QR Code
             </button>
           </div>
         )}
@@ -392,7 +392,7 @@ export default function MoradorQRVisitante() {
         {/* List */}
         {displayVisitors.length > 0 && !viewQR && (
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <p style={{ fontWeight: 700, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", textTransform: 'uppercase' }}>
+            <p style={{ fontWeight: 700, fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", textTransform: 'uppercase' }}>
               Autorizações ({displayVisitors.length})
             </p>
             {displayVisitors.map((v) => {
@@ -411,31 +411,31 @@ export default function MoradorQRVisitante() {
                       <img src={v.foto} alt="" style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }} />
                     ) : (
                       <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <User className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#475569" }} />
+                        <User className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#475569" }} />
                       </div>
                     )}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontWeight: 700, fontSize: '15px', color: isDark ? '#fff' : "#1e293b", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.nome}</p>
-                      <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>
+                      <p style={{ fontWeight: 700, fontSize: "16px", color: isDark ? '#fff' : "#1e293b", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.nome}</p>
+                      <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>
                         {v.dataInicio} {v.horaInicio} — {v.dataFim} {v.horaFim}
                       </p>
                     </div>
-                    <span style={{ background: sc.bg, color: sc.text, fontSize: "11px", fontWeight: 700, padding: "3px 10px", borderRadius: "999px" }}>
+                    <span style={{ background: sc.bg, color: sc.text, fontSize: "12px", fontWeight: 700, padding: "3px 10px", borderRadius: "999px" }}>
                       {sc.label}
                     </span>
-                    {isExpanded ? <ChevronUp className="w-4 h-4" style={{ color: isDark ? '#93c5fd' : "#475569", flexShrink: 0 }} /> : <ChevronDown className="w-4 h-4" style={{ color: isDark ? '#93c5fd' : "#475569", flexShrink: 0 }} />}
+                    {isExpanded ? <ChevronUp className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#475569", flexShrink: 0 }} /> : <ChevronDown className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#475569", flexShrink: 0 }} />}
                   </button>
 
                   {isExpanded && (
                     <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: '10px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                       {v.documento && (
-                        <p style={{ fontSize: '13px', color: isDark ? '#93c5fd' : "#475569" }}><strong style={{ color: isDark ? '#fff' : "#1e293b" }}>Documento:</strong> {v.documento}</p>
+                        <p style={{ fontSize: "14px", color: isDark ? '#93c5fd' : "#475569" }}><strong style={{ color: isDark ? '#fff' : "#1e293b" }}>Documento:</strong> {v.documento}</p>
                       )}
                       {v.parentesco && (
-                        <p style={{ fontSize: '13px', color: isDark ? '#93c5fd' : "#475569" }}><strong style={{ color: isDark ? '#fff' : "#1e293b" }}>Parentesco:</strong> {v.parentesco}</p>
+                        <p style={{ fontSize: "14px", color: isDark ? '#93c5fd' : "#475569" }}><strong style={{ color: isDark ? '#fff' : "#1e293b" }}>Parentesco:</strong> {v.parentesco}</p>
                       )}
                       {v.observacoes && (
-                        <p style={{ fontSize: '13px', color: isDark ? '#93c5fd' : "#475569" }}><strong style={{ color: isDark ? '#fff' : "#1e293b" }}>Obs:</strong> {v.observacoes}</p>
+                        <p style={{ fontSize: "14px", color: isDark ? '#93c5fd' : "#475569" }}><strong style={{ color: isDark ? '#fff' : "#1e293b" }}>Obs:</strong> {v.observacoes}</p>
                       )}
                       <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
                         <button
@@ -443,21 +443,21 @@ export default function MoradorQRVisitante() {
                           style={{
                             flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
                             background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', color: isDark ? '#fff' : "#1e293b",
-                            fontWeight: 700, fontSize: '13px', cursor: 'pointer',
+                            fontWeight: 700, fontSize: "14px", cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                           }}
                         >
-                          <Eye className="w-4 h-4" /> Ver QR Code
+                          <Eye className="w-5 h-5" /> Ver QR Code
                         </button>
                         <button
                           onClick={() => handleShare(v)}
                           style={{
                             padding: '10px 14px', borderRadius: '10px',
                             border: '1.5px solid rgba(99,102,241,0.4)', background: 'rgba(99,102,241,0.15)',
-                            color: '#a5b4fc', fontWeight: 700, fontSize: '13px', cursor: 'pointer',
+                            color: '#a5b4fc', fontWeight: 700, fontSize: "14px", cursor: 'pointer',
                           }}
                         >
-                          <Share2 className="w-4 h-4" />
+                          <Share2 className="w-5 h-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(v.id)}
@@ -467,7 +467,7 @@ export default function MoradorQRVisitante() {
                             color: '#fca5a5', cursor: 'pointer',
                           }}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                     </div>
@@ -483,19 +483,19 @@ export default function MoradorQRVisitante() {
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
             <button
               onClick={() => setViewQR(null)}
-              style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: isDark ? '#93c5fd' : "#475569", fontWeight: 700, fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+              style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: isDark ? '#93c5fd' : "#475569", fontWeight: 700, fontSize: "15px", cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
             >
-              <ArrowLeft className="w-4 h-4" /> Voltar à lista
+              <ArrowLeft className="w-5 h-5" /> Voltar à lista
             </button>
 
             <div style={{
-              background: "#fff", borderRadius: "20px", padding: "28px",
+              background: "var(--color-card, #fff)", borderRadius: "20px", padding: "28px",
               border: "3px solid #6366f1", textAlign: "center", width: "100%", maxWidth: "380px",
             }}>
               <div style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", borderRadius: "14px", padding: "16px", marginBottom: "20px" }}>
                 <QrCode className="w-8 h-8 mx-auto" style={{ color: "#fff" }} />
                 <p style={{ color: "#fff", fontWeight: 800, fontSize: "16px", marginTop: "6px" }}>AUTORIZAÇÃO DE ENTRADA</p>
-                <p style={{ color: isDark ? "rgba(255,255,255,0.7)" : "#475569", fontSize: "12px" }}>{user?.condominio_nome || "Condomínio"}</p>
+                <p style={{ color: isDark ? "rgba(255,255,255,0.7)" : "#475569", fontSize: "13px" }}>{user?.condominio_nome || "Condomínio"}</p>
               </div>
 
               {viewQR.foto && (
@@ -507,14 +507,14 @@ export default function MoradorQRVisitante() {
               )}
 
               <p style={{ fontWeight: 800, fontSize: "18px", color: "#374151" }}>{viewQR.nome}</p>
-              {viewQR.documento && <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>Doc: {viewQR.documento}</p>}
-              {viewQR.parentesco && <p style={{ fontSize: "13px", color: "#6b7280" }}>Parentesco: {viewQR.parentesco}</p>}
+              {viewQR.documento && <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>Doc: {viewQR.documento}</p>}
+              {viewQR.parentesco && <p style={{ fontSize: "14px", color: "#6b7280" }}>Parentesco: {viewQR.parentesco}</p>}
 
               <div style={{ margin: "20px 0", background: "#f8fafc", borderRadius: "12px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
-                <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>VÁLIDO DE</p>
-                <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{viewQR.dataInicio} às {viewQR.horaInicio}</p>
-                <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginTop: "8px", marginBottom: "4px" }}>ATÉ</p>
-                <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{viewQR.dataFim} às {viewQR.horaFim}</p>
+                <p style={{ fontSize: "13px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>VÁLIDO DE</p>
+                <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>{viewQR.dataInicio} às {viewQR.horaInicio}</p>
+                <p style={{ fontSize: "13px", color: "#6b7280", fontWeight: 700, marginTop: "8px", marginBottom: "4px" }}>ATÉ</p>
+                <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>{viewQR.dataFim} às {viewQR.horaFim}</p>
               </div>
 
               <div style={{ margin: "16px 0" }}>
@@ -525,7 +525,7 @@ export default function MoradorQRVisitante() {
                 />
               </div>
 
-              <p style={{ fontSize: "11px", color: "#9ca3af" }}>
+              <p style={{ fontSize: "12px", color: "#9ca3af" }}>
                 Morador: {user?.name || "N/A"} · Bloco {user?.block || "—"} Apt {user?.unit || "—"}
               </p>
             </div>
@@ -535,11 +535,11 @@ export default function MoradorQRVisitante() {
                 onClick={() => handleShare(viewQR)}
                 style={{
                   flex: 1, padding: "14px", borderRadius: "12px", border: "none",
-                  background: "#25d366", color: p.text, fontWeight: 700, fontSize: "14px",
+                  background: "#25d366", color: p.text, fontWeight: 700, fontSize: "15px",
                   cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 }}
               >
-                <Share2 className="w-5 h-5" /> Enviar por WhatsApp
+                <Share2 className="w-6 h-6" /> Enviar por WhatsApp
               </button>
             </div>
           </div>
@@ -554,7 +554,7 @@ export default function MoradorQRVisitante() {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
               <h2 style={{ fontWeight: 800, fontSize: '18px', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <QrCode className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#475569" }} /> Novo QR Code
+                <QrCode className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#475569" }} /> Novo QR Code
               </h2>
               <button onClick={() => setShowForm(false)} style={{ background: 'none', border: 'none', fontSize: '24px', color: isDark ? '#93c5fd' : "#475569", cursor: 'pointer' }}>×</button>
             </div>
@@ -562,7 +562,7 @@ export default function MoradorQRVisitante() {
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               {/* Foto */}
               <div>
-                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Foto do Visitante {config.fotoObrigatoria ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
                 </span>
                 <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} style={{ display: "none" }} />
@@ -571,7 +571,7 @@ export default function MoradorQRVisitante() {
                     <img src={foto} alt="" style={{ width: "80px", height: "80px", borderRadius: "12px", objectFit: "cover" }} />
                     <button
                       onClick={() => setFoto(null)}
-                      style={{ position: "absolute", top: "-6px", right: "-6px", width: "22px", height: "22px", borderRadius: "50%", background: "#dc2626", color: p.text, border: "none", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}
+                      style={{ position: "absolute", top: "-6px", right: "-6px", width: "22px", height: "22px", borderRadius: "50%", background: "#dc2626", color: p.text, border: "none", fontWeight: 700, fontSize: "15px", cursor: "pointer" }}
                     >×</button>
                   </div>
                 ) : (
@@ -584,15 +584,15 @@ export default function MoradorQRVisitante() {
                       gap: "4px", cursor: "pointer", color: isDark ? '#93c5fd' : "#475569",
                     }}
                   >
-                    <Camera className="w-5 h-5" />
-                    <span style={{ fontSize: "10px", fontWeight: 600 }}>Foto</span>
+                    <Camera className="w-6 h-6" />
+                    <span style={{ fontSize: "12px", fontWeight: 600 }}>Foto</span>
                   </button>
                 )}
               </div>
 
               {/* Nome */}
               <div>
-                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Nome do Visitante <span style={{ color: "#dc2626" }}>*</span>
                 </span>
                 <input
@@ -602,14 +602,14 @@ export default function MoradorQRVisitante() {
                   placeholder="Nome completo do visitante"
                   style={{
                     width: "100%", padding: "12px 14px", borderRadius: "10px",
-                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
+                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "16px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
                   }}
                 />
               </div>
 
               {/* Documento */}
               <div>
-                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Documento (RG/CPF) {config.documentoObrigatorio ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
                 </span>
                 <input
@@ -619,14 +619,14 @@ export default function MoradorQRVisitante() {
                   placeholder="Número do documento"
                   style={{
                     width: "100%", padding: "12px 14px", borderRadius: "10px",
-                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
+                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "16px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
                   }}
                 />
               </div>
 
               {/* Parentesco */}
               <div>
-                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Parentesco / Relação {config.parentescoObrigatorio ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
                 </span>
                 <input
@@ -636,7 +636,7 @@ export default function MoradorQRVisitante() {
                   placeholder='Ex: "Mãe", "Prestador de serviço", "Amigo"'
                   style={{
                     width: "100%", padding: "12px 14px", borderRadius: "10px",
-                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
+                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "16px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
                   }}
                 />
               </div>
@@ -644,7 +644,7 @@ export default function MoradorQRVisitante() {
               {/* Data/Hora Início */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Calendar className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Data Início <span style={{ color: "#dc2626" }}>*</span>
                   </span>
@@ -652,11 +652,11 @@ export default function MoradorQRVisitante() {
                     type="date"
                     value={dataInicio}
                     onChange={(e) => setDataInicio(e.target.value)}
-                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "14px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
+                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
                   />
                 </div>
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Clock className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Hora Início <span style={{ color: "#dc2626" }}>*</span>
                   </span>
@@ -664,7 +664,7 @@ export default function MoradorQRVisitante() {
                     type="time"
                     value={horaInicio}
                     onChange={(e) => setHoraInicio(e.target.value)}
-                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "14px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
+                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
                   />
                 </div>
               </div>
@@ -672,7 +672,7 @@ export default function MoradorQRVisitante() {
               {/* Data/Hora Fim */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Calendar className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Data Fim <span style={{ color: "#dc2626" }}>*</span>
                   </span>
@@ -680,11 +680,11 @@ export default function MoradorQRVisitante() {
                     type="date"
                     value={dataFim}
                     onChange={(e) => setDataFim(e.target.value)}
-                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "14px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
+                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
                   />
                 </div>
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                     <Clock className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                     Hora Fim <span style={{ color: "#dc2626" }}>*</span>
                   </span>
@@ -692,14 +692,14 @@ export default function MoradorQRVisitante() {
                     type="time"
                     value={horaFim}
                     onChange={(e) => setHoraFim(e.target.value)}
-                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "14px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
+                    style={{ width: "100%", padding: "12px 10px", borderRadius: "10px", border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff' }}
                   />
                 </div>
               </div>
 
               {/* Observações */}
               <div>
-                <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
+                <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: "6px" }}>
                   Observações {config.observacoesObrigatorio ? <span style={{ color: "#dc2626" }}>*</span> : "(opcional)"}
                 </span>
                 <textarea
@@ -709,7 +709,7 @@ export default function MoradorQRVisitante() {
                   rows={2}
                   style={{
                     width: "100%", padding: "12px 14px", borderRadius: "10px",
-                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "14px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
+                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', fontSize: "15px", fontWeight: 600, color: isDark ? '#fff' : "#1e293b", background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
                     resize: "none",
                   }}
                 />
@@ -729,7 +729,7 @@ export default function MoradorQRVisitante() {
                   marginTop: "8px",
                 }}
               >
-                <QrCode className="w-5 h-5" /> Gerar QR Code
+                <QrCode className="w-6 h-6" /> Gerar QR Code
               </button>
             </div>
           </div>

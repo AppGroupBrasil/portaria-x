@@ -96,7 +96,7 @@ export default function CadastroMoradoresLink() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros/moradores")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18 }}>Cadastro via Link</span>
           <div style={{ marginLeft: "auto" }}>
@@ -110,7 +110,7 @@ export default function CadastroMoradoresLink() {
                 <TStep n={3}><strong>Envie o link</strong> para os moradores — pode ser por WhatsApp, e-mail, grupo do condomínio, etc.</TStep>
                 <TStep n={4}>O morador clica no link, abre uma página no celular e <strong>preenche seus dados</strong> (nome, bloco, unidade, WhatsApp, e-mail, senha)</TStep>
                 <TStep n={5}>Ao confirmar, o morador é <strong>cadastrado automaticamente</strong> e já pode usar o app</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 Você pode enviar o mesmo link para vários moradores — cada um cria seu próprio cadastro.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 Você pode enviar o mesmo link para vários moradores — cada um cria seu próprio cadastro.</p>
               </TSection>
               <TSection icon={<span>🔧</span>} title="FUNÇÕES DISPONÍVEIS">
                 <TBullet><strong>Copiar link</strong> — Copia o link para a área de transferência com um toque</TBullet>
@@ -134,7 +134,7 @@ export default function CadastroMoradoresLink() {
           {/* Info box */}
           <div className="rounded-xl" style={{ padding: "20px", backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
             <div className="flex gap-3">
-              <Link2 className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "#38bdf8" }} />
+              <Link2 className="w-6 h-6 shrink-0 mt-0.5" style={{ color: "#38bdf8" }} />
               <div className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.7)" : "#64748b" }}>
                 <p>
                   Gere um <strong style={{ color: isDark ? "#ffffff" : "#003580" }}>link personalizado</strong>{" "}
@@ -165,7 +165,7 @@ export default function CadastroMoradoresLink() {
                   style={isDark ? { backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : undefined}
                 >
                   {isGenerating ? (
-                    <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                    <div className="w-6 h-6 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                   ) : (
                     "Gerar Link"
                   )}
@@ -174,7 +174,7 @@ export default function CadastroMoradoresLink() {
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }} className="animate-fade-in">
                 <div className="flex items-center gap-2 text-sm" style={{ color: "#34d399" }}>
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-5 h-5" />
                   Link gerado com sucesso!
                 </div>
 
@@ -196,12 +196,12 @@ export default function CadastroMoradoresLink() {
                   >
                     {copied ? (
                       <>
-                        <CheckCircle2 className="w-4 h-4" style={{ color: "#34d399" }} />
+                        <CheckCircle2 className="w-5 h-5" style={{ color: "#34d399" }} />
                         Copiado!
                       </>
                     ) : (
                       <>
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-5 h-5" />
                         Copiar
                       </>
                     )}
@@ -212,7 +212,7 @@ export default function CadastroMoradoresLink() {
                     className="h-12 gap-2 text-sm"
                     style={isDark ? { border: "2px solid #ffffff", color: "#ffffff" } : undefined}
                   >
-                    <Share2 className="w-4 h-4" />
+                    <Share2 className="w-5 h-5" />
                     Compartilhar
                   </Button>
                 </div>

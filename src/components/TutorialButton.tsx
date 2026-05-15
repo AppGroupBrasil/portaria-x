@@ -8,11 +8,11 @@ const flowBoxStyle = (bg: string, border: string): React.CSSProperties => ({
 });
 
 const flowHeaderStyle = (color: string): React.CSSProperties => ({
-  display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "13px", color, marginBottom: "8px",
+  display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "14px", color, marginBottom: "8px",
 });
 
 const stepStyle: React.CSSProperties = {
-  fontSize: "13px", color: "#374151", lineHeight: 1.7, margin: 0,
+  fontSize: "14px", color: "#374151", lineHeight: 1.7, margin: 0,
 };
 
 export function FlowPortaria({ children }: { children: ReactNode }) {
@@ -48,11 +48,11 @@ export function FlowMorador({ children }: { children: ReactNode }) {
 export function TSection({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
   return (
     <div style={{ marginBottom: "16px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "14px", color: "#1e293b", marginBottom: "8px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "15px", color: "var(--card-foreground)", marginBottom: "8px" }}>
         {icon}
         {title}
       </div>
-      <div style={{ fontSize: "13px", color: "#475569", lineHeight: 1.7 }}>{children}</div>
+      <div style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.7 }}>{children}</div>
     </div>
   );
 }
@@ -62,15 +62,15 @@ export function TStep({ n, children }: { n: number; children: ReactNode }) {
     <div style={{ display: "flex", gap: "10px", marginBottom: "6px" }}>
       <span style={{
         width: "22px", height: "22px", borderRadius: "50%", background: "#6366f1", color: "#fff",
-        display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 800, flexShrink: 0, marginTop: "1px",
+        display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 800, flexShrink: 0, marginTop: "1px",
       }}>{n}</span>
-      <span style={{ fontSize: "13px", color: "#374151", lineHeight: 1.6 }}>{children}</span>
+      <span style={{ fontSize: "14px", color: "#374151", lineHeight: 1.6 }}>{children}</span>
     </div>
   );
 }
 
 export function TBullet({ children }: { children: ReactNode }) {
-  return <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, margin: "3px 0", paddingLeft: "8px" }}>• {children}</p>;
+  return <p style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.6, margin: "3px 0", paddingLeft: "8px" }}>• {children}</p>;
 }
 
 interface TutorialButtonProps {
@@ -96,7 +96,7 @@ export default function TutorialButton({ title, text, children }: TutorialButton
           background: "rgba(255,255,255,0.2)",
           backdropFilter: "blur(4px)",
           color: "#fff",
-          fontSize: "11px",
+          fontSize: "12px",
           fontWeight: 700,
           cursor: "pointer",
           whiteSpace: "nowrap",
@@ -125,7 +125,7 @@ export default function TutorialButton({ title, text, children }: TutorialButton
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#fff",
+              background: "var(--color-card, #fff)",
               borderRadius: "20px",
               maxWidth: "420px",
               width: "100%",
@@ -169,18 +169,18 @@ export default function TutorialButton({ title, text, children }: TutorialButton
 
             {/* Content */}
             <div style={{ padding: "24px" }}>
-              <h3 style={{ fontWeight: 800, fontSize: "17px", color: "#1e293b", marginBottom: "14px" }}>
+              <h3 style={{ fontWeight: 800, fontSize: "17px", color: "var(--card-foreground)", marginBottom: "14px" }}>
                 {title}
               </h3>
               {children ? (
-                <div style={{ fontSize: "14px", lineHeight: 1.7, color: "#475569" }}>
+                <div style={{ fontSize: "15px", lineHeight: 1.7, color: "var(--muted-foreground)" }}>
                   {children}
                 </div>
               ) : (
                 <div style={{
-                  fontSize: "14px",
+                  fontSize: "15px",
                   lineHeight: 1.8,
-                  color: "#475569",
+                  color: "var(--muted-foreground)",
                   whiteSpace: "pre-line",
                 }}>
                   {text}
@@ -200,7 +200,7 @@ export default function TutorialButton({ title, text, children }: TutorialButton
                   background: "linear-gradient(135deg, #6366f1, #4f46e5)",
                   color: "#fff",
                   fontWeight: 700,
-                  fontSize: "15px",
+                  fontSize: "16px",
                   cursor: "pointer",
                 }}
               >

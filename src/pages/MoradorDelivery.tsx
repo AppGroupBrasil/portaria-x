@@ -163,15 +163,15 @@ export default function MoradorDelivery() {
             onClick={() => navigate('/dashboard')}
             style={{ padding: 10, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3">
             <div style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', border: isDark ? '1.5px solid rgba(255,255,255,0.2)' : '1.5px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Truck className="w-5 h-5" style={{ color: isDark ? '#fff' : "#1e293b" }} />
+              <Truck className="w-6 h-6" style={{ color: isDark ? '#fff' : "#1e293b" }} />
             </div>
             <div>
               <h1 className="font-bold text-lg" style={{ color: isDark ? '#fff' : "#1e293b" }}>Entregas e Delivery</h1>
-              <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: '12px' }}>Autorizar recebimento de pedidos</p>
+              <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: "13px" }}>Autorizar recebimento de pedidos</p>
             </div>
           </div>
           <div style={{ marginLeft: "auto" }}>
@@ -184,7 +184,7 @@ export default function MoradorDelivery() {
                 <TStep n={2}>Porteiro registra a entrega no sistema com <strong>tipo, origem e foto</strong> do pacote</TStep>
                 <TStep n={3}>Você recebe um <strong>aviso automático no WhatsApp</strong>: "Delivery chegou na portaria"</TStep>
                 <TStep n={4}>O pedido aparece aqui no app com status <strong>"Aguardando retirada"</strong></TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> Detalhes da entrega (origem, tipo, foto, horário de chegada) e pode descer para retirar quando quiser.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> Detalhes da entrega (origem, tipo, foto, horário de chegada) e pode descer para retirar quando quiser.</p>
               </FlowPortaria>
               <FlowMorador>
                 <TStep n={1}>Você fez um pedido e quer <strong>avisar a portaria com antecedência</strong></TStep>
@@ -192,7 +192,7 @@ export default function MoradorDelivery() {
                 <TStep n={3}>A portaria recebe o aviso e <strong>já fica preparada</strong> para quando o entregador chegar</TStep>
                 <TStep n={4}>Quando chegar, o porteiro <strong>confirma e você recebe a notificação</strong></TStep>
                 <TStep n={5}>Você desce, retira o pedido e o porteiro <strong>confirma a retirada</strong> no sistema</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> Que você estava esperando um delivery. Quando chegar, vinculam automaticamente e confirmam com data e hora.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> Que você estava esperando um delivery. Quando chegar, vinculam automaticamente e confirmam com data e hora.</p>
               </FlowMorador>
               <TSection icon={<span>🔍</span>} title="STATUS DOS DELIVERIES">
                 <TBullet><strong style={{ color: "#d97706" }}>Aguardando retirada</strong> — Chegou na portaria, esperando você buscar</TBullet>
@@ -230,7 +230,7 @@ export default function MoradorDelivery() {
         {/* Info text */}
         {!showForm && (
           <p style={{
-            fontSize: '13px',
+            fontSize: "14px",
             color: isDark ? '#94a3b8' : '#64748b',
             textAlign: 'center',
             lineHeight: '1.6',
@@ -256,12 +256,12 @@ export default function MoradorDelivery() {
               boxShadow: '0 0 0 1px rgba(59,130,246,0.3), 0 2px 8px rgba(59,130,246,0.2)',
               color: isDark ? '#fff' : "#1e293b",
               fontWeight: 700,
-              fontSize: '15px',
+              fontSize: "16px",
               cursor: 'pointer',
               width: '100%',
             }}
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-6 h-6" />
             Novo Pedido de Delivery
           </button>
         )}
@@ -287,13 +287,13 @@ export default function MoradorDelivery() {
                 onClick={() => setShowForm(false)}
                 style={{ padding: '6px', borderRadius: '8px', border: 'none', background: 'transparent', cursor: 'pointer' }}
               >
-                <X className="w-5 h-5" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
+                <X className="w-6 h-6" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
               </button>
             </div>
 
             {/* Serviço Selection */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '10px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '10px', display: 'block' }}>
                 Serviço de Delivery *
               </span>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '10px' }}>
@@ -324,7 +324,7 @@ export default function MoradorDelivery() {
                   >
                     {servico === sv.id && (
                       <div style={{ position: 'absolute', top: 4, right: 4 }}>
-                        <CheckCircle2 style={{ width: 16, height: 16, color: '#4ade80' }} />
+                        <CheckCircle2 style={{ width: 20, height: 20, color: '#4ade80' }} />
                       </div>
                     )}
                     <span
@@ -350,7 +350,7 @@ export default function MoradorDelivery() {
                        sv.id === '99food' ? '🍕' :
                        sv.id === 'loggi' ? '📦' : '🏪'}
                     </span>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: servico === sv.id ? sv.color : isDark ? '#93c5fd' : '#1e293b' }}>
+                    <span style={{ fontSize: "13px", fontWeight: 600, color: servico === sv.id ? sv.color : isDark ? '#93c5fd' : '#1e293b' }}>
                       {sv.label}
                     </span>
                   </button>
@@ -361,7 +361,7 @@ export default function MoradorDelivery() {
             {/* Custom service name */}
             {servico === 'outro' && (
               <div>
-                <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+                <span style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                   Nome do Serviço
                 </span>
                 <input
@@ -374,7 +374,7 @@ export default function MoradorDelivery() {
                     padding: '12px 16px',
                     borderRadius: '12px',
                     border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1',
-                    fontSize: '14px',
+                    fontSize: "15px",
                     background: isDark ? 'rgba(255,255,255,0.06)' : '#fff',
                     color: isDark ? '#fff' : "#1e293b",
                     outline: 'none',
@@ -386,7 +386,7 @@ export default function MoradorDelivery() {
 
             {/* Order Number */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                 Número / Código do Pedido
               </span>
               <input
@@ -399,7 +399,7 @@ export default function MoradorDelivery() {
                   padding: '12px 16px',
                   borderRadius: '12px',
                   border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1',
-                  fontSize: '14px',
+                  fontSize: "15px",
                   background: isDark ? 'rgba(255,255,255,0.06)' : '#fff',
                   color: isDark ? '#fff' : "#1e293b",
                   outline: 'none',
@@ -410,7 +410,7 @@ export default function MoradorDelivery() {
 
             {/* Print do Pedido (screenshot) */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                 Print / Foto do Pedido
               </span>
               <input
@@ -442,7 +442,7 @@ export default function MoradorDelivery() {
                       color: p.text,
                     }}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               ) : (
@@ -462,8 +462,8 @@ export default function MoradorDelivery() {
                     gap: '8px',
                   }}
                 >
-                  <Camera className="w-6 h-6" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
-                  <span style={{ fontSize: '13px', color: isDark ? '#93c5fd' : "#475569" }}>
+                  <Camera className="w-7 h-7" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
+                  <span style={{ fontSize: "14px", color: isDark ? '#93c5fd' : "#475569" }}>
                     Tirar foto ou selecionar imagem
                   </span>
                 </button>
@@ -472,7 +472,7 @@ export default function MoradorDelivery() {
 
             {/* Observação */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '8px', display: 'block' }}>
                 Observação
               </span>
               <textarea
@@ -485,7 +485,7 @@ export default function MoradorDelivery() {
                   padding: '12px 16px',
                   borderRadius: '12px',
                   border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1',
-                  fontSize: '14px',
+                  fontSize: "15px",
                   background: isDark ? 'rgba(255,255,255,0.06)' : '#fff',
                   color: isDark ? '#fff' : "#1e293b",
                   outline: 'none',
@@ -509,7 +509,7 @@ export default function MoradorDelivery() {
                 border: servico ? '1.5px solid rgba(59,130,246,0.4)' : (isDark ? '1.5px solid rgba(255,255,255,0.08)' : '2px solid #003580'),
                 color: servico ? '#fff' : (isDark ? '#64748b' : '#003580'),
                 fontWeight: 700,
-                fontSize: '15px',
+                fontSize: "16px",
                 cursor: servico ? 'pointer' : 'not-allowed',
                 opacity: submitting ? 0.7 : 1,
               }}
@@ -522,8 +522,8 @@ export default function MoradorDelivery() {
         {/* ─── Pending deliveries ─── */}
         {pendentes.length > 0 && (
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '15px', color: isDark ? '#fff' : "#1e293b", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Clock className="w-4 h-4" style={{ color: '#f97316' }} />
+            <h3 style={{ fontWeight: 700, fontSize: "16px", color: isDark ? '#fff' : "#1e293b", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Clock className="w-5 h-5" style={{ color: '#f97316' }} />
               Aguardando ({pendentes.length})
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -563,11 +563,11 @@ export default function MoradorDelivery() {
                            d.servico === 'loggi' ? '📦' : '🏪'}
                         </div>
                         <div>
-                          <p style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#fff' : "#1e293b" }}>
+                          <p style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#fff' : "#1e293b" }}>
                             {d.servico === 'outro' && d.servico_custom ? d.servico_custom : sv.label}
                           </p>
                           {d.numero_pedido && (
-                            <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>Pedido: {d.numero_pedido}</p>
+                            <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>Pedido: {d.numero_pedido}</p>
                           )}
                         </div>
                       </div>
@@ -581,18 +581,18 @@ export default function MoradorDelivery() {
                           cursor: 'pointer',
                         }}
                       >
-                        <Trash2 className="w-4 h-4" style={{ color: '#f87171' }} />
+                        <Trash2 className="w-5 h-5" style={{ color: '#f87171' }} />
                       </button>
                     </div>
                     {d.observacao && (
-                      <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569", paddingLeft: '32px' }}>
+                      <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", paddingLeft: '32px' }}>
                         {d.observacao}
                       </p>
                     )}
                     {d.print_pedido && (
                       <div style={{ paddingLeft: '32px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: isDark ? '#7dd3fc' : '#475569', fontSize: '11px' }}>
-                          <Image className="w-3 h-3" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: isDark ? '#7dd3fc' : '#475569', fontSize: "12px" }}>
+                          <Image className="w-4 h-4" />
                           Print anexado
                         </div>
                       </div>
@@ -607,11 +607,11 @@ export default function MoradorDelivery() {
                           borderRadius: '20px',
                           background: 'rgba(245,158,11,0.15)',
                           color: '#fbbf24',
-                          fontSize: '11px',
+                          fontSize: "12px",
                           fontWeight: 600,
                         }}
                       >
-                        <Clock className="w-3 h-3" />
+                        <Clock className="w-4 h-4" />
                         Aguardando entrega
                       </span>
                     </div>
@@ -625,8 +625,8 @@ export default function MoradorDelivery() {
         {/* ─── Received deliveries ─── */}
         {recebidos.length > 0 && (
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '15px', color: isDark ? '#fff' : "#1e293b", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
+            <h3 style={{ fontWeight: 700, fontSize: "16px", color: isDark ? '#fff' : "#1e293b", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 className="w-5 h-5" style={{ color: '#22c55e' }} />
               Recebidos ({recebidos.length})
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -662,11 +662,11 @@ export default function MoradorDelivery() {
                         ✅
                       </div>
                       <div>
-                        <p style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#fff' : "#1e293b" }}>
+                        <p style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#fff' : "#1e293b" }}>
                           {d.servico === 'outro' && d.servico_custom ? d.servico_custom : sv.label}
                         </p>
                         {d.numero_pedido && (
-                          <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>Pedido: {d.numero_pedido}</p>
+                          <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>Pedido: {d.numero_pedido}</p>
                         )}
                       </div>
                     </div>
@@ -680,11 +680,11 @@ export default function MoradorDelivery() {
                           borderRadius: '20px',
                           background: 'rgba(34,197,94,0.15)',
                           color: '#4ade80',
-                          fontSize: '11px',
+                          fontSize: "12px",
                           fontWeight: 600,
                         }}
                       >
-                        <CheckCircle2 className="w-3 h-3" />
+                        <CheckCircle2 className="w-4 h-4" />
                         Recebido{d.recebido_at ? ` em ${new Date(d.recebido_at).toLocaleString('pt-BR')}` : ''}
                       </span>
                     </div>
@@ -711,10 +711,10 @@ export default function MoradorDelivery() {
             <div style={{ width: 72, height: 72, borderRadius: 22, background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', border: isDark ? '1.5px solid rgba(255,255,255,0.2)' : '1.5px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Truck className="w-8 h-8" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
             </div>
-            <p style={{ fontSize: '15px', color: isDark ? '#fff' : "#1e293b", fontWeight: 500 }}>
+            <p style={{ fontSize: "16px", color: isDark ? '#fff' : "#1e293b", fontWeight: 500 }}>
               Nenhuma autorização de delivery ainda.
             </p>
-            <p style={{ fontSize: '13px', color: isDark ? '#93c5fd' : "#475569" }}>
+            <p style={{ fontSize: "14px", color: isDark ? '#93c5fd' : "#475569" }}>
               Informe quando estiver esperando um pedido para facilitar a entrega na portaria.
             </p>
           </div>

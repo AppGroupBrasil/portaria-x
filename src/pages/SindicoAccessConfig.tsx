@@ -340,7 +340,7 @@ export default function SindicoAccessConfig() {
         <div className="flex items-center justify-between" style={{ padding: "1rem 2rem", height: "4.5rem" }}>
           <div className="flex items-center gap-4">
             <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowLeft className="w-7 h-7" />
             </button>
             <div>
               <span style={{ fontWeight: 700, fontSize: 18 }}>Portaria Virtual</span>
@@ -348,7 +348,7 @@ export default function SindicoAccessConfig() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Shield className="w-5 h-5" style={{ color: p.textDim }} />
+            <Shield className="w-6 h-6" style={{ color: p.textDim }} />
             <span style={{ fontSize: 12, color: p.textDim, fontWeight: 700, letterSpacing: "0.05em" }}>PORTARIA X</span>
           </div>
         </div>
@@ -358,13 +358,13 @@ export default function SindicoAccessConfig() {
         {/* Success / Error */}
         {success && (
           <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 text-emerald-500 text-sm">
-            <Check className="w-4 h-4" /> {success}
+            <Check className="w-5 h-5" /> {success}
           </div>
         )}
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-red-500 text-sm">
-            <AlertCircle className="w-4 h-4" /> {error}
-            <button onClick={() => setError("")} className="ml-auto"><X className="w-4 h-4" /></button>
+            <AlertCircle className="w-5 h-5" /> {error}
+            <button onClick={() => setError("")} className="ml-auto"><X className="w-5 h-5" /></button>
           </div>
         )}
 
@@ -375,7 +375,7 @@ export default function SindicoAccessConfig() {
           border: isDark ? '1px solid rgba(245,158,11,0.25)' : '1px solid #fde68a',
           display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
         }}>
-          <AlertCircle style={{ width: 22, height: 22, color: '#f59e0b', flexShrink: 0, marginTop: 2 }} />
+          <AlertCircle style={{ width: 26, height: 26, color: '#f59e0b', flexShrink: 0, marginTop: 2 }} />
           <div style={{ fontSize: '0.82rem', lineHeight: 1.5, color: isDark ? '#fde68a' : '#92400e' }}>
             <p style={{ fontWeight: 700, marginBottom: 4 }}>⚡ Requisitos de Instalação Física</p>
             <p style={{ margin: '2px 0' }}>• O módulo IoT (SONOFF/Shelly) deve estar ligado na <strong>botoeira do motor do portão</strong>, nunca diretamente na alimentação do motor.</p>
@@ -394,7 +394,7 @@ export default function SindicoAccessConfig() {
           <div className="text-center py-16 space-y-4">
             <DoorOpen className="w-16 h-16 mx-auto" style={{ color: "rgba(100, 116, 139, 0.3)" }} />
             <p className="text-lg font-semibold" style={{ color: "#003580" }}>Nenhum ponto de acesso configurado</p>
-            <p className="text-sm" style={{ color: "#64748b" }}>
+            <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
               Crie os pontos de acesso padrão ou adicione manualmente.
             </p>
             <div className="flex justify-center gap-3">
@@ -403,14 +403,14 @@ export default function SindicoAccessConfig() {
                 className="py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
                 style={{ minWidth: 220, paddingLeft: 40, paddingRight: 40 }}
               >
-                <Zap className="w-4 h-4" /> Criar Padrões
+                <Zap className="w-5 h-5" /> Criar Padrões
               </button>
               <button
                 onClick={() => setShowNew(true)}
                 className="py-3 rounded-lg border border-primary text-primary font-medium hover:bg-primary/10 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
                 style={{ minWidth: 220, paddingLeft: 40, paddingRight: 40 }}
               >
-                <Plus className="w-4 h-4" /> Criar Personalizado
+                <Plus className="w-5 h-5" /> Criar Personalizado
               </button>
             </div>
           </div>
@@ -431,7 +431,7 @@ export default function SindicoAccessConfig() {
                 background: "linear-gradient(135deg, #0062d1, #10b981)",
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
               }}>
-                <Info className="w-5 h-5 text-white" />
+                <Info className="w-6 h-6 text-white" />
               </div>
               <div>
                 <p style={{ fontWeight: 700, fontSize: 14, color: "#ffffff", marginBottom: 6, wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
@@ -469,7 +469,7 @@ export default function SindicoAccessConfig() {
                     <div className="flex items-center gap-3">
                       {/* Icon */}
                       <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", border: "1.5px solid rgba(255,255,255,0.35)" }}>
-                        <IconComp className="w-6 h-6 text-white" />
+                        <IconComp className="w-7 h-7 text-white" />
                       </div>
 
                       {/* Info */}
@@ -500,7 +500,7 @@ export default function SindicoAccessConfig() {
                           disabled={isSaving}
                           className={`relative w-12 h-7 rounded-full transition-all ${ap.enabled ? "bg-emerald-500" : "bg-muted-foreground/30"}`}
                         >
-                          <div className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow transition-all ${ap.enabled ? "left-5.5" : "left-0.5"}`} />
+                          <div className={`absolute top-0.5 w-7 h-7 rounded-full bg-white shadow transition-all ${ap.enabled ? "left-5.5" : "left-0.5"}`} />
                         </button>
 
                         {/* Edit */}
@@ -520,9 +520,9 @@ export default function SindicoAccessConfig() {
                             });
                           }}
                           className="p-2 rounded-lg hover:bg-[#003580]/5 transition-all"
-                          style={{ color: "#64748b" }}
+                          style={{ color: "var(--muted-foreground)" }}
                         >
-                          <Pencil className="w-4 h-4" />
+                          <Pencil className="w-5 h-5" />
                         </button>
 
                         {/* Delete */}
@@ -531,7 +531,7 @@ export default function SindicoAccessConfig() {
                           disabled={isSaving}
                           className="p-2 rounded-lg hover:bg-red-500/10 text-red-400 transition-all"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                     </div>
@@ -539,7 +539,7 @@ export default function SindicoAccessConfig() {
                     {/* Device assignment (if devices loaded) */}
                     {devices.length > 0 && (
                       <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(0, 53, 128, 0.05)" }}>
-                        <span className="text-xs mb-1 block" style={{ color: "#64748b" }}>Dispositivo smart switch:</span>
+                        <span className="text-xs mb-1 block" style={{ color: "var(--muted-foreground)" }}>Dispositivo smart switch:</span>
                         <select
                           value={ap.device_id || ""}
                           onChange={(e) => {
@@ -565,7 +565,7 @@ export default function SindicoAccessConfig() {
                           if (!dev || dev.channelCount <= 1) return null;
                           return (
                             <div className="mt-2">
-                              <span className="text-xs mb-1 block" style={{ color: "#64748b" }}>Canal (saída do relê):</span>
+                              <span className="text-xs mb-1 block" style={{ color: "var(--muted-foreground)" }}>Canal (saída do relê):</span>
                               <select
                                 value={ap.channel ?? 0}
                                 onChange={(e) => assignDevice(ap.id, ap.device_id!, Number.parseInt(e.target.value))}
@@ -591,34 +591,34 @@ export default function SindicoAccessConfig() {
             <button
               onClick={() => setShowNew(true)}
               className="w-full rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-6"
-              style={{ background: "#ffffff", color: "#003580", minHeight: "60px" }}
+              style={{ background: "var(--color-card, #fff)", color: "#003580", minHeight: "60px" }}
             >
-              <Plus className="w-5 h-5" style={{ color: "#003580" }} /> Adicionar Acesso Personalizado
+              <Plus className="w-6 h-6" style={{ color: "#003580" }} /> Adicionar Acesso Personalizado
             </button>
 
             {/* Logs section */}
             <button
               onClick={() => { setShowLogs(!showLogs); if (!showLogs) fetchLogs(); }}
               className="w-full rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
-              style={{ background: "#ffffff", color: "#003580", minHeight: "60px" }}
+              style={{ background: "var(--color-card, #fff)", color: "#003580", minHeight: "60px" }}
             >
-              <History className="w-5 h-5" style={{ color: "#003580" }} />
+              <History className="w-6 h-6" style={{ color: "#003580" }} />
               Histórico de Acionamentos
-              {showLogs ? <ChevronUp className="w-4 h-4" style={{ color: "#003580" }} /> : <ChevronDown className="w-4 h-4" style={{ color: "#003580" }} />}
+              {showLogs ? <ChevronUp className="w-5 h-5" style={{ color: "#003580" }} /> : <ChevronDown className="w-5 h-5" style={{ color: "#003580" }} />}
             </button>
 
             {showLogs && (
               <div className="mt-4 flex flex-col gap-4">
                 {logs.length === 0 ? (
-                  <p className="text-sm text-center py-4" style={{ color: "#64748b" }}>Nenhum registro.</p>
+                  <p className="text-sm text-center py-4" style={{ color: "var(--muted-foreground)" }}>Nenhum registro.</p>
                 ) : (
                   logs.map((log) => (
                     <div key={log.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: "rgba(0, 53, 128, 0.02)" }}>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate" style={{ color: "#003580" }}>{log.user_name}</p>
-                        <p className="text-xs" style={{ color: "#64748b" }}>{actionLabel(log.action)} {log.details ? `· ${log.details}` : ""}</p>
+                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{actionLabel(log.action)} {log.details ? `· ${log.details}` : ""}</p>
                       </div>
-                      <span className="text-[10px] shrink-0" style={{ color: "#64748b" }}>{formatDate(log.created_at)}</span>
+                      <span className="text-[10px] shrink-0" style={{ color: "var(--muted-foreground)" }}>{formatDate(log.created_at)}</span>
                     </div>
                   ))
                 )}
@@ -636,32 +636,32 @@ export default function SindicoAccessConfig() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Settings className="w-5 h-5 text-white" />
+                      <Settings className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-bold text-white">Editar Acesso</h3>
                   </div>
                   <button onClick={() => setEditingAP(null)} style={{ width: 40, height: 40, borderRadius: 8, background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer" }}>
-                    <X className="w-5 h-5 text-white" />
+                    <X className="w-6 h-6 text-white" />
                   </button>
                 </div>
               </div>
 
               {/* Body */}
-              <div style={{ background: "#ffffff", padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
+              <div style={{ background: "var(--color-card, #fff)", padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
                 {/* Name */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</span>
                   <input
                     value={editForm.name}
                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                     className="w-full"
-                    style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: 12, padding: "12px 16px", fontSize: 15, color: "#1e293b", outline: "none", transition: "border 0.2s" }}
+                    style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: 12, padding: "12px 16px", fontSize: 15, color: "var(--card-foreground)", outline: "none", transition: "border 0.2s" }}
                   />
                 </div>
 
                 {/* Icon */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</span>
                   <div className="flex gap-2 flex-wrap">
                     {ICON_OPTIONS.map((opt) => (
                       <button
@@ -673,7 +673,7 @@ export default function SindicoAccessConfig() {
                           display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s"
                         }}
                       >
-                        <opt.Icon style={{ width: 22, height: 22, color: editForm.icon === opt.value ? "#003580" : "#94a3b8" }} />
+                        <opt.Icon style={{ width: 26, height: 26, color: editForm.icon === opt.value ? "#003580" : "#94a3b8" }} />
                       </button>
                     ))}
                   </div>
@@ -682,7 +682,7 @@ export default function SindicoAccessConfig() {
                 {/* Pulse duration */}
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</span>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#003580", background: "#eef2ff", padding: "2px 10px", borderRadius: 20 }}>{editForm.pulse_duration}ms</span>
                   </div>
                   <input
@@ -699,7 +699,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Allowed roles */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</span>
                   <div className="flex gap-2 flex-wrap">
                     {ROLE_OPTIONS.map((role) => {
                       const active = editForm.allowed_roles.includes(role.value);
@@ -730,7 +730,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Allow manual open toggle */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Abertura por biometria do celular</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Abertura por biometria do celular</span>
                   <button
                     onClick={() => setEditForm({ ...editForm, allow_manual_open: !editForm.allow_manual_open })}
                     style={{
@@ -745,7 +745,7 @@ export default function SindicoAccessConfig() {
                       background: editForm.allow_manual_open ? "#003580" : "#cbd5e1",
                     }}>
                       <div style={{
-                        width: 20, height: 20, borderRadius: 10, background: "#fff", position: "absolute", top: 2,
+                        width: 24, height: 24, borderRadius: 10, background: "var(--color-card, #fff)", position: "absolute", top: 2,
                         left: editForm.allow_manual_open ? 22 : 2, transition: "all 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
                       }} />
                     </div>
@@ -762,7 +762,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Botoeira for Morador */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Morador</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Morador</span>
                   <button
                     onClick={() => setEditForm({ ...editForm, allow_botoeira_morador: !editForm.allow_botoeira_morador })}
                     style={{
@@ -777,7 +777,7 @@ export default function SindicoAccessConfig() {
                       background: editForm.allow_botoeira_morador ? "#059669" : "#cbd5e1",
                     }}>
                       <div style={{
-                        width: 20, height: 20, borderRadius: 10, background: "#fff", position: "absolute", top: 2,
+                        width: 24, height: 24, borderRadius: 10, background: "var(--color-card, #fff)", position: "absolute", top: 2,
                         left: editForm.allow_botoeira_morador ? 22 : 2, transition: "all 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
                       }} />
                     </div>
@@ -794,7 +794,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Botoeira for Portaria */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Portaria</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Botoeira — Portaria</span>
                   <button
                     onClick={() => setEditForm({ ...editForm, allow_botoeira_portaria: !editForm.allow_botoeira_portaria })}
                     style={{
@@ -809,7 +809,7 @@ export default function SindicoAccessConfig() {
                       background: editForm.allow_botoeira_portaria ? "#d97706" : "#cbd5e1",
                     }}>
                       <div style={{
-                        width: 20, height: 20, borderRadius: 10, background: "#fff", position: "absolute", top: 2,
+                        width: 24, height: 24, borderRadius: 10, background: "var(--color-card, #fff)", position: "absolute", top: 2,
                         left: editForm.allow_botoeira_portaria ? 22 : 2, transition: "all 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
                       }} />
                     </div>
@@ -831,7 +831,7 @@ export default function SindicoAccessConfig() {
                   className="w-full flex items-center justify-center gap-2 font-bold text-white disabled:opacity-50 transition-all active:scale-[0.98]"
                   style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "14px 0", borderRadius: 14, fontSize: 16, border: "none", cursor: "pointer", marginTop: "0.5cm" }}
                 >
-                  {saving !== null ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
+                  {saving !== null ? <Loader2 className="w-6 h-6 animate-spin" /> : <Check className="w-6 h-6" />}
                   Salvar Alterações
                 </button>
               </div>
@@ -848,33 +848,33 @@ export default function SindicoAccessConfig() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Plus className="w-5 h-5 text-white" />
+                      <Plus className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-bold text-white">Novo Ponto de Acesso</h3>
                   </div>
                   <button onClick={() => setShowNew(false)} style={{ width: 40, height: 40, borderRadius: 8, background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer" }}>
-                    <X className="w-5 h-5 text-white" />
+                    <X className="w-6 h-6 text-white" />
                   </button>
                 </div>
               </div>
 
               {/* Body */}
-              <div style={{ background: "#ffffff", padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
+              <div style={{ background: "var(--color-card, #fff)", padding: "24px", display: "flex", flexDirection: "column", gap: "0.5cm" }}>
                 {/* Name */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Nome do acesso</span>
                   <input
                     value={newForm.name}
                     onChange={(e) => setNewForm({ ...newForm, name: e.target.value })}
                     placeholder="Ex: Portão do Estacionamento"
                     className="w-full"
-                    style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: 12, padding: "12px 16px", fontSize: 15, color: "#1e293b", outline: "none", transition: "border 0.2s" }}
+                    style={{ background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: 12, padding: "12px 16px", fontSize: 15, color: "var(--card-foreground)", outline: "none", transition: "border 0.2s" }}
                   />
                 </div>
 
                 {/* Icon */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Ícone</span>
                   <div className="flex gap-2 flex-wrap">
                     {ICON_OPTIONS.map((opt) => (
                       <button
@@ -886,7 +886,7 @@ export default function SindicoAccessConfig() {
                           display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s"
                         }}
                       >
-                        <opt.Icon style={{ width: 22, height: 22, color: newForm.icon === opt.value ? "#003580" : "#94a3b8" }} />
+                        <opt.Icon style={{ width: 26, height: 26, color: newForm.icon === opt.value ? "#003580" : "#94a3b8" }} />
                       </button>
                     ))}
                   </div>
@@ -895,7 +895,7 @@ export default function SindicoAccessConfig() {
                 {/* Pulse duration */}
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Duração do pulso</span>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#003580", background: "#eef2ff", padding: "2px 10px", borderRadius: 20 }}>{newForm.pulse_duration}ms</span>
                   </div>
                   <input
@@ -912,7 +912,7 @@ export default function SindicoAccessConfig() {
 
                 {/* Allowed roles */}
                 <div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-foreground)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8, display: "block" }}>Quem pode abrir</span>
                   <div className="flex gap-2 flex-wrap">
                     {ROLE_OPTIONS.map((role) => {
                       const active = newForm.allowed_roles.includes(role.value);
@@ -948,7 +948,7 @@ export default function SindicoAccessConfig() {
                   className="w-full flex items-center justify-center gap-2 font-bold text-white disabled:opacity-50 transition-all active:scale-[0.98]"
                   style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "14px 0", borderRadius: 14, fontSize: 16, border: "none", cursor: "pointer", marginTop: "0.5cm" }}
                 >
-                  {saving === -1 ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
+                  {saving === -1 ? <Loader2 className="w-6 h-6 animate-spin" /> : <Plus className="w-6 h-6" />}
                   Criar Acesso
                 </button>
               </div>

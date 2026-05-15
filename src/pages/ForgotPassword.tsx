@@ -122,7 +122,7 @@ export default function ForgotPassword() {
 
   /* ── Shared styles ── */
   const cardStyle: React.CSSProperties = {
-    background: "#ffffff",
+    background: "var(--color-card, #fff)",
     borderRadius: "24px",
     boxShadow: "0 20px 60px rgba(0,53,128,0.12)",
     padding: "40px 36px 32px",
@@ -137,7 +137,7 @@ export default function ForgotPassword() {
     background: "linear-gradient(135deg, #003580 0%, #0056d2 100%)",
     color: "#fff",
     fontWeight: 700,
-    fontSize: "15px",
+    fontSize: "16px",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -160,7 +160,7 @@ export default function ForgotPassword() {
     border: "1px solid rgba(239,68,68,0.2)",
     borderRadius: "12px",
     color: "#dc2626",
-    fontSize: "13px",
+    fontSize: "14px",
     marginTop: "12px",
   };
   const tabBtn = (active: boolean): React.CSSProperties => ({
@@ -171,7 +171,7 @@ export default function ForgotPassword() {
     background: active ? "#003580" : "rgba(0,53,128,0.06)",
     color: active ? "#fff" : "#003580",
     fontWeight: 600,
-    fontSize: "14px",
+    fontSize: "15px",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -240,7 +240,7 @@ export default function ForgotPassword() {
             {step === "reset" && "Nova Senha"}
             {step === "success" && "Tudo Pronto!"}
           </h1>
-          <p style={{ fontSize: "14px", color: "#6b7280" }}>
+          <p style={{ fontSize: "15px", color: "#6b7280" }}>
             {step === "request" && "Informe seu e-mail ou telefone cadastrado"}
             {step === "verify" && "Digite o código de 6 dígitos que foi enviado"}
             {step === "reset" && "Escolha sua nova senha de 6 dígitos"}
@@ -307,7 +307,7 @@ export default function ForgotPassword() {
             )}
 
             <button type="submit" disabled={isLoading} style={{ ...btnPrimary, marginTop: "20px", opacity: isLoading ? 0.7 : 1 }}>
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Enviar código <ArrowRight style={{ width: "16px", height: "16px" }} /></>}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Enviar código <ArrowRight style={{ width: "16px", height: "16px" }} /></>}
             </button>
           </form>
         )}
@@ -327,7 +327,7 @@ export default function ForgotPassword() {
                   border: "1px solid rgba(45,51,84,0.2)",
                   borderRadius: "12px",
                   color: "#2d3354",
-                  fontSize: "13px",
+                  fontSize: "14px",
                   marginBottom: "16px",
                 }}
               >
@@ -351,7 +351,7 @@ export default function ForgotPassword() {
                 className="h-14 rounded-xl bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-[#2d3354] focus:ring-[#2d3354]"
                 style={{ textAlign: "center", fontSize: "24px", letterSpacing: "0.3em", marginTop: "8px" }}
               />
-              <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "8px" }}>
+              <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "8px" }}>
                 Enviado para {type === "email" ? "seu e-mail" : "seu telefone"}
               </p>
             </div>
@@ -368,14 +368,14 @@ export default function ForgotPassword() {
                 <ArrowLeft style={{ width: "16px", height: "16px" }} /> Voltar
               </button>
               <button type="submit" disabled={isLoading || code.length !== 6} style={{ ...btnPrimary, flex: 1, opacity: isLoading || code.length !== 6 ? 0.6 : 1 }}>
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Verificar <ArrowRight style={{ width: "16px", height: "16px" }} /></>}
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Verificar <ArrowRight style={{ width: "16px", height: "16px" }} /></>}
               </button>
             </div>
 
             <button
               type="button"
               onClick={(e) => { setError(""); setCode(""); handleRequest(e as any); }}
-              style={{ width: "100%", marginTop: "14px", background: "none", border: "none", color: "#2d3354", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
+              style={{ width: "100%", marginTop: "14px", background: "none", border: "none", color: "#2d3354", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
             >
               Reenviar código
             </button>
@@ -405,7 +405,7 @@ export default function ForgotPassword() {
                   onClick={() => setShowPassword(!showPassword)}
                   style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#94a3b8", cursor: "pointer" }}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
                 </button>
               </div>
             </div>
@@ -430,7 +430,7 @@ export default function ForgotPassword() {
                   onClick={() => setShowConfirm(!showConfirm)}
                   style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#94a3b8", cursor: "pointer" }}
                 >
-                  {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirm ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
                 </button>
               </div>
             </div>
@@ -443,7 +443,7 @@ export default function ForgotPassword() {
             )}
 
             <button type="submit" disabled={isLoading} style={{ ...btnPrimary, marginTop: "20px", opacity: isLoading ? 0.7 : 1 }}>
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Redefinir senha <ArrowRight style={{ width: "16px", height: "16px" }} /></>}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Redefinir senha <ArrowRight style={{ width: "16px", height: "16px" }} /></>}
             </button>
           </form>
         )}
@@ -468,7 +468,7 @@ export default function ForgotPassword() {
             <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#111827", marginBottom: "6px" }}>
               Senha redefinida!
             </h3>
-            <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "24px" }}>
+            <p style={{ fontSize: "15px", color: "#6b7280", marginBottom: "24px" }}>
               Sua senha foi alterada com sucesso. Agora você pode fazer login com sua nova senha.
             </p>
             <button style={btnPrimary} onClick={() => navigate("/login")}>
@@ -482,7 +482,7 @@ export default function ForgotPassword() {
           <>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "24px 0" }}>
               <div style={{ flex: 1, height: "1px", background: "rgba(0,53,128,0.1)" }} />
-              <span style={{ fontSize: "11px", color: "#9ca3af", textTransform: "uppercase", fontWeight: 600 }}>ou</span>
+              <span style={{ fontSize: "12px", color: "#9ca3af", textTransform: "uppercase", fontWeight: 600 }}>ou</span>
               <div style={{ flex: 1, height: "1px", background: "rgba(0,53,128,0.1)" }} />
             </div>
             <a
@@ -500,7 +500,7 @@ export default function ForgotPassword() {
                 background: "#16a34a",
                 color: p.text,
                 fontWeight: 600,
-                fontSize: "14px",
+                fontSize: "15px",
                 textDecoration: "none",
                 transition: "opacity 0.2s",
               }}
@@ -512,7 +512,7 @@ export default function ForgotPassword() {
         )}
 
         {/* Voltar ao login */}
-        <p style={{ textAlign: "center", fontSize: "13px", color: "#6b7280", marginTop: "20px" }}>
+        <p style={{ textAlign: "center", fontSize: "14px", color: "#6b7280", marginTop: "20px" }}>
           Lembrou sua senha?{" "}
           <Link to="/login" style={{ color: "#003580", fontWeight: 600, textDecoration: "none" }}>
             Fazer login

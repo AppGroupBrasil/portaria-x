@@ -99,7 +99,7 @@ export default function DashboardFuncionario() {
         <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "4rem", gap: 16 }}>
           <div className="flex items-center" style={{ gap: 14 }}>
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
-              <ShieldCheck style={{ width: 22, height: 22, color: p.text }} />
+              <ShieldCheck style={{ width: 26, height: 26, color: p.text }} />
             </div>
             <div style={{ minWidth: 0 }}>
               <span
@@ -121,7 +121,7 @@ export default function DashboardFuncionario() {
                 {user?.condominio_nome || "Meu Condomínio"}
               </span>
               <span className="flex items-center" style={{ fontSize: 13, color: p.textDim, gap: 6, marginTop: 6, flexWrap: "wrap" }}>
-                <Shield style={{ width: 14, height: 14 }} />
+                <Shield style={{ width: 18, height: 18 }} />
                 {getRoleLabel(user?.role || "funcionario")}
                 {hasHidden && (
                   <button
@@ -139,7 +139,7 @@ export default function DashboardFuncionario() {
                     }}
                     title="Existem funções ocultas — clique para gerenciar"
                   >
-                    <EyeOff style={{ width: 14, height: 14, color: "#fbbf24" }} />
+                    <EyeOff style={{ width: 18, height: 18, color: "#fbbf24" }} />
                     <span style={{ fontSize: 11, fontWeight: 600, color: "#fbbf24" }}>
                       {layout.hidden?.length || 0} oculto{(layout.hidden?.length || 0) === 1 ? "" : "s"}
                     </span>
@@ -156,7 +156,7 @@ export default function DashboardFuncionario() {
               onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
-              <Settings style={{ width: 20, height: 20, color: p.text }} />
+              <Settings style={{ width: 24, height: 24, color: p.text }} />
             </button>
             <button
               className="flex items-center justify-center"
@@ -165,7 +165,7 @@ export default function DashboardFuncionario() {
               onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
-              <UserCircle style={{ width: 20, height: 20, color: p.text }} />
+              <UserCircle style={{ width: 24, height: 24, color: p.text }} />
             </button>
             <ThemePicker />
             <button
@@ -174,7 +174,7 @@ export default function DashboardFuncionario() {
               onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
-              <Bell style={{ width: 20, height: 20, color: p.text }} />
+              <Bell style={{ width: 24, height: 24, color: p.text }} />
               <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
             </button>
             <button
@@ -184,7 +184,7 @@ export default function DashboardFuncionario() {
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
-              <LogOut style={{ width: 20, height: 20, color: p.text }} />
+              <LogOut style={{ width: 24, height: 24, color: p.text }} />
             </button>
           </div>
         </div>
@@ -254,7 +254,7 @@ export default function DashboardFuncionario() {
                 style={{ gap: 6, fontSize: 12, fontWeight: 600, background: "none", border: "none", color: p.isDarkBase ? "#ffffff" : "#000000", transition: "all 0.2s" }}
               >
                 <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, transition: "all 0.2s" }}>
-                  <Icon style={{ width: 22, height: 22 }} />
+                  <Icon style={{ width: 26, height: 26 }} />
                 </div>
                 <span>{item.shortLabel}</span>
               </button>

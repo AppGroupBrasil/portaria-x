@@ -168,7 +168,7 @@ export default function VisualVerification({
     >
       <div
         style={{
-          background: "#fff",
+          background: "var(--color-card, #fff)",
           borderRadius: "20px",
           width: "100%",
           maxWidth: expanded ? "700px" : "480px",
@@ -192,10 +192,10 @@ export default function VisualVerification({
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <ShieldCheck style={{ width: 22, height: 22 }} />
+            <ShieldCheck style={{ width: 26, height: 26 }} />
             <div>
-              <div style={{ fontWeight: 700, fontSize: "14px" }}>Verificação Visual</div>
-              <div style={{ fontSize: "11px", opacity: 0.85 }}>{visitorName}</div>
+              <div style={{ fontWeight: 700, fontSize: "15px" }}>Verificação Visual</div>
+              <div style={{ fontSize: "12px", opacity: 0.85 }}>{visitorName}</div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -203,13 +203,13 @@ export default function VisualVerification({
               onClick={() => setExpanded(!expanded)}
               style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "8px", width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#fff" }}
             >
-              <ZoomIn style={{ width: 16, height: 16 }} />
+              <ZoomIn style={{ width: 20, height: 20 }} />
             </button>
             <button
               onClick={onClose}
               style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "8px", width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#fff" }}
             >
-              <X style={{ width: 16, height: 16 }} />
+              <X style={{ width: 20, height: 20 }} />
             </button>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function VisualVerification({
         {checkingModels && !modelsReady && (
           <div style={{ padding: "24px", textAlign: "center" }}>
             <Loader2 style={{ width: 32, height: 32, color: "#2d3354", margin: "0 auto 12px", animation: "spin 1s linear infinite" }} />
-            <p style={{ fontSize: "13px", color: "#64748b" }}>Verificando serviço de reconhecimento facial...</p>
+            <p style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>Verificando serviço de reconhecimento facial...</p>
           </div>
         )}
 
@@ -228,7 +228,7 @@ export default function VisualVerification({
             <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
               {/* Registered Photo */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "11px", fontWeight: 600, color: "#2d3354", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <div style={{ fontSize: "12px", fontWeight: 600, color: "#2d3354", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                   Foto Cadastrada
                 </div>
                 <div
@@ -250,7 +250,7 @@ export default function VisualVerification({
 
               {/* Live Camera Feed */}
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "11px", fontWeight: 600, color: "#059669", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <div style={{ fontSize: "12px", fontWeight: 600, color: "#059669", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: "6px" }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block", animation: "pulse 2s infinite" }} />
                   Câmera ao Vivo
                 </div>
@@ -303,13 +303,13 @@ export default function VisualVerification({
                   border: "1px solid #e2e8f0",
                   borderRadius: "8px",
                   padding: "6px 12px",
-                  fontSize: "11px",
-                  color: "#475569",
+                  fontSize: "12px",
+                  color: "var(--muted-foreground)",
                   cursor: "pointer",
                   marginBottom: "12px",
                 }}
               >
-                <Camera style={{ width: 12, height: 12 }} />
+                <Camera style={{ width: 16, height: 16 }} />
                 {useDeviceCamera ? "Usar câmera de segurança" : "Usar câmera do dispositivo"}
               </button>
             )}
@@ -330,8 +330,8 @@ export default function VisualVerification({
               >
                 <ShieldCheck style={{ width: 28, height: 28, color: "#16a34a", flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: "14px", color: "#15803d" }}>IDENTIDADE CONFIRMADA</div>
-                  <div style={{ fontSize: "12px", color: "#166534" }}>
+                  <div style={{ fontWeight: 700, fontSize: "15px", color: "#15803d" }}>IDENTIDADE CONFIRMADA</div>
+                  <div style={{ fontSize: "13px", color: "#166534" }}>
                     Reconhecimento: {confidence >= 55 ? "Excelente" : "Suficiente"} — O rosto corresponde ao cadastro de {visitorName}.
                   </div>
                 </div>
@@ -352,8 +352,8 @@ export default function VisualVerification({
               >
                 <ShieldX style={{ width: 28, height: 28, color: "#dc2626", flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: "14px", color: "#991b1b" }}>ROSTO NÃO CORRESPONDE</div>
-                  <div style={{ fontSize: "12px", color: "#b91c1c" }}>
+                  <div style={{ fontWeight: 700, fontSize: "15px", color: "#991b1b" }}>ROSTO NÃO CORRESPONDE</div>
+                  <div style={{ fontSize: "13px", color: "#b91c1c" }}>
                     O rosto não corresponde ao cadastro.
                   </div>
                 </div>
@@ -374,8 +374,8 @@ export default function VisualVerification({
               >
                 <AlertTriangle style={{ width: 28, height: 28, color: "#d97706", flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: "14px", color: "#92400e" }}>NÃO FOI POSSÍVEL VERIFICAR</div>
-                  <div style={{ fontSize: "12px", color: "#a16207" }}>
+                  <div style={{ fontWeight: 700, fontSize: "15px", color: "#92400e" }}>NÃO FOI POSSÍVEL VERIFICAR</div>
+                  <div style={{ fontSize: "13px", color: "#a16207" }}>
                     {errorMsg || "Nenhum rosto detectado em uma das imagens. Posicione o visitante de frente para a câmera."}
                   </div>
                 </div>
@@ -397,7 +397,7 @@ export default function VisualVerification({
                     : "linear-gradient(135deg, #2d3354 0%, #3d4470 100%)",
                   color: "#fff",
                   fontWeight: 700,
-                  fontSize: "14px",
+                  fontSize: "15px",
                   cursor: verifying ? "not-allowed" : "pointer",
                   display: "flex",
                   alignItems: "center",
@@ -407,17 +407,17 @@ export default function VisualVerification({
               >
                 {verifying ? (
                   <>
-                    <Loader2 style={{ width: 18, height: 18, animation: "spin 1s linear infinite" }} />
+                    <Loader2 style={{ width: 22, height: 22, animation: "spin 1s linear infinite" }} />
                     Verificando...
                   </>
                 ) : result !== "idle" ? (
                   <>
-                    <RefreshCw style={{ width: 18, height: 18 }} />
+                    <RefreshCw style={{ width: 22, height: 22 }} />
                     Verificar Novamente
                   </>
                 ) : (
                   <>
-                    <ShieldCheck style={{ width: 18, height: 18 }} />
+                    <ShieldCheck style={{ width: 22, height: 22 }} />
                     Verificar Identidade
                   </>
                 )}

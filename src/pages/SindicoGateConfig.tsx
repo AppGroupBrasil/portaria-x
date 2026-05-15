@@ -136,11 +136,11 @@ export default function SindicoGateConfig() {
       <header className="sticky top-0 z-30 safe-area-top" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, padding: "18px 24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text, flexShrink: 0 }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 style={{ fontWeight: 700, fontSize: 18, color: p.text, display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
-              <DoorOpen className="w-5 h-5" /> Módulo Portão
+              <DoorOpen className="w-6 h-6" /> Módulo Portão
             </h1>
             <p style={{ fontSize: 12, color: "rgba(147,197,253,0.8)", marginTop: 2, marginBottom: 0 }}>Controle de acesso IoT</p>
           </div>
@@ -210,7 +210,7 @@ export default function SindicoGateConfig() {
               flexShrink: 0,
             }}
           >
-            <span style={{ width: 20, height: 20, background: "#fff", borderRadius: "50%", margin: "0 3px", boxShadow: "0 1px 4px rgba(0,0,0,0.3)", display: "block" }} />
+            <span style={{ width: 24, height: 24, background: "var(--color-card, #fff)", borderRadius: "50%", margin: "0 3px", boxShadow: "0 1px 4px rgba(0,0,0,0.3)", display: "block" }} />
           </button>
         </div>
 
@@ -281,9 +281,9 @@ export default function SindicoGateConfig() {
             opacity: saving ? 0.7 : 1, transition: "background 0.2s",
           }}
         >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" />
-            : saved ? <Check className="w-4 h-4" />
-            : <Zap className="w-4 h-4" />}
+          {saving ? <Loader2 className="w-5 h-5 animate-spin" />
+            : saved ? <Check className="w-5 h-5" />
+            : <Zap className="w-5 h-5" />}
           {saved ? "Salvo!" : "Salvar Configuração"}
         </button>
 
@@ -293,7 +293,7 @@ export default function SindicoGateConfig() {
             onClick={toggleLogs}
             style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: p.accentBright, fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0 }}
           >
-            <History className="w-4 h-4" />
+            <History className="w-5 h-5" />
             {showLogs ? "Ocultar histórico" : "Ver histórico de acionamentos"}
           </button>
 
@@ -327,7 +327,7 @@ export default function SindicoGateConfig() {
                 onClick={fetchLogs}
                 style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: p.accentBright, background: "none", border: "none", cursor: "pointer", marginTop: 8, padding: 0 }}
               >
-                <RefreshCw className="w-3 h-3" /> Atualizar
+                <RefreshCw className="w-4 h-4" /> Atualizar
               </button>
             </div>
           )}
@@ -337,7 +337,7 @@ export default function SindicoGateConfig() {
         <div style={{ background: p.cardBg, border: p.cardBorder, borderRadius: 16, padding: "1rem 1.25rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
             <div style={{ width: 36, height: 36, borderRadius: 10, background: p.iconBoxBg, border: p.iconBoxBorder, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <Shield className="w-4 h-4" style={{ color: p.iconColor }} />
+              <Shield className="w-5 h-5" style={{ color: p.iconColor }} />
             </div>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: p.text, margin: 0 }}>Módulo Portão — Portaria X</h3>
           </div>

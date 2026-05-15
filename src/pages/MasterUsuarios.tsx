@@ -220,9 +220,9 @@ export default function MasterUsuarios() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="h-16 flex items-center gap-3" style={{ paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/dashboard")} className="p-2">
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-7 h-7" />
           </button>
-          <Users className="w-6 h-6" />
+          <Users className="w-7 h-7" />
           <span className="font-semibold text-lg">Gestão de Usuários</span>
           <TutorialButton title="Gestão de Usuários">
             <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
@@ -264,7 +264,7 @@ export default function MasterUsuarios() {
       <div style={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "2rem", paddingBottom: "1.5rem" }}>
         <div className="space-y-8">
         <div className="flex items-center gap-2 h-12 px-4 rounded-lg border border-border">
-          <Search className="w-5 h-5 shrink-0" style={{ color: p.textSecondary }} />
+          <Search className="w-6 h-6 shrink-0" style={{ color: p.textSecondary }} />
           <input
             type="text"
             placeholder="Buscar nome, email ou CPF..."
@@ -276,7 +276,7 @@ export default function MasterUsuarios() {
           />
           {search && (
             <button onClick={() => { setSearch(""); setTimeout(fetchUsers, 0); }}>
-              <X className="w-4 h-4" style={{ color: p.textSecondary }} />
+              <X className="w-5 h-5" style={{ color: p.textSecondary }} />
             </button>
           )}
         </div>
@@ -306,7 +306,7 @@ export default function MasterUsuarios() {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground">Editar Usuário</h3>
               <button onClick={() => setShowForm(false)}>
-                <X className="w-4 h-4 text-muted-foreground" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
             {error && <p className="text-xs text-red-400">{error}</p>}
@@ -392,7 +392,7 @@ export default function MasterUsuarios() {
       <main className="flex-1 space-y-5" style={{ paddingLeft: "1rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "3.5rem" }}>
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-7 h-7 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <p className="text-center text-sm py-8 text-red-400">{error}</p>
@@ -407,7 +407,7 @@ export default function MasterUsuarios() {
             }).map((u) => (
               <div key={u.id} className="flex items-center gap-4 px-5 py-4 rounded-xl">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${roleColor[u.role] || "text-sky-400"}`}>
-                  <Shield className="w-5 h-5" />
+                  <Shield className="w-6 h-6" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-lg font-medium truncate" style={{ color: p.textHeading }}>{u.name}</p>
@@ -418,7 +418,7 @@ export default function MasterUsuarios() {
                     </span>
                     {u.condominio_nome && (
                       <span className="text-sm flex items-center gap-0.5" style={{ color: p.textSecondary }}>
-                        <Building2 className="w-3 h-3" />
+                        <Building2 className="w-4 h-4" />
                         {u.condominio_nome}
                       </span>
                     )}

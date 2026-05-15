@@ -18,11 +18,11 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px", borderRadius: "12px",
-    border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff",
-    color: "#0f172a", outline: "none", boxSizing: "border-box",
+    border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)",
+    color: "var(--card-foreground)", outline: "none", boxSizing: "border-box",
   };
   const labelStyle: React.CSSProperties = {
-    fontWeight: 600, fontSize: "13px", color: "#1e293b",
+    fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)",
     marginBottom: "6px", display: "block",
   };
 
@@ -39,30 +39,30 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: "20px", padding: "24px",
+          background: "var(--color-card, #fff)", borderRadius: "20px", padding: "24px",
           width: "100%", maxWidth: "400px",
           display: "flex", flexDirection: "column", gap: "16px",
         }}
       >
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3 style={{ fontSize: "17px", fontWeight: 700, color: "#1e293b", margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-            <FileText className="w-5 h-5" style={{ color: "#6366f1" }} />
+          <h3 style={{ fontSize: "17px", fontWeight: 700, color: "var(--card-foreground)", margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+            <FileText className="w-6 h-6" style={{ color: "#6366f1" }} />
             Gerar Relatorio
           </h3>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
-            <X className="w-5 h-5" style={{ color: "#94a3b8" }} />
+            <X className="w-6 h-6" style={{ color: "#94a3b8" }} />
           </button>
         </div>
 
-        <p style={{ fontSize: "13px", color: "#64748b", margin: 0 }}>
+        <p style={{ fontSize: "14px", color: "var(--muted-foreground)", margin: 0 }}>
           {title}
         </p>
 
         {/* Date from */}
         <div>
           <span style={labelStyle}>
-            <Calendar className="w-4 h-4 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
+            <Calendar className="w-5 h-5 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
             Data Inicial
           </span>
           <input
@@ -77,7 +77,7 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
         {/* Date to */}
         <div>
           <span style={labelStyle}>
-            <Calendar className="w-4 h-4 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
+            <Calendar className="w-5 h-5 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
             Data Final
           </span>
           <input
@@ -109,13 +109,13 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
               transition: "all 0.2s", flexShrink: 0,
             }}
           >
-            <BarChart3 style={{ width: 18, height: 18, color: withCharts ? "#fff" : "#94a3b8" }} />
+            <BarChart3 style={{ width: 22, height: 22, color: withCharts ? "#fff" : "#94a3b8" }} />
           </div>
           <div style={{ textAlign: "left", flex: 1 }}>
-            <p style={{ fontSize: "13px", fontWeight: 700, color: withCharts ? "#4338ca" : "#1e293b", margin: 0 }}>
+            <p style={{ fontSize: "14px", fontWeight: 700, color: withCharts ? "#4338ca" : "#1e293b", margin: 0 }}>
               Incluir Graficos
             </p>
-            <p style={{ fontSize: "11px", color: withCharts ? "#6366f1" : "#94a3b8", margin: 0 }}>
+            <p style={{ fontSize: "12px", color: withCharts ? "#6366f1" : "#94a3b8", margin: 0 }}>
               Adiciona graficos de barras e estatisticas ao PDF
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
           >
             <div
               style={{
-                width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                width: 22, height: 22, borderRadius: "50%", background: "var(--color-card, #fff)",
                 position: "absolute", top: 2, left: withCharts ? 20 : 2,
                 transition: "all 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
               }}
@@ -146,11 +146,11 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
           style={{
             width: "100%", padding: "14px", borderRadius: "14px", border: "none",
             background: "linear-gradient(135deg, #6366f1, #4f46e5)",
-            color: "#fff", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+            color: "#fff", fontSize: "16px", fontWeight: 700, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
           }}
         >
-          <Download className="w-5 h-5" /> Gerar PDF {withCharts ? "com Graficos" : ""}
+          <Download className="w-6 h-6" /> Gerar PDF {withCharts ? "com Graficos" : ""}
         </button>
       </div>
     </div>

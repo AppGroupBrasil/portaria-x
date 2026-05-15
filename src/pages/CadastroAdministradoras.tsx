@@ -35,17 +35,17 @@ function SubUserRow({ sub, isDark, onEdit, onDelete }: Readonly<{ sub: Administr
   return (
     <div className="flex items-center gap-4 py-3" style={{ paddingLeft: "3.5rem", paddingRight: "1.25rem", backgroundColor: isDark ? "rgba(0,0,0,0.15)" : "#f8fafc" }}>
       <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: isDark ? "rgba(139,92,246,0.2)" : "#ede9fe" }}>
-        <Users className="w-4 h-4 text-purple-400" />
+        <Users className="w-5 h-5 text-purple-400" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate" style={{ color: "#003580" }}>{sub.name}</p>
-        <p className="text-xs truncate" style={{ color: "#64748b" }}>{sub.email}</p>
+        <p className="text-xs truncate" style={{ color: "var(--muted-foreground)" }}>{sub.email}</p>
       </div>
       <button onClick={() => onEdit(sub)} className="p-2 hover:text-sky-400 transition-colors" style={{ color: "#94a3b8" }}>
-        <Pencil className="w-4 h-4" />
+        <Pencil className="w-5 h-5" />
       </button>
       <button onClick={() => onDelete(sub.id, sub.name)} className="p-2 hover:text-destructive transition-colors" style={{ color: "#94a3b8" }}>
-        <Trash2 className="w-4 h-4" />
+        <Trash2 className="w-5 h-5" />
       </button>
     </div>
   );
@@ -197,7 +197,7 @@ export default function CadastroAdministradoras() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3" style={{ paddingLeft: "2rem", paddingRight: "2rem", height: "4.5rem" }}>
           <button onClick={() => navigate("/cadastros")} className="p-2">
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span className="font-semibold text-lg">Administradoras</span>
           <div style={{ marginLeft: "auto" }}>
@@ -211,7 +211,7 @@ export default function CadastroAdministradoras() {
                 <TStep n={3}>Informe o <strong>e-mail</strong> (será o login de acesso ao sistema)</TStep>
                 <TStep n={4}>Defina uma <strong>senha de 6 dígitos</strong></TStep>
                 <TStep n={5}>Clique em <strong>"Cadastrar"</strong> para salvar</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 A administradora já pode acessar o sistema usando e-mail + senha definidos.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 A administradora já pode acessar o sistema usando e-mail + senha definidos.</p>
               </TSection>
               <TSection icon={<span>🔧</span>} title="GERENCIANDO ADMINISTRADORAS">
                 <TBullet><strong>Vincular condomínios</strong> — Associe um ou mais condomínios à administradora para ela gerenciar</TBullet>
@@ -241,7 +241,7 @@ export default function CadastroAdministradoras() {
           {/* Info */}
           <div className="rounded-xl p-5">
             <div className="flex gap-3">
-              <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <ShieldCheck className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Somente o <strong className="text-foreground">Admin Master</strong> pode cadastrar e gerenciar administradoras.
               </p>
@@ -254,7 +254,7 @@ export default function CadastroAdministradoras() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 {subUserParentId && (
                   <div className="flex items-center gap-2 p-3 rounded-lg border border-purple-400/30 mb-2" style={{ backgroundColor: isDark ? "rgba(168,85,247,0.1)" : "#f5f0ff" }}>
-                    <Users className="w-4 h-4 text-purple-400" />
+                    <Users className="w-5 h-5 text-purple-400" />
                     <span className="text-sm" style={{ color: "#003580" }}>
                       Criando sub-usuário para: <strong>{lista.find(a => a.id === subUserParentId)?.name}</strong>
                     </span>
@@ -289,7 +289,7 @@ export default function CadastroAdministradoras() {
                       className="pr-10"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
@@ -308,12 +308,12 @@ export default function CadastroAdministradoras() {
 
                 {error && (
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-fade-in">
-                    <AlertCircle className="w-4 h-4 shrink-0" /> {error}
+                    <AlertCircle className="w-5 h-5 shrink-0" /> {error}
                   </div>
                 )}
                 {success && (
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm animate-fade-in">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" /> {success}
+                    <CheckCircle2 className="w-5 h-5 shrink-0" /> {success}
                   </div>
                 )}
 
@@ -322,7 +322,7 @@ export default function CadastroAdministradoras() {
                     Cancelar
                   </Button>
                   <Button type="submit" className="flex-1 h-12 font-semibold" disabled={isLoading}>
-                    {isLoading ? <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : (editingId ? "Salvar" : "Cadastrar")}
+                    {isLoading ? <div className="w-6 h-6 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" /> : (editingId ? "Salvar" : "Cadastrar")}
                   </Button>
                 </div>
               </form>
@@ -352,11 +352,11 @@ export default function CadastroAdministradoras() {
                       {/* Main admin row */}
                       <div className="flex items-center gap-4 p-5">
                         <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}>
-                          <ShieldCheck className="w-5 h-5 text-white" />
+                          <ShieldCheck className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-base font-medium truncate" style={{ color: "#003580" }}>{adm.name}</p>
-                          <p className="text-sm truncate" style={{ color: "#64748b" }}>{adm.email}</p>
+                          <p className="text-sm truncate" style={{ color: "var(--muted-foreground)" }}>{adm.email}</p>
                           {subs.length > 0 && (
                             <p className="text-xs mt-0.5" style={{ color: "#8b5cf6" }}>
                               {subs.length} sub-usuário{subs.length > 1 ? "s" : ""}
@@ -374,7 +374,7 @@ export default function CadastroAdministradoras() {
                           style={{ color: "#94a3b8" }}
                           title="Adicionar sub-usuário"
                         >
-                          <UserPlus className="w-5 h-5" />
+                          <UserPlus className="w-6 h-6" />
                         </button>
                         {subs.length > 0 && (
                           <button
@@ -382,14 +382,14 @@ export default function CadastroAdministradoras() {
                             className="p-2.5 hover:text-sky-400 transition-colors"
                             style={{ color: "#94a3b8" }}
                           >
-                            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                            {isExpanded ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
                           </button>
                         )}
                         <button onClick={() => startEdit(adm)} className="p-2.5 hover:text-sky-400 transition-colors" style={{ color: "#94a3b8" }}>
-                          <Pencil className="w-5 h-5" />
+                          <Pencil className="w-6 h-6" />
                         </button>
                         <button onClick={() => handleDelete(adm.id, adm.name)} className="p-2.5 hover:text-destructive transition-colors" style={{ color: "#94a3b8" }}>
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-6 h-6" />
                         </button>
                       </div>
 
@@ -409,7 +409,7 @@ export default function CadastroAdministradoras() {
           })()}
 
           {lista.length === 0 && !showForm && (
-            <p className="text-sm text-center py-8" style={{ color: "#64748b" }}>
+            <p className="text-sm text-center py-8" style={{ color: "var(--muted-foreground)" }}>
               Nenhuma administradora cadastrada.
             </p>
           )}

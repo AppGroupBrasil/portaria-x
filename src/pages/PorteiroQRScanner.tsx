@@ -258,11 +258,11 @@ export default function PorteiroQRScanner() {
       <header className="safe-area-top" style={{ background: p.headerBg, padding: "18px 24px", borderBottom: p.headerBorder, boxShadow: p.headerShadow, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-7 h-7" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 className="text-white flex items-center gap-2" style={{ fontWeight: 700, fontSize: 18 }}>
-              <Scan className="w-5 h-5" /> Leitor QR Visitante
+              <Scan className="w-6 h-6" /> Leitor QR Visitante
             </h1>
             <p style={{ fontSize: 12, color: isDark ? "rgba(255,255,255,0.6)" : "#64748b" }}>Escaneie o QR Code do visitante</p>
           </div>
@@ -275,7 +275,7 @@ export default function PorteiroQRScanner() {
               padding: "10px 16px",
               color: p.text,
               fontWeight: 700,
-              fontSize: "13px",
+              fontSize: "14px",
               cursor: "pointer",
             }}
           >
@@ -302,10 +302,10 @@ export default function PorteiroQRScanner() {
               border: "2px solid #2d3354", textAlign: "center",
             }}>
               <Scan className="w-8 h-8 mx-auto" style={{ color: "#2d3354" }} />
-              <p style={{ fontWeight: 700, fontSize: "15px", color: "#2d3354", marginTop: "8px" }}>
+              <p style={{ fontWeight: 700, fontSize: "16px", color: "#2d3354", marginTop: "8px" }}>
                 Aponte a câmera para o QR Code
               </p>
-              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
                 O QR Code é gerado pelo morador no app
               </p>
             </div>
@@ -340,7 +340,7 @@ export default function PorteiroQRScanner() {
               </div>
             ) : (
               <div style={{ width: "100%", maxWidth: "400px" }}>
-                <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "8px" }}>
+                <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151", marginBottom: "8px" }}>
                   Câmera indisponível — cole o conteúdo do QR Code:
                 </p>
                 <textarea
@@ -350,7 +350,7 @@ export default function PorteiroQRScanner() {
                   rows={6}
                   style={{
                     width: "100%", padding: "14px", borderRadius: "12px",
-                    border: "2px solid #d1d5db", fontSize: "13px", color: "#374151",
+                    border: "2px solid #d1d5db", fontSize: "14px", color: "#374151",
                     fontFamily: "monospace", resize: "none",
                   }}
                 />
@@ -360,7 +360,7 @@ export default function PorteiroQRScanner() {
                   style={{
                     width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                     background: manualInput.trim() ? "#003580" : "#d1d5db",
-                    color: p.text, fontWeight: 700, fontSize: "15px",
+                    color: p.text, fontWeight: 700, fontSize: "16px",
                     cursor: manualInput.trim() ? "pointer" : "not-allowed", marginTop: "10px",
                   }}
                 >
@@ -373,7 +373,7 @@ export default function PorteiroQRScanner() {
               onClick={() => setShowManualInput(!showManualInput)}
               style={{
                 background: "none", border: "none", color: "#6366f1",
-                fontWeight: 700, fontSize: "13px", cursor: "pointer",
+                fontWeight: 700, fontSize: "14px", cursor: "pointer",
               }}
             >
               {showManualInput ? "Usar Câmera" : "Inserir Manualmente"}
@@ -404,14 +404,14 @@ export default function PorteiroQRScanner() {
               }}>
                 {scanStatus === "autorizado" ? "ENTRADA AUTORIZADA" : scanStatus === "expirado" ? "AUTORIZAÇÃO EXPIRADA" : "QR CODE INVÁLIDO"}
               </p>
-              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
                 {scanStatus === "autorizado" ? "Este visitante possui autorização válida" : scanStatus === "expirado" ? "O período de autorização já terminou" : "Este QR Code não é uma autorização válida"}
               </p>
             </div>
 
             {/* Visitor Details */}
             {visitor && (
-              <div style={{ background: "#fff", borderRadius: "16px", border: "2px solid #e5e7eb", padding: "20px" }}>
+              <div style={{ background: "var(--color-card, #fff)", borderRadius: "16px", border: "2px solid #e5e7eb", padding: "20px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
                   {visitor.visitante.foto ? (
                     <img src={visitor.visitante.foto} alt="" style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "3px solid #e5e7eb" }} />
@@ -423,7 +423,7 @@ export default function PorteiroQRScanner() {
                   <div>
                     <p style={{ fontWeight: 800, fontSize: "18px", color: "#374151" }}>{visitor.visitante.nome}</p>
                     {visitor.visitante.parentesco && (
-                      <p style={{ fontSize: "13px", color: "#6b7280" }}>{visitor.visitante.parentesco}</p>
+                      <p style={{ fontSize: "14px", color: "#6b7280" }}>{visitor.visitante.parentesco}</p>
                     )}
                   </div>
                 </div>
@@ -431,29 +431,29 @@ export default function PorteiroQRScanner() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {visitor.visitante.documento && (
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
-                      <FileText className="w-4 h-4" style={{ color: "#6b7280", flexShrink: 0 }} />
+                      <FileText className="w-5 h-5" style={{ color: "#6b7280", flexShrink: 0 }} />
                       <div>
-                        <p style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 700 }}>DOCUMENTO</p>
-                        <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{visitor.visitante.documento}</p>
+                        <p style={{ fontSize: "12px", color: "#9ca3af", fontWeight: 700 }}>DOCUMENTO</p>
+                        <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>{visitor.visitante.documento}</p>
                       </div>
                     </div>
                   )}
 
                   <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
-                    <Calendar className="w-4 h-4" style={{ color: "#6b7280", flexShrink: 0 }} />
+                    <Calendar className="w-5 h-5" style={{ color: "#6b7280", flexShrink: 0 }} />
                     <div>
-                      <p style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 700 }}>PERÍODO AUTORIZADO</p>
-                      <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>
+                      <p style={{ fontSize: "12px", color: "#9ca3af", fontWeight: 700 }}>PERÍODO AUTORIZADO</p>
+                      <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>
                         {visitor.autorizacao.dataInicio} {visitor.autorizacao.horaInicio} — {visitor.autorizacao.dataFim} {visitor.autorizacao.horaFim}
                       </p>
                     </div>
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#f8fafc", borderRadius: "10px" }}>
-                    <User className="w-4 h-4" style={{ color: "#6b7280", flexShrink: 0 }} />
+                    <User className="w-5 h-5" style={{ color: "#6b7280", flexShrink: 0 }} />
                     <div>
-                      <p style={{ fontSize: "11px", color: "#9ca3af", fontWeight: 700 }}>MORADOR RESPONSÁVEL</p>
-                      <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>
+                      <p style={{ fontSize: "12px", color: "#9ca3af", fontWeight: 700 }}>MORADOR RESPONSÁVEL</p>
+                      <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>
                         {visitor.morador.nome} — Bloco {visitor.morador.bloco} Apt {visitor.morador.unidade}
                       </p>
                     </div>
@@ -461,10 +461,10 @@ export default function PorteiroQRScanner() {
 
                   {visitor.visitante.observacoes && (
                     <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", padding: "10px 14px", background: "#fffbeb", borderRadius: "10px", border: "1px solid #fde68a" }}>
-                      <AlertTriangle className="w-4 h-4" style={{ color: "#d97706", flexShrink: 0, marginTop: "2px" }} />
+                      <AlertTriangle className="w-5 h-5" style={{ color: "#d97706", flexShrink: 0, marginTop: "2px" }} />
                       <div>
-                        <p style={{ fontSize: "11px", color: "#92400e", fontWeight: 700 }}>OBSERVAÇÕES</p>
-                        <p style={{ fontSize: "14px", color: "#374151" }}>{visitor.visitante.observacoes}</p>
+                        <p style={{ fontSize: "12px", color: "#92400e", fontWeight: 700 }}>OBSERVAÇÕES</p>
+                        <p style={{ fontSize: "15px", color: "#374151" }}>{visitor.visitante.observacoes}</p>
                       </div>
                     </div>
                   )}
@@ -476,11 +476,11 @@ export default function PorteiroQRScanner() {
                     onClick={() => setShowWhatsAppModal(true)}
                     style={{
                       width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-                      background: "#25d366", color: p.text, fontWeight: 700, fontSize: "15px",
+                      background: "#25d366", color: p.text, fontWeight: 700, fontSize: "16px",
                       cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
-                    <MessageCircle className="w-5 h-5" /> Avisar Morador (WhatsApp)
+                    <MessageCircle className="w-6 h-6" /> Avisar Morador (WhatsApp)
                   </button>
 
                   <button
@@ -491,15 +491,15 @@ export default function PorteiroQRScanner() {
                       border: notifiedInApp ? "2px solid #86efac" : "2px solid #6366f1",
                       background: notifiedInApp ? "#f0fdf4" : "#fff",
                       color: notifiedInApp ? "#166534" : "#6366f1",
-                      fontWeight: 700, fontSize: "15px",
+                      fontWeight: 700, fontSize: "16px",
                       cursor: notifiedInApp ? "default" : "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
                     {notifiedInApp ? (
-                      <><CheckCircle2 className="w-5 h-5" /> Aviso Enviado no Sistema</>
+                      <><CheckCircle2 className="w-6 h-6" /> Aviso Enviado no Sistema</>
                     ) : (
-                      <><Shield className="w-5 h-5" /> Enviar Aviso no Sistema</>
+                      <><Shield className="w-6 h-6" /> Enviar Aviso no Sistema</>
                     )}
                   </button>
 
@@ -507,12 +507,12 @@ export default function PorteiroQRScanner() {
                     onClick={resetScan}
                     style={{
                       width: "100%", padding: "14px", borderRadius: "12px",
-                      border: "2px solid #d1d5db", background: "#fff",
-                      color: "#6b7280", fontWeight: 700, fontSize: "15px", cursor: "pointer",
+                      border: "2px solid #d1d5db", background: "var(--color-card, #fff)",
+                      color: "#6b7280", fontWeight: 700, fontSize: "16px", cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
-                    <Scan className="w-5 h-5" /> Escanear Outro QR
+                    <Scan className="w-6 h-6" /> Escanear Outro QR
                   </button>
                 </div>
               </div>
@@ -526,11 +526,11 @@ export default function PorteiroQRScanner() {
                   style={{
                     padding: "14px 28px", borderRadius: "12px", border: "none",
                     background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                    color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
+                    color: "#fff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
                     display: "inline-flex", alignItems: "center", gap: "12px",
                   }}
                 >
-                  <Scan className="w-5 h-5" /> Tentar Novamente
+                  <Scan className="w-6 h-6" /> Tentar Novamente
                 </button>
               </div>
             )}
@@ -540,7 +540,7 @@ export default function PorteiroQRScanner() {
         {/* ═══ LOG MODE ═══ */}
         {mode === "log" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <p style={{ fontWeight: 700, fontSize: "14px", color: "#6b7280", textTransform: "uppercase" }}>
+            <p style={{ fontWeight: 700, fontSize: "15px", color: "#6b7280", textTransform: "uppercase" }}>
               Histórico de Leituras ({scanLog.length})
             </p>
 
@@ -552,28 +552,28 @@ export default function PorteiroQRScanner() {
             ) : (
               scanLog.map((log, i) => (
                 <div key={i} style={{
-                  background: "#fff", borderRadius: "12px", padding: "14px 16px",
+                  background: "var(--color-card, #fff)", borderRadius: "12px", padding: "14px 16px",
                   border: `2px solid ${log.status === "autorizado" ? "#86efac" : log.status === "expirado" ? "#fca5a5" : "#fde68a"}`,
                   display: "flex", alignItems: "center", gap: "12px",
                 }}>
                   {log.status === "autorizado" ? (
-                    <CheckCircle2 className="w-5 h-5" style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <CheckCircle2 className="w-6 h-6" style={{ color: "#16a34a", flexShrink: 0 }} />
                   ) : log.status === "expirado" ? (
-                    <XCircle className="w-5 h-5" style={{ color: "#dc2626", flexShrink: 0 }} />
+                    <XCircle className="w-6 h-6" style={{ color: "#dc2626", flexShrink: 0 }} />
                   ) : (
-                    <AlertTriangle className="w-5 h-5" style={{ color: "#d97706", flexShrink: 0 }} />
+                    <AlertTriangle className="w-6 h-6" style={{ color: "#d97706", flexShrink: 0 }} />
                   )}
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>{log.visitanteNome}</p>
-                    <p style={{ fontSize: "12px", color: "#9ca3af" }}>
+                    <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151" }}>{log.visitanteNome}</p>
+                    <p style={{ fontSize: "13px", color: "#9ca3af" }}>
                       Morador: {log.moradorNome} · Bloco {log.bloco} Apt {log.unidade}
                     </p>
-                    <p style={{ fontSize: "11px", color: "#d1d5db" }}>
+                    <p style={{ fontSize: "12px", color: "#d1d5db" }}>
                       {new Date(log.scannedAt).toLocaleString("pt-BR")}
                     </p>
                   </div>
                   <span style={{
-                    fontSize: "11px", fontWeight: 700, padding: "3px 10px", borderRadius: "999px",
+                    fontSize: "12px", fontWeight: 700, padding: "3px 10px", borderRadius: "999px",
                     background: log.status === "autorizado" ? "#dcfce7" : log.status === "expirado" ? "#fee2e2" : "#fef3c7",
                     color: log.status === "autorizado" ? "#166534" : log.status === "expirado" ? "#991b1b" : "#92400e",
                   }}>
@@ -595,17 +595,17 @@ export default function PorteiroQRScanner() {
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
               <h2 style={{ fontWeight: 800, fontSize: "18px", color: "#374151", display: "flex", alignItems: "center", gap: "12px" }}>
-                <MessageCircle className="w-5 h-5" style={{ color: "#25d366" }} /> Avisar Morador
+                <MessageCircle className="w-6 h-6" style={{ color: "#25d366" }} /> Avisar Morador
               </h2>
               <button onClick={() => setShowWhatsAppModal(false)} style={{ background: "none", border: "none", fontSize: "24px", color: "#9ca3af", cursor: "pointer" }}>×</button>
             </div>
 
-            <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "16px" }}>
+            <p style={{ fontSize: "15px", color: "#6b7280", marginBottom: "16px" }}>
               Digite o número de WhatsApp do morador para enviar o aviso de chegada do visitante.
             </p>
 
             <div>
-              <span style={{ display: "block", fontWeight: 700, fontSize: "13px", color: "#374151", marginBottom: "6px" }}>
+              <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
                 <Phone className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
                 Número do Morador
               </span>
@@ -632,13 +632,13 @@ export default function PorteiroQRScanner() {
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               }}
             >
-              <MessageCircle className="w-5 h-5" /> Enviar Aviso pelo WhatsApp
+              <MessageCircle className="w-6 h-6" /> Enviar Aviso pelo WhatsApp
             </button>
 
             {visitor && (
               <div style={{ marginTop: "16px", background: "#f8fafc", borderRadius: "10px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
-                <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>Prévia da mensagem:</p>
-                <p style={{ fontSize: "12px", color: "#374151", lineHeight: 1.5 }}>
+                <p style={{ fontSize: "13px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>Prévia da mensagem:</p>
+                <p style={{ fontSize: "13px", color: "#374151", lineHeight: 1.5 }}>
                   🔔 AVISO DE CHEGADA<br />
                   Visitante: {visitor.visitante.nome}<br />
                   Morador: {visitor.morador.nome} — Bloco {visitor.morador.bloco} Apt {visitor.morador.unidade}

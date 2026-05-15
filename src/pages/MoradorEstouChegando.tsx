@@ -539,7 +539,7 @@ export default function MoradorEstouChegando() {
         <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)" }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem 1.5rem', height: '4rem' }}>
             <button onClick={() => navigate(-1)} style={{ padding: '0.5rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer', transition: 'all 0.2s' }}>
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-6 h-6" />
             </button>
             <span style={{ fontWeight: 800, fontSize: '1.125rem', color: isDark ? '#fff' : "#1e293b" }}>Estou Chegando</span>
           </div>
@@ -562,7 +562,7 @@ export default function MoradorEstouChegando() {
         <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)" }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem 1.5rem', height: '4rem' }}>
             <button onClick={() => navigate(-1)} style={{ padding: '0.5rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer', transition: 'all 0.2s' }}>
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-6 h-6" />
             </button>
             <span style={{ fontWeight: 800, fontSize: '1.125rem', color: isDark ? '#fff' : "#1e293b" }}>Estou Chegando</span>
           </div>
@@ -588,7 +588,7 @@ export default function MoradorEstouChegando() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.5rem', height: '4rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <button onClick={() => navigate(-1)} style={{ padding: '0.5rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer', transition: 'all 0.2s' }}>
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-6 h-6" />
             </button>
             <span style={{ fontWeight: 800, fontSize: '1.125rem', color: isDark ? '#fff' : "#1e293b" }}>Estou Chegando</span>
           </div>
@@ -612,8 +612,8 @@ export default function MoradorEstouChegando() {
                 <TBullet>Se for de <strong>Uber/Táxi</strong>, informe a placa para o porteiro identificar o veículo</TBullet>
               </TSection>
             </TutorialButton>
-            {wsConnected && <Wifi className="w-4 h-4 text-emerald-400" />}
-            {!wsConnected && autoEnabled && <WifiOff className="w-4 h-4 text-red-400" />}
+            {wsConnected && <Wifi className="w-5 h-5 text-emerald-400" />}
+            {!wsConnected && autoEnabled && <WifiOff className="w-5 h-5 text-red-400" />}
           </div>
         </div>
       </header>
@@ -633,12 +633,12 @@ export default function MoradorEstouChegando() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <HelpCircle style={{ width: 22, height: 22, color: '#fff' }} />
+              <HelpCircle style={{ width: 26, height: 26, color: '#fff' }} />
               <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#fff' }}>Como funciona?</span>
             </div>
             {showHelp
-              ? <ChevronUp style={{ width: 20, height: 20, color: '#fff' }} />
-              : <ChevronDown style={{ width: 20, height: 20, color: '#fff' }} />}
+              ? <ChevronUp style={{ width: 24, height: 24, color: '#fff' }} />
+              : <ChevronDown style={{ width: 24, height: 24, color: '#fff' }} />}
           </button>
           {showHelp && (
             <div style={{
@@ -675,9 +675,9 @@ export default function MoradorEstouChegando() {
                 border: autoEnabled ? '1.5px solid rgba(255,255,255,0.3)' : (isDark ? '1.5px solid rgba(255,255,255,0.1)' : '1.5px solid #cbd5e1')
               }}>
                 {autoEnabled ? (
-                  <Navigation className="w-6 h-6 animate-pulse" style={{ color: isDark ? '#fff' : "#1e293b" }} />
+                  <Navigation className="w-7 h-7 animate-pulse" style={{ color: isDark ? '#fff' : "#1e293b" }} />
                 ) : (
-                  <Power className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#1e293b" }} />
+                  <Power className="w-7 h-7" style={{ color: isDark ? '#93c5fd' : "#1e293b" }} />
                 )}
               </div>
               <div>
@@ -700,8 +700,8 @@ export default function MoradorEstouChegando() {
               }}
             >
               <div style={{
-                width: 24, height: 24, borderRadius: 999, position: 'absolute', top: 4, transition: 'all 0.3s',
-                ...(autoEnabled ? { right: 4, left: 'auto', background: '#fff' } : { left: 4, right: 'auto', background: isDark ? 'rgba(255,255,255,0.4)' : '#ffffff' })
+                width: 28, height: 28, borderRadius: 999, position: 'absolute', top: 4, transition: 'all 0.3s',
+                ...(autoEnabled ? { right: 4, left: 'auto', background: "var(--color-card, #fff)" } : { left: 4, right: 'auto', background: isDark ? 'rgba(255,255,255,0.4)' : '#ffffff' })
               }} />
             </button>
           </div>
@@ -726,7 +726,7 @@ export default function MoradorEstouChegando() {
                 background: autoGateOpen ? 'rgba(255,255,255,0.2)' : (isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04))' : '#e2e8f0'),
                 border: autoGateOpen ? '1.5px solid rgba(255,255,255,0.3)' : (isDark ? '1.5px solid rgba(255,255,255,0.1)' : '1.5px solid #cbd5e1')
               }}>
-                <Car className="w-5 h-5" style={{ color: autoGateOpen ? '#fff' : (isDark ? '#93c5fd' : '#1e293b') }} />
+                <Car className="w-6 h-6" style={{ color: autoGateOpen ? '#fff' : (isDark ? '#93c5fd' : '#1e293b') }} />
               </div>
               <div>
                 <p style={{ fontWeight: 700, fontSize: '1rem', color: autoGateOpen ? '#fff' : (isDark ? '#fff' : '#1e293b') }}>
@@ -750,8 +750,8 @@ export default function MoradorEstouChegando() {
               }}
             >
               <div style={{
-                width: 22, height: 22, borderRadius: 999, position: 'absolute', top: 3, transition: 'all 0.3s',
-                ...(autoGateOpen ? { right: 3, left: 'auto', background: '#fff' } : { left: 3, right: 'auto', background: isDark ? 'rgba(255,255,255,0.4)' : '#ffffff' })
+                width: 26, height: 26, borderRadius: 999, position: 'absolute', top: 3, transition: 'all 0.3s',
+                ...(autoGateOpen ? { right: 3, left: 'auto', background: "var(--color-card, #fff)" } : { left: 3, right: 'auto', background: isDark ? 'rgba(255,255,255,0.4)' : '#ffffff' })
               }} />
             </button>
           </div>
@@ -763,13 +763,13 @@ export default function MoradorEstouChegando() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {status === "connecting" && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem' }}>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   <span>Conectando ao GPS...</span>
                 </div>
               )}
               {status === "active" && distance !== null && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem' }}>
-                  <MapPin className="w-4 h-4" />
+                  <MapPin className="w-5 h-5" />
                   <span>
                     {distance}m do condomínio
                     {direction === "approaching" ? " — Aproximando ↓" : " — Afastando ↑"}
@@ -778,7 +778,7 @@ export default function MoradorEstouChegando() {
               )}
               {status === "active" && distance === null && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem' }}>
-                  <Shield className="w-4 h-4" />
+                  <Shield className="w-5 h-5" />
                   <span>Monitorando sua localização...</span>
                 </div>
               )}
@@ -811,7 +811,7 @@ export default function MoradorEstouChegando() {
           <div style={{ borderRadius: 20, padding: '1.25rem', background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b" }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div className="animate-pulse" style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg, rgba(147,197,253,0.2), rgba(147,197,253,0.05))', border: '1.5px solid rgba(147,197,253,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Navigation className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#1e293b" }} />
+                <Navigation className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#1e293b" }} />
               </div>
               <div>
                 <p style={{ fontWeight: 700, color: isDark ? '#fff' : "#1e293b" }}>Portaria Notificada!</p>
@@ -826,7 +826,7 @@ export default function MoradorEstouChegando() {
 
         {errorMsg && (
           <div style={{ borderRadius: 16, padding: '1rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <AlertTriangle style={{ width: 20, height: 20, color: '#ef4444', flexShrink: 0 }} />
+            <AlertTriangle style={{ width: 24, height: 24, color: '#ef4444', flexShrink: 0 }} />
             <p style={{ color: '#fca5a5', fontSize: '0.875rem' }}>{errorMsg}</p>
           </div>
         )}
@@ -842,7 +842,7 @@ export default function MoradorEstouChegando() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Settings className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#1e293b" }} />
+            <Settings className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#1e293b" }} />
             <span style={{ fontWeight: 600, color: isDark ? '#fff' : "#1e293b" }}>Configurações</span>
           </div>
           <span style={{ fontSize: '0.75rem', color: isDark ? '#7dd3fc' : '#475569' }}>
@@ -867,7 +867,7 @@ export default function MoradorEstouChegando() {
             {/* Schedule info */}
             {config && (
               <div style={{ borderRadius: 16, padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1' }}>
-                <Clock className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#1e293b", flexShrink: 0 }} />
+                <Clock className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#1e293b", flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: '0.75rem', color: isDark ? '#7dd3fc' : '#475569' }}>Horário ativo</p>
                   <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b" }}>{config.horario_inicio} — {config.horario_fim}</p>
@@ -911,10 +911,10 @@ export default function MoradorEstouChegando() {
                 >
                   {vehicleType === "proprio" && (
                     <div style={{ position: 'absolute', top: 8, right: 8 }}>
-                      <CheckCircle2 style={{ width: 18, height: 18, color: '#4ade80' }} />
+                      <CheckCircle2 style={{ width: 22, height: 22, color: '#4ade80' }} />
                     </div>
                   )}
-                  <Car style={{ width: 24, height: 24, margin: '0 auto 0.25rem', color: vehicleType === "proprio" ? '#60a5fa' : '#93c5fd' }} />
+                  <Car style={{ width: 28, height: 28, margin: '0 auto 0.25rem', color: vehicleType === "proprio" ? '#60a5fa' : '#93c5fd' }} />
                   <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b" }}>Veículo Próprio</p>
                 </button>
                 <button
@@ -929,10 +929,10 @@ export default function MoradorEstouChegando() {
                 >
                   {vehicleType === "uber_taxi" && (
                     <div style={{ position: 'absolute', top: 8, right: 8 }}>
-                      <CheckCircle2 style={{ width: 18, height: 18, color: '#4ade80' }} />
+                      <CheckCircle2 style={{ width: 22, height: 22, color: '#4ade80' }} />
                     </div>
                   )}
-                  <Navigation style={{ width: 24, height: 24, margin: '0 auto 0.25rem', color: vehicleType === "uber_taxi" ? '#60a5fa' : '#93c5fd' }} />
+                  <Navigation style={{ width: 28, height: 28, margin: '0 auto 0.25rem', color: vehicleType === "uber_taxi" ? '#60a5fa' : '#93c5fd' }} />
                   <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b" }}>Uber / Táxi</p>
                 </button>
               </div>
@@ -959,13 +959,13 @@ export default function MoradorEstouChegando() {
                         <p style={{ fontSize: '0.75rem', color: isDark ? '#93c5fd' : "#1e293b" }}>{v.modelo} {v.cor && `· ${v.cor}`}</p>
                       </div>
                       <div style={{
-                        width: 24, height: 24, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        width: 28, height: 28, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0, marginLeft: '0.75rem',
                         ...(selectedVehicle?.placa === v.placa
                           ? { background: '#3b82f6', color: isDark ? '#fff' : "#1e293b" }
                           : { border: isDark ? '2px solid rgba(255,255,255,0.2)' : '2px solid #cbd5e1' })
                       }}>
-                        {selectedVehicle?.placa === v.placa && <CheckCircle2 className="w-6 h-6" />}
+                        {selectedVehicle?.placa === v.placa && <CheckCircle2 className="w-7 h-7" />}
                       </div>
                     </button>
                   ))}

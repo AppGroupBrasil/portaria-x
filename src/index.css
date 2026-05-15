@@ -670,3 +670,77 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .grid-card:active {
   transform: scale(0.98);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   PERMANENT GLOBAL OVERRIDES
+   Single source of truth. Touches inline-styled elements via
+   attribute selectors so we never have to edit per-page again.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* --- Root font size scaling (rem-based icons & text grow on wide screens) --- */
+@media (min-width: 1024px) { html { font-size: 17.5px; } }
+@media (min-width: 1440px) { html { font-size: 19px; } }
+@media (min-width: 1920px) { html { font-size: 20.5px; } }
+
+/* --- Page chrome: minimum 0.5cm padding + gap, full-width content --- */
+main {
+  padding-top: max(0.5cm, 14px) !important;
+  padding-left: max(0.5cm, env(safe-area-inset-left)) !important;
+  padding-right: max(0.5cm, env(safe-area-inset-right)) !important;
+  row-gap: max(0.5cm, 14px);
+  column-gap: max(0.5cm, 14px);
+  gap: max(0.5cm, 14px);
+}
+main:not(.flex):not(.grid) > * + * {
+  margin-top: max(0.5cm, 14px);
+}
+header {
+  padding-top: max(0.5cm, env(safe-area-inset-top)) !important;
+  padding-bottom: max(0.5cm, 12px) !important;
+  padding-left: max(0.5cm, env(safe-area-inset-left)) !important;
+  padding-right: max(0.5cm, env(safe-area-inset-right)) !important;
+}
+
+/* --- Theme-aware override for inputs/textareas/selects with white inline bg --- */
+:root.dark input[style*="#fff"],
+:root.dark input[style*="#ffffff"],
+:root.dark textarea[style*="#fff"],
+:root.dark textarea[style*="#ffffff"],
+:root.dark select[style*="#fff"],
+:root.dark select[style*="#ffffff"],
+:root.steel input[style*="#fff"],
+:root.steel textarea[style*="#fff"],
+:root.steel select[style*="#fff"],
+:root.emerald input[style*="#fff"],
+:root.emerald textarea[style*="#fff"],
+:root.emerald select[style*="#fff"],
+:root.midnight input[style*="#fff"],
+:root.midnight textarea[style*="#fff"],
+:root.midnight select[style*="#fff"] {
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+
+/* --- Last-resort: text colors that are hardcoded dark on any dark theme --- */
+:root.dark [style*="color: #1e293b"],
+:root.dark [style*="color:#1e293b"],
+:root.dark [style*="color: #0f172a"],
+:root.dark [style*="color:#0f172a"],
+:root.dark [style*="color: #0c4a6e"],
+:root.dark [style*="color:#0c4a6e"],
+:root.dark [style*="color: #334155"],
+:root.steel [style*="color: #1e293b"],
+:root.steel [style*="color: #0f172a"],
+:root.steel [style*="color: #334155"],
+:root.emerald [style*="color: #1e293b"],
+:root.emerald [style*="color: #0f172a"],
+:root.midnight [style*="color: #1e293b"],
+:root.midnight [style*="color: #0f172a"] {
+  color: var(--card-foreground) !important;
+}
+
+/* --- Minimum legible font-size on form labels and small body text --- */
+span[style*="display: block"][style*="fontSize"],
+label {
+  font-size: clamp(0.875rem, 0.8rem + 0.15vw, 1rem) !important;
+}

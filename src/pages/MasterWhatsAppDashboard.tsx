@@ -216,9 +216,9 @@ export default function MasterWhatsAppDashboard() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <MessageCircle className="w-4 h-4" style={{ color: "#25d366" }} />
+          <MessageCircle className="w-5 h-5" style={{ color: "#25d366" }} />
           <span style={{ fontWeight: 700, fontSize: 15, flex: 1 }}>WhatsApp</span>
         </div>
       </header>

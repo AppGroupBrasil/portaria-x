@@ -203,11 +203,11 @@ export default function MoradorVeiculos() {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate("/dashboard")} style={{ padding: '0.5rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer', transition: 'all 0.2s' }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', border: isDark ? '1.5px solid rgba(255,255,255,0.2)' : '1.5px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Car className="w-5 h-5" />
+              <Car className="w-6 h-6" />
             </div>
             <div>
               <h1 style={{ fontWeight: 800, fontSize: '1.125rem', color: isDark ? '#fff' : "#1e293b", margin: 0 }}>Veículos</h1>
@@ -226,7 +226,7 @@ export default function MoradorVeiculos() {
                 <TStep n={4}>Selecione o <strong>tipo</strong>: Carro, Moto, Van, Bicicleta</TStep>
                 <TStep n={5}>Toque em <strong>"Cadastrar"</strong> para enviar</TStep>
                 <TStep n={6}>O veículo fica com status <strong>"Pendente"</strong> até o porteiro aprovar</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> Seu veículo aparece na lista de veículos pendentes. O porteiro revisa e aprova. Após aprovado, fica autorizado permanentemente.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> Seu veículo aparece na lista de veículos pendentes. O porteiro revisa e aprova. Após aprovado, fica autorizado permanentemente.</p>
               </FlowMorador>
               <FlowPortaria>
                 <TStep n={1}>Seu veículo chega no portão do condomínio</TStep>
@@ -234,7 +234,7 @@ export default function MoradorVeiculos() {
                 <TStep n={3}>Sistema mostra que o <strong>veículo é autorizado</strong> com nome do morador, bloco e unidade</TStep>
                 <TStep n={4}>Porteiro <strong>registra entrada</strong> com um toque e abre o portão</TStep>
                 <TStep n={5}>Na saída, porteiro <strong>registra a saída</strong> da mesma forma</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> No app, pode consultar o histórico completo de entradas e saídas do seu veículo com data e hora.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> No app, pode consultar o histórico completo de entradas e saídas do seu veículo com data e hora.</p>
               </FlowPortaria>
               <TSection icon={<span>🔍</span>} title="STATUS DOS VEÍCULOS">
                 <TBullet><strong style={{ color: "#d97706" }}>Pendente</strong> — Aguardando aprovação do porteiro (destaque amarelo)</TBullet>
@@ -270,11 +270,11 @@ export default function MoradorVeiculos() {
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
               padding: '16px', borderRadius: '16px',
               background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : '#ffffff',
-              border: isDark ? '2px solid rgba(255,255,255,0.7)' : '2px solid #1e293b', color: isDark ? '#fff' : "#1e293b", fontWeight: 700, fontSize: '15px', cursor: 'pointer', width: '100%',
+              border: isDark ? '2px solid rgba(255,255,255,0.7)' : '2px solid #1e293b', color: isDark ? '#fff' : "#1e293b", fontWeight: 700, fontSize: "16px", cursor: 'pointer', width: '100%',
               transition: 'all 0.2s',
             }}
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-6 h-6" />
             Autorizar Acesso de Veículo
           </button>
         )}
@@ -287,19 +287,19 @@ export default function MoradorVeiculos() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {editingId && <Pencil className="w-4 h-4" style={{ color: '#f59e0b' }} />}
+                {editingId && <Pencil className="w-5 h-5" style={{ color: '#f59e0b' }} />}
                 <h2 style={{ fontWeight: 700, fontSize: '16px', color: isDark ? '#fff' : "#1e293b" }}>
                   {editingId ? 'Editar Autorização' : 'Nova Autorização'}
                 </h2>
               </div>
               <button onClick={() => { setShowForm(false); setEditingId(null); }} style={{ padding: '6px', borderRadius: '8px', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                <X className="w-5 h-5" style={{ color: isDark ? '#93c5fd' : "#475569" }} />
+                <X className="w-6 h-6" style={{ color: isDark ? '#93c5fd' : "#475569" }} />
               </button>
             </div>
 
             {/* PLACA — em destaque */}
             <div>
-              <span style={{ fontWeight: 700, fontSize: '14px', color: isDark ? '#fff' : "#1e293b", marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontWeight: 700, fontSize: "15px", color: isDark ? '#fff' : "#1e293b", marginBottom: '8px', display: 'block' }}>
                 Placa do Veículo *
               </span>
               <input
@@ -321,14 +321,14 @@ export default function MoradorVeiculos() {
             {/* Modelo + Cor */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Modelo</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Modelo</span>
                 <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ex: Civic, Onix..."
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }} />
               </div>
               <div>
-                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Cor</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Cor</span>
                 <select value={cor} onChange={(e) => setCor(e.target.value)}
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }}>
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }}>
                   <option value="">Selecione</option>
                   {CORES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -337,40 +337,40 @@ export default function MoradorVeiculos() {
 
             {/* Motorista */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Nome do Motorista</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Nome do Motorista</span>
               <input type="text" value={motorista} onChange={(e) => setMotorista(e.target.value)} placeholder="Nome completo do motorista"
-                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }} />
+                style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box' }} />
             </div>
 
             {/* data início + fim */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Liberado de *</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Liberado de *</span>
                 <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
               </div>
               <div>
-                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até *</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até *</span>
                 <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
               </div>
             </div>
 
             {/* hora início + fim */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Horário de</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Horário de</span>
                 <input type="time" value={horaInicio} onChange={(e) => setHoraInicio(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
               </div>
               <div>
-                <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Até</span>
                 <input type="time" value={horaFim} onChange={(e) => setHoraFim(e.target.value)}
                   onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#fff', color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box', cursor: 'pointer', colorScheme: isDark ? 'dark' : 'light' }} />
               </div>
             </div>
 
@@ -394,13 +394,13 @@ export default function MoradorVeiculos() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s', flexShrink: 0,
               }}>
-                {requerSaida && <CheckCircle2 className="w-4 h-4" style={{ color: '#ffffff' }} />}
+                {requerSaida && <CheckCircle2 className="w-5 h-5" style={{ color: '#ffffff' }} />}
               </div>
               <div>
-                <p style={{ fontWeight: 600, fontSize: '14px', color: isDark ? '#fff' : "#1e293b" }}>
+                <p style={{ fontWeight: 600, fontSize: "15px", color: isDark ? '#fff' : "#1e293b" }}>
                   Precisa autorização para saída?
                 </p>
-                <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>
+                <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>
                   A portaria vai solicitar sua liberação antes do veículo sair
                 </p>
               </div>
@@ -408,9 +408,9 @@ export default function MoradorVeiculos() {
 
             {/* Observação */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Observação</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '6px', display: 'block' }}>Observação</span>
               <textarea value={observacao} onChange={(e) => setObservacao(e.target.value)} placeholder="Ex: Prestador de serviço, entrega de mudança..."
-                rows={2} style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '14px', background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', color: isDark ? '#fff' : "#1e293b", outline: 'none', resize: 'none', boxSizing: 'border-box' }} />
+                rows={2} style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "15px", background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', color: isDark ? '#fff' : "#1e293b", outline: 'none', resize: 'none', boxSizing: 'border-box' }} />
             </div>
 
             {/* Error */}
@@ -418,7 +418,7 @@ export default function MoradorVeiculos() {
               <div style={{
                 padding: '12px 14px', borderRadius: '12px',
                 background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-                color: '#fca5a5', fontSize: '13px', fontWeight: 500,
+                color: '#fca5a5', fontSize: "14px", fontWeight: 500,
               }}>
                 {formError}
               </div>
@@ -436,7 +436,7 @@ export default function MoradorVeiculos() {
                     : "#003580"
                   : "#e2e8f0",
                 border: "none", color: placa && dataInicio && dataFim ? "#fff" : "#94a3b8",
-                fontWeight: 700, fontSize: "15px",
+                fontWeight: 700, fontSize: "16px",
                 cursor: placa && dataInicio && dataFim ? "pointer" : "not-allowed",
                 opacity: submitting ? 0.7 : 1,
               }}
@@ -449,8 +449,8 @@ export default function MoradorVeiculos() {
         {/* ═══ Pending Approvals from Portaria ═══ */}
         {pendentes.length > 0 && (
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '15px', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle className="w-4 h-4" style={{ color: '#f59e0b' }} />
+            <h3 style={{ fontWeight: 700, fontSize: "16px", color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle className="w-5 h-5" style={{ color: '#f59e0b' }} />
               Aguardando sua aprovação ({pendentes.length})
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -470,30 +470,30 @@ export default function MoradorVeiculos() {
                       {v.placa}
                     </div>
                     <div>
-                      <p style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#fff' : "#1e293b" }}>
+                      <p style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#fff' : "#1e293b" }}>
                         {v.modelo || "Veículo"} {v.cor ? `· ${v.cor}` : ""}
                       </p>
                       {v.motorista_nome && (
-                        <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>🧑 {v.motorista_nome}</p>
+                        <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>🧑 {v.motorista_nome}</p>
                       )}
                     </div>
                   </div>
 
                   <div style={{
                     padding: '8px 12px', borderRadius: '10px',
-                    background: 'rgba(245,158,11,0.1)', fontSize: '12px', color: '#fbbf24', fontWeight: 500,
+                    background: 'rgba(245,158,11,0.1)', fontSize: "13px", color: '#fbbf24', fontWeight: 500,
                   }}>
                     ⚠️ A portaria está solicitando autorização para este veículo acessar o condomínio.
                   </div>
 
                   {v.observacao && (
-                    <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569", fontStyle: 'italic' }}>💬 Portaria: {v.observacao}</p>
+                    <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", fontStyle: 'italic' }}>💬 Portaria: {v.observacao}</p>
                   )}
 
                   {/* Observation input */}
                   <div>
-                    <span style={{ fontWeight: 600, fontSize: '12px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '4px', display: 'block' }}>
-                      <MessageSquare className="w-3 h-3" style={{ display: "inline", verticalAlign: "middle", marginRight: "4px" }} />
+                    <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '4px', display: 'block' }}>
+                      <MessageSquare className="w-4 h-4" style={{ display: "inline", verticalAlign: "middle", marginRight: "4px" }} />
                       Observação para portaria (opcional)
                     </span>
                     <input
@@ -504,7 +504,7 @@ export default function MoradorVeiculos() {
                       onChange={(e) => { setRespondingId(v.id); setResponseObs(e.target.value); }}
                       style={{
                         width: '100%', padding: '10px 12px', borderRadius: '10px',
-                        border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: '13px', background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc',
+                        border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', fontSize: "14px", background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc',
                         color: isDark ? '#fff' : "#1e293b", outline: 'none', boxSizing: 'border-box',
                       }}
                     />
@@ -519,11 +519,11 @@ export default function MoradorVeiculos() {
                         flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                         padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                        border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                        border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                         cursor: "pointer", boxShadow: "0 2px 8px rgba(34,197,94,0.3)",
                       }}
                     >
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-5 h-5" />
                       Permitir
                     </button>
                     <button
@@ -532,11 +532,11 @@ export default function MoradorVeiculos() {
                         flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                         padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-                        border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                        border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                         cursor: "pointer", boxShadow: "0 2px 8px rgba(239,68,68,0.3)",
                       }}
                     >
-                      <Ban className="w-4 h-4" />
+                      <Ban className="w-5 h-5" />
                       Negar
                     </button>
                   </div>
@@ -549,8 +549,8 @@ export default function MoradorVeiculos() {
         {/* ═══ Active vehicles ═══ */}
         {ativas.length > 0 && (
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '15px', color: isDark ? '#fff' : "#1e293b", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Shield className="w-4 h-4" style={{ color: '#60a5fa' }} />
+            <h3 style={{ fontWeight: 700, fontSize: "16px", color: isDark ? '#fff' : "#1e293b", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Shield className="w-5 h-5" style={{ color: '#60a5fa' }} />
               Ativas ({ativas.length})
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -562,8 +562,8 @@ export default function MoradorVeiculos() {
         {/* ═══ Other vehicles ═══ */}
         {outras.length > 0 && (
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '15px', color: isDark ? '#93c5fd' : "#475569", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Clock className="w-4 h-4" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
+            <h3 style={{ fontWeight: 700, fontSize: "16px", color: isDark ? '#93c5fd' : "#475569", marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Clock className="w-5 h-5" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
               Anteriores ({outras.length})
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -577,8 +577,8 @@ export default function MoradorVeiculos() {
             <div style={{ width: 72, height: 72, borderRadius: 22, background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', border: isDark ? '1.5px solid rgba(255,255,255,0.1)' : '1.5px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Car className="w-9 h-9" style={{ color: isDark ? '#93c5fd' : "#475569" }} />
             </div>
-            <p style={{ fontSize: '15px', color: isDark ? '#fff' : "#1e293b", fontWeight: 600 }}>Nenhuma autorização de veículo.</p>
-            <p style={{ fontSize: '13px', color: isDark ? '#93c5fd' : "#475569" }}>Autorize veículos para facilitar o acesso na portaria.</p>
+            <p style={{ fontSize: "16px", color: isDark ? '#fff' : "#1e293b", fontWeight: 600 }}>Nenhuma autorização de veículo.</p>
+            <p style={{ fontSize: "14px", color: isDark ? '#93c5fd' : "#475569" }}>Autorize veículos para facilitar o acesso na portaria.</p>
           </div>
         )}
 
@@ -622,28 +622,28 @@ function VehicleCard({ v, onCancel, onEdit }: { v: VehicleAuth; onCancel: (id: n
             {v.placa}
           </div>
           <div>
-            <p style={{ fontWeight: 600, fontSize: '13px', color: isDark ? '#fff' : "#1e293b" }}>
+            <p style={{ fontWeight: 600, fontSize: "14px", color: isDark ? '#fff' : "#1e293b" }}>
               {v.modelo || "Veículo"} {v.cor ? `· ${v.cor}` : ""}
             </p>
             {v.motorista_nome && (
-              <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>🧑 {v.motorista_nome}</p>
+              <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>🧑 {v.motorista_nome}</p>
             )}
           </div>
         </div>
         {isActive && (
           <div style={{ display: "flex", gap: "6px" }}>
             <button onClick={() => onEdit(v)} style={{ padding: '6px', borderRadius: '8px', border: 'none', background: 'rgba(245,158,11,0.15)', cursor: 'pointer' }} title="Editar">
-              <Pencil className="w-4 h-4" style={{ color: '#fbbf24' }} />
+              <Pencil className="w-5 h-5" style={{ color: '#fbbf24' }} />
             </button>
             <button onClick={() => onCancel(v.id)} style={{ padding: '6px', borderRadius: '8px', border: 'none', background: 'rgba(239,68,68,0.15)', cursor: 'pointer' }} title="Cancelar">
-              <Trash2 className="w-4 h-4" style={{ color: '#fca5a5' }} />
+              <Trash2 className="w-5 h-5" style={{ color: '#fca5a5' }} />
             </button>
           </div>
         )}
       </div>
 
       {/* Dates */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: isDark ? '#93c5fd' : "#475569" }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: "13px", color: isDark ? '#93c5fd' : "#475569" }}>
         <Calendar className="w-3.5 h-3.5" />
         {formatDate(v.data_inicio)} até {formatDate(v.data_fim)}
         {v.hora_inicio && v.hora_fim && ` · ${v.hora_inicio} - ${v.hora_fim}`}
@@ -652,29 +652,29 @@ function VehicleCard({ v, onCancel, onEdit }: { v: VehicleAuth; onCancel: (id: n
       {/* Status badges */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
         {isActive && (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: 600 }}>
-            <CheckCircle2 className="w-3 h-3" /> Ativa
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#dcfce7", color: "#15803d", fontSize: "12px", fontWeight: 600 }}>
+            <CheckCircle2 className="w-4 h-4" /> Ativa
           </span>
         )}
         {entrou && (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#e0f2fe", color: "#0369a1", fontSize: "11px", fontWeight: 600 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#e0f2fe", color: "#0369a1", fontSize: "12px", fontWeight: 600 }}>
             Entrada confirmada
           </span>
         )}
         {v.requer_autorizacao_saida === 1 && (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#fef3c7", color: "#b45309", fontSize: "11px", fontWeight: 600 }}>
-            <LogOutIcon className="w-3 h-3" /> Saída requer autorização
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#fef3c7", color: "#b45309", fontSize: "12px", fontWeight: 600 }}>
+            <LogOutIcon className="w-4 h-4" /> Saída requer autorização
           </span>
         )}
         {v.saida_autorizada === 1 && (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: 600 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 10px", borderRadius: "20px", background: "#dcfce7", color: "#15803d", fontSize: "12px", fontWeight: 600 }}>
             Saída autorizada
           </span>
         )}
       </div>
 
       {v.observacao && (
-        <p style={{ fontSize: '12px', color: isDark ? '#7dd3fc' : '#475569', fontStyle: 'italic' }}>💬 {v.observacao}</p>
+        <p style={{ fontSize: "13px", color: isDark ? '#7dd3fc' : '#475569', fontStyle: 'italic' }}>💬 {v.observacao}</p>
       )}
     </div>
   );

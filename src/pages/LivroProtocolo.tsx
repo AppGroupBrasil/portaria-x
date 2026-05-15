@@ -299,10 +299,10 @@ export default function LivroProtocolo() {
   };
 
   const tipoIcon = (t: string) => {
-    if (t === "encomenda") return <Package className="w-5 h-5" style={{ color: "#fff" }} />;
-    if (t === "entrega") return <Truck className="w-5 h-5" style={{ color: "#fff" }} />;
-    if (t === "ocorrencia") return <AlertTriangle className="w-5 h-5" style={{ color: "#fff" }} />;
-    return <Mail className="w-5 h-5" style={{ color: "#fff" }} />;
+    if (t === "encomenda") return <Package className="w-6 h-6" style={{ color: "#fff" }} />;
+    if (t === "entrega") return <Truck className="w-6 h-6" style={{ color: "#fff" }} />;
+    if (t === "ocorrencia") return <AlertTriangle className="w-6 h-6" style={{ color: "#fff" }} />;
+    return <Mail className="w-6 h-6" style={{ color: "#fff" }} />;
   };
 
   const tipoColor = (t: string) => {
@@ -327,11 +327,11 @@ export default function LivroProtocolo() {
   // ── Styles ──
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px", borderRadius: "12px",
-    border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff",
-    color: "#0f172a", outline: "none", boxSizing: "border-box",
+    border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)",
+    color: "var(--card-foreground)", outline: "none", boxSizing: "border-box",
   };
   const labelStyle: React.CSSProperties = {
-    fontWeight: 600, fontSize: "13px", color: "#1e293b",
+    fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)",
     marginBottom: "6px", display: "block",
   };
 
@@ -341,11 +341,11 @@ export default function LivroProtocolo() {
       <header style={{ color: p.text, background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 style={{ fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: "12px" }}>
-              <BookOpen className="w-5 h-5" /> Livro de Protocolo
+              <BookOpen className="w-6 h-6" /> Livro de Protocolo
             </h1>
             <p style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }}>Registro de encomendas, entregas e retiradas</p>
           </div>
@@ -364,7 +364,7 @@ export default function LivroProtocolo() {
               <TStep n={4}>Tire uma <strong>foto</strong> como comprovante visual (opcional mas recomendado)</TStep>
               <TStep n={5}><strong>Assine digitalmente</strong> desenhando com o dedo na tela do celular</TStep>
               <TStep n={6}>Toque em <strong>"Registrar"</strong> — sistema salva com data, hora e seu nome automaticamente</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Sindico/Administradora ve:</strong> No Espelho da Portaria, consulta todos os registros feitos pelos porteiros com fotos, assinaturas e detalhes completos.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Sindico/Administradora ve:</strong> No Espelho da Portaria, consulta todos os registros feitos pelos porteiros com fotos, assinaturas e detalhes completos.</p>
             </FlowPortaria>
             <TSection icon={<span>🔧</span>} title="FUNCOES DISPONIVEIS">
               <TBullet><strong>Assinatura digital</strong> — Desenhe sua assinatura na tela do celular (substitui assinatura no papel)</TBullet>
@@ -400,9 +400,9 @@ export default function LivroProtocolo() {
           <div style={{
             background: "#dcfce7", border: "1px solid #86efac", borderRadius: "12px",
             padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px",
-            color: "#166534", fontSize: "14px", fontWeight: 600,
+            color: "#166534", fontSize: "15px", fontWeight: 600,
           }}>
-            <CheckCircle2 className="w-5 h-5" /> {successMsg}
+            <CheckCircle2 className="w-6 h-6" /> {successMsg}
           </div>
         )}
 
@@ -414,21 +414,21 @@ export default function LivroProtocolo() {
               display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               flex: 1, padding: "14px", borderRadius: "14px", border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1",
               background: showForm ? "#ef4444" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
-              color: "#fff", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+              color: "#fff", fontSize: "16px", fontWeight: 700, cursor: "pointer",
             }}
           >
-            {showForm ? <><X className="w-5 h-5" /> Cancelar</> : <><Plus className="w-5 h-5" /> Novo Registro</>}
+            {showForm ? <><X className="w-6 h-6" /> Cancelar</> : <><Plus className="w-6 h-6" /> Novo Registro</>}
           </button>
           <button
             onClick={() => setShowReport(true)}
             style={{
               display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
-              background: "#fff",
-              color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+              background: "var(--color-card, #fff)",
+              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
-            <FileText className="w-4 h-4" /> Relatório
+            <FileText className="w-5 h-5" /> Relatório
           </button>
         </div>
 
@@ -445,12 +445,12 @@ export default function LivroProtocolo() {
             background: "transparent", borderRadius: "16px", padding: "20px",
             border: "none", display: "flex", flexDirection: "column", gap: "1.2rem",
           }}>
-            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#1e293b", margin: 0 }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: 0 }}>
               Novo Registro
             </h3>
 
             {formError && (
-              <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", padding: "10px 14px", color: "#991b1b", fontSize: "13px" }}>
+              <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", padding: "10px 14px", color: "#991b1b", fontSize: "14px" }}>
                 {formError}
               </div>
             )}
@@ -478,7 +478,7 @@ export default function LivroProtocolo() {
                     }}
                   >
                     <span style={{ fontSize: "20px" }}>{t.icon}</span>
-                    <span style={{ fontSize: "11px", fontWeight: 700, color: tipoForm === t.v ? "#4f46e5" : "#64748b" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 700, color: tipoForm === t.v ? "#4f46e5" : "#64748b" }}>
                       {t.l}
                     </span>
                   </button>
@@ -518,7 +518,7 @@ export default function LivroProtocolo() {
                 <div>
                   <span style={labelStyle}>Porteiro que entregou</span>
                   <input type="text" value={user?.name || ""} readOnly
-                    style={{ ...inputStyle, background: "#f1f5f9", color: "#64748b", cursor: "default" }} />
+                    style={{ ...inputStyle, background: "#f1f5f9", color: "var(--muted-foreground)", cursor: "default" }} />
                 </div>
               </>
             )}
@@ -534,7 +534,7 @@ export default function LivroProtocolo() {
                 <div>
                   <span style={labelStyle}>Porteiro</span>
                   <input type="text" value={user?.name || ""} readOnly
-                    style={{ ...inputStyle, background: "#f1f5f9", color: "#64748b", cursor: "default" }} />
+                    style={{ ...inputStyle, background: "#f1f5f9", color: "var(--muted-foreground)", cursor: "default" }} />
                 </div>
               </>
             )}
@@ -557,7 +557,7 @@ export default function LivroProtocolo() {
                 <div>
                   <span style={labelStyle}>Porteiro</span>
                   <input type="text" value={user?.name || ""} readOnly
-                    style={{ ...inputStyle, background: "#f1f5f9", color: "#64748b", cursor: "default" }} />
+                    style={{ ...inputStyle, background: "#f1f5f9", color: "var(--muted-foreground)", cursor: "default" }} />
                 </div>
                 {/* Audio recorder */}
                 <div>
@@ -574,9 +574,9 @@ export default function LivroProtocolo() {
                         cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
                         flexShrink: 0,
                       }}>
-                        <Play className="w-5 h-5" />
+                        <Play className="w-6 h-6" />
                       </button>
-                      <span style={{ flex: 1, fontSize: "13px", color: "#475569", fontWeight: 600 }}>
+                      <span style={{ flex: 1, fontSize: "14px", color: "var(--muted-foreground)", fontWeight: 600 }}>
                         {isPlayingAudio ? "Reproduzindo..." : "Áudio gravado ✓"}
                       </span>
                       <button onClick={() => setAudioData(null)} style={{
@@ -584,7 +584,7 @@ export default function LivroProtocolo() {
                         background: "#fee2e2", color: "#dc2626",
                         cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
                   ) : (
@@ -597,18 +597,18 @@ export default function LivroProtocolo() {
                         cursor: "pointer", display: "flex", alignItems: "center",
                         justifyContent: "center", gap: "10px",
                         color: isRecording ? "#dc2626" : "#64748b",
-                        fontSize: "14px", fontWeight: 600,
+                        fontSize: "15px", fontWeight: 600,
                         animation: isRecording ? "pulse 1.5s infinite" : "none",
                       }}
                     >
                       {isRecording ? (
                         <>
-                          <Square className="w-5 h-5" />
+                          <Square className="w-6 h-6" />
                           Parar Gravação
                         </>
                       ) : (
                         <>
-                          <Mic className="w-5 h-5" />
+                          <Mic className="w-6 h-6" />
                           Gravar Áudio
                         </>
                       )}
@@ -630,7 +630,7 @@ export default function LivroProtocolo() {
                     width: "32px", height: "32px", display: "flex", alignItems: "center", justifyContent: "center",
                     cursor: "pointer", color: p.text,
                   }}>
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               ) : showCamera ? (
@@ -652,16 +652,16 @@ export default function LivroProtocolo() {
                   <button onClick={openCamera} style={{
                     flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
-                    alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
+                    alignItems: "center", gap: "6px", color: "var(--muted-foreground)", fontSize: "14px", fontWeight: 600,
                   }}>
-                    <Camera className="w-6 h-6" /> Camera
+                    <Camera className="w-7 h-7" /> Camera
                   </button>
                   <button onClick={() => fileInputRef.current?.click()} style={{
                     flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
-                    alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
+                    alignItems: "center", gap: "6px", color: "var(--muted-foreground)", fontSize: "14px", fontWeight: 600,
                   }}>
-                    <Package className="w-6 h-6" /> Galeria
+                    <Package className="w-7 h-7" /> Galeria
                   </button>
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} style={{ display: "none" }} />
                 </div>
@@ -682,7 +682,7 @@ export default function LivroProtocolo() {
               style={{
                 width: "100%", padding: "14px", borderRadius: "14px", border: "none",
                 background: saving ? "#94a3b8" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
-                color: "#fff", fontSize: "15px", fontWeight: 700,
+                color: "#fff", fontSize: "16px", fontWeight: 700,
                 cursor: saving ? "default" : "pointer",
                 marginTop: "2.4rem",
               }}
@@ -708,7 +708,7 @@ export default function LivroProtocolo() {
                 padding: "8px 16px", borderRadius: "20px", border: "none",
                 background: filter === f.v ? "#6366f1" : "#e2e8f0",
                 color: filter === f.v ? "#fff" : "#475569",
-                fontSize: "13px", fontWeight: 600, cursor: "pointer",
+                fontSize: "14px", fontWeight: 600, cursor: "pointer",
               }}
             >
               {f.l}
@@ -723,13 +723,13 @@ export default function LivroProtocolo() {
               marginLeft: "auto",
             }}
           >
-            <Settings className="w-4 h-4" style={{ color: isDark ? "#94a3b8" : "#64748b" }} />
+            <Settings className="w-5 h-5" style={{ color: isDark ? "#94a3b8" : "#64748b" }} />
           </button>
         </div>
 
         {/* Search */}
         <div style={{ position: "relative" }}>
-          <Search className="w-4 h-4" style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+          <Search className="w-5 h-5" style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
           <input
             type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por protocolo, nome..."
@@ -745,7 +745,7 @@ export default function LivroProtocolo() {
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "3rem 1rem", color: "#94a3b8" }}>
             <BookOpen className="w-12 h-12 mx-auto mb-3" style={{ opacity: 0.4 }} />
-            <p style={{ fontWeight: 600, fontSize: "15px" }}>Nenhum registro encontrado</p>
+            <p style={{ fontWeight: 600, fontSize: "16px" }}>Nenhum registro encontrado</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -756,7 +756,7 @@ export default function LivroProtocolo() {
                   key={e.id}
                   onClick={() => setExpandedId(isExpanded ? null : e.id)}
                   style={{
-                    background: "#fff", borderRadius: "16px", border: "1px solid #e2e8f0",
+                    background: "var(--color-card, #fff)", borderRadius: "16px", border: "1px solid #e2e8f0",
                     overflow: "hidden", cursor: "pointer", transition: "all 0.2s",
                   }}
                 >
@@ -770,18 +770,18 @@ export default function LivroProtocolo() {
                       {tipoIcon(e.tipo)}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontWeight: 700, fontSize: "14px", color: "#1e293b", margin: 0 }}>
+                      <p style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)", margin: 0 }}>
                         {tipoLabel(e.tipo)}
                       </p>
-                      <p style={{ fontSize: "12px", color: "#64748b", margin: "2px 0 0" }}>
+                      <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: "2px 0 0" }}>
                         {formatDate(e.created_at)}
                       </p>
-                      <p style={{ fontSize: "11px", color: "#6366f1", fontWeight: 700, margin: "2px 0 0" }}>
+                      <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: 700, margin: "2px 0 0" }}>
                         {e.protocolo}
                       </p>
                     </div>
                     <div style={{
-                      padding: "4px 10px", borderRadius: "20px", fontSize: "11px", fontWeight: 700,
+                      padding: "4px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: 700,
                       background: e.assinatura ? "#dcfce7" : "#fef3c7",
                       color: e.assinatura ? "#166534" : "#92400e",
                       flexShrink: 0,
@@ -799,12 +799,12 @@ export default function LivroProtocolo() {
                       {/* Protocol + Date */}
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PROTOCOLO</span>
-                          <p style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1", margin: "2px 0 0" }}>{e.protocolo}</p>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>PROTOCOLO</span>
+                          <p style={{ fontSize: "14px", fontWeight: 700, color: "#6366f1", margin: "2px 0 0" }}>{e.protocolo}</p>
                         </div>
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>DATA/HORA</span>
-                          <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{formatDate(e.created_at)}</p>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>DATA/HORA</span>
+                          <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{formatDate(e.created_at)}</p>
                         </div>
                       </div>
 
@@ -813,14 +813,14 @@ export default function LivroProtocolo() {
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                           {e.deixada_por && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>DEIXADA POR</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.deixada_por}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>DEIXADA POR</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.deixada_por}</p>
                             </div>
                           )}
                           {e.para && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PARA</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.para}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>PARA</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.para}</p>
                             </div>
                           )}
                         </div>
@@ -830,21 +830,21 @@ export default function LivroProtocolo() {
                         <>
                           {e.o_que_e && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>O QUE E</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.o_que_e}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>O QUE E</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.o_que_e}</p>
                             </div>
                           )}
                           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                             {e.entregue_para && (
                               <div>
-                                <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>ENTREGUE PARA</span>
-                                <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.entregue_para}</p>
+                                <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>ENTREGUE PARA</span>
+                                <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.entregue_para}</p>
                               </div>
                             )}
                             {e.porteiro_entregou && (
                               <div>
-                                <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PORTEIRO</span>
-                                <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.porteiro_entregou}</p>
+                                <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>PORTEIRO</span>
+                                <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.porteiro_entregou}</p>
                               </div>
                             )}
                           </div>
@@ -855,14 +855,14 @@ export default function LivroProtocolo() {
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                           {e.retirada_por && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>RETIRADA POR</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.retirada_por}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>RETIRADA POR</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.retirada_por}</p>
                             </div>
                           )}
                           {e.porteiro && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PORTEIRO</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.porteiro}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>PORTEIRO</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.porteiro}</p>
                             </div>
                           )}
                         </div>
@@ -872,25 +872,25 @@ export default function LivroProtocolo() {
                         <>
                           {e.titulo && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>TÍTULO</span>
-                              <p style={{ fontSize: "14px", fontWeight: 700, color: "#dc2626", margin: "2px 0 0" }}>{e.titulo}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>TÍTULO</span>
+                              <p style={{ fontSize: "15px", fontWeight: 700, color: "#dc2626", margin: "2px 0 0" }}>{e.titulo}</p>
                             </div>
                           )}
                           {e.descricao && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>DESCRIÇÃO</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0", whiteSpace: "pre-wrap" }}>{e.descricao}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>DESCRIÇÃO</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0", whiteSpace: "pre-wrap" }}>{e.descricao}</p>
                             </div>
                           )}
                           {e.porteiro && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PORTEIRO</span>
-                              <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{e.porteiro}</p>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>PORTEIRO</span>
+                              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{e.porteiro}</p>
                             </div>
                           )}
                           {e.audio && (
                             <div>
-                              <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>ÁUDIO</span>
+                              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>ÁUDIO</span>
                               <audio controls src={e.audio} style={{ width: "100%", marginTop: "4px" }} />
                             </div>
                           )}
@@ -900,7 +900,7 @@ export default function LivroProtocolo() {
                       {/* Photo */}
                       {e.foto && (
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>FOTO</span>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>FOTO</span>
                           <img src={e.foto} alt="Foto" style={{
                             width: "100%", borderRadius: "10px", maxHeight: "220px",
                             objectFit: "contain", marginTop: "4px", background: "#f1f5f9",
@@ -911,7 +911,7 @@ export default function LivroProtocolo() {
                       {/* Signature */}
                       {e.assinatura && (
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>ASSINATURA DIGITAL</span>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>ASSINATURA DIGITAL</span>
                           <div style={{
                             marginTop: "4px", borderRadius: "10px", border: "1px solid #e2e8f0",
                             background: "#f8fafc", padding: "8px", textAlign: "center",
@@ -930,11 +930,11 @@ export default function LivroProtocolo() {
                           display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                           width: "100%", padding: "10px", borderRadius: "10px", border: "none",
                           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                          color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer",
+                          color: "#fff", fontSize: "14px", fontWeight: 700, cursor: "pointer",
                           marginTop: "4px",
                         }}
                       >
-                        <Download className="w-4 h-4" /> Baixar PDF deste Registro
+                        <Download className="w-5 h-5" /> Baixar PDF deste Registro
                       </button>
                     </div>
                   )}

@@ -247,9 +247,9 @@ export default function LiberacaoCadastros() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "16px", paddingRight: "24px" }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <ShieldCheck className="w-5 h-5" />
+          <ShieldCheck className="w-6 h-6" />
           <span style={{ fontWeight: 700, fontSize: 16 }}>Liberação de Cadastros</span>
           <div className="flex-1" />
           {pendentes.length > 0 && (
@@ -269,7 +269,7 @@ export default function LiberacaoCadastros() {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-base font-semibold" style={{ color: "#003580" }}>Aprovação de Auto-Cadastro</p>
-              <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>
+              <p className="text-sm mt-0.5" style={{ color: "var(--muted-foreground)" }}>
                 {autoCadastroEnabled
                   ? "Moradores precisam de aprovação após se cadastrarem"
                   : "Moradores têm acesso imediato após auto-cadastro"}
@@ -282,11 +282,11 @@ export default function LiberacaoCadastros() {
               style={{ minWidth: "56px", minHeight: "44px", cursor: configLoading ? "wait" : "pointer" }}
             >
               {configLoading ? (
-                <Loader2 className="w-10 h-10 animate-spin" style={{ color: "#64748b" }} />
+                <Loader2 className="w-10 h-10 animate-spin" style={{ color: "var(--muted-foreground)" }} />
               ) : autoCadastroEnabled ? (
                 <ToggleRight className="w-12 h-12 text-sky-500" />
               ) : (
-                <ToggleLeft className="w-12 h-12" style={{ color: "#64748b" }} />
+                <ToggleLeft className="w-12 h-12" style={{ color: "var(--muted-foreground)" }} />
               )}
             </button>
           </div>
@@ -305,10 +305,10 @@ export default function LiberacaoCadastros() {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-sky-500" />
+                  <Mail className="w-5 h-5 text-sky-500" />
                   <p className="text-base font-semibold" style={{ color: "#003580" }}>Notificação por E-mail</p>
                 </div>
-                <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>
+                <p className="text-sm mt-0.5" style={{ color: "var(--muted-foreground)" }}>
                   Receba um e-mail quando houver um cadastro aguardando liberação
                 </p>
               </div>
@@ -319,11 +319,11 @@ export default function LiberacaoCadastros() {
                 style={{ minWidth: "56px", minHeight: "44px", cursor: emailSaving ? "wait" : "pointer" }}
               >
                 {emailSaving ? (
-                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: "#64748b" }} />
+                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: "var(--muted-foreground)" }} />
                 ) : emailEnabled ? (
                   <ToggleRight className="w-12 h-12 text-sky-500" />
                 ) : (
-                  <ToggleLeft className="w-12 h-12" style={{ color: "#64748b" }} />
+                  <ToggleLeft className="w-12 h-12" style={{ color: "var(--muted-foreground)" }} />
                 )}
               </button>
             </div>
@@ -360,10 +360,10 @@ export default function LiberacaoCadastros() {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4 text-green-500" />
+                  <MessageCircle className="w-5 h-5 text-green-500" />
                   <p className="text-base font-semibold" style={{ color: "#003580" }}>Notificação por WhatsApp</p>
                 </div>
-                <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>
+                <p className="text-sm mt-0.5" style={{ color: "var(--muted-foreground)" }}>
                   Ao finalizar o cadastro, o morador poderá solicitar liberação via WhatsApp
                 </p>
               </div>
@@ -374,11 +374,11 @@ export default function LiberacaoCadastros() {
                 style={{ minWidth: "56px", minHeight: "44px", cursor: whatsappSaving ? "wait" : "pointer" }}
               >
                 {whatsappSaving ? (
-                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: "#64748b" }} />
+                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: "var(--muted-foreground)" }} />
                 ) : whatsappEnabled ? (
                   <ToggleRight className="w-12 h-12 text-green-500" />
                 ) : (
-                  <ToggleLeft className="w-12 h-12" style={{ color: "#64748b" }} />
+                  <ToggleLeft className="w-12 h-12" style={{ color: "var(--muted-foreground)" }} />
                 )}
               </button>
             </div>
@@ -404,7 +404,7 @@ export default function LiberacaoCadastros() {
                     Salvar
                   </button>
                 </div>
-                <p className="text-xs mt-2" style={{ color: "#64748b" }}>
+                <p className="text-xs mt-2" style={{ color: "var(--muted-foreground)" }}>
                   O morador verá a opção de enviar solicitação pelo WhatsApp após concluir o cadastro
                 </p>
               </div>
@@ -414,14 +414,14 @@ export default function LiberacaoCadastros() {
         {/* Success message */}
         {successMsg && (
           <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 flex items-center gap-2" style={{ marginBottom: "20px" }}>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
             <span className="text-sm text-emerald-600 dark:text-emerald-400">{successMsg}</span>
           </div>
         )}
 
         {/* Search */}
         <div className="flex items-center gap-2 h-11 rounded-lg border border-border bg-card" style={{ paddingLeft: "16px", paddingRight: "12px", marginBottom: "20px" }}>
-          <Search className="w-4 h-4 shrink-0" style={{ color: "#64748b" }} />
+          <Search className="w-5 h-5 shrink-0" style={{ color: "var(--muted-foreground)" }} />
           <input
             type="text"
             placeholder="Buscar por nome, e-mail, bloco, unidade..."
@@ -434,7 +434,7 @@ export default function LiberacaoCadastros() {
 
         {/* Pending count label */}
         <div className="flex items-center gap-2" style={{ marginBottom: "18px" }}>
-          <Clock className="w-4 h-4 text-amber-500" />
+          <Clock className="w-5 h-5 text-amber-500" />
           <span className="text-base font-medium" style={{ color: "#003580" }}>
             {pendentes.length} cadastro{pendentes.length !== 1 ? "s" : ""} aguardando liberação
           </span>
@@ -443,12 +443,12 @@ export default function LiberacaoCadastros() {
         {/* List */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="w-6 h-6 text-sky-500 animate-spin" />
+            <Loader2 className="w-7 h-7 text-sky-500 animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
             <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3 opacity-50" />
-            <p className="text-base" style={{ color: "#64748b" }}>
+            <p className="text-base" style={{ color: "var(--muted-foreground)" }}>
               {pendentes.length === 0 ? "Nenhum cadastro pendente de aprovação." : "Nenhum resultado encontrado."}
             </p>
           </div>
@@ -464,11 +464,11 @@ export default function LiberacaoCadastros() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}>
-                        <Clock className="w-5 h-5 text-white" />
+                        <Clock className="w-6 h-6 text-white" />
                       </div>
                       <div>
                         <p className="text-base font-semibold" style={{ color: "#003580" }}>{p.name}</p>
-                        <p className="text-xs" style={{ color: "#64748b" }}>
+                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
                           Solicitado em {new Date(p.created_at).toLocaleDateString("pt-BR")} às{" "}
                           {new Date(p.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                         </p>
@@ -481,31 +481,31 @@ export default function LiberacaoCadastros() {
 
                   {/* Details grid */}
                   <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-                    <div className="flex items-center gap-1.5" style={{ color: "#64748b" }}>
-                      <Mail className="w-3 h-3 shrink-0" />
+                    <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
+                      <Mail className="w-4 h-4 shrink-0" />
                       <span className="truncate">{p.email}</span>
                     </div>
                     {p.phone && (
-                      <div className="flex items-center gap-1.5" style={{ color: "#64748b" }}>
-                        <Phone className="w-3 h-3 shrink-0" />
+                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
+                        <Phone className="w-4 h-4 shrink-0" />
                         <span>{p.phone}</span>
                       </div>
                     )}
                     {p.block && (
-                      <div className="flex items-center gap-1.5" style={{ color: "#64748b" }}>
-                        <Building2 className="w-3 h-3 shrink-0" />
+                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
+                        <Building2 className="w-4 h-4 shrink-0" />
                         <span>Bloco {p.block}</span>
                       </div>
                     )}
                     {p.unit && (
-                      <div className="flex items-center gap-1.5" style={{ color: "#64748b" }}>
-                        <Home className="w-3 h-3 shrink-0" />
+                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
+                        <Home className="w-4 h-4 shrink-0" />
                         <span>Unidade {p.unit}</span>
                       </div>
                     )}
                     {p.perfil && (
-                      <div className="flex items-center gap-1.5" style={{ color: "#64748b" }}>
-                        <UserCheck className="w-3 h-3 shrink-0" />
+                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
+                        <UserCheck className="w-4 h-4 shrink-0" />
                         <span>{perfilLabel(p.perfil)}</span>
                       </div>
                     )}

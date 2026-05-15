@@ -159,7 +159,7 @@ export default function AutorizarVisitante() {
       {/* Header */}
       <div className="text-white" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "24px 24px 32px 24px", paddingTop: "max(24px, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-2 mb-2">
-          <Shield className="w-5 h-5" />
+          <Shield className="w-6 h-6" />
           <span className="font-semibold text-sm">Portaria - Autorização de Visitante</span>
         </div>
         <p className="text-sky-100 text-[13px]">
@@ -238,14 +238,14 @@ export default function AutorizarVisitante() {
               background: "linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%)",
               color: "#fff",
               cursor: "pointer",
-              fontSize: "13px",
+              fontSize: "14px",
               fontWeight: 700,
             }}
           >
-            <Video style={{ width: 18, height: 18 }} />
+            <Video style={{ width: 22, height: 22 }} />
             <div style={{ textAlign: "left", flex: 1 }}>
               <div>Câmera da Portaria</div>
-              <div style={{ fontSize: "10px", fontWeight: 400, opacity: 0.8 }}>
+              <div style={{ fontSize: "12px", fontWeight: 400, opacity: 0.8 }}>
                 {showCamera ? "Toque para ocultar" : "Toque para ver quem está na portaria"}
               </div>
             </div>
@@ -289,12 +289,12 @@ export default function AutorizarVisitante() {
                 />
               ) : (
                 <div style={{ height: "160px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Camera style={{ width: 40, height: 40, color: "#334155" }} />
+                  <Camera style={{ width: 40, height: 40, color: "var(--card-foreground)" }} />
                 </div>
               )}
               <div style={{ padding: "6px 12px", background: "rgba(15,23,42,0.9)", display: "flex", alignItems: "center", gap: "6px" }}>
                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-                <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600 }}>
+                <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>
                   {cameraInfo.nome || "Câmera Portaria"} — AO VIVO
                 </span>
               </div>
@@ -320,10 +320,10 @@ export default function AutorizarVisitante() {
             style={{ backgroundColor: "#16a34a" }}
           >
             {responding ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-6 h-6 animate-spin" />
             ) : (
               <>
-                <CheckCircle2 className="w-6 h-6" />
+                <CheckCircle2 className="w-7 h-7" />
                 Autorizar Entrada
               </>
             )}
@@ -335,10 +335,10 @@ export default function AutorizarVisitante() {
             style={{ backgroundColor: "#dc2626" }}
           >
             {responding ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-6 h-6 animate-spin" />
             ) : (
               <>
-                <XCircle className="w-6 h-6" />
+                <XCircle className="w-7 h-7" />
                 Não Autorizar
               </>
             )}

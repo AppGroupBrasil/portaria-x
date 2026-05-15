@@ -166,29 +166,29 @@ export default function PortariaVirtual() {
     {
       num: 1,
       title: "ESCOLHA SEU DISPOSITIVO",
-      icon: <ClipboardCheck className="w-6 h-6" />,
+      icon: <ClipboardCheck className="w-7 h-7" />,
       color: "#6366f1",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
+          <p style={{ fontSize: "16px", lineHeight: 1.7, color: "#374151" }}>
             Voce tem <strong>2 opcoes</strong> de dispositivo para instalar. Recomendamos a <strong>Opcao 1</strong> (mais facil e mais barata).
           </p>
 
           {/* OPTION 1: Mini Smart Switch */}
           <div style={{ background: "#f0fdf4", borderRadius: "12px", padding: "16px", border: "2px solid #16a34a" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
-              <span style={{ background: "#16a34a", color: p.text, fontWeight: 800, fontSize: "13px", padding: "4px 10px", borderRadius: "6px" }}>OPCAO 1 — RECOMENDADA</span>
+              <span style={{ background: "#16a34a", color: p.text, fontWeight: 800, fontSize: "14px", padding: "4px 10px", borderRadius: "6px" }}>OPCAO 1 — RECOMENDADA</span>
             </div>
             <p style={{ fontWeight: 800, fontSize: "16px", color: "#166534", marginBottom: "4px" }}>Mini Smart Switch (Tasmota)</p>
-            <p style={{ fontSize: "13px", color: "#374151", lineHeight: 1.7, marginBottom: "12px" }}>
+            <p style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7, marginBottom: "12px" }}>
               E um interruptor inteligente <strong>compacto e completo</strong> — ja vem com WiFi + rele + alimentacao tudo em 1 pecinha.
               Muito mais facil de instalar: so liga 2 fios no motor e pronto. Nao precisa de fonte USB, fios jumper nem conhecimento tecnico.
             </p>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px 16px", border: "1px solid #d1fae5", marginBottom: "10px" }}>
-              <p style={{ fontWeight: 700, fontSize: "14px", color: "#059669" }}>1 x Mini Smart Switch WiFi (com Tasmota)</p>
-              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>Busque: "mini smart switch wifi tasmota" ou "sonoff mini r2"</p>
-              <p style={{ fontSize: "13px", fontWeight: 600, color: "#d97706", marginTop: "2px" }}>Preco: R$20 a R$35</p>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px 16px", border: "1px solid #d1fae5", marginBottom: "10px" }}>
+              <p style={{ fontWeight: 700, fontSize: "15px", color: "#059669" }}>1 x Mini Smart Switch WiFi (com Tasmota)</p>
+              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>Busque: "mini smart switch wifi tasmota" ou "sonoff mini r2"</p>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: "#d97706", marginTop: "2px" }}>Preco: R$20 a R$35</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "8px" }}>
                 {[
                   { loja: "Mercado Livre", url: "https://lista.mercadolivre.com.br/mini-smart-switch-wifi" },
@@ -196,31 +196,31 @@ export default function PortariaVirtual() {
                   { loja: "Amazon", url: "https://www.amazon.com.br/s?k=sonoff+mini+r2" },
                 ].map((link, j) => (
                   <a key={j} href={link.url} target="_blank" rel="noopener noreferrer"
-                    style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "6px 12px", borderRadius: "6px", border: "1px solid #16a34a", backgroundColor: "#f0fdf4", color: "#16a34a", fontSize: "12px", fontWeight: 700, textDecoration: "none" }}>
+                    style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "6px 12px", borderRadius: "6px", border: "1px solid #16a34a", backgroundColor: "#f0fdf4", color: "#16a34a", fontSize: "13px", fontWeight: 700, textDecoration: "none" }}>
                     <ExternalLink style={{ width: "12px", height: "12px" }} /> {link.loja}
                   </a>
                 ))}
               </div>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px 16px", border: "1px solid #d1fae5" }}>
-              <p style={{ fontWeight: 700, fontSize: "14px", color: "#059669" }}>1 metro de Fio Paralelo Fino</p>
-              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>Qualquer loja de eletrica tem — fio de campainha serve</p>
-              <p style={{ fontSize: "13px", fontWeight: 600, color: "#d97706", marginTop: "2px" }}>Preco: R$2</p>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px 16px", border: "1px solid #d1fae5" }}>
+              <p style={{ fontWeight: 700, fontSize: "15px", color: "#059669" }}>1 metro de Fio Paralelo Fino</p>
+              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>Qualquer loja de eletrica tem — fio de campainha serve</p>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: "#d97706", marginTop: "2px" }}>Preco: R$2</p>
             </div>
 
             <div style={{ marginTop: "12px", background: "#ecfdf5", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
-              <p style={{ fontWeight: 800, fontSize: "15px", color: "#16a34a" }}>CUSTO TOTAL: R$22 a R$37 por portao</p>
+              <p style={{ fontWeight: 800, fontSize: "16px", color: "#16a34a" }}>CUSTO TOTAL: R$22 a R$37 por portao</p>
             </div>
           </div>
 
           {/* OPTION 2: ESP32 + Relay */}
           <div style={{ background: "#f9fafb", borderRadius: "12px", padding: "16px", border: "1px solid #d1d5db" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
-              <span style={{ background: "#6b7280", color: p.text, fontWeight: 800, fontSize: "13px", padding: "4px 10px", borderRadius: "6px" }}>OPCAO 2 — ALTERNATIVA</span>
+              <span style={{ background: "#6b7280", color: p.text, fontWeight: 800, fontSize: "14px", padding: "4px 10px", borderRadius: "6px" }}>OPCAO 2 — ALTERNATIVA</span>
             </div>
             <p style={{ fontWeight: 800, fontSize: "16px", color: "#374151", marginBottom: "4px" }}>ESP32 DevKit + Modulo Rele</p>
-            <p style={{ fontSize: "13px", color: "#6b7280", lineHeight: 1.7, marginBottom: "12px" }}>
+            <p style={{ fontSize: "14px", color: "#6b7280", lineHeight: 1.7, marginBottom: "12px" }}>
               Monta voce mesmo: placa ESP32 + modulo rele + fios + fonte USB. Requer mais passos na instalacao, mas funciona igualmente bem.
             </p>
 
@@ -237,16 +237,16 @@ export default function PortariaVirtual() {
               { nome: "3 Fios Jumper Femea-Femea", preco: "R$3~5", links: [] },
               { nome: "1m Fio Paralelo Fino", preco: "R$2", links: [] },
             ].map((item, i) => (
-              <div key={i} style={{ background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #e5e7eb", marginBottom: "6px" }}>
+              <div key={i} style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "10px", border: "1px solid #e5e7eb", marginBottom: "6px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <p style={{ fontWeight: 700, fontSize: "13px", color: "#374151" }}>{item.nome}</p>
-                  <p style={{ fontSize: "12px", fontWeight: 600, color: "#d97706" }}>{item.preco}</p>
+                  <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>{item.nome}</p>
+                  <p style={{ fontSize: "13px", fontWeight: 600, color: "#d97706" }}>{item.preco}</p>
                 </div>
                 {item.links.length > 0 && (
                   <div style={{ display: "flex", gap: "6px", marginTop: "6px" }}>
                     {item.links.map((link, j) => (
                       <a key={j} href={link.url} target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: "11px", color: "#4f46e5", textDecoration: "none", padding: "2px 6px", borderRadius: "4px", background: "#eef2ff" }}>
+                        style={{ fontSize: "12px", color: "#4f46e5", textDecoration: "none", padding: "2px 6px", borderRadius: "4px", background: "#eef2ff" }}>
                         {link.loja} ↗
                       </a>
                     ))}
@@ -255,12 +255,12 @@ export default function PortariaVirtual() {
               </div>
             ))}
             <div style={{ marginTop: "8px", background: "#f3f4f6", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
-              <p style={{ fontWeight: 800, fontSize: "15px", color: "#6b7280" }}>CUSTO TOTAL: R$50 a R$75 por portao</p>
+              <p style={{ fontWeight: 800, fontSize: "16px", color: "#6b7280" }}>CUSTO TOTAL: R$50 a R$75 por portao</p>
             </div>
           </div>
 
           <div style={{ background: "#eef0f5", borderRadius: "8px", padding: "14px 16px", border: "1px solid rgba(45,51,84,0.3)" }}>
-            <p style={{ fontSize: "13px", color: "#2d3354", lineHeight: 1.7 }}>
+            <p style={{ fontSize: "14px", color: "#2d3354", lineHeight: 1.7 }}>
               <strong>DICA:</strong> Se voce ja tem o Mini Smart Switch, ele e a melhor opcao — mais barato, mais simples e mais compacto.
               Compre 1 dispositivo para CADA portao. Ex: 1 entrada + 3 blocos = 4 dispositivos.
             </p>
@@ -271,38 +271,38 @@ export default function PortariaVirtual() {
     {
       num: 2,
       title: "VERIFICAR O WIFI DO CONDOMINIO",
-      icon: <Wifi className="w-6 h-6" />,
+      icon: <Wifi className="w-7 h-7" />,
       color: "#0ea5e9",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#eef0f5", borderRadius: "12px", padding: "16px", border: "1px solid rgba(45,51,84,0.3)" }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#2d3354", marginBottom: "8px" }}>POR QUE PRECISA DE WIFI?</p>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#374151" }}>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#2d3354", marginBottom: "8px" }}>POR QUE PRECISA DE WIFI?</p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
               O aparelhinho (ESP32) usa o WiFi do condominio para se comunicar com o celular.
               Sem WiFi, ele nao funciona. E igual um celular sem internet.
             </p>
           </div>
 
-          <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151" }}>O QUE FAZER:</p>
+          <p style={{ fontWeight: 700, fontSize: "16px", color: "#374151" }}>O QUE FAZER:</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>1. Va ate o portao do condominio</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Fique bem perto do motor do portao (geralmente e uma caixa de metal na parede, perto do portao).
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>2. Pegue seu celular</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Conecte no WiFi do condominio. Abra o Google ou qualquer site. Se o site abrir, o sinal e bom!
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>3. O site abriu?</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 <strong style={{ color: "#16a34a" }}>SIM</strong> = Otimo! Pode ir para o proximo passo.<br />
                 <strong style={{ color: "#dc2626" }}>NAO</strong> = Vai precisar de um repetidor de WiFi (R$50-80) perto do portao.
               </p>
@@ -310,7 +310,7 @@ export default function PortariaVirtual() {
           </div>
 
           <div style={{ background: "#fef2f2", borderRadius: "8px", padding: "14px 16px", border: "1px solid #fecaca" }}>
-            <p style={{ fontSize: "13px", color: "#991b1b" }}>
+            <p style={{ fontSize: "14px", color: "#991b1b" }}>
               <strong>IMPORTANTE:</strong> Anote o NOME do WiFi e a SENHA. Voce vai precisar depois.
             </p>
           </div>
@@ -320,81 +320,81 @@ export default function PortariaVirtual() {
     {
       num: 3,
       title: "INSTALAR O MINI SMART SWITCH (OPCAO 1)",
-      icon: <Zap className="w-6 h-6" />,
+      icon: <Zap className="w-7 h-7" />,
       color: "#16a34a",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#f0fdf4", borderRadius: "12px", padding: "16px", border: "2px solid #16a34a" }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#166534", marginBottom: "8px" }}>SE VOCE ESCOLHEU O MINI SMART SWITCH:</p>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#374151" }}>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#166534", marginBottom: "8px" }}>SE VOCE ESCOLHEU O MINI SMART SWITCH:</p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
               O Mini Smart Switch e muito mais simples de instalar que o ESP32. Ele liga direto na rede eletrica
               e tem bornes (parafusinhos) prontos para conectar. Siga estes passos:
             </p>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>1. Flashear com Tasmota (so 1 vez)</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Use o site <strong>tasmota.github.io/install</strong> no computador. Conecte o switch via USB (se tiver porta)
                 ou use <strong>Tuya-Convert</strong> pelo celular (OTA, sem fios). Escolha o firmware "Tasmota Lite".
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>2. Configurar o WiFi no Tasmota</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Apos flashear, o switch cria uma rede WiFi "tasmota-XXXX". Conecte nela pelo celular,
                 vai abrir uma pagina automatica. Digite o nome e senha do WiFi do condominio. Pronto!
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>3. Ache o IP do dispositivo</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Depois de conectar no WiFi, abra o navegador e acesse o roteador (geralmente 192.168.1.1)
                 para ver o IP que foi atribuido ao switch. Anote esse IP.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>4. Abrir o motor do portao</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Abra a tampa do motor com chave Phillips. Procure os bornes marcados
                 <strong> "FECHA"</strong> (ou FC/CLOSE) e <strong>"COM"</strong> (ou COMUM/COMMON).
               </p>
             </div>
 
             <div style={{ background: "#f0fdf4", borderRadius: "12px", padding: "14px", border: "2px solid #16a34a" }}>
-              <p style={{ fontWeight: 700, fontSize: "15px", color: "#16a34a", marginBottom: "8px" }}>5. Ligar os fios — SO 2 FIOS!</p>
-              <p style={{ fontSize: "14px", color: "#374151" }}>
+              <p style={{ fontWeight: 700, fontSize: "16px", color: "#16a34a", marginBottom: "8px" }}>5. Ligar os fios — SO 2 FIOS!</p>
+              <p style={{ fontSize: "15px", color: "#374151" }}>
                 O Mini Smart Switch tem bornes marcados <strong>S1</strong> e <strong>S2</strong>. Ligue assim:
               </p>
               <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "12px" }}>
-                <div style={{ background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #bbf7d0" }}>
+                <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "10px", border: "1px solid #bbf7d0" }}>
                   <p style={{ fontWeight: 700, color: "#16a34a" }}>FIO 1: Borne S1 do Switch → Borne FECHA do Motor</p>
                 </div>
-                <div style={{ background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #bbf7d0" }}>
+                <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "10px", border: "1px solid #bbf7d0" }}>
                   <p style={{ fontWeight: 700, color: "#16a34a" }}>FIO 2: Borne S2 do Switch → Borne COM do Motor</p>
                 </div>
               </div>
-              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "8px" }}>
+              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "8px" }}>
                 Desencape as pontas dos fios (1cm), coloque no borne e aperte o parafuso.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>6. Alimentar o switch</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 O Mini Smart Switch alimenta direto na rede eletrica (100-240V). Ligue os bornes
                 <strong> L-In</strong> e <strong>N-In</strong> na fase e neutro da tomada mais proxima (peca a um eletricista se nao souber).
                 Os bornes L-Out e N-Out nao sao usados neste caso.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>7. Configurar PulseTime no Tasmota</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Acesse o IP do switch no navegador. Va em <strong>Console</strong> e digite: <strong>PulseTime 10</strong>
                 (isso faz o rele ligar por 1 segundo e desligar automatico — perfeito para portao).
               </p>
@@ -402,10 +402,10 @@ export default function PortariaVirtual() {
           </div>
 
           <div style={{ background: "#ecfdf5", borderRadius: "8px", padding: "14px 16px", border: "1px solid #a7f3d0", textAlign: "center" }}>
-            <p style={{ fontWeight: 800, fontSize: "15px", color: "#16a34a" }}>
+            <p style={{ fontWeight: 800, fontSize: "16px", color: "#16a34a" }}>
               PRONTO! Pule direto para o Passo 7 (Testar pelo App)
             </p>
-            <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>
+            <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
               Os Passos 4, 5 e 6 sao apenas para quem escolheu ESP32+Rele.
             </p>
           </div>
@@ -415,55 +415,55 @@ export default function PortariaVirtual() {
     {
       num: 4,
       title: "ABRIR O MOTOR DO PORTAO (ESP32)",
-      icon: <Wrench className="w-6 h-6" />,
+      icon: <Wrench className="w-7 h-7" />,
       color: "#f59e0b",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#fffbeb", borderRadius: "12px", padding: "16px", border: "1px solid #fde68a" }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#92400e", marginBottom: "8px" }}>O QUE E O MOTOR DO PORTAO?</p>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#374151" }}>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#92400e", marginBottom: "8px" }}>O QUE E O MOTOR DO PORTAO?</p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
               E uma caixa de metal que fica perto do portao, geralmente na parede. Dentro dela tem uma placa
               eletronica (um quadradinho verde ou azul) com varios parafusos pequenos.
             </p>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>1. Abra a tampa do motor</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Usando uma chave Phillips (a chave em formato de estrela/cruz), tire os parafusos da tampa.
                 Geralmente sao 2 ou 4 parafusos.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>2. Ache os parafusinhos com nomes</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Na placa, voce vai ver parafusinhos pequenos com letras escritas do lado.
                 Procure por: <strong>FECHA</strong> e <strong>COM</strong> (ou <strong>COMUM</strong>).
               </p>
-              <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
+              <p style={{ fontSize: "14px", color: "#9ca3af", marginTop: "4px" }}>
                 Outras marcas podem escrever: FC e COM, ou BOTAO.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>3. Faca o TESTE</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Pegue um pedacinho de fio. Encoste uma ponta no parafuso <strong>FECHA</strong> e a outra ponta no
                 parafuso <strong>COM</strong>. So encostar por 1 segundo e tirar.
               </p>
-              <p style={{ fontSize: "14px", fontWeight: 700, color: "#16a34a", marginTop: "8px" }}>
+              <p style={{ fontSize: "15px", fontWeight: 700, color: "#16a34a", marginTop: "8px" }}>
                 Se o portao mexeu = PARABENS! Sao esses os parafusos certos!
               </p>
-              <p style={{ fontSize: "14px", fontWeight: 700, color: "#dc2626", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", fontWeight: 700, color: "#dc2626", marginTop: "4px" }}>
                 Se nao mexeu = Tente outros parafusos (ABRE + COM).
               </p>
             </div>
           </div>
 
           <div style={{ background: "#f0fdf4", borderRadius: "8px", padding: "14px 16px", border: "1px solid #bbf7d0" }}>
-            <p style={{ fontSize: "13px", color: "#166534" }}>
+            <p style={{ fontSize: "14px", color: "#166534" }}>
               <strong>NAO TENHA MEDO:</strong> Esses parafusinhos tem apenas 12 volts (como uma pilha grande). NAO da choque.
               E 100% seguro encostar o fio neles.
             </p>
@@ -474,19 +474,19 @@ export default function PortariaVirtual() {
     {
       num: 5,
       title: "LIGAR OS FIOS - PARTE 1 (ESP32 NO RELE)",
-      icon: <Cable className="w-6 h-6" />,
+      icon: <Cable className="w-7 h-7" />,
       color: "#8b5cf6",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#f5f3ff", borderRadius: "12px", padding: "16px", border: "1px solid #ddd6fe" }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#5b21b6", marginBottom: "8px" }}>O QUE VAMOS FAZER AGORA?</p>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#374151" }}>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#5b21b6", marginBottom: "8px" }}>O QUE VAMOS FAZER AGORA?</p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
               Vamos ligar o aparelhinho (ESP32) no modulo rele usando 3 fios jumper.
               E so encaixar igual LEGO, nao precisa de solda nem de ferramenta.
             </p>
           </div>
 
-          <div style={{ background: "#fff", borderRadius: "12px", padding: "16px", border: "2px solid #8b5cf6" }}>
+          <div style={{ background: "var(--color-card, #fff)", borderRadius: "12px", padding: "16px", border: "2px solid #8b5cf6" }}>
             <p style={{ fontWeight: 700, fontSize: "16px", color: "#5b21b6", marginBottom: "16px", textAlign: "center" }}>
               ENCAIXE OS 3 FIOS ASSIM:
             </p>
@@ -499,27 +499,27 @@ export default function PortariaVirtual() {
               ].map((fio, i) => (
                 <div key={i} style={{ background: "#faf5ff", borderRadius: "8px", padding: "14px 16px", border: "1px solid #e9d5ff" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: fio.cor, display: "flex", alignItems: "center", justifyContent: "center", color: p.text, fontWeight: 700, fontSize: "14px", flexShrink: 0 }}>
+                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: fio.cor, display: "flex", alignItems: "center", justifyContent: "center", color: p.text, fontWeight: 700, fontSize: "15px", flexShrink: 0 }}>
                       {i + 1}
                     </div>
                     <div>
-                      <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>
+                      <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151" }}>
                         {fio.de} &rarr; {fio.para}
                       </p>
-                      <p style={{ fontSize: "12px", color: "#9ca3af" }}>{fio.corNome}</p>
+                      <p style={{ fontSize: "13px", color: "#9ca3af" }}>{fio.corNome}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "12px", textAlign: "center" }}>
+            <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "12px", textAlign: "center" }}>
               Os pinos tem o nome escrito na placa do ESP32. So olhar com atencao.
             </p>
           </div>
 
           <div style={{ background: "#f0fdf4", borderRadius: "8px", padding: "14px 16px", border: "1px solid #bbf7d0" }}>
-            <p style={{ fontSize: "13px", color: "#166534" }}>
+            <p style={{ fontSize: "14px", color: "#166534" }}>
               <strong>DICA:</strong> O fio jumper e aquele fiozinho com uma pontinha de plastico.
               Voce so ENCAIXA na ponta do ESP32. Nao precisa apertar parafuso nem soldar.
               Se nao encaixou, vire o fio e tente do outro lado.
@@ -531,40 +531,40 @@ export default function PortariaVirtual() {
     {
       num: 6,
       title: "LIGAR OS FIOS - PARTE 2 (RELE NO MOTOR)",
-      icon: <Zap className="w-6 h-6" />,
+      icon: <Zap className="w-7 h-7" />,
       color: "#ef4444",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#fef2f2", borderRadius: "12px", padding: "16px", border: "1px solid #fecaca" }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#991b1b", marginBottom: "8px" }}>AGORA VAMOS LIGAR NO MOTOR!</p>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#374151" }}>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#991b1b", marginBottom: "8px" }}>AGORA VAMOS LIGAR NO MOTOR!</p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
               Corte o fio paralelo em 2 pedacos. Desencape as pontas (tire 1cm do plastico com uma faca ou
               alicate). Agora ligue assim:
             </p>
           </div>
 
-          <div style={{ background: "#fff", borderRadius: "12px", padding: "16px", border: "2px solid #ef4444" }}>
+          <div style={{ background: "var(--color-card, #fff)", borderRadius: "12px", padding: "16px", border: "2px solid #ef4444" }}>
             <p style={{ fontWeight: 700, fontSize: "16px", color: "#dc2626", marginBottom: "16px", textAlign: "center" }}>
               LIGUE OS 2 FIOS ASSIM:
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ background: "#fef2f2", borderRadius: "8px", padding: "14px", border: "1px solid #fecaca" }}>
-                <p style={{ fontWeight: 700, fontSize: "15px", color: "#dc2626" }}>FIO 1:</p>
-                <p style={{ fontSize: "14px", color: "#374151", marginTop: "4px" }}>
+                <p style={{ fontWeight: 700, fontSize: "16px", color: "#dc2626" }}>FIO 1:</p>
+                <p style={{ fontSize: "15px", color: "#374151", marginTop: "4px" }}>
                   Parafuso <strong>COM</strong> do Rele &rarr; Parafuso <strong>FECHA</strong> do Motor
                 </p>
-                <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
+                <p style={{ fontSize: "14px", color: "#9ca3af", marginTop: "4px" }}>
                   (desparafuse, coloque a ponta do fio, reaparafuse)
                 </p>
               </div>
 
               <div style={{ background: "#fef2f2", borderRadius: "8px", padding: "14px", border: "1px solid #fecaca" }}>
-                <p style={{ fontWeight: 700, fontSize: "15px", color: "#dc2626" }}>FIO 2:</p>
-                <p style={{ fontSize: "14px", color: "#374151", marginTop: "4px" }}>
+                <p style={{ fontWeight: 700, fontSize: "16px", color: "#dc2626" }}>FIO 2:</p>
+                <p style={{ fontSize: "15px", color: "#374151", marginTop: "4px" }}>
                   Parafuso <strong>NO</strong> do Rele &rarr; Parafuso <strong>COM</strong> do Motor
                 </p>
-                <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
+                <p style={{ fontSize: "14px", color: "#9ca3af", marginTop: "4px" }}>
                   (NO quer dizer "Normalmente Aberto" - e o parafuso do meio do rele)
                 </p>
               </div>
@@ -572,7 +572,7 @@ export default function PortariaVirtual() {
           </div>
 
           <div style={{ background: "#fffbeb", borderRadius: "8px", padding: "14px 16px", border: "1px solid #fde68a" }}>
-            <p style={{ fontSize: "13px", color: "#92400e" }}>
+            <p style={{ fontSize: "14px", color: "#92400e" }}>
               <strong>ATENCAO:</strong> Nao desconecte nenhum fio que ja estava ligado no motor!
               Os fios do controle remoto continuam onde estavam. Voce so ADICIONA 2 fios novos.
               O controle remoto e o app vao funcionar juntos.
@@ -584,35 +584,35 @@ export default function PortariaVirtual() {
     {
       num: 7,
       title: "LIGAR NA TOMADA (ESP32)",
-      icon: <Plug className="w-6 h-6" />,
+      icon: <Plug className="w-7 h-7" />,
       color: "#10b981",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>1. Ache uma tomada perto do portao</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Se nao tem tomada perto, use uma extensao.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>2. Plugue a fonte USB na tomada</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 E igualzinho carregar um celular. A fonte vai na tomada.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>3. Conecte o cabo USB no ESP32</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 O cabo micro USB vai na entradinha do ESP32 (igual entrada de celular antigo).
               </p>
             </div>
 
             <div style={{ background: "#f0fdf4", borderRadius: "12px", padding: "14px", border: "2px solid #16a34a" }}>
-              <p style={{ fontWeight: 700, fontSize: "15px", color: "#16a34a" }}>4. Uma luzinha azul acendeu no ESP32?</p>
-              <p style={{ fontSize: "14px", color: "#374151", marginTop: "4px" }}>
+              <p style={{ fontWeight: 700, fontSize: "16px", color: "#16a34a" }}>4. Uma luzinha azul acendeu no ESP32?</p>
+              <p style={{ fontSize: "15px", color: "#374151", marginTop: "4px" }}>
                 <strong style={{ color: "#16a34a" }}>SIM</strong> = Esta ligado! Funcionou! Va para o proximo passo.<br />
                 <strong style={{ color: "#dc2626" }}>NAO</strong> = Verifique se o cabo esta bem encaixado. Tente outra tomada.
               </p>
@@ -624,42 +624,42 @@ export default function PortariaVirtual() {
     {
       num: 8,
       title: "TESTAR PELO APLICATIVO",
-      icon: <Smartphone className="w-6 h-6" />,
+      icon: <Smartphone className="w-7 h-7" />,
       color: "#06b6d4",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#ecfeff", borderRadius: "12px", padding: "16px", border: "1px solid #a5f3fc" }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#155e75", marginBottom: "8px" }}>HORA DO TESTE!</p>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#374151" }}>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#155e75", marginBottom: "8px" }}>HORA DO TESTE!</p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#374151" }}>
               Se chegou ate aqui, esta quase pronto! Agora vamos testar se tudo funciona.
             </p>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>1. Abra o app no celular</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Entre com seu login e va ate esta tela (Portaria Virtual).
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>2. Va na aba "Configuracao"</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Selecione o tipo do dispositivo (Mini Smart Switch ou ESP32). Digite o IP do dispositivo e o token (se necessario).
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>3. Va na aba "Controle"</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Verifique se o status esta "ONLINE" (bolinha verde). Se sim, toque no botao grande "ABRIR PORTAO".
               </p>
             </div>
 
             <div style={{ background: "#f0fdf4", borderRadius: "12px", padding: "14px", border: "2px solid #16a34a" }}>
-              <p style={{ fontWeight: 700, fontSize: "15px", color: "#16a34a" }}>4. O portao abriu?</p>
-              <p style={{ fontSize: "14px", color: "#374151", marginTop: "4px" }}>
+              <p style={{ fontWeight: 700, fontSize: "16px", color: "#16a34a" }}>4. O portao abriu?</p>
+              <p style={{ fontSize: "15px", color: "#374151", marginTop: "4px" }}>
                 <strong style={{ color: "#16a34a" }}>SIM</strong> = PARABENS! Instalacao concluida com sucesso!<br />
                 <strong style={{ color: "#dc2626" }}>NAO</strong> = Revise os fios (Passo 4 e 5). Verifique se o WiFi esta funcionando (Passo 2).
               </p>
@@ -671,36 +671,36 @@ export default function PortariaVirtual() {
     {
       num: 9,
       title: "ORGANIZAR E GUARDAR",
-      icon: <ClipboardCheck className="w-6 h-6" />,
+      icon: <ClipboardCheck className="w-7 h-7" />,
       color: "#16a34a",
       content: (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>1. Coloque tudo dentro de uma caixinha</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Compre uma caixinha plastica de sobrepor 4x2 (R$5 em loja de eletrica).
                 Coloque o ESP32 e o rele dentro. Faca um furinho para passar os fios e o cabo USB.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>2. Fixe na parede</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Use fita dupla face forte ou 2 parafusos. Fixe perto do motor do portao.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>3. Organize os fios</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Use uma abracadeira (aquele plastico de prender fio) para deixar bonito.
               </p>
             </div>
 
-            <div style={{ background: "#fff", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
+            <div style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "14px", border: "1px solid #e5e7eb" }}>
               <p style={{ fontWeight: 700, color: "#059669" }}>4. Feche a tampa do motor</p>
-              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>
+              <p style={{ fontSize: "15px", color: "#6b7280", marginTop: "4px" }}>
                 Recoloque os parafusos da tampa. Pronto, acabou!
               </p>
             </div>
@@ -711,7 +711,7 @@ export default function PortariaVirtual() {
             <p style={{ fontWeight: 700, fontSize: "18px", color: "#16a34a", marginTop: "8px" }}>
               INSTALACAO CONCLUIDA!
             </p>
-            <p style={{ fontSize: "14px", color: "#374151", marginTop: "4px" }}>
+            <p style={{ fontSize: "15px", color: "#374151", marginTop: "4px" }}>
               Agora os moradores podem abrir o portao pelo celular.
             </p>
           </div>
@@ -726,11 +726,11 @@ export default function PortariaVirtual() {
       <header className="premium-header safe-area-top" style={{ padding: "18px 24px", paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ color: p.text }}>
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-7 h-7" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 className="text-lg font-bold text-white flex items-center gap-2">
-              <DoorOpen className="w-5 h-5" /> Portaria Virtual
+              <DoorOpen className="w-6 h-6" /> Portaria Virtual
             </h1>
             <p className="text-xs text-white/70">Controle de Portao por App</p>
           </div>
@@ -744,7 +744,7 @@ export default function PortariaVirtual() {
               <TStep n={3}>Toque no botao <strong>"ABRIR PORTAO"</strong> do portao desejado</TStep>
               <TStep n={4}>O portao abre <strong>automaticamente</strong> em 2-3 segundos</TStep>
               <TStep n={5}>O sistema registra a abertura com <strong>data, hora e seu nome</strong> para auditoria</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Seguranca:</strong> O sindico pode consultar o historico de todas as aberturas no Espelho da Portaria.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Seguranca:</strong> O sindico pode consultar o historico de todas as aberturas no Espelho da Portaria.</p>
             </FlowPortaria>
             <TSection icon={<span>🔧</span>} title="3 ABAS DISPONIVEIS">
               <TBullet><strong>Controle</strong> — Botoes para abrir cada portao cadastrado. Tela principal do dia a dia.</TBullet>
@@ -777,9 +777,9 @@ export default function PortariaVirtual() {
       {/* Tabs */}
       <div style={{ padding: "12px 24px 0", display: "flex", gap: "12px" }}>
         {[
-          { key: "controle" as const, label: "Controle", icon: <DoorOpen className="w-4 h-4" /> },
-          { key: "tutorial" as const, label: "Tutorial", icon: <BookOpen className="w-4 h-4" /> },
-          { key: "config" as const, label: "Configuracao", icon: <Settings className="w-4 h-4" /> },
+          { key: "controle" as const, label: "Controle", icon: <DoorOpen className="w-5 h-5" /> },
+          { key: "tutorial" as const, label: "Tutorial", icon: <BookOpen className="w-5 h-5" /> },
+          { key: "config" as const, label: "Configuracao", icon: <Settings className="w-5 h-5" /> },
         ].map((t) => (
           <button
             key={t.key}
@@ -796,7 +796,7 @@ export default function PortariaVirtual() {
               backgroundColor: tab === t.key ? "#003580" : "#fff",
               color: tab === t.key ? "#fff" : "#6b7280",
               fontWeight: 700,
-              fontSize: "13px",
+              fontSize: "14px",
               cursor: "pointer",
             }}
           >
@@ -818,7 +818,7 @@ export default function PortariaVirtual() {
                 <p style={{ fontWeight: 800, fontSize: "17px", color: "#92400e", marginTop: "12px" }}>
                   NENHUM PORTAO CONFIGURADO
                 </p>
-                <p style={{ fontSize: "14px", color: "#78716c", marginTop: "8px", lineHeight: 1.6 }}>
+                <p style={{ fontSize: "15px", color: "#78716c", marginTop: "8px", lineHeight: 1.6 }}>
                   Va na aba "Configuracao" para adicionar os portoes do condominio (entrada principal, blocos, etc).
                 </p>
                 <button
@@ -831,7 +831,7 @@ export default function PortariaVirtual() {
                     background: isDark ? "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" : "#ffffff",
                     color: p.text,
                     fontWeight: 700,
-                    fontSize: "14px",
+                    fontSize: "15px",
                     cursor: "pointer",
                   }}
                 >
@@ -848,7 +848,7 @@ export default function PortariaVirtual() {
                       borderRadius: "16px",
                       border: gate.status === "online" ? "2px solid #86efac" : "2px solid #e5e7eb",
                       overflow: "hidden",
-                      background: "#fff",
+                      background: "var(--color-card, #fff)",
                     }}
                   >
                     {/* Gate header with status */}
@@ -861,12 +861,12 @@ export default function PortariaVirtual() {
                       borderBottom: "1px solid #e5e7eb",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <Building className="w-5 h-5" style={{ color: gate.status === "online" ? "#16a34a" : "#9ca3af" }} />
+                        <Building className="w-6 h-6" style={{ color: gate.status === "online" ? "#16a34a" : "#9ca3af" }} />
                         <div>
-                          <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151" }}>{gate.name}</p>
+                          <p style={{ fontWeight: 700, fontSize: "16px", color: "#374151" }}>{gate.name}</p>
                           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
-                            <p style={{ fontSize: "12px", color: "#9ca3af" }}>IP: {gate.ip}</p>
-                            <span style={{ fontSize: "10px", fontWeight: 700, color: "#6366f1", background: "#ede9fe", padding: "1px 6px", borderRadius: "4px" }}>
+                            <p style={{ fontSize: "13px", color: "#9ca3af" }}>IP: {gate.ip}</p>
+                            <span style={{ fontSize: "12px", fontWeight: 700, color: "#6366f1", background: "#ede9fe", padding: "1px 6px", borderRadius: "4px" }}>
                               {gate.type === "esp32" ? "ESP32" : "Smart Switch"}
                             </span>
                           </div>
@@ -874,15 +874,15 @@ export default function PortariaVirtual() {
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                         {gate.status === "checking" ? (
-                          <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#6b7280" }} />
+                          <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#6b7280" }} />
                         ) : gate.status === "online" ? (
-                          <Wifi className="w-4 h-4" style={{ color: "#16a34a" }} />
+                          <Wifi className="w-5 h-5" style={{ color: "#16a34a" }} />
                         ) : (
-                          <WifiOff className="w-4 h-4" style={{ color: "#dc2626" }} />
+                          <WifiOff className="w-5 h-5" style={{ color: "#dc2626" }} />
                         )}
                         <span style={{
                           fontWeight: 700,
-                          fontSize: "12px",
+                          fontSize: "13px",
                           color: gate.status === "online" ? "#16a34a" : gate.status === "checking" ? "#6b7280" : "#dc2626",
                           padding: "4px 10px",
                           borderRadius: "20px",
@@ -919,12 +919,12 @@ export default function PortariaVirtual() {
                       >
                         {openingId === gate.id ? (
                           <>
-                            <Loader2 className="w-6 h-6 animate-spin" />
+                            <Loader2 className="w-7 h-7 animate-spin" />
                             <span>ABRINDO...</span>
                           </>
                         ) : (
                           <>
-                            <DoorOpen className="w-6 h-6" />
+                            <DoorOpen className="w-7 h-7" />
                             <span>ABRIR PORTAO</span>
                           </>
                         )}
@@ -940,7 +940,7 @@ export default function PortariaVirtual() {
                             border: "1px solid #d1d5db",
                             backgroundColor: "#fff",
                             color: "#374151",
-                            fontSize: "12px",
+                            fontSize: "13px",
                             fontWeight: 600,
                             cursor: "pointer",
                           }}
@@ -955,18 +955,18 @@ export default function PortariaVirtual() {
                             border: "1px solid #d1d5db",
                             backgroundColor: "#fff",
                             color: "#6b7280",
-                            fontSize: "12px",
+                            fontSize: "13px",
                             fontWeight: 600,
                             cursor: "pointer",
                           }}
                         >
-                          <Settings className="w-4 h-4" />
+                          <Settings className="w-5 h-5" />
                         </button>
                       </div>
 
                       {lastActions[gate.id] && (
-                        <p style={{ fontSize: "12px", color: "#166534", textAlign: "center" }}>
-                          <CheckCircle2 className="w-3 h-3 inline-block mr-1" style={{ verticalAlign: "-1px" }} />
+                        <p style={{ fontSize: "13px", color: "#166534", textAlign: "center" }}>
+                          <CheckCircle2 className="w-4 h-4 inline-block mr-1" style={{ verticalAlign: "-1px" }} />
                           Ultimo acionamento: {lastActions[gate.id]}
                         </p>
                       )}
@@ -977,10 +977,10 @@ export default function PortariaVirtual() {
                 {/* Security notice */}
                 <div style={{ padding: "14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
-                    <ShieldAlert className="w-4 h-4" style={{ color: "#6366f1" }} />
-                    <span style={{ fontWeight: 700, fontSize: "13px", color: "#374151" }}>Seguranca</span>
+                    <ShieldAlert className="w-5 h-5" style={{ color: "#6366f1" }} />
+                    <span style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>Seguranca</span>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#6b7280", lineHeight: 1.6 }}>
+                  <p style={{ fontSize: "13px", color: "#6b7280", lineHeight: 1.6 }}>
                     Apenas usuarios autorizados podem abrir o portao. Todas as acoes sao registradas com data, hora e nome do usuario.
                   </p>
                 </div>
@@ -1004,12 +1004,12 @@ export default function PortariaVirtual() {
               <p style={{ fontWeight: 800, fontSize: "17px", color: "#2d3354", marginTop: "8px" }}>
                 COMO INSTALAR O ABRIDOR DE PORTAO
               </p>
-              <p style={{ fontSize: "14px", color: "#374151", marginTop: "6px", lineHeight: 1.6 }}>
+              <p style={{ fontSize: "15px", color: "#374151", marginTop: "6px", lineHeight: 1.6 }}>
                 Siga os passos abaixo, um de cada vez.
                 Cada passo explica TUDO que voce precisa fazer.
                 Qualquer pessoa consegue instalar!
               </p>
-              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "6px" }}>
+              <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "6px" }}>
                 Tempo total: 30 a 40 minutos
               </p>
             </div>
@@ -1054,7 +1054,7 @@ export default function PortariaVirtual() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <p style={{
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 700,
                       color: openStep === step.num ? "rgba(255,255,255,0.8)" : "#9ca3af",
                       textTransform: "uppercase",
@@ -1062,7 +1062,7 @@ export default function PortariaVirtual() {
                       Passo {step.num} de 9
                     </p>
                     <p style={{
-                      fontSize: "14px",
+                      fontSize: "15px",
                       fontWeight: 800,
                       color: openStep === step.num ? "#fff" : "#374151",
                       marginTop: "2px",
@@ -1071,9 +1071,9 @@ export default function PortariaVirtual() {
                     </p>
                   </div>
                   {openStep === step.num ? (
-                    <ChevronUp className="w-5 h-5" style={{ color: p.text, flexShrink: 0 }} />
+                    <ChevronUp className="w-6 h-6" style={{ color: p.text, flexShrink: 0 }} />
                   ) : (
-                    <ChevronDown className="w-5 h-5" style={{ color: "#9ca3af", flexShrink: 0 }} />
+                    <ChevronDown className="w-6 h-6" style={{ color: "#9ca3af", flexShrink: 0 }} />
                   )}
                 </button>
 
@@ -1100,7 +1100,7 @@ export default function PortariaVirtual() {
               <p style={{ fontWeight: 800, fontSize: "16px", color: "#5b21b6", marginBottom: "8px" }}>
                 Configuracao dos Portoes
               </p>
-              <p style={{ fontSize: "13px", color: "#6b7280", lineHeight: 1.6 }}>
+              <p style={{ fontSize: "14px", color: "#6b7280", lineHeight: 1.6 }}>
                 Adicione cada portao do condominio. Normalmente tem 1 portao na <strong>entrada principal</strong> e
                 depois 1 portao por <strong>bloco</strong>. Cada portao precisa de 1 ESP32 instalado.
               </p>
@@ -1109,12 +1109,12 @@ export default function PortariaVirtual() {
             {/* Existing gates list */}
             {gates.length > 0 && (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>
+                <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151" }}>
                   PORTOES CADASTRADOS ({gates.length})
                 </p>
                 {gates.map((gate) => (
                   <div key={gate.id} style={{
-                    background: "#fff",
+                    background: "var(--color-card, #fff)",
                     borderRadius: "12px",
                     padding: "14px",
                     border: editId === gate.id ? "2px solid #6366f1" : "2px solid #e5e7eb",
@@ -1122,10 +1122,10 @@ export default function PortariaVirtual() {
                     alignItems: "center",
                     gap: "12px",
                   }}>
-                    <Building className="w-5 h-5" style={{ color: "#6366f1", flexShrink: 0 }} />
+                    <Building className="w-6 h-6" style={{ color: "#6366f1", flexShrink: 0 }} />
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontWeight: 700, fontSize: "14px", color: "#374151" }}>{gate.name}</p>
-                      <p style={{ fontSize: "12px", color: "#9ca3af" }}>IP: {gate.ip}</p>
+                      <p style={{ fontWeight: 700, fontSize: "15px", color: "#374151" }}>{gate.name}</p>
+                      <p style={{ fontSize: "13px", color: "#9ca3af" }}>IP: {gate.ip}</p>
                     </div>
                     <button
                       onClick={() => startEditGate(gate)}
@@ -1133,9 +1133,9 @@ export default function PortariaVirtual() {
                         padding: "6px 12px",
                         borderRadius: "6px",
                         border: "1px solid #d1d5db",
-                        background: "#fff",
+                        background: "var(--color-card, #fff)",
                         color: "#6366f1",
-                        fontSize: "12px",
+                        fontSize: "13px",
                         fontWeight: 600,
                         cursor: "pointer",
                       }}
@@ -1148,12 +1148,12 @@ export default function PortariaVirtual() {
                         padding: "6px 10px",
                         borderRadius: "6px",
                         border: "1px solid #fca5a5",
-                        background: "#fff",
+                        background: "var(--color-card, #fff)",
                         color: "#dc2626",
                         cursor: "pointer",
                       }}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 ))}
@@ -1162,20 +1162,20 @@ export default function PortariaVirtual() {
 
             {/* Add / Edit gate form */}
             <div style={{
-              background: "#fff",
+              background: "var(--color-card, #fff)",
               borderRadius: "16px",
               padding: "20px",
               border: "2px solid #6366f1",
             }}>
-              <p style={{ fontWeight: 800, fontSize: "15px", color: "#5b21b6", marginBottom: "14px", display: "flex", alignItems: "center", gap: "12px" }}>
-                <Plus className="w-5 h-5" />
+              <p style={{ fontWeight: 800, fontSize: "16px", color: "#5b21b6", marginBottom: "14px", display: "flex", alignItems: "center", gap: "12px" }}>
+                <Plus className="w-6 h-6" />
                 {editId ? "EDITAR PORTAO" : "ADICIONAR NOVO PORTAO"}
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                 {/* Device Type Selector */}
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "15px", color: "#374151", marginBottom: "6px" }}>
                     Tipo do Dispositivo
                   </span>
                   <div style={{ display: "flex", gap: "12px" }}>
@@ -1192,10 +1192,10 @@ export default function PortariaVirtual() {
                         textAlign: "center",
                       }}
                     >
-                      <p style={{ fontWeight: 700, fontSize: "13px", color: editType === "tasmota" ? "#5b21b6" : "#6b7280" }}>
+                      <p style={{ fontWeight: 700, fontSize: "14px", color: editType === "tasmota" ? "#5b21b6" : "#6b7280" }}>
                         Mini Smart Switch
                       </p>
-                      <p style={{ fontSize: "11px", color: "#9ca3af", marginTop: "2px" }}>
+                      <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "2px" }}>
                         Sonoff / Tasmota
                       </p>
                     </button>
@@ -1212,10 +1212,10 @@ export default function PortariaVirtual() {
                         textAlign: "center",
                       }}
                     >
-                      <p style={{ fontWeight: 700, fontSize: "13px", color: editType === "esp32" ? "#5b21b6" : "#6b7280" }}>
+                      <p style={{ fontWeight: 700, fontSize: "14px", color: editType === "esp32" ? "#5b21b6" : "#6b7280" }}>
                         ESP32 + Rele
                       </p>
-                      <p style={{ fontSize: "11px", color: "#9ca3af", marginTop: "2px" }}>
+                      <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "2px" }}>
                         Firmware customizado
                       </p>
                     </button>
@@ -1223,7 +1223,7 @@ export default function PortariaVirtual() {
                 </div>
 
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "15px", color: "#374151", marginBottom: "6px" }}>
                     Nome do Portao
                   </span>
                   <input
@@ -1236,7 +1236,7 @@ export default function PortariaVirtual() {
                       padding: "14px",
                       borderRadius: "10px",
                       border: "2px solid #d1d5db",
-                      fontSize: "15px",
+                      fontSize: "16px",
                       fontWeight: 600,
                       color: "#374151",
                       backgroundColor: "#fff",
@@ -1245,7 +1245,7 @@ export default function PortariaVirtual() {
                 </div>
 
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "15px", color: "#374151", marginBottom: "6px" }}>
                     Endereco IP do Dispositivo
                   </span>
                   <input
@@ -1258,13 +1258,13 @@ export default function PortariaVirtual() {
                       padding: "14px",
                       borderRadius: "10px",
                       border: "2px solid #d1d5db",
-                      fontSize: "15px",
+                      fontSize: "16px",
                       fontWeight: 600,
                       color: "#374151",
                       backgroundColor: "#fff",
                     }}
                   />
-                  <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                  <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
                     {editType === "tasmota"
                       ? "O IP aparece no painel Tasmota do dispositivo. Acesse http://IP na rede local."
                       : "O IP aparece quando o ESP32 liga. Cada portao tem um IP diferente."}
@@ -1272,7 +1272,7 @@ export default function PortariaVirtual() {
                 </div>
 
                 <div>
-                  <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+                  <span style={{ display: "block", fontWeight: 700, fontSize: "15px", color: "#374151", marginBottom: "6px" }}>
                     Token de Seguranca
                   </span>
                   <input
@@ -1285,13 +1285,13 @@ export default function PortariaVirtual() {
                       padding: "14px",
                       borderRadius: "10px",
                       border: "2px solid #d1d5db",
-                      fontSize: "15px",
+                      fontSize: "16px",
                       fontWeight: 600,
                       color: "#374151",
                       backgroundColor: "#fff",
                     }}
                   />
-                  <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                  <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
                     {editType === "tasmota"
                       ? "Opcional para Mini Smart Switch. Deixe vazio se nao configurou senha no Tasmota."
                       : "Senha que protege o portao. Peca ao suporte."}
@@ -1325,9 +1325,9 @@ export default function PortariaVirtual() {
                       padding: "14px 16px",
                       borderRadius: "12px",
                       border: "2px solid #d1d5db",
-                      background: "#fff",
+                      background: "var(--color-card, #fff)",
                       color: "#6b7280",
-                      fontSize: "14px",
+                      fontSize: "15px",
                       fontWeight: 600,
                       cursor: "pointer",
                     }}
@@ -1345,15 +1345,15 @@ export default function PortariaVirtual() {
               padding: "16px",
               border: "1px solid rgba(45,51,84,0.3)",
             }}>
-              <p style={{ fontWeight: 700, fontSize: "14px", color: "#2d3354", marginBottom: "10px" }}>
+              <p style={{ fontWeight: 700, fontSize: "15px", color: "#2d3354", marginBottom: "10px" }}>
                 EXEMPLO DE CONFIGURACAO:
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "13px", color: "#374151" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "14px", color: "#374151" }}>
                 <p>• <strong>Portao 1:</strong> "Entrada Principal" — Mini Smart Switch — IP: 192.168.1.200</p>
                 <p>• <strong>Portao 2:</strong> "Bloco A" — Mini Smart Switch — IP: 192.168.1.201</p>
                 <p>• <strong>Portao 3:</strong> "Bloco B" — ESP32 + Rele — IP: 192.168.1.202</p>
               </div>
-              <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "8px" }}>
+              <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "8px" }}>
                 Cada portao precisa de 1 dispositivo (Mini Smart Switch OU ESP32+Rele) instalado.
               </p>
             </div>
@@ -1365,7 +1365,7 @@ export default function PortariaVirtual() {
               padding: "16px",
               border: "1px solid #fde68a",
             }}>
-              <p style={{ fontWeight: 700, fontSize: "14px", color: "#92400e", marginBottom: "10px" }}>
+              <p style={{ fontWeight: 700, fontSize: "15px", color: "#92400e", marginBottom: "10px" }}>
                 PROBLEMAS COMUNS:
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -1376,9 +1376,9 @@ export default function PortariaVirtual() {
                   { p: "WiFi nao chega no portao", s: "Instale um repetidor de WiFi perto do portao (custa R$50-80)." },
                   { p: "Tenho varios blocos", s: "Instale 1 dispositivo em CADA portao. Cada um tera um IP diferente. Adicione todos aqui." },
                 ].map((item, i) => (
-                  <div key={i} style={{ background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #fde68a" }}>
-                    <p style={{ fontWeight: 700, fontSize: "13px", color: "#dc2626" }}>{item.p}</p>
-                    <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>{item.s}</p>
+                  <div key={i} style={{ background: "var(--color-card, #fff)", borderRadius: "8px", padding: "10px", border: "1px solid #fde68a" }}>
+                    <p style={{ fontWeight: 700, fontSize: "14px", color: "#dc2626" }}>{item.p}</p>
+                    <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "2px" }}>{item.s}</p>
                   </div>
                 ))}
               </div>

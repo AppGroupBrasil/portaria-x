@@ -90,8 +90,8 @@ export default function ApresentacaoPage() {
   } as const;
 
   const sectionSub = {
-    fontSize: "15px",
-    color: "#475569",
+    fontSize: "16px",
+    color: "var(--muted-foreground)",
     lineHeight: 1.7,
     maxWidth: "720px",
     margin: "0 auto",
@@ -112,7 +112,7 @@ export default function ApresentacaoPage() {
   };
 
   return (
-    <div style={{ background: "#ffffff", minHeight: "100vh" }}>
+    <div style={{ background: "var(--color-card, #fff)", minHeight: "100vh" }}>
       <div className="no-print" style={{
         position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.96)",
         borderBottom: "1px solid #e2e8f0", backdropFilter: "blur(10px)",
@@ -124,7 +124,7 @@ export default function ApresentacaoPage() {
           <button onClick={() => navigate(-1)} style={{
             display: "flex", alignItems: "center", gap: "12px",
             background: "transparent", border: "none", color: "#003580",
-            fontWeight: 700, fontSize: "15px", cursor: "pointer",
+            fontWeight: 700, fontSize: "16px", cursor: "pointer",
           }}>
             <ArrowLeft style={{ width: "18px", height: "18px" }} /> Voltar
           </button>
@@ -133,7 +133,7 @@ export default function ApresentacaoPage() {
               display: "flex", alignItems: "center", gap: "6px",
               padding: "10px 20px", borderRadius: "10px",
               background: "linear-gradient(135deg, #0062d1, #003580)", border: "none",
-              color: "#ffffff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+              color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
             }}>
               <Printer style={{ width: "16px", height: "16px" }} /> Imprimir / PDF
             </button>
@@ -141,7 +141,7 @@ export default function ApresentacaoPage() {
               display: "flex", alignItems: "center", gap: "6px",
               padding: "10px 20px", borderRadius: "10px",
               background: copied ? "#10b981" : "#f8fafc", border: "1px solid #e2e8f0",
-              color: copied ? "#ffffff" : "#003580", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+              color: copied ? "#ffffff" : "#003580", fontWeight: 700, fontSize: "15px", cursor: "pointer",
             }}>
               <Copy style={{ width: "16px", height: "16px" }} /> {copied ? "Copiado!" : "Copiar Link"}
             </button>
@@ -149,7 +149,7 @@ export default function ApresentacaoPage() {
               display: "flex", alignItems: "center", gap: "6px",
               padding: "10px 20px", borderRadius: "10px",
               background: "#25D366", border: "none",
-              color: "#ffffff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+              color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
             }}>
               <MessageCircle style={{ width: "16px", height: "16px" }} /> WhatsApp
             </button>
@@ -193,7 +193,7 @@ export default function ApresentacaoPage() {
             rel="noopener noreferrer"
             style={{
               padding: "16px 32px", borderRadius: "14px",
-              border: "2px solid #003580", background: "#ffffff",
+              border: "2px solid #003580", background: "var(--color-card, #fff)",
               color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
               display: "flex", alignItems: "center", gap: "12px",
               textDecoration: "none",
@@ -228,7 +228,7 @@ export default function ApresentacaoPage() {
               display: "flex", alignItems: "center", gap: "10px",
               background: b.bg, border: `2px solid ${b.border}`,
               borderRadius: "14px", padding: "12px 28px",
-              fontSize: "15px", fontWeight: 600, color: b.textColor,
+              fontSize: "16px", fontWeight: 600, color: b.textColor,
               minWidth: "220px", justifyContent: "center",
             }}>
               <b.icon style={{ width: "20px", height: "20px", color: b.iconColor }} /> {b.text}
@@ -244,7 +244,7 @@ export default function ApresentacaoPage() {
             { icon: Eye, text: "Monitoramento em tempo real" },
             { icon: Bell, text: "Notificações automáticas" },
           ].map((b) => (
-            <div key={b.text} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>
+            <div key={b.text} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", color: "rgba(255,255,255,0.7)" }}>
               <b.icon style={{ width: "16px", height: "16px" }} /> {b.text}
             </div>
           ))}
@@ -264,7 +264,7 @@ export default function ApresentacaoPage() {
               return (
                 <div key={k} style={{ display: "flex", alignItems: "center", gap: "6px", background: pr.bg, padding: "5px 12px", borderRadius: "999px" }}>
                   <PrIcon style={{ width: "13px", height: "13px", color: "#fff" }} />
-                  <span style={{ fontSize: "12px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
                 </div>
               );
             })}
@@ -281,7 +281,7 @@ export default function ApresentacaoPage() {
           <Star style={{ width: "20px", height: "20px", color: "#003580" }} />
           <div>
             <h3 style={{ fontWeight: 800, fontSize: "16px", color: "#003580", margin: 0 }}>Funções Incluídas no Plano</h3>
-            <p style={{ fontSize: "12px", color: "#336699", margin: 0 }}>Disponíveis para todos os condomínios — {standardFeatures.length} funcionalidades</p>
+            <p style={{ fontSize: "13px", color: "#336699", margin: 0 }}>Disponíveis para todos os condomínios — {standardFeatures.length} funcionalidades</p>
           </div>
         </div>
 
@@ -300,15 +300,15 @@ export default function ApresentacaoPage() {
                 }}>
                   <Icon style={{ width: "20px", height: "20px", color: "#003580" }} />
                 </div>
-                <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#003580", marginBottom: "6px" }}>{f.title}</h3>
-                <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, flex: 1 }}>{f.desc}</p>
+                <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#003580", marginBottom: "6px" }}>{f.title}</h3>
+                <p style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.6, flex: 1 }}>{f.desc}</p>
                 <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", marginTop: "12px", paddingTop: "10px", borderTop: "1px solid #f1f5f9" }}>
                   {f.profiles.map((pk) => {
                     const pr = PROFILES[pk]; const PrIcon = pr.icon;
                     return (
                       <div key={pk} style={{ display: "flex", alignItems: "center", gap: "4px", background: pr.bg, padding: "3px 8px", borderRadius: "999px" }}>
                         <PrIcon style={{ width: "11px", height: "11px", color: "#fff" }} />
-                        <span style={{ fontSize: "10px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
+                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
                       </div>
                     );
                   })}
@@ -328,7 +328,7 @@ export default function ApresentacaoPage() {
           <Cpu style={{ width: "20px", height: "20px", color: "#7c3aed" }} />
           <div>
             <h3 style={{ fontWeight: 800, fontSize: "16px", color: "#7c3aed", margin: 0 }}>Módulos Extras</h3>
-            <p style={{ fontSize: "12px", color: "#8b5cf6", margin: 0 }}>
+            <p style={{ fontSize: "13px", color: "#8b5cf6", margin: 0 }}>
               Funcionalidades extras em preparação — <strong>DISPONÍVEL EM BREVE</strong>
             </p>
           </div>
@@ -351,7 +351,7 @@ export default function ApresentacaoPage() {
                   color: "#ffffff",
                   borderRadius: "999px",
                   padding: "4px 10px",
-                  fontSize: "10px",
+                  fontSize: "12px",
                   fontWeight: 800,
                   letterSpacing: "0.3px",
                 }}>
@@ -365,15 +365,15 @@ export default function ApresentacaoPage() {
                 }}>
                   <Icon style={{ width: "20px", height: "20px", color: "#003580" }} />
                 </div>
-                <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#003580", marginBottom: "6px" }}>{f.title}</h3>
-                <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, flex: 1 }}>{f.desc}</p>
+                <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#003580", marginBottom: "6px" }}>{f.title}</h3>
+                <p style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.6, flex: 1 }}>{f.desc}</p>
                 <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", marginTop: "12px", paddingTop: "10px", borderTop: "1px solid #f1f5f9" }}>
                   {f.profiles.map((pk) => {
                     const pr = PROFILES[pk]; const PrIcon = pr.icon;
                     return (
                       <div key={pk} style={{ display: "flex", alignItems: "center", gap: "4px", background: pr.bg, padding: "3px 8px", borderRadius: "999px" }}>
                         <PrIcon style={{ width: "11px", height: "11px", color: "#fff" }} />
-                        <span style={{ fontSize: "10px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
+                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#fff" }}>{pr.label}</span>
                       </div>
                     );
                   })}
@@ -415,20 +415,20 @@ export default function ApresentacaoPage() {
                     <Cpu style={{ width: "18px", height: "18px", color: "#003580" }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#003580", margin: 0 }}>{brand.name}</h3>
-                    <span style={{ fontSize: "11px", color: "#64748b" }}>{brand.country}</span>
+                    <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#003580", margin: 0 }}>{brand.name}</h3>
+                    <span style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>{brand.country}</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#f8fafc", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", color: "#64748b", fontWeight: 600 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#f8fafc", padding: "3px 8px", borderRadius: "999px", fontSize: "12px", color: "var(--muted-foreground)", fontWeight: 600 }}>
                     <IntegIcon style={{ width: "12px", height: "12px" }} />
                     {INTEGRATION_LABELS[brand.integrationType].split(" ")[0]}
                   </div>
                 </div>
-                <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, marginBottom: "12px" }}>{brand.description}</p>
+                <p style={{ fontSize: "14px", color: "var(--muted-foreground)", lineHeight: 1.6, marginBottom: "12px" }}>{brand.description}</p>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--muted-foreground)", display: "flex", alignItems: "center", gap: "4px" }}>
                     <Wrench style={{ width: "12px", height: "12px" }} /> Dificuldade
                   </span>
-                  <span style={{ fontSize: "12px", fontWeight: 700, color: diffColor }}>{brand.difficulty}/10 — {diffLabel}</span>
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: diffColor }}>{brand.difficulty}/10 — {diffLabel}</span>
                 </div>
                 <div style={{ width: "100%", height: "5px", borderRadius: "999px", background: "#f1f5f9", overflow: "hidden", marginTop: "6px" }}>
                   <div style={{ width: `${brand.difficulty * 10}%`, height: "100%", borderRadius: "999px", background: diffColor }} />
@@ -458,13 +458,13 @@ export default function ApresentacaoPage() {
             }}>
               <h3 style={{ fontWeight: 800, fontSize: "18px", color: "#003580", marginBottom: "16px" }}>{plan.name}</h3>
               <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginBottom: "20px" }}>
-                <span style={{ fontSize: "14px", color: "#003580" }}>R$</span>
+                <span style={{ fontSize: "15px", color: "#003580" }}>R$</span>
                 <span style={{ fontSize: "44px", fontWeight: 900, color: "#003580", lineHeight: 1 }}>{plan.price}</span>
-                <span style={{ fontSize: "14px", color: "#003580" }}>/mês</span>
+                <span style={{ fontSize: "15px", color: "#003580" }}>/mês</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {planFeatures.map((f) => (
-                  <div key={f} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "13px", color: "#003580" }}>
+                  <div key={f} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "14px", color: "#003580" }}>
                     <Check style={{ width: "15px", height: "15px", color: "#10b981", flexShrink: 0 }} /> {f}
                   </div>
                 ))}
@@ -488,10 +488,10 @@ export default function ApresentacaoPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "700px", margin: "0 auto" }}>
           {faqs.map((faq) => (
             <div key={faq.q} className="print-section" style={{ border: "1.5px solid #e2e8f0", borderRadius: "12px", overflow: "hidden" }}>
-              <div style={{ background: "#f8fafc", padding: "14px 18px", fontWeight: 700, fontSize: "15px", color: "#003580" }}>
+              <div style={{ background: "#f8fafc", padding: "14px 18px", fontWeight: 700, fontSize: "16px", color: "#003580" }}>
                 {faq.q}
               </div>
-              <div style={{ padding: "14px 18px", fontSize: "14px", color: "#475569", lineHeight: 1.7 }}>
+              <div style={{ padding: "14px 18px", fontSize: "15px", color: "var(--muted-foreground)", lineHeight: 1.7 }}>
                 {faq.a}
               </div>
             </div>
@@ -509,24 +509,24 @@ export default function ApresentacaoPage() {
         padding: "48px 32px", textAlign: "center", color: "#ffffff",
       }}>
         <h2 style={{ fontWeight: 900, fontSize: "24px", marginBottom: "12px" }}>Entre em contato</h2>
-        <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.8)", marginBottom: "24px" }}>
+        <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.8)", marginBottom: "24px" }}>
           Teste grátis por 7 dias. Fale conosco e transforme a portaria do seu condomínio.
         </p>
         <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "32px" }}>
-          <div style={{ border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "10px", padding: "12px 24px", fontSize: "15px", fontWeight: 600 }}>
+          <div style={{ border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "10px", padding: "12px 24px", fontSize: "16px", fontWeight: 600 }}>
             📱 (11) 93328-4364
           </div>
-          <div style={{ border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "10px", padding: "12px 24px", fontSize: "15px", fontWeight: 600 }}>
+          <div style={{ border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "10px", padding: "12px 24px", fontSize: "16px", fontWeight: 600 }}>
             🌐 www.portariax.com.br
           </div>
         </div>
-        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>© 2026 Portaria X — APP GROUP LTDA-ME</p>
+        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)" }}>© 2026 Portaria X — APP GROUP LTDA-ME</p>
       </section>
 
       {/* ═══ BOTTOM ACTION BAR ═══ */}
       <div className="no-print" style={{
         position: "sticky", bottom: 0, zIndex: 100,
-        background: "#ffffff", borderTop: "1px solid #e2e8f0",
+        background: "var(--color-card, #fff)", borderTop: "1px solid #e2e8f0",
         padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "center",
         gap: "10px", flexWrap: "wrap",
       }}>
@@ -534,7 +534,7 @@ export default function ApresentacaoPage() {
           display: "flex", alignItems: "center", gap: "6px",
           padding: "12px 24px", borderRadius: "10px",
           background: "linear-gradient(135deg, #0062d1, #003580)", border: "none",
-          color: "#ffffff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+          color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
           <Printer style={{ width: "16px", height: "16px" }} /> Imprimir / Salvar PDF
         </button>
@@ -542,7 +542,7 @@ export default function ApresentacaoPage() {
           display: "flex", alignItems: "center", gap: "6px",
           padding: "12px 24px", borderRadius: "10px",
           background: copied ? "#10b981" : "#f8fafc", border: "1px solid #e2e8f0",
-          color: copied ? "#ffffff" : "#003580", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+          color: copied ? "#ffffff" : "#003580", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
           <Share2 style={{ width: "16px", height: "16px" }} /> {copied ? "Link Copiado!" : "Compartilhar Link"}
         </button>
@@ -550,7 +550,7 @@ export default function ApresentacaoPage() {
           display: "flex", alignItems: "center", gap: "6px",
           padding: "12px 24px", borderRadius: "10px",
           background: "#25D366", border: "none",
-          color: "#ffffff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+          color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
           <MessageCircle style={{ width: "16px", height: "16px" }} /> Enviar via WhatsApp
         </button>

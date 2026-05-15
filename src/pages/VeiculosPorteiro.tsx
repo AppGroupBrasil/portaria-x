@@ -103,7 +103,7 @@ function getTabButtonStyle(isSelected: boolean, isDark: boolean) {
     background: isSelected ? activeBackground : inactiveBackground,
     color: isSelected ? activeColor : inactiveColor,
     fontWeight: 600,
-    fontSize: "12px",
+    fontSize: "13px",
     cursor: "pointer",
   } as const;
 }
@@ -622,10 +622,10 @@ export default function VeiculosPorteiro() {
       >
         <div className="flex items-center gap-4">
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <Car className="w-6 h-6" />
+            <Car className="w-7 h-7" />
             <div>
               <h1 style={{ fontWeight: 700, fontSize: 18 }}>Acesso Veículos</h1>
               <p style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }}>Gerenciar autorizações de veículos</p>
@@ -639,7 +639,7 @@ export default function VeiculosPorteiro() {
               <TStep n={1}>Morador abre o app e vai em <strong>"Meus Veiculos"</strong></TStep>
               <TStep n={2}>Cadastra o veiculo com <strong>placa, modelo, cor e tipo</strong></TStep>
               <TStep n={3}>O veiculo chega na sua tela com status <strong>"Pendente"</strong></TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Sua acao:</strong> Revise os dados (placa, modelo, cor). Se estiver correto, toque em <strong>"Aprovar"</strong>. Se os dados estiverem errados, toque em <strong>"Recusar"</strong> e o morador pode corrigir.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Sua acao:</strong> Revise os dados (placa, modelo, cor). Se estiver correto, toque em <strong>"Aprovar"</strong>. Se os dados estiverem errados, toque em <strong>"Recusar"</strong> e o morador pode corrigir.</p>
             </FlowMorador>
             <FlowPortaria>
               <TStep n={1}>Veiculo chega no portao do condominio</TStep>
@@ -647,7 +647,7 @@ export default function VeiculosPorteiro() {
               <TStep n={3}>O sistema mostra se o veiculo e <strong>autorizado</strong> (verde) ou <strong>desconhecido</strong> (vermelho)</TStep>
               <TStep n={4}>Se autorizado, toque em <strong>"Registrar Entrada"</strong> e abra o portao</TStep>
               <TStep n={5}>Na saida do veiculo, toque em <strong>"Registrar Saida"</strong></TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> No app, o historico de entradas e saidas do veiculo com data e hora.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> No app, o historico de entradas e saidas do veiculo com data e hora.</p>
             </FlowPortaria>
             <TSection icon={<span>🔍</span>} title="STATUS DOS VEICULOS">
               <TBullet><strong style={{ color: "#d97706" }}>Pendente</strong> — Morador cadastrou, aguardando sua aprovacao</TBullet>
@@ -673,7 +673,7 @@ export default function VeiculosPorteiro() {
 
         {/* Search */}
         <div style={{ marginTop: "12px", position: "relative" }}>
-          <Search className="w-4 h-4" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: p.textDim }} />
+          <Search className="w-5 h-5" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: p.textDim }} />
           <input
             type="text"
             value={searchTerm}
@@ -682,7 +682,7 @@ export default function VeiculosPorteiro() {
             style={{
               width: "100%", padding: "10px 12px 10px 36px", borderRadius: "12px",
               border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1", background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8",
-              color: p.text, fontSize: "13px", outline: "none", boxSizing: "border-box",
+              color: p.text, fontSize: "14px", outline: "none", boxSizing: "border-box",
             }}
           />
         </div>
@@ -708,22 +708,22 @@ export default function VeiculosPorteiro() {
             style={{
               marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
-              background: "#fff",
-              color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+              background: "var(--color-card, #fff)",
+              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
-            <FileText className="w-4 h-4" /> Relatório
+            <FileText className="w-5 h-5" /> Relatório
           </button>
           <button
             onClick={() => setShowSettings(true)}
             style={{
               display: "flex", alignItems: "center", justifyContent: "center",
               padding: "10px", borderRadius: "8px", border: "2px solid #64748b",
-              background: "#fff", color: "#64748b", cursor: "pointer",
+              background: "var(--color-card, #fff)", color: "var(--muted-foreground)", cursor: "pointer",
             }}
             title="Configurações - Campos obrigatórios"
           >
-            <Settings className="w-5 h-5" />
+            <Settings className="w-6 h-6" />
           </button>
         </div>
       </header>
@@ -755,11 +755,11 @@ export default function VeiculosPorteiro() {
                 color: isDark ? "#f1f5f9" : "#0c4a6e",
                 display: "flex", alignItems: "center", gap: "12px",
               }}>
-                <Settings className="w-5 h-5" style={{ color: "#64748b" }} />
+                <Settings className="w-6 h-6" style={{ color: "var(--muted-foreground)" }} />
                 Campos do Cadastro
               </h3>
               <button onClick={() => setShowSettings(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
-                <X className="w-5 h-5" style={{ color: "#64748b" }} />
+                <X className="w-6 h-6" style={{ color: "var(--muted-foreground)" }} />
               </button>
             </div>
 
@@ -769,12 +769,12 @@ export default function VeiculosPorteiro() {
               padding: "14px 16px", borderRadius: "12px",
               ...getConfigCardStyle(uniquePlateEnabled, isDark, "#f0fdf4", "rgba(34,197,94,0.12)", "#bbf7d0", "rgba(34,197,94,0.3)"),
             }}>
-              <ShieldCheck className="w-5 h-5" style={{ color: uniquePlateEnabled ? "#16a34a" : "#94a3b8", flexShrink: 0 }} />
+              <ShieldCheck className="w-6 h-6" style={{ color: uniquePlateEnabled ? "#16a34a" : "#94a3b8", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "13px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#1e293b" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#1e293b" }}>
                   Placa única por vez
                 </div>
-                <div style={{ fontSize: "11px", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
+                <div style={{ fontSize: "12px", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
                   Só permitir cadastrar a mesma placa após dar baixa na atual
                 </div>
               </div>
@@ -790,7 +790,7 @@ export default function VeiculosPorteiro() {
               >
                 <div style={{
                   width: "22px", height: "22px", borderRadius: "50%",
-                  background: "#fff", position: "absolute", top: "2px",
+                  background: "var(--color-card, #fff)", position: "absolute", top: "2px",
                   left: uniquePlateEnabled ? "24px" : "2px",
                   transition: "left 0.2s",
                   boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
@@ -804,12 +804,12 @@ export default function VeiculosPorteiro() {
               padding: "14px 16px", borderRadius: "12px",
               ...getConfigCardStyle(Boolean(autoCancelTime), isDark, "#fff7ed", "rgba(234,88,12,0.12)", "#fed7aa", "rgba(234,88,12,0.3)"),
             }}>
-              <Clock className="w-5 h-5" style={{ color: autoCancelTime ? "#ea580c" : "#94a3b8", flexShrink: 0 }} />
+              <Clock className="w-6 h-6" style={{ color: autoCancelTime ? "#ea580c" : "#94a3b8", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "13px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#1e293b" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#1e293b" }}>
                   Encerrar liberações do dia
                 </div>
-                <div style={{ fontSize: "11px", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
+                <div style={{ fontSize: "12px", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
                   Cancelar automaticamente após o horário
                 </div>
               </div>
@@ -822,7 +822,7 @@ export default function VeiculosPorteiro() {
                   border: "1px solid " + (isDark ? "#475569" : "#cbd5e1"),
                   background: isDark ? "#0f172a" : "#fff",
                   color: isDark ? "#f1f5f9" : "#1e293b",
-                  fontSize: "14px", fontWeight: 600, width: "100px",
+                  fontSize: "15px", fontWeight: 600, width: "100px",
                   outline: "none",
                 }}
               />
@@ -832,7 +832,7 @@ export default function VeiculosPorteiro() {
                   style={{ background: "none", border: "none", cursor: "pointer", padding: "2px" }}
                   title="Remover horário"
                 >
-                  <X className="w-4 h-4" style={{ color: "#ef4444" }} />
+                  <X className="w-5 h-5" style={{ color: "#ef4444" }} />
                 </button>
               )}
             </div>
@@ -845,12 +845,12 @@ export default function VeiculosPorteiro() {
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 padding: "12px 16px", borderRadius: "12px",
                 background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-                border: "none", color: "#fff", fontWeight: 700, fontSize: "13px",
+                border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
                 cursor: cancellingDay ? "wait" : "pointer",
                 opacity: cancellingDay ? 0.7 : 1,
               }}
             >
-              <Ban className="w-4 h-4" />
+              <Ban className="w-5 h-5" />
               {cancellingDay ? "Encerrando..." : "Encerrar todas liberações do dia agora"}
             </button>
 
@@ -860,12 +860,12 @@ export default function VeiculosPorteiro() {
               padding: "14px 16px", borderRadius: "12px",
               ...getConfigCardStyle(limitPerAptEnabled, isDark, "#eff6ff", "rgba(59,130,246,0.12)", "#bfdbfe", "rgba(59,130,246,0.3)"),
             }}>
-              <Car className="w-5 h-5" style={{ color: limitPerAptEnabled ? "#2563eb" : "#94a3b8", flexShrink: 0 }} />
+              <Car className="w-6 h-6" style={{ color: limitPerAptEnabled ? "#2563eb" : "#94a3b8", flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "13px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#1e293b" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#1e293b" }}>
                   Limitar veículos por unidade
                 </div>
-                <div style={{ fontSize: "11px", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
+                <div style={{ fontSize: "12px", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
                   Máximo de veículos ativos por apartamento
                 </div>
               </div>
@@ -881,7 +881,7 @@ export default function VeiculosPorteiro() {
               >
                 <div style={{
                   width: "22px", height: "22px", borderRadius: "50%",
-                  background: "#fff", position: "absolute", top: "2px",
+                  background: "var(--color-card, #fff)", position: "absolute", top: "2px",
                   left: limitPerAptEnabled ? "24px" : "2px",
                   transition: "left 0.2s",
                   boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
@@ -895,7 +895,7 @@ export default function VeiculosPorteiro() {
                 background: isDark ? "rgba(59,130,246,0.08)" : "#f0f7ff",
                 border: "1px solid " + (isDark ? "rgba(59,130,246,0.2)" : "#dbeafe"),
               }}>
-                <span style={{ fontSize: "13px", fontWeight: 600, color: isDark ? "#93c5fd" : "#1e40af", flex: 1 }}>
+                <span style={{ fontSize: "14px", fontWeight: 600, color: isDark ? "#93c5fd" : "#1e40af", flex: 1 }}>
                   Quantidade máxima
                 </span>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -942,7 +942,7 @@ export default function VeiculosPorteiro() {
 
             <div style={{ width: "100%", height: "1px", background: isDark ? "rgba(255,255,255,0.1)" : "#e2e8f0" }} />
 
-            <p style={{ fontSize: "13px", color: isDark ? "#94a3b8" : "#64748b", margin: 0 }}>
+            <p style={{ fontSize: "14px", color: isDark ? "#94a3b8" : "#64748b", margin: 0 }}>
               Campos marcados com <KeyRound className="w-3.5 h-3.5" style={{ display: "inline", verticalAlign: "middle", color: "#d97706" }} /> são <strong>obrigatórios</strong>. Toque nos campos opcionais para torná-los obrigatórios.
             </p>
 
@@ -973,7 +973,7 @@ export default function VeiculosPorteiro() {
                 const statusLabelStyle = field.required
                   ? {
                       marginLeft: "auto",
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 700,
                       color: "#d97706",
                       background: isDark ? "rgba(217,119,6,0.2)" : "#fef3c7",
@@ -982,7 +982,7 @@ export default function VeiculosPorteiro() {
                     }
                   : {
                       marginLeft: "auto",
-                      fontSize: "11px",
+                      fontSize: "12px",
                       fontWeight: 500,
                       color: isDark ? "#64748b" : "#94a3b8",
                     };
@@ -1010,12 +1010,12 @@ export default function VeiculosPorteiro() {
                   }}
                 >
                   {field.required ? (
-                    <KeyRound className="w-4 h-4" style={{ color: "#d97706", flexShrink: 0 }} />
+                    <KeyRound className="w-5 h-5" style={{ color: "#d97706", flexShrink: 0 }} />
                   ) : (
                     <span style={{ width: "16px", height: "16px", borderRadius: "4px", flexShrink: 0, border: `2px solid ${isDark ? "#475569" : "#cbd5e1"}`, display: "inline-block" }} />
                   )}
                   <span style={{
-                    fontSize: "14px", fontWeight: field.required ? 700 : 500,
+                    fontSize: "15px", fontWeight: field.required ? 700 : 500,
                     color: labelColor,
                   }}>
                     {field.name}
@@ -1065,11 +1065,11 @@ export default function VeiculosPorteiro() {
             display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
             padding: "14px", borderRadius: "14px",
             background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-            border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1", color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
+            border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1", color: "#fff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
             width: "100%", boxShadow: "0 4px 12px rgba(14,165,233,0.3)",
           }}
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-6 h-6" />
           Cadastrar Veículo
         </button>
 
@@ -1080,19 +1080,19 @@ export default function VeiculosPorteiro() {
             border: "2px solid #0ea5e920", display: "flex", flexDirection: "column", gap: "14px",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0c4a6e", display: "flex", alignItems: "center", gap: "12px" }}>
-                <Car className="w-5 h-5" style={{ color: "#0ea5e9" }} />
+              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)", display: "flex", alignItems: "center", gap: "12px" }}>
+                <Car className="w-6 h-6" style={{ color: "#0ea5e9" }} />
                 Cadastrar Veículo
               </h3>
               <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
-                <X className="w-5 h-5" style={{ color: "#64748b" }} />
+                <X className="w-6 h-6" style={{ color: "var(--muted-foreground)" }} />
               </button>
             </div>
 
             {formError && (
               <div style={{
                 padding: "10px 14px", borderRadius: "10px", background: "#fef2f2",
-                border: "1px solid #fecaca", color: "#b91c1c", fontSize: "13px", fontWeight: 500,
+                border: "1px solid #fecaca", color: "#b91c1c", fontSize: "14px", fontWeight: 500,
               }}>
                 {formError}
               </div>
@@ -1100,14 +1100,14 @@ export default function VeiculosPorteiro() {
 
             {/* Placa + Buscar */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Placa *</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Placa *</span>
               <div style={{ display: "flex", gap: "12px", alignItems: "stretch" }}>
                 <input type="text" value={placa} onChange={(e) => handlePlacaChange(e.target.value)} placeholder="ABC1D23"
                   maxLength={7}
                   onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleBuscarPlaca(); } }}
                   style={{
                     flex: 1, padding: "14px", borderRadius: "12px", border: "2px solid #0ea5e9",
-                    fontSize: "22px", background: "#f0f9ff", color: "#0c4a6e", outline: "none",
+                    fontSize: "22px", background: "#f0f9ff", color: "var(--card-foreground)", outline: "none",
                     boxSizing: "border-box", fontWeight: 800, letterSpacing: "4px", textAlign: "center",
                     fontFamily: "monospace", textTransform: "uppercase",
                   }} />
@@ -1118,7 +1118,7 @@ export default function VeiculosPorteiro() {
                   style={{
                     padding: "0 20px", borderRadius: "12px", border: "none",
                     background: searchingPlate ? "#94a3b8" : "#003580",
-                    color: "#fff", fontWeight: 700, fontSize: "14px", cursor: searchingPlate ? "wait" : "pointer",
+                    color: "#fff", fontWeight: 700, fontSize: "15px", cursor: searchingPlate ? "wait" : "pointer",
                     display: "flex", alignItems: "center", gap: "6px", whiteSpace: "nowrap",
                     boxShadow: "0 2px 8px rgba(14,165,233,0.3)",
                     opacity: placa.replaceAll(/[^A-Za-z0-9]/g, "").length < 3 ? 0.5 : 1,
@@ -1126,9 +1126,9 @@ export default function VeiculosPorteiro() {
                   }}
                 >
                   {searchingPlate ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    <Search className="w-4 h-4" />
+                    <Search className="w-5 h-5" />
                   )}
                   Buscar
                 </button>
@@ -1147,7 +1147,7 @@ export default function VeiculosPorteiro() {
                   <div style={{
                     position: "absolute", top: "6px", right: "6px", display: "flex", alignItems: "center", gap: "4px",
                     padding: "4px 10px", borderRadius: "8px", background: "rgba(34,197,94,0.9)",
-                    color: "#fff", fontSize: "11px", fontWeight: 600,
+                    color: "#fff", fontSize: "12px", fontWeight: 600,
                   }}>
                     ✅ Foto anexada
                   </div>
@@ -1159,10 +1159,10 @@ export default function VeiculosPorteiro() {
             {searchingPlate && (
               <div style={{
                 padding: "10px 14px", borderRadius: "10px", background: "#f0f9ff",
-                border: "1px solid #bae6fd", color: "#0369a1", fontSize: "13px", fontWeight: 500,
+                border: "1px solid #bae6fd", color: "#0369a1", fontSize: "14px", fontWeight: 500,
                 display: "flex", alignItems: "center", gap: "12px",
               }}>
-                <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#0ea5e9" }} />
+                <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#0ea5e9" }} />
                 Buscando veículo no sistema...
               </div>
             )}
@@ -1171,10 +1171,10 @@ export default function VeiculosPorteiro() {
             {plateNotFound && !searchingPlate && !plateFound && (
               <div style={{
                 padding: "10px 14px", borderRadius: "10px", background: "#fffbeb",
-                border: "1px solid #fde68a", color: "#92400e", fontSize: "13px", fontWeight: 500,
+                border: "1px solid #fde68a", color: "#92400e", fontSize: "14px", fontWeight: 500,
                 display: "flex", alignItems: "center", gap: "12px",
               }}>
-                <Car className="w-4 h-4" style={{ color: "#d97706" }} />
+                <Car className="w-5 h-5" style={{ color: "#d97706" }} />
                 Veículo não encontrado. Preencha os dados manualmente.
               </div>
             )}
@@ -1187,12 +1187,12 @@ export default function VeiculosPorteiro() {
                 border: "1px solid #86efac", display: "flex", flexDirection: "column", gap: "6px",
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <CheckCircle2 className="w-4 h-4" style={{ color: "#16a34a" }} />
-                  <span style={{ fontWeight: 700, fontSize: "13px", color: "#15803d" }}>
+                  <CheckCircle2 className="w-5 h-5" style={{ color: "#16a34a" }} />
+                  <span style={{ fontWeight: 700, fontSize: "14px", color: "#15803d" }}>
                     Veículo encontrado no sistema!
                   </span>
                 </div>
-                <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: "1.5" }}>
+                <p style={{ fontSize: "13px", color: "#166534", margin: 0, lineHeight: "1.5" }}>
                   Dados preenchidos automaticamente. Confira e clique em <strong>Enviar</strong>.
                   {plateFound.morador_name && (
                     <span> — Último morador: <strong>{plateFound.morador_name}</strong>
@@ -1206,27 +1206,27 @@ export default function VeiculosPorteiro() {
             {/* Modelo + Cor */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Modelo{reqModelo ? " *" : ""}</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Modelo{reqModelo ? " *" : ""}</span>
                 <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ex: Civic, Onix..."
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)", color: "var(--card-foreground)", outline: "none", boxSizing: "border-box" }} />
               </div>
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Cor{reqCor ? " *" : ""}</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Cor{reqCor ? " *" : ""}</span>
                 <input type="text" value={cor} onChange={(e) => setCor(e.target.value)} placeholder="Ex: Preto, Branco..."
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)", color: "var(--card-foreground)", outline: "none", boxSizing: "border-box" }} />
               </div>
             </div>
 
             {/* Motorista */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Nome do Motorista{reqMotorista ? " *" : ""}</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Nome do Motorista{reqMotorista ? " *" : ""}</span>
               <input type="text" value={motorista} onChange={(e) => setMotorista(e.target.value)} placeholder="Nome completo do motorista"
-                style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
+                style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)", color: "var(--card-foreground)", outline: "none", boxSizing: "border-box" }} />
             </div>
 
             {/* Bloco */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Bloco *</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Bloco *</span>
               <select
                 value={bloco}
                 onChange={(e) => {
@@ -1235,7 +1235,7 @@ export default function VeiculosPorteiro() {
                   setSelectedMoradorId("");
                   fetchMoradoresBloco(e.target.value);
                 }}
-                style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box", cursor: "pointer" }}
+                style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)", color: "var(--card-foreground)", outline: "none", boxSizing: "border-box", cursor: "pointer" }}
               >
                 <option value="">Selecione o bloco</option>
                 {blocks.map((b) => (
@@ -1247,7 +1247,7 @@ export default function VeiculosPorteiro() {
             {/* Morador (dropdown com busca) */}
             {bloco && moradores.length > 0 && (
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Morador</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Morador</span>
                 <SearchableSelect
                   value={selectedMoradorId}
                   onChange={(val) => handleSelectMorador(val)}
@@ -1265,18 +1265,18 @@ export default function VeiculosPorteiro() {
             {/* Apartamento — só aparece se NÃO selecionou morador (fallback manual) */}
             {!selectedMoradorId && (
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Apartamento *</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Apartamento *</span>
                 <input type="text" value={apartamento} onChange={(e) => setApartamento(e.target.value)} placeholder="Ex: 101"
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box" }} />
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)", color: "var(--card-foreground)", outline: "none", boxSizing: "border-box" }} />
               </div>
             )}
 
             {/* Observação */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b", marginBottom: "6px", display: "block" }}>Observação{reqObservacao ? " *" : " (portaria)"}</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", marginBottom: "6px", display: "block" }}>Observação{reqObservacao ? " *" : " (portaria)"}</span>
               <textarea value={observacao} onChange={(e) => setObservacao(e.target.value)} placeholder="Informações adicionais..."
                 rows={3}
-                style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff", color: "#0f172a", outline: "none", boxSizing: "border-box", resize: "vertical" }} />
+                style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)", color: "var(--card-foreground)", outline: "none", boxSizing: "border-box", resize: "vertical" }} />
             </div>
 
             {/* Submit */}
@@ -1287,12 +1287,12 @@ export default function VeiculosPorteiro() {
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
                 padding: "14px", borderRadius: "14px",
                 background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
+                border: "none", color: "#fff", fontWeight: 700, fontSize: "16px",
                 cursor: saving ? "not-allowed" : "pointer", width: "100%",
                 opacity: saving ? 0.7 : 1,
               }}
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-6 h-6" />
               {saving ? "Cadastrando..." : "Cadastrar e Notificar Morador"}
             </button>
           </div>
@@ -1307,7 +1307,7 @@ export default function VeiculosPorteiro() {
         {!loading && filtered.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 24px", gap: "16px", textAlign: "center" }}>
             <Car className="w-16 h-16" style={{ color: "#cbd5e1" }} />
-            <p style={{ fontSize: "15px", color: "#64748b", fontWeight: 500 }}>
+            <p style={{ fontSize: "16px", color: "var(--muted-foreground)", fontWeight: 500 }}>
               Nenhuma autorização {filter === "ativa" ? "ativa" : filter === "utilizada" ? "utilizada" : ""}.
             </p>
           </div>
@@ -1341,17 +1341,17 @@ export default function VeiculosPorteiro() {
                   <div style={{
                     padding: "10px 16px", borderRadius: "12px",
                     background: "#f0f9ff", border: "2px solid #0ea5e9",
-                    fontWeight: 800, fontSize: "20px", color: "#0c4a6e",
+                    fontWeight: 800, fontSize: "20px", color: "var(--card-foreground)",
                     letterSpacing: "3px", fontFamily: "monospace",
                   }}>
                     {v.placa}
                   </div>
                   <div>
-                    <p style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a" }}>
+                    <p style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)" }}>
                       {v.modelo || "Veículo"} {v.cor ? `· ${v.cor}` : ""}
                     </p>
                     {v.motorista_nome && (
-                      <p style={{ fontSize: "12px", color: "#64748b" }}>🧑 {v.motorista_nome}</p>
+                      <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>🧑 {v.motorista_nome}</p>
                     )}
                   </div>
                 </div>
@@ -1360,8 +1360,8 @@ export default function VeiculosPorteiro() {
               {/* ── Morador info ── */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
-                  <p style={{ fontWeight: 600, fontSize: "13px", color: "#1e293b" }}>{v.morador_name}</p>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>
+                  <p style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)" }}>{v.morador_name}</p>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>
                     {v.bloco && `Bloco ${v.bloco}`} {v.apartamento && `· Apto ${v.apartamento}`}
                   </p>
                 </div>
@@ -1373,7 +1373,7 @@ export default function VeiculosPorteiro() {
                         display: "flex", alignItems: "center", gap: "6px",
                         padding: "8px 14px", borderRadius: "10px",
                         background: "#dcfce7", border: "none",
-                        color: "#15803d", fontWeight: 600, fontSize: "12px", cursor: "pointer",
+                        color: "#15803d", fontWeight: 600, fontSize: "13px", cursor: "pointer",
                       }}
                     >
                       <Phone className="w-3.5 h-3.5" /> Ligar
@@ -1390,7 +1390,7 @@ export default function VeiculosPorteiro() {
                         display: "flex", alignItems: "center", gap: "6px",
                         padding: "8px 14px", borderRadius: "10px",
                         background: "#25d366", border: "none",
-                        color: "#ffffff", fontWeight: 600, fontSize: "12px", cursor: "pointer",
+                        color: "#ffffff", fontWeight: 600, fontSize: "13px", cursor: "pointer",
                       }}
                     >
                       <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
@@ -1401,7 +1401,7 @@ export default function VeiculosPorteiro() {
 
               {/* ── Dates ── */}
               {!pendente && (
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "12px", color: "#475569" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "13px", color: "var(--muted-foreground)" }}>
                   <Clock className="w-3.5 h-3.5" />
                   {formatDate(v.data_inicio)} até {formatDate(v.data_fim)}
                   {v.hora_inicio && v.hora_fim && ` · ${v.hora_inicio} - ${v.hora_fim}`}
@@ -1414,82 +1414,82 @@ export default function VeiculosPorteiro() {
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#fef3c7", color: "#b45309", fontSize: "11px", fontWeight: 600,
+                    background: "#fef3c7", color: "#b45309", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <Hourglass className="w-3 h-3" /> Aguardando aprovação do morador
+                    <Hourglass className="w-4 h-4" /> Aguardando aprovação do morador
                   </span>
                 )}
                 {negada && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#fecaca", color: "#b91c1c", fontSize: "11px", fontWeight: 600,
+                    background: "#fecaca", color: "#b91c1c", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <Ban className="w-3 h-3" /> Acesso negado pelo morador
+                    <Ban className="w-4 h-4" /> Acesso negado pelo morador
                   </span>
                 )}
                 {active && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: 600,
+                    background: "#dcfce7", color: "#15803d", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <Shield className="w-3 h-3" /> Ativa
+                    <Shield className="w-4 h-4" /> Ativa
                   </span>
                 )}
                 {entrou && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#e0f2fe", color: "#0369a1", fontSize: "11px", fontWeight: 600,
+                    background: "#e0f2fe", color: "#0369a1", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <LogIn className="w-3 h-3" /> Entrada {formatDateTime(v.entrada_confirmada_at!)}
+                    <LogIn className="w-4 h-4" /> Entrada {formatDateTime(v.entrada_confirmada_at!)}
                   </span>
                 )}
                 {needsExitAuth && !saidaAutorizada && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#fef3c7", color: "#b45309", fontSize: "11px", fontWeight: 600,
+                    background: "#fef3c7", color: "#b45309", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <LogOutIcon className="w-3 h-3" /> Saída requer autorização
+                    <LogOutIcon className="w-4 h-4" /> Saída requer autorização
                   </span>
                 )}
                 {saidaSolicitada && !saidaAutorizada && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#fecaca", color: "#b91c1c", fontSize: "11px", fontWeight: 600,
+                    background: "#fecaca", color: "#b91c1c", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <Clock className="w-3 h-3" /> Saída solicitada — aguardando
+                    <Clock className="w-4 h-4" /> Saída solicitada — aguardando
                   </span>
                 )}
                 {saidaAutorizada && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#dcfce7", color: "#15803d", fontSize: "11px", fontWeight: 600,
+                    background: "#dcfce7", color: "#15803d", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <CheckCircle2 className="w-3 h-3" /> Saída autorizada
+                    <CheckCircle2 className="w-4 h-4" /> Saída autorizada
                   </span>
                 )}
                 {isExpired(v) && (
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: "4px",
                     padding: "3px 10px", borderRadius: "20px",
-                    background: "#f1f5f9", color: "#64748b", fontSize: "11px", fontWeight: 600,
+                    background: "#f1f5f9", color: "var(--muted-foreground)", fontSize: "12px", fontWeight: 600,
                   }}>
-                    <XCircle className="w-3 h-3" /> Expirada
+                    <XCircle className="w-4 h-4" /> Expirada
                   </span>
                 )}
               </div>
 
               {v.observacao && (
-                <p style={{ fontSize: "12px", color: "#64748b", fontStyle: "italic" }}>💬 Portaria: {v.observacao}</p>
+                <p style={{ fontSize: "13px", color: "var(--muted-foreground)", fontStyle: "italic" }}>💬 Portaria: {v.observacao}</p>
               )}
 
               {v.morador_observacao && (
-                <p style={{ fontSize: "12px", color: "#0369a1", fontStyle: "italic", background: "#e0f2fe", padding: "8px 12px", borderRadius: "10px" }}>
+                <p style={{ fontSize: "13px", color: "#0369a1", fontStyle: "italic", background: "#e0f2fe", padding: "8px 12px", borderRadius: "10px" }}>
                   🏠 Morador: {v.morador_observacao}
                 </p>
               )}
@@ -1507,11 +1507,11 @@ export default function VeiculosPorteiro() {
                         display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                         padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                        border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                        border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                         cursor: "pointer", width: "100%", opacity: isLoading ? 0.7 : 1,
                       }}
                     >
-                      <LogIn className="w-4 h-4" />
+                      <LogIn className="w-5 h-5" />
                       {isLoading ? "Confirmando..." : "Confirmar Entrada"}
                     </button>
                   )}
@@ -1525,11 +1525,11 @@ export default function VeiculosPorteiro() {
                         display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                         padding: "14px 16px", borderRadius: "12px",
                         background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
-                        border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                        border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                         cursor: "pointer", width: "100%", opacity: isLoading ? 0.7 : 1,
                       }}
                     >
-                      <MessageCircle className="w-4 h-4" />
+                      <MessageCircle className="w-5 h-5" />
                       {isLoading ? "Enviando..." : "Solicitar Liberação de Saída"}
                     </button>
                   )}
@@ -1544,10 +1544,10 @@ export default function VeiculosPorteiro() {
                           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                           padding: "14px 16px", borderRadius: "12px",
                           background: "#fef3c7", border: "1px solid #fbbf24",
-                          color: "#b45309", fontWeight: 600, fontSize: "13px", cursor: "pointer",
+                          color: "#b45309", fontWeight: 600, fontSize: "14px", cursor: "pointer",
                         }}
                       >
-                        <MessageCircle className="w-4 h-4" />
+                        <MessageCircle className="w-5 h-5" />
                         Reenviar Solicitação
                       </button>
                       <button
@@ -1557,10 +1557,10 @@ export default function VeiculosPorteiro() {
                           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                           padding: "14px 16px", borderRadius: "12px",
                           background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                          border: "none", color: "#fff", fontWeight: 600, fontSize: "13px", cursor: "pointer",
+                          border: "none", color: "#fff", fontWeight: 600, fontSize: "14px", cursor: "pointer",
                         }}
                       >
-                        <CheckCircle2 className="w-4 h-4" />
+                        <CheckCircle2 className="w-5 h-5" />
                         Liberar Saída
                       </button>
                     </div>
@@ -1572,9 +1572,9 @@ export default function VeiculosPorteiro() {
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                       padding: "14px 16px", borderRadius: "12px",
                       background: "#dcfce7", border: "1px solid #86efac",
-                      color: "#15803d", fontWeight: 700, fontSize: "14px",
+                      color: "#15803d", fontWeight: 700, fontSize: "15px",
                     }}>
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-5 h-5" />
                       Saida Liberada — Pode sair
                     </div>
                   )}
@@ -1590,11 +1590,11 @@ export default function VeiculosPorteiro() {
                     display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     width: "100%", padding: "14px 16px", borderRadius: "12px",
                     background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-                    border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                    border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                     cursor: "pointer", opacity: isLoading ? 0.7 : 1,
                   }}
                 >
-                  <LogOutIcon className="w-4 h-4" />
+                  <LogOutIcon className="w-5 h-5" />
                   {isLoading ? "Registrando..." : "Registrar Saída"}
                 </button>
               )}
@@ -1606,11 +1606,11 @@ export default function VeiculosPorteiro() {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                   width: "100%", padding: "8px", borderRadius: "10px", border: "2px solid #002a66",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                  color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                  color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer",
                   marginTop: "8px",
                 }}
               >
-                <Download className="w-3 h-3" /> Baixar PDF
+                <Download className="w-4 h-4" /> Baixar PDF
               </button>
             </div>
           );
@@ -1624,7 +1624,7 @@ export default function VeiculosPorteiro() {
           display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
         }} role="dialog" aria-modal="true" aria-label="Notificação via WhatsApp">
           <div style={{
-            background: "#fff", borderRadius: "20px", padding: "24px",
+            background: "var(--color-card, #fff)", borderRadius: "20px", padding: "24px",
             width: "100%", maxWidth: "400px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
           }}>
             {/* Header */}
@@ -1640,12 +1640,12 @@ export default function VeiculosPorteiro() {
                   </svg>
                 </div>
                 <div>
-                  <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>Cadastro Realizado!</h3>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>Revise o link e envie a notificação</p>
+                  <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>Cadastro Realizado!</h3>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Revise o link e envie a notificação</p>
                 </div>
               </div>
               <button onClick={() => setWhatsappModal(null)} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
-                <X className="w-5 h-5" style={{ color: "#94a3b8" }} />
+                <X className="w-6 h-6" style={{ color: "#94a3b8" }} />
               </button>
             </div>
 
@@ -1654,15 +1654,15 @@ export default function VeiculosPorteiro() {
               background: "#f0fdf4", borderRadius: "12px", padding: "14px",
               border: "1px solid #86efac", marginBottom: "16px",
             }}>
-              <p style={{ fontSize: "13px", color: "#15803d", fontWeight: 600 }}>
-                <CheckCircle2 className="w-4 h-4" style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} />
+              <p style={{ fontSize: "14px", color: "#15803d", fontWeight: 600 }}>
+                <CheckCircle2 className="w-5 h-5" style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} />
                 Veículo <strong>{whatsappModal.placaRegistrada}</strong> cadastrado com sucesso!
               </p>
-              <p style={{ fontSize: "12px", color: "#16a34a", marginTop: "4px" }}>
+              <p style={{ fontSize: "13px", color: "#16a34a", marginTop: "4px" }}>
                 Aguardando aprovação de <strong>{whatsappModal.moradorName}</strong>
               </p>
               {whatsappModal.moradorPhone && (
-                <p style={{ fontSize: "11px", color: "#15803d", marginTop: "4px" }}>
+                <p style={{ fontSize: "12px", color: "#15803d", marginTop: "4px" }}>
                   WhatsApp: {whatsappModal.moradorPhone}
                 </p>
               )}
@@ -1670,7 +1670,7 @@ export default function VeiculosPorteiro() {
 
             {/* Approval link */}
             <div style={{ marginBottom: "16px" }}>
-              <span style={{ fontWeight: 600, fontSize: "12px", color: "#475569", marginBottom: "6px", display: "block" }}>
+              <span style={{ fontWeight: 600, fontSize: "13px", color: "var(--muted-foreground)", marginBottom: "6px", display: "block" }}>
                 Link de aprovação:
               </span>
               <div style={{
@@ -1683,7 +1683,7 @@ export default function VeiculosPorteiro() {
                   value={whatsappModal.approvalUrl}
                   style={{
                     flex: 1, background: "transparent", border: "none", outline: "none",
-                    fontSize: "11px", color: "#475569", fontFamily: "monospace",
+                    fontSize: "12px", color: "var(--muted-foreground)", fontFamily: "monospace",
                   }}
                 />
                 <button
@@ -1691,7 +1691,7 @@ export default function VeiculosPorteiro() {
                   title="Copiar link"
                   style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}
                 >
-                  <Copy className="w-4 h-4" style={{ color: "#6366f1" }} />
+                  <Copy className="w-5 h-5" style={{ color: "#6366f1" }} />
                 </button>
               </div>
             </div>
@@ -1703,11 +1703,11 @@ export default function VeiculosPorteiro() {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
                   padding: "12px", borderRadius: "12px", background: "#eef2ff",
-                  border: "1px solid #c7d2fe", color: "#4338ca", fontWeight: 700, fontSize: "14px",
+                  border: "1px solid #c7d2fe", color: "#4338ca", fontWeight: 700, fontSize: "15px",
                   cursor: "pointer", width: "100%",
                 }}
               >
-                <Copy className="w-4 h-4" />
+                <Copy className="w-5 h-5" />
                 Copiar link de aprovação
               </button>
               <button
@@ -1715,7 +1715,7 @@ export default function VeiculosPorteiro() {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
                   padding: "14px", borderRadius: "14px", background: "#25d366",
-                  border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
+                  border: "none", color: "#fff", fontWeight: 700, fontSize: "16px",
                   cursor: "pointer", width: "100%",
                 }}
               >
@@ -1731,7 +1731,7 @@ export default function VeiculosPorteiro() {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                   padding: "14px 16px", borderRadius: "12px",
                   background: "transparent", border: "1px solid #e2e8f0",
-                  color: "#64748b", fontWeight: 600, fontSize: "14px",
+                  color: "var(--muted-foreground)", fontWeight: 600, fontSize: "15px",
                   cursor: "pointer", width: "100%",
                 }}
               >

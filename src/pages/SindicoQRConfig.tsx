@@ -98,11 +98,11 @@ export default function SindicoQRConfig() {
       <header className="safe-area-top" style={{ background: p.headerBg, padding: "18px 24px", borderBottom: p.headerBorder, boxShadow: p.headerShadow }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-7 h-7" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 className="text-white flex items-center gap-2" style={{ fontWeight: 700, fontSize: 18 }}>
-              <Settings className="w-5 h-5" /> Config. QR Visitante
+              <Settings className="w-6 h-6" /> Config. QR Visitante
             </h1>
             <p style={{ fontSize: 12, color: p.textSecondary }}>Defina os campos obrigatórios</p>
           </div>
@@ -117,8 +117,8 @@ export default function SindicoQRConfig() {
               gap: "6px",
             }}
           >
-            <QrCode className="w-4 h-4 text-white" />
-            <span style={{ color: p.text, fontWeight: 700, fontSize: "12px" }}>QR Code</span>
+            <QrCode className="w-5 h-5 text-white" />
+            <span style={{ color: p.text, fontWeight: 700, fontSize: "13px" }}>QR Code</span>
           </div>
         </div>
       </header>
@@ -137,12 +137,12 @@ export default function SindicoQRConfig() {
             alignItems: "flex-start",
           }}
         >
-          <Info className="w-5 h-5" style={{ color: p.textSecondary, flexShrink: 0, marginTop: "2px" }} />
+          <Info className="w-6 h-6" style={{ color: p.textSecondary, flexShrink: 0, marginTop: "2px" }} />
           <div>
-            <p style={{ fontWeight: 700, fontSize: "14px", color: p.text }}>
+            <p style={{ fontWeight: 700, fontSize: "15px", color: p.text }}>
               Campos Obrigatórios do QR Code
             </p>
-            <p style={{ fontSize: "13px", color: p.textSecondary, marginTop: "4px", lineHeight: 1.5 }}>
+            <p style={{ fontSize: "14px", color: p.textSecondary, marginTop: "4px", lineHeight: 1.5 }}>
               Configure quais informações o morador deverá preencher obrigatoriamente ao gerar um QR Code de autorização para visitantes.
               O campo <strong>Nome do Visitante</strong> é sempre obrigatório e não pode ser desabilitado.
             </p>
@@ -167,20 +167,20 @@ export default function SindicoQRConfig() {
               width: "44px",
               height: "44px",
               borderRadius: "12px",
-              background: "#ffffff",
+              background: "var(--color-card, #fff)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
             }}
           >
-            <Users className="w-5 h-5" style={{ color: "#16a34a" }} />
+            <Users className="w-6 h-6" style={{ color: "#16a34a" }} />
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#4ade80" }}>Nome do Visitante</p>
-            <p style={{ fontSize: "12px", color: p.textSecondary }}>Campo obrigatório (não pode ser desativado)</p>
+            <p style={{ fontWeight: 700, fontSize: "16px", color: "#4ade80" }}>Nome do Visitante</p>
+            <p style={{ fontSize: "13px", color: p.textSecondary }}>Campo obrigatório (não pode ser desativado)</p>
           </div>
-          <CheckCircle2 className="w-6 h-6" style={{ color: "#22c55e", flexShrink: 0 }} />
+          <CheckCircle2 className="w-7 h-7" style={{ color: "#22c55e", flexShrink: 0 }} />
         </div>
 
         {/* Configurable fields */}
@@ -211,7 +211,7 @@ export default function SindicoQRConfig() {
                     width: "44px",
                     height: "44px",
                     borderRadius: "12px",
-                    background: "#ffffff",
+                    background: "var(--color-card, #fff)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -219,16 +219,16 @@ export default function SindicoQRConfig() {
                     transition: "all 0.2s",
                   }}
                 >
-                  <Icon className="w-5 h-5" style={{ color: enabled ? field.color : "#9ca3af" }} />
+                  <Icon className="w-6 h-6" style={{ color: enabled ? field.color : "#9ca3af" }} />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontWeight: 700, fontSize: "15px", color: enabled ? p.text : p.textMuted }}>
+                  <p style={{ fontWeight: 700, fontSize: "16px", color: enabled ? p.text : p.textMuted }}>
                     {field.label}
                     {enabled && (
                       <span
                         style={{
                           marginLeft: "8px",
-                          fontSize: "11px",
+                          fontSize: "12px",
                           fontWeight: 700,
                           padding: "2px 8px",
                           borderRadius: "999px",
@@ -240,7 +240,7 @@ export default function SindicoQRConfig() {
                       </span>
                     )}
                   </p>
-                  <p style={{ fontSize: "12px", color: p.textSecondary, marginTop: "2px", lineHeight: 1.4 }}>
+                  <p style={{ fontSize: "13px", color: p.textSecondary, marginTop: "2px", lineHeight: 1.4 }}>
                     {field.description}
                   </p>
                 </div>
@@ -264,30 +264,30 @@ export default function SindicoQRConfig() {
             marginTop: "0",
           }}
         >
-          <p style={{ fontWeight: 700, fontSize: "13px", color: p.textSecondary, textTransform: "uppercase", marginBottom: "8px" }}>
+          <p style={{ fontWeight: 700, fontSize: "14px", color: p.textSecondary, textTransform: "uppercase", marginBottom: "8px" }}>
             Resumo da Configuração
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-            <span style={{ fontSize: "12px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(34,197,94,0.2)" : "#dcfce7", color: "#4ade80" }}>
+            <span style={{ fontSize: "13px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(34,197,94,0.2)" : "#dcfce7", color: "#4ade80" }}>
               ✓ Nome
             </span>
             {config.fotoObrigatoria && (
-              <span style={{ fontSize: "12px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
+              <span style={{ fontSize: "13px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
                 ✓ Foto
               </span>
             )}
             {config.documentoObrigatorio && (
-              <span style={{ fontSize: "12px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
+              <span style={{ fontSize: "13px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
                 ✓ Documento
               </span>
             )}
             {config.parentescoObrigatorio && (
-              <span style={{ fontSize: "12px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
+              <span style={{ fontSize: "13px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
                 ✓ Parentesco
               </span>
             )}
             {config.observacoesObrigatorio && (
-              <span style={{ fontSize: "12px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
+              <span style={{ fontSize: "13px", fontWeight: 700, padding: "4px 10px", borderRadius: "999px", background: p.isDarkBase ? "rgba(129,140,248,0.2)" : "#eef2ff", color: "#a5b4fc" }}>
                 ✓ Observações
               </span>
             )}
@@ -318,9 +318,9 @@ export default function SindicoQRConfig() {
           }}
         >
           {saved ? (
-            <><CheckCircle2 className="w-5 h-5" /> Configuração Salva!</>
+            <><CheckCircle2 className="w-6 h-6" /> Configuração Salva!</>
           ) : (
-            <><Save className="w-5 h-5" /> Salvar Configuração</>
+            <><Save className="w-6 h-6" /> Salvar Configuração</>
           )}
         </button>
       </main>

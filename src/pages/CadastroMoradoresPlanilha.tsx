@@ -163,7 +163,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros/moradores")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18 }}>Cadastro em Lote</span>
           <div style={{ marginLeft: "auto" }}>
@@ -179,7 +179,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                 <TStep n={5}>Clique em <strong>"Upload"</strong> e selecione o arquivo preenchido</TStep>
                 <TStep n={6}>O sistema processa a planilha e mostra uma <strong>prévia dos dados importados</strong></TStep>
                 <TStep n={7}>Revise os dados, corrija erros destacados em vermelho e clique em <strong>"Confirmar"</strong></TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: p.textSecondary }}>👉 Todos os moradores são cadastrados de uma vez e já podem acessar o app.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: p.textSecondary }}>👉 Todos os moradores são cadastrados de uma vez e já podem acessar o app.</p>
               </TSection>
               <TSection icon={<span>📱</span>} title="COLUNAS DA PLANILHA">
                 <TBullet><strong>Nome</strong> — Nome completo do morador</TBullet>
@@ -207,7 +207,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
           {/* Info box */}
           <div className="rounded-xl p-5" style={{ backgroundColor: p.surfaceBg, border: p.cardBorder }}>
             <div className="flex gap-3">
-              <FileSpreadsheet className="w-5 h-5 shrink-0 mt-0.5" style={{ color: p.accent }} />
+              <FileSpreadsheet className="w-6 h-6 shrink-0 mt-0.5" style={{ color: p.accent }} />
               <div className="text-sm leading-relaxed" style={{ color: p.textSecondary }}>
                 <p>
                   Importe vários moradores de uma só vez usando uma{" "}
@@ -268,7 +268,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
             <div className="text-sm" style={{ color: p.textSecondary, display: "flex", flexDirection: "column", gap: "14px" }}>
               <p className="font-semibold" style={{ color: p.textAccent, marginBottom: "2px" }}>Passo a passo:</p>
               <p><strong style={{ color: p.accent }}>Passo 1</strong> — Abra o <strong>Excel</strong> e crie uma nova planilha.</p>
-              <p><strong style={{ color: p.accent }}>Passo 2</strong> — Na <strong>primeira linha</strong>, escreva os cabeçalhos: <span style={{ color: p.accent, fontFamily: "monospace", fontSize: "12px" }}>Nome Completo;Bloco;Unidade;Perfil;WhatsApp;E-mail</span></p>
+              <p><strong style={{ color: p.accent }}>Passo 2</strong> — Na <strong>primeira linha</strong>, escreva os cabeçalhos: <span style={{ color: p.accent, fontFamily: "monospace", fontSize: "13px" }}>Nome Completo;Bloco;Unidade;Perfil;WhatsApp;E-mail</span></p>
               <p><strong style={{ color: p.accent }}>Passo 3</strong> — Preencha os dados dos moradores <strong>a partir da segunda linha</strong>.</p>
               <p><strong style={{ color: p.accent }}>Passo 4</strong> — O campo <strong>Perfil</strong> deve ser: <span style={{ color: p.accent }}>Proprietário</span>, <span style={{ color: p.accent }}>Locatário</span> ou <span style={{ color: p.accent }}>Dependente</span>.</p>
               <p><strong style={{ color: p.accent }}>Passo 5</strong> — Salve como <strong>CSV (separado por ponto-e-vírgula)</strong>: Arquivo → Salvar como → Tipo: CSV.</p>
@@ -278,7 +278,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
           {/* Dica IA */}
           <div className="rounded-2xl p-7" style={{ backgroundColor: p.accentLight, border: p.cardBorder }}>
             <div className="flex items-center gap-3 mb-4">
-              <Sparkles className="w-5 h-5" style={{ color: p.accent }} />
+              <Sparkles className="w-6 h-6" style={{ color: p.accent }} />
               <span className="text-base font-medium" style={{ color: p.textAccent }}>Dica: use uma IA para formatar sua planilha</span>
             </div>
             <p className="text-sm" style={{ color: p.textSecondary, marginBottom: "19px" }}>
@@ -298,9 +298,9 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
               }}
             >
               {promptCopied ? (
-                <><CheckCircle2 className="w-4 h-4" /> Prompt copiado!</>
+                <><CheckCircle2 className="w-5 h-5" /> Prompt copiado!</>
               ) : (
-                <><Copy className="w-4 h-4" /> Copiar prompt para usar na IA</>
+                <><Copy className="w-5 h-5" /> Copiar prompt para usar na IA</>
               )}
             </button>
           </div>
@@ -337,7 +337,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
               <div className="space-y-4 animate-fade-in">
                 {/* File info */}
                 <div className="flex items-center gap-3 p-3 rounded-lg" style={{ backgroundColor: p.surfaceBg }}>
-                  <FileText className="w-5 h-5" style={{ color: p.accent }} />
+                  <FileText className="w-6 h-6" style={{ color: p.accent }} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm truncate" style={{ color: p.textAccent }}>{file.name}</p>
                     <p className="text-xs" style={{ color: p.textDim }}>
@@ -349,7 +349,7 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                     className="p-1 hover:text-destructive transition-colors"
                     style={{ color: p.textDim }}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
 
@@ -400,10 +400,10 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
                   }}
                 >
                   {isUploading ? (
-                    <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: p.cardBg, borderTopColor: "transparent" }} />
+                    <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: p.cardBg, borderTopColor: "transparent" }} />
                   ) : (
                     <>
-                      <Upload className="w-4 h-4" />
+                      <Upload className="w-5 h-5" />
                       Importar {parsedData.length} Morador(es)
                     </>
                   )}

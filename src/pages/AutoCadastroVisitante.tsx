@@ -231,7 +231,7 @@ export default function AutoCadastroVisitante() {
               {cameraMode === "foto" ? "Sua Foto" : "Foto do Documento"}
             </span>
             <button onClick={stopCamera} style={{ color: "#fff" }}>
-              <X className="w-6 h-6" />
+              <X className="w-7 h-7" />
             </button>
           </div>
           <div style={{ flex: 1, minHeight: 0, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -255,7 +255,7 @@ export default function AutoCadastroVisitante() {
               className="rounded-full bg-white flex items-center justify-center transition-opacity"
               style={{ border: "4px solid rgba(255,255,255,0.5)", opacity: cameraReady ? 1 : 0.4, padding: "16px 32px", gap: "12px" }}
             >
-              <Camera className="w-6 h-6 text-gray-800" />
+              <Camera className="w-7 h-7 text-gray-800" />
               <span className="text-gray-800 font-bold text-sm">Clique aqui para tirar foto</span>
             </button>
           </div>
@@ -265,7 +265,7 @@ export default function AutoCadastroVisitante() {
       {/* Header */}
       <div style={{ color: "#fff", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", padding: "24px 24px 32px" }}>
         <div className="flex items-center gap-2 mb-2">
-          <UserPlus className="w-5 h-5" />
+          <UserPlus className="w-6 h-6" />
           <span className="font-semibold text-sm">Auto Cadastro de Visitante</span>
         </div>
         <p className="text-sky-100 text-[13px]">
@@ -291,9 +291,9 @@ export default function AutoCadastroVisitante() {
                 <img src={form.foto} alt="Foto" className="w-full h-full object-cover" />
                 <button
                   onClick={() => setForm({ ...form, foto: "" })}
-                  className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"
+                  className="absolute top-1 right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
                 >
-                  <X className="w-3 h-3 text-white" />
+                  <X className="w-4 h-4 text-white" />
                 </button>
               </div>
             ) : (
@@ -302,7 +302,7 @@ export default function AutoCadastroVisitante() {
                 className="w-24 h-24 rounded-xl flex flex-col items-center justify-center gap-1"
                 style={{ border: "2px dashed #d1d5db" }}
               >
-                <Camera className="w-6 h-6 text-gray-400" />
+                <Camera className="w-7 h-7 text-gray-400" />
                 <span className="text-[10px] text-gray-400">Tirar foto</span>
               </button>
             )}
@@ -363,7 +363,7 @@ export default function AutoCadastroVisitante() {
               className="mt-1 h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"
             />
             <label htmlFor="naoSeiBloco" className="text-sm text-gray-600 flex items-center gap-1">
-              <HelpCircle className="w-4 h-4 text-amber-500" />
+              <HelpCircle className="w-5 h-5 text-amber-500" />
               Não sei o bloco ou apartamento do morador
             </label>
           </div>
@@ -380,7 +380,7 @@ export default function AutoCadastroVisitante() {
               <span className="text-sm font-medium text-gray-800 mb-1 block">Bloco que vai visitar</span>
               {loadingBlocos ? (
                 <div className="flex items-center gap-2 h-10 px-3 text-sm text-gray-400">
-                  <Loader2 className="w-4 h-4 animate-spin" /> Carregando blocos...
+                  <Loader2 className="w-5 h-5 animate-spin" /> Carregando blocos...
                 </div>
               ) : blocos.length === 0 ? (
                 <input
@@ -403,7 +403,7 @@ export default function AutoCadastroVisitante() {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 </div>
               )}
             </div>
@@ -427,7 +427,7 @@ export default function AutoCadastroVisitante() {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 </div>
               ) : (
                 <input
@@ -467,9 +467,9 @@ export default function AutoCadastroVisitante() {
                 <img src={form.documento_foto} alt="Documento" className="w-full h-full object-cover" />
                 <button
                   onClick={() => setForm({ ...form, documento_foto: "" })}
-                  className="absolute top-2 right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
+                  className="absolute top-2 right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center"
                 >
-                  <X className="w-4 h-4 text-white" />
+                  <X className="w-5 h-5 text-white" />
                 </button>
               </div>
             ) : (
@@ -478,7 +478,7 @@ export default function AutoCadastroVisitante() {
                 className="w-full h-20 rounded-xl flex items-center justify-center gap-2"
                 style={{ border: "2px dashed #d1d5db" }}
               >
-                <FileText className="w-5 h-5 text-gray-400" />
+                <FileText className="w-6 h-6 text-gray-400" />
                 <span className="text-sm text-gray-400">Fotografar documento</span>
               </button>
             )}
@@ -493,12 +493,12 @@ export default function AutoCadastroVisitante() {
           >
             {saving ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-6 h-6 animate-spin" />
                 <span>{savingText || "Enviando..."}</span>
               </>
             ) : (
               <>
-                <Send className="w-4 h-4" />
+                <Send className="w-5 h-5" />
                 Enviar Cadastro
               </>
             )}

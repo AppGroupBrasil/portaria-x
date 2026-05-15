@@ -391,10 +391,10 @@ export default function DeliveryPorteiro() {
             onClick={() => navigate("/dashboard")}
             style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <Truck className="w-6 h-6" />
+            <Truck className="w-7 h-7" />
             <div>
               <h1 style={{ fontWeight: 700, fontSize: 18 }}>Entregas e Delivery</h1>
               <p style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }}>Gerenciar entregas pendentes</p>
@@ -412,14 +412,14 @@ export default function DeliveryPorteiro() {
               <TStep n={5}>Informa o <strong>tipo</strong> da entrega: Comida, Pacote, Documento, Envelope</TStep>
               <TStep n={6}>Tira <strong>foto da entrega</strong> (opcional mas recomendado como comprovante)</TStep>
               <TStep n={7}>Toca em <strong>"Registrar"</strong> — sistema salva e notifica o morador automaticamente</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Recebe notificacao no WhatsApp + aparece no app dele com status "Aguardando retirada". Quando descer para buscar, voce confirma a entrega.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Recebe notificacao no WhatsApp + aparece no app dele com status "Aguardando retirada". Quando descer para buscar, voce confirma a entrega.</p>
             </FlowPortaria>
             <FlowMorador>
               <TStep n={1}>Morador pode avisar antecipado pelo app: <strong>"Estou esperando um iFood"</strong> com codigo do pedido</TStep>
               <TStep n={2}>O aviso aparece na sua tela com <strong>destaque</strong> — voce ja sabe quem recebe</TStep>
               <TStep n={3}>Quando o entregador chegar, voce <strong>ja tem todas as informacoes</strong> (codigo, nome, tipo)</TStep>
               <TStep n={4}>Morador desce e retira. Voce toca em <strong>"Confirmar Retirada"</strong></TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Registro completo:</strong> Status muda para "Entregue" com data, hora e porteiro responsavel.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Registro completo:</strong> Status muda para "Entregue" com data, hora e porteiro responsavel.</p>
             </FlowMorador>
             <TSection icon={<span>🔍</span>} title="STATUS DAS ENTREGAS">
               <TBullet><strong style={{ color: "#d97706" }}>Aguardando retirada</strong> — Chegou na portaria, esperando morador buscar</TBullet>
@@ -445,7 +445,7 @@ export default function DeliveryPorteiro() {
         {/* Search */}
         <div style={{ marginTop: "12px", position: "relative" }}>
           <Search
-            className="w-4 h-4"
+            className="w-5 h-5"
             style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: p.textDim }}
           />
           <input
@@ -460,7 +460,7 @@ export default function DeliveryPorteiro() {
               border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1",
               background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8",
               color: p.text,
-              fontSize: "13px",
+              fontSize: "14px",
               outline: "none",
               boxSizing: "border-box",
             }}
@@ -488,7 +488,7 @@ export default function DeliveryPorteiro() {
                   ? (isDark ? "#ea580c" : "#fff")
                   : (isDark ? "rgba(255,255,255,0.8)" : "#475569"),
                 fontWeight: 600,
-                fontSize: "12px",
+                fontSize: "13px",
                 cursor: "pointer",
               }}
             >
@@ -500,11 +500,11 @@ export default function DeliveryPorteiro() {
             style={{
               marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
-              background: "#fff",
-              color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+              background: "var(--color-card, #fff)",
+              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
-            <FileText className="w-4 h-4" /> Relatório
+            <FileText className="w-5 h-5" /> Relatório
           </button>
         </div>
       </header>
@@ -564,7 +564,7 @@ export default function DeliveryPorteiro() {
             }}
           >
             <Package className="w-16 h-16" style={{ color: "#cbd5e1" }} />
-            <p style={{ fontSize: "15px", color: "#64748b", fontWeight: 500 }}>
+            <p style={{ fontSize: "16px", color: "var(--muted-foreground)", fontWeight: 500 }}>
               Nenhum delivery {filter === "pendente" ? "pendente" : filter === "recebido" ? "recebido" : ""}.
             </p>
           </div>
@@ -605,11 +605,11 @@ export default function DeliveryPorteiro() {
                     {sv.emoji}
                   </div>
                   <div>
-                    <p style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a" }}>
+                    <p style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)" }}>
                       {d.servico === "outro" && d.servico_custom ? d.servico_custom : sv.label}
                     </p>
                     {d.numero_pedido && (
-                      <p style={{ fontSize: "12px", color: "#64748b" }}>
+                      <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>
                         Pedido: {d.numero_pedido}
                       </p>
                     )}
@@ -619,7 +619,7 @@ export default function DeliveryPorteiro() {
                   style={{
                     padding: "4px 10px",
                     borderRadius: "20px",
-                    fontSize: "11px",
+                    fontSize: "12px",
                     fontWeight: 600,
                     background: isPendente ? "#fef3c7" : "#dcfce7",
                     color: isPendente ? "#b45309" : "#15803d",
@@ -628,7 +628,7 @@ export default function DeliveryPorteiro() {
                     gap: "4px",
                   }}
                 >
-                  {isPendente ? <Clock className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
+                  {isPendente ? <Clock className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                   {isPendente ? "Pendente" : "Recebido"}
                 </span>
               </div>
@@ -645,10 +645,10 @@ export default function DeliveryPorteiro() {
                 }}
               >
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontWeight: 600, fontSize: "13px", color: "#0f172a" }}>
+                  <p style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)" }}>
                     {d.morador_name}
                   </p>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>
                     {d.bloco && `Bloco ${d.bloco}`} {d.apartamento && `- Apt ${d.apartamento}`}
                   </p>
                 </div>
@@ -662,14 +662,14 @@ export default function DeliveryPorteiro() {
                       display: "flex",
                     }}
                   >
-                    <Phone className="w-4 h-4" style={{ color: "#0284c7" }} />
+                    <Phone className="w-5 h-5" style={{ color: "#0284c7" }} />
                   </a>
                 )}
               </div>
 
               {/* Observação */}
               {d.observacao && (
-                <p style={{ fontSize: "12px", color: "#64748b", fontStyle: "italic" }}>
+                <p style={{ fontSize: "13px", color: "var(--muted-foreground)", fontStyle: "italic" }}>
                   💬 {d.observacao}
                 </p>
               )}
@@ -687,18 +687,18 @@ export default function DeliveryPorteiro() {
                     border: "1px solid #e2e8f0",
                     background: "#f8fafc",
                     cursor: "pointer",
-                    fontSize: "12px",
-                    color: "#475569",
+                    fontSize: "13px",
+                    color: "var(--muted-foreground)",
                     fontWeight: 500,
                   }}
                 >
-                  <Image className="w-4 h-4" style={{ color: "#6366f1" }} />
+                  <Image className="w-5 h-5" style={{ color: "#6366f1" }} />
                   Ver print do pedido
                 </button>
               )}
 
               {/* Timestamps */}
-              <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+              <div style={{ fontSize: "12px", color: "#94a3b8" }}>
                 Criado: {new Date(d.created_at).toLocaleString("pt-BR")}
                 {d.recebido_at && ` | Recebido: ${new Date(d.recebido_at).toLocaleString("pt-BR")}`}
               </div>
@@ -715,7 +715,7 @@ export default function DeliveryPorteiro() {
                     border: "none",
                     color: p.text,
                     fontWeight: 700,
-                    fontSize: "14px",
+                    fontSize: "15px",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -723,7 +723,7 @@ export default function DeliveryPorteiro() {
                     gap: "12px",
                   }}
                 >
-                  <CheckCircle2 className="w-5 h-5" />
+                  <CheckCircle2 className="w-6 h-6" />
                   Recebido
                 </button>
               )}
@@ -735,11 +735,11 @@ export default function DeliveryPorteiro() {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                   width: "100%", padding: "8px", borderRadius: "10px", border: "none",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                  color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                  color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer",
                   marginTop: "4px",
                 }}
               >
-                <Download className="w-3 h-3" /> Baixar PDF
+                <Download className="w-4 h-4" /> Baixar PDF
               </button>
             </div>
           );
@@ -756,7 +756,7 @@ export default function DeliveryPorteiro() {
             border: "none",
             color: "#fff",
             fontWeight: 700,
-            fontSize: "15px",
+            fontSize: "16px",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
@@ -765,7 +765,7 @@ export default function DeliveryPorteiro() {
             boxShadow: "0 4px 12px rgba(37,99,235,0.3)",
           }}
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-6 h-6" />
           Cadastrar Delivery
         </button>
       </main>
@@ -800,7 +800,7 @@ export default function DeliveryPorteiro() {
               color: p.text,
             }}
           >
-            <X className="w-6 h-6" />
+            <X className="w-7 h-7" />
           </button>
           <img
             src={printPreview}
@@ -842,14 +842,14 @@ export default function DeliveryPorteiro() {
           >
             {/* Modal header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <h2 style={{ fontWeight: 700, fontSize: "18px", color: "#0f172a" }}>
+              <h2 style={{ fontWeight: 700, fontSize: "18px", color: "var(--card-foreground)" }}>
                 Confirmar Recebimento
               </h2>
               <button
                 onClick={closeModal}
                 style={{ padding: "6px", borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer" }}
               >
-                <X className="w-5 h-5" style={{ color: "#64748b" }} />
+                <X className="w-6 h-6" style={{ color: "var(--muted-foreground)" }} />
               </button>
             </div>
 
@@ -864,7 +864,7 @@ export default function DeliveryPorteiro() {
                 gap: "6px",
               }}
             >
-              <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a" }}>
+              <p style={{ fontWeight: 600, fontSize: "15px", color: "var(--card-foreground)" }}>
                 {(() => {
                   const sv = getServicoInfo(selectedDelivery.servico);
                   return selectedDelivery.servico === "outro" && selectedDelivery.servico_custom
@@ -873,14 +873,14 @@ export default function DeliveryPorteiro() {
                 })()}{" "}
                 {selectedDelivery.numero_pedido && `· ${selectedDelivery.numero_pedido}`}
               </p>
-              <p style={{ fontSize: "13px", color: "#475569" }}>
+              <p style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>
                 {selectedDelivery.morador_name} · Bloco {selectedDelivery.bloco} - Apt {selectedDelivery.apartamento}
               </p>
             </div>
 
             {/* Camera / Photo section */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "14px", color: "#1e293b", marginBottom: "10px", display: "block" }}>
+              <span style={{ fontWeight: 600, fontSize: "15px", color: "var(--card-foreground)", marginBottom: "10px", display: "block" }}>
                 📸 Foto da Entrega (opcional)
               </span>
 
@@ -912,7 +912,7 @@ export default function DeliveryPorteiro() {
                         width: "60px",
                         height: "60px",
                         borderRadius: "50%",
-                        background: "#fff",
+                        background: "var(--color-card, #fff)",
                         border: "4px solid #22c55e",
                         cursor: "pointer",
                         display: "flex",
@@ -937,7 +937,7 @@ export default function DeliveryPorteiro() {
                         alignSelf: "center",
                       }}
                     >
-                      <X className="w-5 h-5" style={{ color: p.text }} />
+                      <X className="w-6 h-6" style={{ color: p.text }} />
                     </button>
                   </div>
                 </div>
@@ -960,7 +960,7 @@ export default function DeliveryPorteiro() {
                       border: "none",
                       cursor: "pointer",
                       color: p.text,
-                      fontSize: "12px",
+                      fontSize: "13px",
                       fontWeight: 600,
                     }}
                   >
@@ -984,7 +984,7 @@ export default function DeliveryPorteiro() {
                   }}
                 >
                   <Camera className="w-8 h-8" style={{ color: "#94a3b8" }} />
-                  <span style={{ fontSize: "13px", color: "#64748b" }}>
+                  <span style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>
                     Tirar foto da entrega
                   </span>
                 </button>
@@ -1003,7 +1003,7 @@ export default function DeliveryPorteiro() {
                 border: "none",
                 color: p.text,
                 fontWeight: 700,
-                fontSize: "15px",
+                fontSize: "16px",
                 cursor: "pointer",
                 opacity: submitting ? 0.7 : 1,
                 display: "flex",
@@ -1012,11 +1012,11 @@ export default function DeliveryPorteiro() {
                 gap: "12px",
               }}
             >
-              <CheckCircle2 className="w-5 h-5" />
+              <CheckCircle2 className="w-6 h-6" />
               {submitting ? "Confirmando..." : "Confirmar Recebido e Avisar Morador"}
             </button>
 
-            <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8" }}>
+            <p style={{ textAlign: "center", fontSize: "12px", color: "#94a3b8" }}>
               O morador será notificado via WhatsApp automaticamente.
             </p>
           </div>
@@ -1041,17 +1041,17 @@ export default function DeliveryPorteiro() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <h2 style={{ fontWeight: 700, fontSize: "18px", color: isDark ? "#fff" : "#0f172a" }}>Registrar Delivery</h2>
               <button onClick={() => { stopFormCamera(); setShowForm(false); }} style={{ padding: "6px", borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer" }}>
-                <X className="w-5 h-5" style={{ color: "#64748b" }} />
+                <X className="w-6 h-6" style={{ color: "var(--muted-foreground)" }} />
               </button>
             </div>
 
             {formError && (
-              <p style={{ color: "#ef4444", fontSize: "13px", fontWeight: 600 }}>{formError}</p>
+              <p style={{ color: "#ef4444", fontSize: "14px", fontWeight: 600 }}>{formError}</p>
             )}
 
             {/* Bloco */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Bloco *</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Bloco *</span>
               <select
                 value={formBloco}
                 onChange={(e) => { setFormBloco(e.target.value); setFormMoradorId(""); setFormApartamento(""); fetchMoradoresBloco(e.target.value); }}
@@ -1059,7 +1059,7 @@ export default function DeliveryPorteiro() {
                   width: "100%", padding: "10px 12px", borderRadius: "12px",
                   border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1",
                   background: isDark ? "rgba(255,255,255,0.06)" : "#fff",
-                  color: isDark ? "#fff" : "#1e293b", fontSize: "14px", boxSizing: "border-box",
+                  color: isDark ? "#fff" : "#1e293b", fontSize: "15px", boxSizing: "border-box",
                 }}
               >
                 <option value="">Selecione o bloco</option>
@@ -1070,7 +1070,7 @@ export default function DeliveryPorteiro() {
             {/* Morador */}
             {formBloco && (
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Morador *</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Morador *</span>
                 <SearchableSelect
                   options={formMoradores.map((m) => {
                     const label = `${m.name}${m.unit ? ` - Apto ${m.unit}` : ""}`;
@@ -1086,14 +1086,14 @@ export default function DeliveryPorteiro() {
             {/* Apartamento */}
             {formBloco && (
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Apartamento</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Apartamento</span>
                 <input
                   type="text" value={formApartamento} onChange={(e) => setFormApartamento(e.target.value)}
                   placeholder="Apto" style={{
                     width: "100%", padding: "10px 12px", borderRadius: "12px",
                     border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1",
                     background: isDark ? "rgba(255,255,255,0.06)" : "#fff",
-                    color: isDark ? "#fff" : "#1e293b", fontSize: "14px", boxSizing: "border-box",
+                    color: isDark ? "#fff" : "#1e293b", fontSize: "15px", boxSizing: "border-box",
                   }}
                 />
               </div>
@@ -1101,7 +1101,7 @@ export default function DeliveryPorteiro() {
 
             {/* Servico */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Servico *</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Servico *</span>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
                 {Object.entries(SERVICOS).map(([key, sv]) => (
                   <button
@@ -1114,7 +1114,7 @@ export default function DeliveryPorteiro() {
                     }}
                   >
                     <span style={{ fontSize: "18px" }}>{sv.emoji}</span>
-                    <span style={{ fontSize: "11px", fontWeight: 600, color: formServico === key ? sv.color : isDark ? "#93c5fd" : "#1e293b" }}>{sv.label}</span>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: formServico === key ? sv.color : isDark ? "#93c5fd" : "#1e293b" }}>{sv.label}</span>
                   </button>
                 ))}
               </div>
@@ -1122,14 +1122,14 @@ export default function DeliveryPorteiro() {
 
             {formServico === "outro" && (
               <div>
-                <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Nome do Servico</span>
+                <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Nome do Servico</span>
                 <input
                   type="text" value={formServicoCustom} onChange={(e) => setFormServicoCustom(e.target.value)}
                   placeholder="Ex: Farmacia, Mercado..." style={{
                     width: "100%", padding: "10px 12px", borderRadius: "12px",
                     border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1",
                     background: isDark ? "rgba(255,255,255,0.06)" : "#fff",
-                    color: isDark ? "#fff" : "#1e293b", fontSize: "14px", boxSizing: "border-box",
+                    color: isDark ? "#fff" : "#1e293b", fontSize: "15px", boxSizing: "border-box",
                   }}
                 />
               </div>
@@ -1137,58 +1137,58 @@ export default function DeliveryPorteiro() {
 
             {/* Numero pedido */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Numero do Pedido</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Numero do Pedido</span>
               <input
                 type="text" value={formNumeroPedido} onChange={(e) => setFormNumeroPedido(e.target.value)}
                 placeholder="Ex: #12345" style={{
                   width: "100%", padding: "10px 12px", borderRadius: "12px",
                   border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1",
                   background: isDark ? "rgba(255,255,255,0.06)" : "#fff",
-                  color: isDark ? "#fff" : "#1e293b", fontSize: "14px", boxSizing: "border-box",
+                  color: isDark ? "#fff" : "#1e293b", fontSize: "15px", boxSizing: "border-box",
                 }}
               />
             </div>
 
             {/* Observacao */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Observacao</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Observacao</span>
               <textarea
                 value={formObs} onChange={(e) => setFormObs(e.target.value)}
                 placeholder="Notas sobre a entrega..." rows={2} style={{
                   width: "100%", padding: "10px 12px", borderRadius: "12px",
                   border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #cbd5e1",
                   background: isDark ? "rgba(255,255,255,0.06)" : "#fff",
-                  color: isDark ? "#fff" : "#1e293b", fontSize: "14px", resize: "none", boxSizing: "border-box",
+                  color: isDark ? "#fff" : "#1e293b", fontSize: "15px", resize: "none", boxSizing: "border-box",
                 }}
               />
             </div>
 
             {/* Foto */}
             <div>
-              <span style={{ fontWeight: 600, fontSize: "13px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Foto da Entrega</span>
+              <span style={{ fontWeight: 600, fontSize: "14px", color: isDark ? "#93c5fd" : "#475569", marginBottom: "6px", display: "block" }}>Foto da Entrega</span>
               {formCapturing ? (
                 <div style={{ position: "relative", borderRadius: "12px", overflow: "hidden" }}>
                   <video ref={formVideoRef} autoPlay playsInline muted style={{ width: "100%", borderRadius: "12px" }} />
                   <div style={{ position: "absolute", bottom: "12px", left: 0, right: 0, display: "flex", justifyContent: "center", gap: "12px" }}>
-                    <button onClick={captureFormPhoto} style={{ width: 56, height: 56, borderRadius: "50%", background: "#fff", border: "4px solid #22c55e", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Camera className="w-6 h-6" style={{ color: "#22c55e" }} />
+                    <button onClick={captureFormPhoto} style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--color-card, #fff)", border: "4px solid #22c55e", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Camera className="w-7 h-7" style={{ color: "#22c55e" }} />
                     </button>
                     <button onClick={stopFormCamera} style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(0,0,0,0.5)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", alignSelf: "center" }}>
-                      <X className="w-5 h-5" style={{ color: "#fff" }} />
+                      <X className="w-6 h-6" style={{ color: "#fff" }} />
                     </button>
                   </div>
                 </div>
               ) : formFoto ? (
                 <div style={{ position: "relative" }}>
                   <img src={formFoto} alt="Foto" style={{ width: "100%", borderRadius: "12px", maxHeight: "200px", objectFit: "contain", background: "#f1f5f9" }} />
-                  <button onClick={() => { setFormFoto(null); startFormCamera(); }} style={{ position: "absolute", top: 8, right: 8, padding: "6px 12px", borderRadius: "20px", background: "rgba(0,0,0,0.6)", border: "none", cursor: "pointer", color: "#fff", fontSize: "12px", fontWeight: 600 }}>
+                  <button onClick={() => { setFormFoto(null); startFormCamera(); }} style={{ position: "absolute", top: 8, right: 8, padding: "6px 12px", borderRadius: "20px", background: "rgba(0,0,0,0.6)", border: "none", cursor: "pointer", color: "#fff", fontSize: "13px", fontWeight: 600 }}>
                     Tirar outra
                   </button>
                 </div>
               ) : (
                 <button onClick={startFormCamera} style={{ width: "100%", padding: "20px", borderRadius: "12px", border: "2px dashed #cbd5e1", background: isDark ? "rgba(255,255,255,0.04)" : "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-                  <Camera className="w-6 h-6" style={{ color: "#94a3b8" }} />
-                  <span style={{ fontSize: "12px", color: "#64748b" }}>Tirar foto da entrega</span>
+                  <Camera className="w-7 h-7" style={{ color: "#94a3b8" }} />
+                  <span style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Tirar foto da entrega</span>
                 </button>
               )}
             </div>
@@ -1200,15 +1200,15 @@ export default function DeliveryPorteiro() {
               style={{
                 width: "100%", padding: "14px", borderRadius: "14px",
                 background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
+                border: "none", color: "#fff", fontWeight: 700, fontSize: "16px",
                 cursor: "pointer", opacity: formSaving ? 0.7 : 1,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               }}
             >
-              <Truck className="w-5 h-5" />
+              <Truck className="w-6 h-6" />
               {formSaving ? "Registrando..." : "Registrar e Avisar Morador"}
             </button>
-            <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8" }}>
+            <p style={{ textAlign: "center", fontSize: "12px", color: "#94a3b8" }}>
               O morador sera notificado via WhatsApp automaticamente.
             </p>
           </div>

@@ -79,11 +79,11 @@ export default function MoradorCorrespondencias() {
       <header style={{ background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", padding: '1rem 1.5rem', color: isDark ? '#fff' : "#1e293b" }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button onClick={() => navigate('/dashboard')} style={{ padding: 10, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 className="text-lg font-bold" style={{ color: isDark ? '#fff' : "#1e293b" }}>Minhas Correspondências</h1>
-            <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: '12px' }}>
+            <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: "13px" }}>
               {user?.block && user?.unit ? `Bloco ${user.block} · Apto ${user.unit}` : "Avisos de correspondência"}
             </p>
           </div>
@@ -96,13 +96,13 @@ export default function MoradorCorrespondencias() {
               <TStep n={2}>O porteiro registra no sistema: <strong>tipo</strong> (encomenda, carta, documento), <strong>origem</strong> (Correios, Sedex, ML) e <strong>tira foto</strong></TStep>
               <TStep n={3}>Você recebe um <strong>aviso automático no WhatsApp</strong>: "Você tem uma correspondência na portaria"</TStep>
               <TStep n={4}>A correspondência aparece aqui no app com status <strong>"Aguardando retirada"</strong></TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> Detalhes completos (tipo, origem, foto do pacote, data/hora de chegada) e pode ir buscar quando quiser.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> Detalhes completos (tipo, origem, foto do pacote, data/hora de chegada) e pode ir buscar quando quiser.</p>
             </FlowPortaria>
             <FlowMorador>
               <TStep n={1}>Você vai até a portaria para <strong>retirar a correspondência</strong></TStep>
               <TStep n={2}>O porteiro localiza seu pacote e <strong>confirma a retirada</strong> no sistema</TStep>
               <TStep n={3}>O status muda para <strong>"Retirada"</strong> com data e hora da retirada</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Registro completo:</strong> Você tem o histórico de quando chegou e quando retirou — útil para reclamações de extravio.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Registro completo:</strong> Você tem o histórico de quando chegou e quando retirou — útil para reclamações de extravio.</p>
             </FlowMorador>
             <TSection icon={<span>🔍</span>} title="STATUS DAS CORRESPONDÊNCIAS">
               <TBullet><strong style={{ color: "#d97706" }}>Aguardando retirada</strong> — Chegou na portaria e está esperando você buscar (destaque amarelo)</TBullet>
@@ -119,7 +119,7 @@ export default function MoradorCorrespondencias() {
           {pendingCount > 0 && (
             <div style={{
               background: "#fbbf24", color: "#78350f", borderRadius: "20px",
-              padding: "4px 12px", fontSize: "12px", fontWeight: 800,
+              padding: "4px 12px", fontSize: "13px", fontWeight: 800,
             }}>
               {pendingCount} pendente{pendingCount > 1 ? "s" : ""}
             </div>
@@ -148,11 +148,11 @@ export default function MoradorCorrespondencias() {
                 padding: '8px 16px', borderRadius: '20px', border: 'none',
                 background: filter === f.v ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.06)',
                 color: filter === f.v ? '#fff' : '#93c5fd',
-                fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                fontSize: "14px", fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '6px',
               }}
             >
-              {filter === f.v && <CheckCircle2 style={{ width: 14, height: 14, color: '#4ade80' }} />}
+              {filter === f.v && <CheckCircle2 style={{ width: 18, height: 18, color: '#4ade80' }} />}
               {f.l}
             </button>
           ))}
@@ -169,7 +169,7 @@ export default function MoradorCorrespondencias() {
               <Mail className="w-8 h-8" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
             </div>
             <p style={{ fontWeight: 600, fontSize: '16px', color: isDark ? '#fff' : "#1e293b" }}>Nenhuma correspondência</p>
-            <p style={{ fontSize: '13px', marginTop: '4px', color: isDark ? '#93c5fd' : "#475569" }}>
+            <p style={{ fontSize: "14px", marginTop: '4px', color: isDark ? '#93c5fd' : "#475569" }}>
               {filter === 'pendente'
                 ? 'Você não tem correspondências pendentes.'
                 : filter === 'retirada'
@@ -202,25 +202,25 @@ export default function MoradorCorrespondencias() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                     }}>
                       {isPending
-                        ? <Package className="w-6 h-6" style={{ color: isDark ? '#fff' : "#1e293b" }} />
-                        : <CheckCircle2 className="w-6 h-6" style={{ color: isDark ? '#fff' : "#1e293b" }} />}
+                        ? <Package className="w-7 h-7" style={{ color: isDark ? '#fff' : "#1e293b" }} />
+                        : <CheckCircle2 className="w-7 h-7" style={{ color: isDark ? '#fff' : "#1e293b" }} />}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontWeight: 700, fontSize: '14px', color: isDark ? '#fff' : "#1e293b", margin: 0 }}>
+                      <p style={{ fontWeight: 700, fontSize: "15px", color: isDark ? '#fff' : "#1e293b", margin: 0 }}>
                         {tipoLabel[c.tipo] || c.tipo}
                       </p>
-                      <p style={{ fontSize: '12px', color: isDark ? '#93c5fd' : "#475569", margin: '2px 0 0' }}>
+                      <p style={{ fontSize: "13px", color: isDark ? '#93c5fd' : "#475569", margin: '2px 0 0' }}>
                         {formatDate(c.created_at)}
                       </p>
                       <p style={{
-                        fontSize: '11px', fontWeight: 700, margin: '2px 0 0',
+                        fontSize: "12px", fontWeight: 700, margin: '2px 0 0',
                         color: isDark ? '#7dd3fc' : '#475569',
                       }}>
                         Protocolo: {c.protocolo}
                       </p>
                     </div>
                     <div style={{
-                      padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700,
+                      padding: '4px 10px', borderRadius: '20px', fontSize: "12px", fontWeight: 700,
                       background: isPending ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)',
                       color: isPending ? '#fbbf24' : '#4ade80',
                       flexShrink: 0,
@@ -242,25 +242,25 @@ export default function MoradorCorrespondencias() {
                       }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>PROTOCOLO</span>
-                            <p style={{ fontSize: '14px', fontWeight: 700, color: isDark ? '#93c5fd' : "#475569", margin: '2px 0 0' }}>{c.protocolo}</p>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>PROTOCOLO</span>
+                            <p style={{ fontSize: "15px", fontWeight: 700, color: isDark ? '#93c5fd' : "#475569", margin: '2px 0 0' }}>{c.protocolo}</p>
                           </div>
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>TIPO</span>
-                            <p style={{ fontSize: '14px', color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>{tipoLabel[c.tipo] || c.tipo}</p>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>TIPO</span>
+                            <p style={{ fontSize: "15px", color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>{tipoLabel[c.tipo] || c.tipo}</p>
                           </div>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>DATA</span>
-                            <p style={{ fontSize: '13px', color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>DATA</span>
+                            <p style={{ fontSize: "14px", color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>
                               {new Date(c.created_at).toLocaleDateString('pt-BR')}
                             </p>
                           </div>
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>HORA</span>
-                            <p style={{ fontSize: '13px', color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>HORA</span>
+                            <p style={{ fontSize: "14px", color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>
                               {new Date(c.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                             </p>
                           </div>
@@ -268,22 +268,22 @@ export default function MoradorCorrespondencias() {
 
                         {c.remetente && (
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>REMETENTE</span>
-                            <p style={{ fontSize: '14px', color: isDark ? '#fff' : "#1e293b", fontWeight: 600, margin: '2px 0 0' }}>{c.remetente}</p>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>REMETENTE</span>
+                            <p style={{ fontSize: "15px", color: isDark ? '#fff' : "#1e293b", fontWeight: 600, margin: '2px 0 0' }}>{c.remetente}</p>
                           </div>
                         )}
 
                         {c.descricao && (
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>DESCRIÇÃO</span>
-                            <p style={{ fontSize: '13px', color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>{c.descricao}</p>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>DESCRIÇÃO</span>
+                            <p style={{ fontSize: "14px", color: isDark ? '#fff' : "#1e293b", margin: '2px 0 0' }}>{c.descricao}</p>
                           </div>
                         )}
 
                         <div>
-                          <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>STATUS</span>
+                          <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>STATUS</span>
                           <p style={{
-                            fontSize: '14px', fontWeight: 700, margin: '2px 0 0',
+                            fontSize: "15px", fontWeight: 700, margin: '2px 0 0',
                             color: isPending ? '#fbbf24' : '#4ade80',
                           }}>
                             {isPending ? '⏳ Aguardando retirada' : '✅ Retirada'}
@@ -292,8 +292,8 @@ export default function MoradorCorrespondencias() {
 
                         {c.retirado_at && (
                           <div>
-                            <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>RETIRADA EM</span>
-                            <p style={{ fontSize: '13px', color: '#4ade80', fontWeight: 600, margin: '2px 0 0' }}>
+                            <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600 }}>RETIRADA EM</span>
+                            <p style={{ fontSize: "14px", color: '#4ade80', fontWeight: 600, margin: '2px 0 0' }}>
                               {formatDate(c.retirado_at)}
                             </p>
                           </div>
@@ -303,7 +303,7 @@ export default function MoradorCorrespondencias() {
                       {/* Photo */}
                       {c.foto && (
                         <div>
-                          <span style={{ fontSize: '11px', color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+                          <span style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
                             FOTO DA CORRESPONDÊNCIA
                           </span>
                           <img src={c.foto} alt="Correspondência" style={{
@@ -320,8 +320,8 @@ export default function MoradorCorrespondencias() {
                           display: 'flex', alignItems: 'center', gap: '10px',
                           border: '1px solid rgba(245,158,11,0.3)',
                         }}>
-                          <Clock className="w-5 h-5" style={{ color: '#fbbf24', flexShrink: 0 }} />
-                          <p style={{ fontSize: '13px', color: '#fcd34d', fontWeight: 600, margin: 0 }}>
+                          <Clock className="w-6 h-6" style={{ color: '#fbbf24', flexShrink: 0 }} />
+                          <p style={{ fontSize: "14px", color: '#fcd34d', fontWeight: 600, margin: 0 }}>
                             Correspondência aguardando retirada na portaria.
                           </p>
                         </div>

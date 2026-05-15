@@ -319,11 +319,11 @@ export default function CorrespondenciasPorteiro() {
   // ═══════════ Styles ═══════════
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px", borderRadius: "12px",
-    border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff",
-    color: "#0f172a", outline: "none", boxSizing: "border-box",
+    border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)",
+    color: "var(--card-foreground)", outline: "none", boxSizing: "border-box",
   };
   const labelStyle: React.CSSProperties = {
-    fontWeight: 600, fontSize: "13px", color: "#1e293b",
+    fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)",
     marginBottom: "6px", display: "block",
   };
 
@@ -333,7 +333,7 @@ export default function CorrespondenciasPorteiro() {
       <header style={{ color: p.text, background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div style={{ flex: 1 }}>
             <h1 style={{ fontWeight: 700, fontSize: 18 }}>Aviso de Correspondência</h1>
@@ -351,14 +351,14 @@ export default function CorrespondenciasPorteiro() {
               <TStep n={5}>Informe a <strong>origem</strong>: Correios, Mercado Livre, Amazon, Shopee, Sedex, Documento, etc.</TStep>
               <TStep n={6}>Tire uma <strong>foto do pacote</strong> (opcional mas recomendado como comprovante)</TStep>
               <TStep n={7}>Toque em <strong>"Registrar"</strong> — sistema salva e envia <strong>WhatsApp automatico</strong> ao morador</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Recebe WhatsApp "Voce tem uma correspondencia na portaria" + aparece no app com status "Aguardando retirada" e a foto do pacote.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>O morador ve:</strong> Recebe WhatsApp "Voce tem uma correspondencia na portaria" + aparece no app com status "Aguardando retirada" e a foto do pacote.</p>
             </FlowPortaria>
             <FlowMorador>
               <TStep n={1}>Morador recebe a notificacao e vai ate a portaria</TStep>
               <TStep n={2}>Voce localiza a correspondencia e entrega ao morador</TStep>
               <TStep n={3}>Toque em <strong>"Confirmar Retirada"</strong> no app</TStep>
               <TStep n={4}>Status muda para <strong>"Retirada"</strong> com data, hora e porteiro responsavel</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Registro completo:</strong> O morador tambem ve a atualizacao no app dele. Historico fica disponivel para consulta.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Registro completo:</strong> O morador tambem ve a atualizacao no app dele. Historico fica disponivel para consulta.</p>
             </FlowMorador>
             <TSection icon={<span>🔍</span>} title="STATUS DAS CORRESPONDENCIAS">
               <TBullet><strong style={{ color: "#d97706" }}>Aguardando retirada</strong> — Chegou na portaria, esperando morador buscar (destaque amarelo)</TBullet>
@@ -395,9 +395,9 @@ export default function CorrespondenciasPorteiro() {
           <div style={{
             background: "#dcfce7", border: "1px solid #86efac", borderRadius: "12px",
             padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px",
-            color: "#166534", fontSize: "14px", fontWeight: 600,
+            color: "#166534", fontSize: "15px", fontWeight: 600,
           }}>
-            <CheckCircle2 className="w-5 h-5" /> {successMsg}
+            <CheckCircle2 className="w-6 h-6" /> {successMsg}
           </div>
         )}
 
@@ -408,24 +408,24 @@ export default function CorrespondenciasPorteiro() {
             display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
             width: "100%", padding: "14px", borderRadius: "14px", border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1",
             background: showForm ? "#ef4444" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
-            color: "#fff", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+            color: "#fff", fontSize: "16px", fontWeight: 700, cursor: "pointer",
           }}
         >
-          {showForm ? <><X className="w-5 h-5" /> Cancelar</> : <><Plus className="w-5 h-5" /> Registrar Correspondência</>}
+          {showForm ? <><X className="w-6 h-6" /> Cancelar</> : <><Plus className="w-6 h-6" /> Registrar Correspondência</>}
         </button>
 
         {/* ═══════════ FORM ═══════════ */}
         {showForm && (
           <div style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
+            background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
             border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "16px",
           }}>
-            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#1e293b", margin: 0 }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: 0 }}>
               Nova Correspondência
             </h3>
 
             {formError && (
-              <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", padding: "10px 14px", color: "#991b1b", fontSize: "13px" }}>
+              <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", padding: "10px 14px", color: "#991b1b", fontSize: "14px" }}>
                 {formError}
               </div>
             )}
@@ -522,7 +522,7 @@ export default function CorrespondenciasPorteiro() {
                       cursor: "pointer", color: p.text,
                     }}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               ) : showCamera ? (
@@ -544,16 +544,16 @@ export default function CorrespondenciasPorteiro() {
                   <button onClick={openCamera} style={{
                     flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
-                    alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
+                    alignItems: "center", gap: "6px", color: "var(--muted-foreground)", fontSize: "14px", fontWeight: 600,
                   }}>
-                    <Camera className="w-6 h-6" /> Câmera
+                    <Camera className="w-7 h-7" /> Câmera
                   </button>
                   <button onClick={() => fileInputRef.current?.click()} style={{
                     flex: 1, padding: "14px 16px", borderRadius: "12px", border: "2px dashed #cbd5e1",
                     background: "#f8fafc", cursor: "pointer", display: "flex", flexDirection: "column",
-                    alignItems: "center", gap: "6px", color: "#64748b", fontSize: "13px", fontWeight: 600,
+                    alignItems: "center", gap: "6px", color: "var(--muted-foreground)", fontSize: "14px", fontWeight: 600,
                   }}>
-                    <Package className="w-6 h-6" /> Galeria
+                    <Package className="w-7 h-7" /> Galeria
                   </button>
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} style={{ display: "none" }} />
                 </div>
@@ -567,7 +567,7 @@ export default function CorrespondenciasPorteiro() {
               style={{
                 width: "100%", padding: "14px", borderRadius: "14px", border: "none",
                 background: saving ? "#94a3b8" : "linear-gradient(135deg, #10b981, #059669)",
-                color: "#fff", fontSize: "15px", fontWeight: 700, cursor: saving ? "default" : "pointer",
+                color: "#fff", fontSize: "16px", fontWeight: 700, cursor: saving ? "default" : "pointer",
               }}
             >
               {saving ? "Registrando..." : "✅ Registrar Correspondência"}
@@ -589,7 +589,7 @@ export default function CorrespondenciasPorteiro() {
                 padding: "8px 16px", borderRadius: "20px", border: "none",
                 background: filter === f.v ? "#6366f1" : "#e2e8f0",
                 color: filter === f.v ? "#fff" : "#475569",
-                fontSize: "13px", fontWeight: 600, cursor: "pointer",
+                fontSize: "14px", fontWeight: 600, cursor: "pointer",
               }}
             >
               {f.l}
@@ -600,11 +600,11 @@ export default function CorrespondenciasPorteiro() {
             style={{
               marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
-              background: "#fff",
-              color: "#d97706", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+              background: "var(--color-card, #fff)",
+              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
-            <FileText className="w-4 h-4" /> Relatório
+            <FileText className="w-5 h-5" /> Relatório
           </button>
         </div>
 
@@ -629,7 +629,7 @@ export default function CorrespondenciasPorteiro() {
 
         {/* Search bar */}
         <div style={{ position: "relative" }}>
-          <Search className="w-4 h-4" style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
+          <Search className="w-5 h-5" style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} />
           <input
             type="text"
             value={searchTerm}
@@ -649,7 +649,7 @@ export default function CorrespondenciasPorteiro() {
             textAlign: "center", padding: "3rem 1rem", color: "#94a3b8",
           }}>
             <Mail className="w-12 h-12 mx-auto mb-3" style={{ opacity: 0.4 }} />
-            <p style={{ fontWeight: 600, fontSize: "15px" }}>Nenhuma correspondência encontrada</p>
+            <p style={{ fontWeight: 600, fontSize: "16px" }}>Nenhuma correspondência encontrada</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -660,7 +660,7 @@ export default function CorrespondenciasPorteiro() {
                   key={c.id}
                   onClick={() => setExpandedId(isExpanded ? null : c.id)}
                   style={{
-                    background: "#fff", borderRadius: "16px", border: "1px solid #e2e8f0",
+                    background: "var(--color-card, #fff)", borderRadius: "16px", border: "1px solid #e2e8f0",
                     overflow: "hidden", cursor: "pointer", transition: "all 0.2s",
                   }}
                 >
@@ -673,20 +673,20 @@ export default function CorrespondenciasPorteiro() {
                         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                       }}>
                         {c.status === "pendente"
-                          ? <Clock className="w-5 h-5" style={{ color: "#d97706" }} />
-                          : <CheckCircle2 className="w-5 h-5" style={{ color: "#16a34a" }} />}
+                          ? <Clock className="w-6 h-6" style={{ color: "#d97706" }} />
+                          : <CheckCircle2 className="w-6 h-6" style={{ color: "#16a34a" }} />}
                       </div>
                       <div style={{ minWidth: 0 }}>
-                        <p style={{ fontWeight: 700, fontSize: "14px", color: "#1e293b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        <p style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {c.morador_name}
                         </p>
-                        <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>
+                        <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: 0 }}>
                           Bloco {c.bloco} · Apto {c.apartamento} · {tipoLabel[c.tipo] || c.tipo}
                         </p>
                       </div>
                     </div>
                     <div style={{
-                      padding: "4px 10px", borderRadius: "20px", fontSize: "11px", fontWeight: 700,
+                      padding: "4px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: 700,
                       background: c.status === "pendente" ? "#fef3c7" : "#dcfce7",
                       color: c.status === "pendente" ? "#92400e" : "#166534",
                       flexShrink: 0,
@@ -703,32 +703,32 @@ export default function CorrespondenciasPorteiro() {
                     }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>PROTOCOLO</span>
-                          <p style={{ fontSize: "13px", fontWeight: 700, color: "#6366f1", margin: "2px 0 0" }}>{c.protocolo}</p>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>PROTOCOLO</span>
+                          <p style={{ fontSize: "14px", fontWeight: 700, color: "#6366f1", margin: "2px 0 0" }}>{c.protocolo}</p>
                         </div>
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>DATA/HORA</span>
-                          <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{formatDate(c.created_at)}</p>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>DATA/HORA</span>
+                          <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{formatDate(c.created_at)}</p>
                         </div>
                       </div>
 
                       {c.remetente && (
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>REMETENTE</span>
-                          <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{c.remetente}</p>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>REMETENTE</span>
+                          <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{c.remetente}</p>
                         </div>
                       )}
 
                       {c.descricao && (
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>DESCRIÇÃO</span>
-                          <p style={{ fontSize: "13px", color: "#1e293b", margin: "2px 0 0" }}>{c.descricao}</p>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>DESCRIÇÃO</span>
+                          <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "2px 0 0" }}>{c.descricao}</p>
                         </div>
                       )}
 
                       {c.foto && (
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>FOTO</span>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>FOTO</span>
                           <img src={c.foto} alt="Correspondência" style={{
                             width: "100%", borderRadius: "10px", maxHeight: "400px",
                             objectFit: "contain", marginTop: "4px", background: "#f1f5f9",
@@ -738,8 +738,8 @@ export default function CorrespondenciasPorteiro() {
 
                       {c.retirado_at && (
                         <div>
-                          <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>RETIRADA EM</span>
-                          <p style={{ fontSize: "13px", color: "#16a34a", fontWeight: 600, margin: "2px 0 0" }}>
+                          <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>RETIRADA EM</span>
+                          <p style={{ fontSize: "14px", color: "#16a34a", fontWeight: 600, margin: "2px 0 0" }}>
                             {formatDate(c.retirado_at)}
                           </p>
                         </div>
@@ -751,7 +751,7 @@ export default function CorrespondenciasPorteiro() {
                           style={{
                             width: "100%", padding: "14px 16px", borderRadius: "12px", border: "none",
                             background: "linear-gradient(135deg, #10b981, #059669)",
-                            color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer",
+                            color: "#fff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
                             marginTop: "4px",
                           }}
                         >
@@ -766,11 +766,11 @@ export default function CorrespondenciasPorteiro() {
                           display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                           width: "100%", padding: "10px", borderRadius: "10px", border: "none",
                           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                          color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer",
+                          color: "#fff", fontSize: "14px", fontWeight: 700, cursor: "pointer",
                           marginTop: "4px",
                         }}
                       >
-                        <Download className="w-4 h-4" /> Baixar PDF deste Registro
+                        <Download className="w-5 h-5" /> Baixar PDF deste Registro
                       </button>
                     </div>
                   )}
@@ -788,7 +788,7 @@ export default function CorrespondenciasPorteiro() {
           display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
         }}>
           <div style={{
-            background: "#fff", borderRadius: "20px", padding: "24px",
+            background: "var(--color-card, #fff)", borderRadius: "20px", padding: "24px",
             width: "100%", maxWidth: "400px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
           }}>
             {/* Header */}
@@ -804,12 +804,12 @@ export default function CorrespondenciasPorteiro() {
                   </svg>
                 </div>
                 <div>
-                  <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>Correspondência Registrada!</h3>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>Envie o aviso via WhatsApp</p>
+                  <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>Correspondência Registrada!</h3>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Envie o aviso via WhatsApp</p>
                 </div>
               </div>
               <button onClick={() => setWhatsappModal(null)} style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}>
-                <X className="w-5 h-5" style={{ color: "#94a3b8" }} />
+                <X className="w-6 h-6" style={{ color: "#94a3b8" }} />
               </button>
             </div>
 
@@ -818,11 +818,11 @@ export default function CorrespondenciasPorteiro() {
               background: "#f0fdf4", borderRadius: "12px", padding: "14px",
               border: "1px solid #86efac", marginBottom: "16px",
             }}>
-              <p style={{ fontSize: "13px", color: "#15803d", fontWeight: 600 }}>
-                <CheckCircle2 className="w-4 h-4" style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} />
+              <p style={{ fontSize: "14px", color: "#15803d", fontWeight: 600 }}>
+                <CheckCircle2 className="w-5 h-5" style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} />
                 Protocolo: <strong>{whatsappModal.protocolo}</strong>
               </p>
-              <p style={{ fontSize: "12px", color: "#16a34a", marginTop: "4px" }}>
+              <p style={{ fontSize: "13px", color: "#16a34a", marginTop: "4px" }}>
                 {whatsappModal.tipoCorr} para <strong>{whatsappModal.moradorName}</strong>
               </p>
             </div>
@@ -834,7 +834,7 @@ export default function CorrespondenciasPorteiro() {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
                   padding: "14px", borderRadius: "14px", background: "#25d366",
-                  border: "none", color: p.text, fontWeight: 700, fontSize: "15px",
+                  border: "none", color: p.text, fontWeight: 700, fontSize: "16px",
                   cursor: "pointer", width: "100%",
                 }}
               >
@@ -850,7 +850,7 @@ export default function CorrespondenciasPorteiro() {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                   padding: "14px 16px", borderRadius: "12px",
                   background: "transparent", border: "1px solid #e2e8f0",
-                  color: "#64748b", fontWeight: 600, fontSize: "14px",
+                  color: "var(--muted-foreground)", fontWeight: 600, fontSize: "15px",
                   cursor: "pointer", width: "100%",
                 }}
               >

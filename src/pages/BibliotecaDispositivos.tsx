@@ -58,11 +58,11 @@ function IntegrationBadge({ type }: Readonly<{ type: "cloud" | "local" | "hybrid
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: "4px",
-      fontSize: "11px", fontWeight: 600, padding: "2px 8px",
+      fontSize: "12px", fontWeight: 600, padding: "2px 8px",
       borderRadius: "20px", background: `${colors[type]}15`,
       color: colors[type], whiteSpace: "nowrap",
     }}>
-      <Icon style={{ width: 12, height: 12 }} />
+      <Icon style={{ width: 16, height: 16 }} />
       {INTEGRATION_LABELS[type]}
     </span>
   );
@@ -92,8 +92,8 @@ function BrandCard({ brand, isActive, onClick }: Readonly<{ brand: BrandInfo; is
         flexShrink: 0,
       }}
     >
-      <span style={{ fontSize: "14px", fontWeight: 700 }}>{brand.name.split("/")[0].trim()}</span>
-      <span style={{ fontSize: "11px", opacity: 0.7 }}>{count} dispositivo{countSuffix}</span>
+      <span style={{ fontSize: "15px", fontWeight: 700 }}>{brand.name.split("/")[0].trim()}</span>
+      <span style={{ fontSize: "12px", opacity: 0.7 }}>{count} dispositivo{countSuffix}</span>
     </button>
   );
 }
@@ -105,7 +105,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
 
   return (
     <div style={{
-      background: "#fff",
+      background: "var(--color-card, #fff)",
       borderRadius: "16px",
       overflow: "hidden",
       border: device.recommended ? "2px solid #003580" : "1px solid #e2e8f0",
@@ -120,14 +120,14 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
           color: "#fff",
           padding: "6px 16px",
-          fontSize: "11px",
+          fontSize: "12px",
           fontWeight: 700,
           display: "flex",
           alignItems: "center",
           gap: "6px",
           letterSpacing: "0.5px",
         }}>
-          <Star style={{ width: 12, height: 12 }} fill="#fbbf24" color="#fbbf24" />
+          <Star style={{ width: 16, height: 16 }} fill="#fbbf24" color="#fbbf24" />
           RECOMENDADO PORTARIA X
         </div>
       )}
@@ -138,17 +138,17 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
               <span style={{
-                fontSize: "10px", fontWeight: 700, color: "#64748b",
+                fontSize: "12px", fontWeight: 700, color: "var(--muted-foreground)",
                 textTransform: "uppercase", letterSpacing: "0.5px",
               }}>
                 {brand?.name}
               </span>
               <IntegrationBadge type={device.integrationType} />
             </div>
-            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#0f172a", margin: "6px 0 0" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: "6px 0 0" }}>
               {device.name}
             </h3>
-            <p style={{ fontSize: "12px", color: "#64748b", margin: "2px 0 0" }}>
+            <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: "2px 0 0" }}>
               {device.model}
             </p>
           </div>
@@ -162,7 +162,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
           }}>
             <span style={{
               display: "inline-flex", alignItems: "center", gap: "4px",
-              fontSize: "11px", fontWeight: 600, padding: "3px 10px",
+              fontSize: "12px", fontWeight: 600, padding: "3px 10px",
               borderRadius: "20px",
               background: device.available ? "#dcfce7" : "#fef9c3",
               color: device.available ? "#166534" : "#854d0e",
@@ -174,7 +174,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
               )}
             </span>
             {device.priceRange && (
-              <span style={{ fontSize: "13px", fontWeight: 700, color: "#003580" }}>
+              <span style={{ fontSize: "14px", fontWeight: 700, color: "#003580" }}>
                 {device.priceRange}
               </span>
             )}
@@ -183,7 +183,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
 
         {/* Description */}
         <p style={{
-          fontSize: "13px", color: "#334155", margin: "12px 0 0",
+          fontSize: "14px", color: "var(--card-foreground)", margin: "12px 0 0",
           lineHeight: 1.6,
         }}>
           {device.description}
@@ -195,18 +195,18 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
         }}>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: "4px",
-            fontSize: "11px", fontWeight: 600, padding: "3px 10px",
-            borderRadius: "20px", background: "#f1f5f9", color: "#475569",
+            fontSize: "12px", fontWeight: 600, padding: "3px 10px",
+            borderRadius: "20px", background: "#f1f5f9", color: "var(--muted-foreground)",
           }}>
             <CategoryIcon cat={device.category} size={12} color="#475569" />
             {CATEGORY_LABELS[device.category]}
           </span>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: "4px",
-            fontSize: "11px", fontWeight: 600, padding: "3px 10px",
+            fontSize: "12px", fontWeight: 600, padding: "3px 10px",
             borderRadius: "20px", background: "#eff6ff", color: "#1e40af",
           }}>
-            <Cpu style={{ width: 12, height: 12 }} />
+            <Cpu style={{ width: 16, height: 16 }} />
             {PROTOCOL_LABELS[device.protocol]}
           </span>
         </div>
@@ -247,7 +247,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
             gap: "6px",
             marginTop: "12px",
             padding: "8px",
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 600,
             color: "#003580",
             borderRadius: "8px",
@@ -255,9 +255,9 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
           }}
         >
           {expanded ? (
-            <><ChevronUp style={{ width: 16, height: 16 }} /> Menos detalhes</>
+            <><ChevronUp style={{ width: 20, height: 20 }} /> Menos detalhes</>
           ) : (
-            <><ChevronDown style={{ width: 16, height: 16 }} /> Mais detalhes</>
+            <><ChevronDown style={{ width: 20, height: 20 }} /> Mais detalhes</>
           )}
         </button>
 
@@ -273,14 +273,14 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
           }}>
             {/* Features */}
             <div>
-              <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", margin: "0 0 8px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <CheckCircle2 style={{ width: 14, height: 14, color: "#059669" }} />
+              <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 8px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <CheckCircle2 style={{ width: 18, height: 18, color: "#059669" }} />
                 Funcionalidades
               </h4>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                 {device.features.map((f) => (
                   <span key={f} style={{
-                    fontSize: "12px", padding: "4px 10px",
+                    fontSize: "13px", padding: "4px 10px",
                     borderRadius: "20px", background: "#f0fdf4",
                     color: "#166534", border: "1px solid #bbf7d0",
                   }}>
@@ -292,22 +292,22 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
 
             {/* Use case */}
             <div>
-              <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", margin: "0 0 6px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <Shield style={{ width: 14, height: 14, color: "#003580" }} />
+              <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 6px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <Shield style={{ width: 18, height: 18, color: "#003580" }} />
                 Caso de Uso
               </h4>
-              <p style={{ fontSize: "13px", color: "#334155", margin: 0, lineHeight: 1.6 }}>
+              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: 0, lineHeight: 1.6 }}>
                 {device.useCase}
               </p>
             </div>
 
             {/* Install notes */}
             <div>
-              <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", margin: "0 0 6px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <Settings2 style={{ width: 14, height: 14, color: "#d97706" }} />
+              <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 6px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <Settings2 style={{ width: 18, height: 18, color: "#d97706" }} />
                 Instalação
               </h4>
-              <p style={{ fontSize: "13px", color: "#334155", margin: 0, lineHeight: 1.6, background: "#fffbeb", padding: "10px 12px", borderRadius: "8px", border: "1px solid #fde68a" }}>
+              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: 0, lineHeight: 1.6, background: "#fffbeb", padding: "10px 12px", borderRadius: "8px", border: "1px solid #fde68a" }}>
                 {device.installNotes}
               </p>
             </div>
@@ -315,13 +315,13 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
             {/* Protocols */}
             {device.specs.protocols && (
               <div>
-                <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", margin: "0 0 6px" }}>
+                <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 6px" }}>
                   Protocolos suportados
                 </h4>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {device.specs.protocols.map((p) => (
                     <span key={p} style={{
-                      fontSize: "12px", padding: "4px 10px",
+                      fontSize: "13px", padding: "4px 10px",
                       borderRadius: "20px", background: "#eff6ff",
                       color: "#1e40af", border: "1px solid #bfdbfe",
                     }}>
@@ -335,13 +335,13 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
             {/* Extra specs */}
             {device.specs.extras && (
               <div>
-                <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", margin: "0 0 6px" }}>
+                <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 6px" }}>
                   Extras
                 </h4>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {device.specs.extras.map((e) => (
                     <span key={e} style={{
-                      fontSize: "12px", padding: "4px 10px",
+                      fontSize: "13px", padding: "4px 10px",
                       borderRadius: "20px", background: "#f5f3ff",
                       color: "#6d28d9", border: "1px solid #ddd6fe",
                     }}>
@@ -354,7 +354,7 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
 
             {/* Dimensions */}
             {device.specs.dimensions && (
-              <div style={{ fontSize: "12px", color: "#64748b" }}>
+              <div style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>
                 <strong>Dimensões:</strong> {device.specs.dimensions}
               </div>
             )}
@@ -375,12 +375,12 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                   color: "#fff",
                   fontWeight: 700,
-                  fontSize: "14px",
+                  fontSize: "15px",
                   textDecoration: "none",
                   boxShadow: "0 4px 12px rgba(0,53,128,0.3)",
                 }}
               >
-                <ExternalLink style={{ width: 16, height: 16 }} />
+                <ExternalLink style={{ width: 20, height: 20 }} />
                 Ver preços e comprar
               </a>
             )}
@@ -395,10 +395,10 @@ function DeviceCard({ device }: Readonly<{ device: DeviceModel }>) {
 function Spec({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
     <div>
-      <div style={{ fontSize: "10px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.3px" }}>
+      <div style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.3px" }}>
         {label}
       </div>
-      <div style={{ fontSize: "12px", fontWeight: 600, color: "#334155", marginTop: "2px" }}>
+      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--card-foreground)", marginTop: "2px" }}>
         {value}
       </div>
     </div>
@@ -481,13 +481,13 @@ export default function BibliotecaDispositivos() {
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
             }}
           >
-            <ArrowLeft className="w-5 h-5" style={{ color: p.text }} />
+            <ArrowLeft className="w-6 h-6" style={{ color: p.text }} />
           </button>
           <div>
             <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700 }}>
               Biblioteca de Dispositivos
             </h1>
-            <p style={{ margin: "4px 0 0", fontSize: "13px", opacity: 0.8 }}>
+            <p style={{ margin: "4px 0 0", fontSize: "14px", opacity: 0.8 }}>
               Hardware compatível com Portaria X
             </p>
           </div>
@@ -500,7 +500,7 @@ export default function BibliotecaDispositivos() {
         }}>
           <Search style={{
             position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)",
-            width: 18, height: 18, color: "#94a3b8",
+            width: 22, height: 22, color: "#94a3b8",
           }} />
           <input
             type="text"
@@ -514,7 +514,7 @@ export default function BibliotecaDispositivos() {
               border: "none",
               background: isDark ? "rgba(255,255,255,0.15)" : "#f0f4f8",
               color: p.text,
-              fontSize: "14px",
+              fontSize: "15px",
               outline: "none",
               boxSizing: "border-box",
             }}
@@ -531,12 +531,12 @@ export default function BibliotecaDispositivos() {
           gap: "12px",
           marginBottom: "16px",
         }}>
-          <StatBox label="Dispositivos" value={DEVICES.length} icon={<Package style={{ width: 16, height: 16, color: "#003580" }} />} />
-          <StatBox label="Marcas" value={BRANDS.length} icon={<Globe style={{ width: 16, height: 16, color: "#7c3aed" }} />} />
+          <StatBox label="Dispositivos" value={DEVICES.length} icon={<Package style={{ width: 20, height: 20, color: "#003580" }} />} />
+          <StatBox label="Marcas" value={BRANDS.length} icon={<Globe style={{ width: 20, height: 20, color: "#7c3aed" }} />} />
           <StatBox
             label="Integrados"
             value={DEVICES.filter((d) => d.available).length}
-            icon={<CheckCircle2 style={{ width: 16, height: 16, color: "#059669" }} />}
+            icon={<CheckCircle2 style={{ width: 20, height: 20, color: "#059669" }} />}
           />
         </div>
 
@@ -547,8 +547,8 @@ export default function BibliotecaDispositivos() {
           border: "1px solid #fde68a",
           display: "flex", gap: "10px", alignItems: "flex-start",
         }}>
-          <Info style={{ width: 20, height: 20, color: "#f59e0b", flexShrink: 0, marginTop: 2 }} />
-          <div style={{ fontSize: "12px", lineHeight: 1.5, color: "#92400e" }}>
+          <Info style={{ width: 24, height: 24, color: "#f59e0b", flexShrink: 0, marginTop: 2 }} />
+          <div style={{ fontSize: "13px", lineHeight: 1.5, color: "#92400e" }}>
             <p style={{ fontWeight: 700, marginBottom: 3 }}>⚡ Instalação Segura</p>
             <p style={{ margin: "2px 0" }}>• Conecte o módulo na <strong>botoeira do motor</strong> (contato seco), nunca direto na alimentação.</p>
             <p style={{ margin: "2px 0" }}>• Wi-Fi <strong>2.4 GHz dedicado</strong> com sinal forte no local do módulo é obrigatório.</p>
@@ -577,7 +577,7 @@ export default function BibliotecaDispositivos() {
                 borderRadius: "20px",
                 border: "none",
                 cursor: "pointer",
-                fontSize: "13px",
+                fontSize: "14px",
                 fontWeight: 600,
                 whiteSpace: "nowrap",
                 background: tab === t.key ? "#003580" : "#fff",
@@ -600,18 +600,18 @@ export default function BibliotecaDispositivos() {
               borderRadius: "20px",
               border: "none",
               cursor: "pointer",
-              fontSize: "13px",
+              fontSize: "14px",
               fontWeight: 600,
               whiteSpace: "nowrap",
               background: showFilters ? "#f1f5f9" : "#fff",
-              color: "#64748b",
+              color: "var(--muted-foreground)",
               display: "flex",
               alignItems: "center",
               gap: "4px",
               boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
             }}
           >
-            <Filter style={{ width: 14, height: 14 }} />
+            <Filter style={{ width: 18, height: 18 }} />
             Filtros
           </button>
         </div>
@@ -619,7 +619,7 @@ export default function BibliotecaDispositivos() {
         {/* Filters panel */}
         {showFilters && (
           <div style={{
-            background: "#fff",
+            background: "var(--color-card, #fff)",
             borderRadius: "12px",
             padding: "14px",
             marginBottom: "12px",
@@ -628,7 +628,7 @@ export default function BibliotecaDispositivos() {
             flexDirection: "column",
             gap: "10px",
           }}>
-            <div style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>Tipo de integração</div>
+            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--muted-foreground)" }}>Tipo de integração</div>
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               {[
                 { value: null, label: "Todos" },
@@ -644,7 +644,7 @@ export default function BibliotecaDispositivos() {
                     borderRadius: "16px",
                     border: "1px solid #e2e8f0",
                     cursor: "pointer",
-                    fontSize: "12px",
+                    fontSize: "13px",
                     fontWeight: 600,
                     background: filterIntegration === f.value ? "#003580" : "#f8fafc",
                     color: filterIntegration === f.value ? "#fff" : "#475569",
@@ -655,7 +655,7 @@ export default function BibliotecaDispositivos() {
               ))}
             </div>
 
-            <div style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>Status</div>
+            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--muted-foreground)" }}>Status</div>
             <div style={{ display: "flex", gap: "6px" }}>
               {[
                 { value: null, label: "Todos" },
@@ -670,7 +670,7 @@ export default function BibliotecaDispositivos() {
                     borderRadius: "16px",
                     border: "1px solid #e2e8f0",
                     cursor: "pointer",
-                    fontSize: "12px",
+                    fontSize: "13px",
                     fontWeight: 600,
                     background: filterAvailable === f.value ? "#003580" : "#f8fafc",
                     color: filterAvailable === f.value ? "#fff" : "#475569",
@@ -724,7 +724,7 @@ export default function BibliotecaDispositivos() {
                 borderRadius: "12px",
                 border: "1px solid #e2e8f0",
                 cursor: "pointer",
-                fontSize: "12px",
+                fontSize: "13px",
                 fontWeight: 600,
                 background: selectedCat === null ? "#003580" : "#fff",
                 color: selectedCat === null ? "#fff" : "#475569",
@@ -744,7 +744,7 @@ export default function BibliotecaDispositivos() {
                     borderRadius: "12px",
                     border: "1px solid #e2e8f0",
                     cursor: "pointer",
-                    fontSize: "12px",
+                    fontSize: "13px",
                     fontWeight: 600,
                     display: "flex",
                     alignItems: "center",
@@ -756,7 +756,7 @@ export default function BibliotecaDispositivos() {
                   <CategoryIcon cat={cat} size={14} color={selectedCat === cat ? "#fff" : "#475569"} />
                   {CATEGORY_LABELS[cat]}
                   <span style={{
-                    fontSize: "10px",
+                    fontSize: "12px",
                     background: selectedCat === cat ? "rgba(255,255,255,0.2)" : "#f1f5f9",
                     padding: "2px 6px",
                     borderRadius: "10px",
@@ -775,7 +775,7 @@ export default function BibliotecaDispositivos() {
           if (!brand) return null;
           return (
             <div style={{
-              background: "#fff",
+              background: "var(--color-card, #fff)",
               borderRadius: "14px",
               padding: "16px",
               marginBottom: "14px",
@@ -783,14 +783,14 @@ export default function BibliotecaDispositivos() {
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
-                  <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#0f172a", margin: 0 }}>{brand.name}</h3>
-                  <p style={{ fontSize: "12px", color: "#64748b", margin: "2px 0 0" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: 0 }}>{brand.name}</h3>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: "2px 0 0" }}>
                     {brand.country} · <a href={brand.website} target="_blank" rel="noopener noreferrer" style={{ color: "#003580" }}>{brand.website.replace("https://", "")}</a>
                   </p>
                 </div>
                 <IntegrationBadge type={brand.integrationType} />
               </div>
-              <p style={{ fontSize: "13px", color: "#334155", margin: "10px 0 0", lineHeight: 1.6 }}>
+              <p style={{ fontSize: "14px", color: "var(--card-foreground)", margin: "10px 0 0", lineHeight: 1.6 }}>
                 {brand.description}
               </p>
             </div>
@@ -799,7 +799,7 @@ export default function BibliotecaDispositivos() {
 
         {/* Results count */}
         <div style={{
-          fontSize: "12px", fontWeight: 600, color: "#64748b",
+          fontSize: "13px", fontWeight: 600, color: "var(--muted-foreground)",
           marginBottom: "12px",
         }}>
           {filtered.length} dispositivo{filtered.length === 1 ? "" : "s"} encontrado{filtered.length === 1 ? "" : "s"}
@@ -814,11 +814,11 @@ export default function BibliotecaDispositivos() {
           {filtered.length === 0 && (
             <div style={{
               textAlign: "center", padding: "40px 20px",
-              color: "#94a3b8", fontSize: "14px",
+              color: "#94a3b8", fontSize: "15px",
             }}>
               <Package style={{ width: 40, height: 40, marginBottom: "12px", opacity: 0.4 }} />
               <p style={{ margin: 0 }}>Nenhum dispositivo encontrado</p>
-              <p style={{ margin: "4px 0 0", fontSize: "12px" }}>Tente ajustar os filtros ou a busca</p>
+              <p style={{ margin: "4px 0 0", fontSize: "13px" }}>Tente ajustar os filtros ou a busca</p>
             </div>
           )}
         </div>
@@ -827,12 +827,12 @@ export default function BibliotecaDispositivos() {
         <div style={{
           marginTop: "24px",
           padding: "16px",
-          background: "#fff",
+          background: "var(--color-card, #fff)",
           borderRadius: "14px",
           border: "1px solid #e2e8f0",
           textAlign: "center",
         }}>
-          <p style={{ fontSize: "13px", color: "#64748b", margin: 0, lineHeight: 1.6 }}>
+          <p style={{ fontSize: "14px", color: "var(--muted-foreground)", margin: 0, lineHeight: 1.6 }}>
             💡 A Portaria X está constantemente adicionando suporte a novos dispositivos.
             Hardware marcado como <strong>"Em breve"</strong> será integrado nas próximas atualizações.
           </p>
@@ -846,15 +846,15 @@ export default function BibliotecaDispositivos() {
 function StatBox({ label, value, icon }: Readonly<{ label: string; value: number; icon: React.ReactNode }>) {
   return (
     <div style={{
-      background: "#fff",
+      background: "var(--color-card, #fff)",
       borderRadius: "12px",
       padding: "14px 16px",
       textAlign: "center",
       border: "1px solid #e2e8f0",
     }}>
       <div style={{ display: "flex", justifyContent: "center", marginBottom: "4px" }}>{icon}</div>
-      <div style={{ fontSize: "18px", fontWeight: 700, color: "#0f172a" }}>{value}</div>
-      <div style={{ fontSize: "11px", color: "#64748b" }}>{label}</div>
+      <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--card-foreground)" }}>{value}</div>
+      <div style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>{label}</div>
     </div>
   );
 }

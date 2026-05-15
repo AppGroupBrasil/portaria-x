@@ -157,7 +157,7 @@ function renderFeatureToggle(
           transition: "all 0.2s ease",
         }}
       >
-        <Icon className="w-5 h-5" style={{ color: iconColor }} />
+        <Icon className="w-6 h-6" style={{ color: iconColor }} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ fontSize: 14, fontWeight: 600, color: p.textHeading, marginBottom: 2 }}>{feature.label}</p>
@@ -169,7 +169,7 @@ function renderFeatureToggle(
         transition: "all 0.2s ease",
       }}>
         <div style={{
-          width: 22, height: 22, borderRadius: "50%", background: "#fff",
+          width: 26, height: 26, borderRadius: "50%", background: "var(--color-card, #fff)",
           boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "all 0.2s ease",
           transform: enabled ? "translateX(20px)" : "translateX(0)",
         }} />
@@ -296,8 +296,8 @@ export default function AdminFeaturesConfig() {
   }
 
   let statusIndicator: React.ReactNode = null;
-  if (saving) { statusIndicator = <Loader2 className="w-5 h-5 animate-spin text-white/60" />; }
-  else if (saved) { statusIndicator = <div className="flex items-center gap-1 text-emerald-300 text-sm font-medium"><Check className="w-4 h-4" /> Salvo</div>; }
+  if (saving) { statusIndicator = <Loader2 className="w-6 h-6 animate-spin text-white/60" />; }
+  else if (saved) { statusIndicator = <div className="flex items-center gap-1 text-emerald-300 text-sm font-medium"><Check className="w-5 h-5" /> Salvo</div>; }
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
@@ -323,7 +323,7 @@ export default function AdminFeaturesConfig() {
                 color: p.text,
               }}
             >
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowLeft className="w-7 h-7" />
             </button>
             <div>
               <span style={{ fontWeight: 700, fontSize: 18 }} className="block">
@@ -401,18 +401,18 @@ export default function AdminFeaturesConfig() {
                 flexShrink: 0,
               }}
             >
-              <Building2 className="w-5 h-5" style={{ color: "#ffffff" }} />
+              <Building2 className="w-6 h-6" style={{ color: "#ffffff" }} />
             </div>
             <div style={{ flex: 1, textAlign: "left" }}>
-              <p style={{ fontSize: "11px", color: p.textMuted, marginBottom: "2px" }}>
+              <p style={{ fontSize: "12px", color: p.textMuted, marginBottom: "2px" }}>
                 Condomínio selecionado
               </p>
-              <p style={{ fontSize: "15px", fontWeight: 600, color: p.textAccent }}>
+              <p style={{ fontSize: "16px", fontWeight: 600, color: p.textAccent }}>
                 {selectedCondo?.name || "Selecione..."}
               </p>
             </div>
             <ChevronDown
-              className="w-5 h-5"
+              className="w-6 h-6"
               style={{
                 color: p.textMuted,
                 transition: "transform 0.2s",
@@ -458,10 +458,10 @@ export default function AdminFeaturesConfig() {
                     border: "none",
                   }}
                 >
-                  <Building2 className="w-4 h-4" style={{ color: c.id === selectedCondoId ? p.accent : p.textMuted }} />
+                  <Building2 className="w-5 h-5" style={{ color: c.id === selectedCondoId ? p.accent : p.textMuted }} />
                   <span
                     style={{
-                      fontSize: "14px",
+                      fontSize: "15px",
                       fontWeight: c.id === selectedCondoId ? 600 : 400,
                       color: c.id === selectedCondoId ? p.textAccent : p.textSecondary,
                     }}
@@ -469,7 +469,7 @@ export default function AdminFeaturesConfig() {
                     {c.name}
                   </span>
                   {c.id === selectedCondoId && (
-                    <Check className="w-4 h-4 ml-auto" style={{ color: p.accent }} />
+                    <Check className="w-5 h-5 ml-auto" style={{ color: p.accent }} />
                   )}
                 </button>
               ))}
@@ -489,12 +489,12 @@ export default function AdminFeaturesConfig() {
             border: "none",
           }}
         >
-          <Settings className="w-5 h-5 shrink-0" style={{ color: "#6366f1", marginTop: "2px" }} />
+          <Settings className="w-6 h-6 shrink-0" style={{ color: "#6366f1", marginTop: "2px" }} />
           <div>
-            <p style={{ fontSize: "13px", fontWeight: 600, color: p.textAccent, marginBottom: "4px" }}>
+            <p style={{ fontSize: "14px", fontWeight: 600, color: p.textAccent, marginBottom: "4px" }}>
               Configuração de Funções
             </p>
-            <p style={{ fontSize: "12px", color: "#dc2626", lineHeight: 1.5 }}>
+            <p style={{ fontSize: "13px", color: "#dc2626", lineHeight: 1.5 }}>
               Habilite ou desabilite as funções para cada perfil do condomínio selecionado.
               Funções desabilitadas ficam invisíveis no painel do respectivo perfil.
             </p>
@@ -524,7 +524,7 @@ export default function AdminFeaturesConfig() {
                 style={{
                   flex: 1,
                   padding: "12px 8px",
-                  fontSize: "13px",
+                  fontSize: "14px",
                   fontWeight: 700,
                   border: "none",
                   background: tabBg,
@@ -539,7 +539,7 @@ export default function AdminFeaturesConfig() {
               >
                 {t.label}
                 <span style={{
-                  fontSize: "10px",
+                  fontSize: "12px",
                   fontWeight: 700,
                   padding: "1px 6px",
                   borderRadius: "6px",
@@ -556,8 +556,8 @@ export default function AdminFeaturesConfig() {
         {/* Summary + bulk actions */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <Settings className="w-4 h-4" style={{ color: currentTab.color }} />
-            <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
+            <Settings className="w-5 h-5" style={{ color: currentTab.color }} />
+            <span style={{ fontSize: "14px", fontWeight: 600, color: p.textHeading }}>
               {enabledCount} de {currentTab.features.length} ativas
             </span>
           </div>
@@ -565,7 +565,7 @@ export default function AdminFeaturesConfig() {
             <button
               onClick={() => toggleAll(currentTab.features, true)}
               style={{
-                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                fontSize: "12px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
                 border: "none", background: `${currentTab.color}15`, color: currentTab.color, cursor: "pointer",
               }}
             >
@@ -574,7 +574,7 @@ export default function AdminFeaturesConfig() {
             <button
               onClick={() => toggleAll(currentTab.features, false)}
               style={{
-                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                fontSize: "12px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "#e5e7eb"}`, background: isDark ? "rgba(255,255,255,0.04)" : "#fff", color: "#dc2626", cursor: "pointer",
               }}
             >
@@ -586,18 +586,18 @@ export default function AdminFeaturesConfig() {
         {/* Feature toggles */}
         {loadingConfig ? (
           <div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
-            <Loader2 className="w-6 h-6 animate-spin" style={{ color: p.textAccent }} />
+            <Loader2 className="w-7 h-7 animate-spin" style={{ color: p.textAccent }} />
           </div>
         ) : (
           <>
             {/* ══ SECTION: Funções Padrão ══ */}
             <div style={{ marginBottom: "0.5rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px", padding: "0 4px" }}>
-                <Star className="w-4 h-4" style={{ color: currentTab.color }} />
-                <span style={{ fontSize: "13px", fontWeight: 700, color: currentTab.color, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                <Star className="w-5 h-5" style={{ color: currentTab.color }} />
+                <span style={{ fontSize: "14px", fontWeight: 700, color: currentTab.color, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                   Funções Padrão
                 </span>
-                <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: `${currentTab.color}15`, color: currentTab.color }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: `${currentTab.color}15`, color: currentTab.color }}>
                   Incluídas para todos
                 </span>
               </div>
@@ -615,11 +615,11 @@ export default function AdminFeaturesConfig() {
                   background: isDark ? "rgba(139,92,246,0.08)" : "rgba(139,92,246,0.05)",
                   border: `1px dashed ${isDark ? "rgba(139,92,246,0.3)" : "rgba(139,92,246,0.25)"}`,
                 }}>
-                  <Sparkles className="w-4 h-4" style={{ color: "#8b5cf6" }} />
-                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  <Sparkles className="w-5 h-5" style={{ color: "#8b5cf6" }} />
+                  <span style={{ fontSize: "14px", fontWeight: 700, color: "#8b5cf6", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                     Funções Extras
                   </span>
-                  <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: "rgba(139,92,246,0.12)", color: "#8b5cf6" }}>
+                  <span style={{ fontSize: "12px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: "rgba(139,92,246,0.12)", color: "#8b5cf6" }}>
                     Desabilitadas por padrão
                   </span>
                 </div>

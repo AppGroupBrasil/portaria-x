@@ -135,7 +135,7 @@ export default function SindicoEstouChegandoConfig() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3" style={{ padding: "1rem 1.5rem", height: "4rem" }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18, flex: 1 }}>Config. Estou Chegando</span>
           <TutorialButton title="Config. Estou Chegando — Sindico">
@@ -203,8 +203,8 @@ export default function SindicoEstouChegandoConfig() {
               </span>
             </div>
             {infoOpen
-              ? <ChevronUp style={{ width: 18, height: 18, color: p.isDarkBase ? "#93c5fd" : "#1d4ed8", flexShrink: 0 }} />
-              : <ChevronDown style={{ width: 18, height: 18, color: p.isDarkBase ? "#93c5fd" : "#1d4ed8", flexShrink: 0 }} />}
+              ? <ChevronUp style={{ width: 22, height: 22, color: p.isDarkBase ? "#93c5fd" : "#1d4ed8", flexShrink: 0 }} />
+              : <ChevronDown style={{ width: 22, height: 22, color: p.isDarkBase ? "#93c5fd" : "#1d4ed8", flexShrink: 0 }} />}
           </button>
           {/* Conteúdo colapsável */}
           {infoOpen && (
@@ -230,7 +230,7 @@ export default function SindicoEstouChegandoConfig() {
         {/* Toggle */}
         <div className="flex items-center justify-between rounded-2xl p-5" style={{ marginBottom: "1.2rem" }}>
           <div className="flex items-center gap-3">
-            <Navigation className="w-5 h-5" style={{ color: p.accentBright }} />
+            <Navigation className="w-6 h-6" style={{ color: p.accentBright }} />
             <div>
               <p className="font-medium" style={{ color: p.text }}>Funcionalidade ativa</p>
               <p className="text-xs" style={{ color: p.textSecondary }}>Habilitar notificação de chegada</p>
@@ -248,7 +248,7 @@ export default function SindicoEstouChegandoConfig() {
         {/* Schedule */}
         <div className="rounded-2xl p-5" style={{ marginBottom: "1.2rem" }}>
           <div className="flex items-center gap-2 mb-5">
-            <Clock className="w-5 h-5" style={{ color: p.accentBright }} />
+            <Clock className="w-6 h-6" style={{ color: p.accentBright }} />
             <p className="font-medium" style={{ color: p.text }}>Horário Ativo</p>
           </div>
           <p className="text-xs mb-5" style={{ color: p.textSecondary }}>
@@ -265,7 +265,7 @@ export default function SindicoEstouChegandoConfig() {
                   className="w-full pr-12 rounded-xl"
                   style={{ color: p.text, background: p.cardBg, border: "1.5px solid rgba(255,255,255,0.3)", minHeight: "48px", paddingLeft: "20px" }}
                 />
-                <Clock className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#ffffff" }} />
+                <Clock className="w-5 h-5 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#ffffff" }} />
               </div>
             </div>
             <div>
@@ -278,7 +278,7 @@ export default function SindicoEstouChegandoConfig() {
                   className="w-full pr-12 rounded-xl [&::-webkit-calendar-picker-indicator]{display:none}"
                   style={{ color: p.text, background: p.cardBg, border: "1.5px solid rgba(255,255,255,0.3)", minHeight: "48px", paddingLeft: "20px" }}
                 />
-                <Clock className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#ffffff" }} />
+                <Clock className="w-5 h-5 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#ffffff" }} />
               </div>
             </div>
           </div>
@@ -312,7 +312,7 @@ export default function SindicoEstouChegandoConfig() {
         <div className="rounded-2xl p-5" style={{ marginBottom: "1.2rem" }}>
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5" style={{ color: p.accentBright }} />
+              <MapPin className="w-6 h-6" style={{ color: p.accentBright }} />
               <p className="font-medium" style={{ color: p.text }}>Localização do Condomínio</p>
             </div>
             <button
@@ -320,7 +320,7 @@ export default function SindicoEstouChegandoConfig() {
               className="text-xs hover:underline flex items-center gap-1"
               style={{ color: p.accentBright }}
             >
-              <Navigation className="w-3 h-3" />
+              <Navigation className="w-4 h-4" />
               Usar minha localização
             </button>
           </div>
@@ -395,15 +395,15 @@ export default function SindicoEstouChegandoConfig() {
           style={{ background: saved ? "linear-gradient(135deg, #10b981, #059669)" : "#ffffff", color: saved ? "#ffffff" : "#003580", minHeight: "60px" }}
         >
           {saving ? (
-            <Loader2 className="w-6 h-6 animate-spin" />
+            <Loader2 className="w-7 h-7 animate-spin" />
           ) : saved ? (
             <>
-              <CheckCircle className="w-6 h-6" />
+              <CheckCircle className="w-7 h-7" />
               Salvo!
             </>
           ) : (
             <>
-              <Save className="w-6 h-6" />
+              <Save className="w-7 h-7" />
               Salvar Configuração
             </>
           )}

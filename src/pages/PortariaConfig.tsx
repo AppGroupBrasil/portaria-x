@@ -127,10 +127,10 @@ export default function PortariaConfig() {
             onClick={() => navigate("/dashboard")}
             style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3">
-            <Settings className="w-6 h-6" />
+            <Settings className="w-7 h-7" />
             <div>
               <h1 style={{ fontWeight: 700, fontSize: 18 }}>Configurações</h1>
               <p style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }}>Regras de acesso do condomínio</p>
@@ -143,7 +143,7 @@ export default function PortariaConfig() {
 
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", padding: "48px" }}>
-            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#64748b" }} />
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--muted-foreground)" }} />
           </div>
         ) : (
           <>
@@ -161,13 +161,13 @@ export default function PortariaConfig() {
                 border: "2px solid #003580", background: "transparent",
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
               }}>
-                <Palette className="w-5 h-5" style={{ color: "#003580" }} />
+                <Palette className="w-6 h-6" style={{ color: "#003580" }} />
               </div>
               <div style={{ flex: 1, textAlign: "left" }}>
-                <h2 style={{ fontWeight: 700, fontSize: "15px", color: "var(--color-foreground, #0f172a)" }}>Personalizar Dashboard</h2>
-                <p style={{ fontSize: "12px", color: "#64748b" }}>Reorganize ícones do dashboard e barra inferior</p>
+                <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>Personalizar Dashboard</h2>
+                <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Reorganize ícones do dashboard e barra inferior</p>
               </div>
-              <ChevronRight className="w-5 h-5" style={{ color: "#003580" }} />
+              <ChevronRight className="w-6 h-6" style={{ color: "#003580" }} />
             </button>
 
             {/* ═══ Section: Veículos ═══ */}
@@ -180,11 +180,11 @@ export default function PortariaConfig() {
                   width: "36px", height: "36px", borderRadius: "10px",
                   background: "#e0f2fe", display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <Car className="w-5 h-5" style={{ color: "#0284c7" }} />
+                  <Car className="w-6 h-6" style={{ color: "#0284c7" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a" }}>Controle de Veículos</h2>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>Regras para autorização de acesso de veículos</p>
+                  <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>Controle de Veículos</h2>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Regras para autorização de acesso de veículos</p>
                 </div>
               </div>
 
@@ -206,16 +206,16 @@ export default function PortariaConfig() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s", flexShrink: 0,
                 }}>
-                  {vehicleUniqueAccess && <CheckCircle2 className="w-4 h-4" style={{ color: p.text }} />}
+                  {vehicleUniqueAccess && <CheckCircle2 className="w-5 h-5" style={{ color: p.text }} />}
                 </div>
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <ShieldAlert className="w-4 h-4" style={{ color: vehicleUniqueAccess ? "#0284c7" : "#94a3b8" }} />
-                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
+                    <ShieldAlert className="w-5 h-5" style={{ color: vehicleUniqueAccess ? "#0284c7" : "#94a3b8" }} />
+                    <p style={{ fontWeight: 600, fontSize: "15px", color: "var(--card-foreground)", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       Acesso único por placa
                     </p>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     Só permitir o cadastro de uma nova autorização para um veículo quando não houver
                     nenhuma autorização ativa para a mesma placa.
                   </p>
@@ -240,16 +240,16 @@ export default function PortariaConfig() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s", flexShrink: 0,
                 }}>
-                  {vehicleLimitPerApt && <CheckCircle2 className="w-4 h-4" style={{ color: p.text }} />}
+                  {vehicleLimitPerApt && <CheckCircle2 className="w-5 h-5" style={{ color: p.text }} />}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <Hash className="w-4 h-4" style={{ color: vehicleLimitPerApt ? "#0284c7" : "#94a3b8" }} />
-                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
+                    <Hash className="w-5 h-5" style={{ color: vehicleLimitPerApt ? "#0284c7" : "#94a3b8" }} />
+                    <p style={{ fontWeight: 600, fontSize: "15px", color: "var(--card-foreground)", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       Limitar veículos por apartamento
                     </p>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     Limitar a quantidade de veículos com autorizações ativas por apartamento.
                   </p>
 
@@ -259,7 +259,7 @@ export default function PortariaConfig() {
                       onClick={(e) => e.stopPropagation()}
                       style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}
                     >
-                      <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>Limite:</span>
+                      <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>Limite:</span>
                       <input
                         type="number"
                         min="1"
@@ -269,11 +269,11 @@ export default function PortariaConfig() {
                         style={{
                           width: "80px", padding: "8px 12px", borderRadius: "10px",
                           border: "2px solid #0ea5e9", fontSize: "16px", fontWeight: 700,
-                          textAlign: "center", background: "#fff", color: "#0c4a6e",
+                          textAlign: "center", background: "var(--color-card, #fff)", color: "var(--card-foreground)",
                           outline: "none", boxSizing: "border-box",
                         }}
                       />
-                      <span style={{ fontSize: "12px", color: "#64748b" }}>veículos por apartamento</span>
+                      <span style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>veículos por apartamento</span>
                     </div>
                   )}
                 </div>
@@ -290,11 +290,11 @@ export default function PortariaConfig() {
                   width: "36px", height: "36px", borderRadius: "10px",
                   background: "#fef3c7", display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <Clock className="w-5 h-5" style={{ color: "#d97706" }} />
+                  <Clock className="w-6 h-6" style={{ color: "#d97706" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a" }}>Expiração de Autorizações</h2>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>Prazo máximo para autorizações de visitantes e veículos</p>
+                  <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>Expiração de Autorizações</h2>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Prazo máximo para autorizações de visitantes e veículos</p>
                 </div>
               </div>
 
@@ -315,16 +315,16 @@ export default function PortariaConfig() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s", flexShrink: 0,
                 }}>
-                  {maxAuthDaysEnabled && <CheckCircle2 className="w-4 h-4" style={{ color: p.text }} />}
+                  {maxAuthDaysEnabled && <CheckCircle2 className="w-5 h-5" style={{ color: p.text }} />}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <Clock className="w-4 h-4" style={{ color: maxAuthDaysEnabled ? "#d97706" : "#94a3b8" }} />
-                    <p style={{ fontWeight: 600, fontSize: "14px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
+                    <Clock className="w-5 h-5" style={{ color: maxAuthDaysEnabled ? "#d97706" : "#94a3b8" }} />
+                    <p style={{ fontWeight: 600, fontSize: "15px", color: "var(--card-foreground)", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                       Prazo máximo de autorização
                     </p>
                   </div>
-                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "4px", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>
                     Autorizações prévias e automáticas de visitantes e veículos expiram automaticamente após o prazo definido.
                   </p>
 
@@ -333,7 +333,7 @@ export default function PortariaConfig() {
                       onClick={(e) => e.stopPropagation()}
                       style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "12px" }}
                     >
-                      <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>Prazo:</span>
+                      <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>Prazo:</span>
                       <input
                         type="number"
                         min="1"
@@ -343,11 +343,11 @@ export default function PortariaConfig() {
                         style={{
                           width: "80px", padding: "8px 12px", borderRadius: "10px",
                           border: "2px solid #f59e0b", fontSize: "16px", fontWeight: 700,
-                          textAlign: "center", background: "#fff", color: "#92400e",
+                          textAlign: "center", background: "var(--color-card, #fff)", color: "#92400e",
                           outline: "none", boxSizing: "border-box",
                         }}
                       />
-                      <span style={{ fontSize: "12px", color: "#64748b" }}>dias</span>
+                      <span style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>dias</span>
                     </div>
                   )}
                 </div>
@@ -364,15 +364,15 @@ export default function PortariaConfig() {
                   width: "36px", height: "36px", borderRadius: "10px",
                   background: "#ede9fe", display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <FileText className="w-5 h-5" style={{ color: "#7c3aed" }} />
+                  <FileText className="w-6 h-6" style={{ color: "#7c3aed" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a" }}>Auto-Cadastro de Visitantes</h2>
-                  <p style={{ fontSize: "12px", color: "#64748b" }}>Campos obrigatórios no formulário de auto-cadastro</p>
+                  <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>Auto-Cadastro de Visitantes</h2>
+                  <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>Campos obrigatórios no formulário de auto-cadastro</p>
                 </div>
               </div>
 
-              <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "-8px" }}>
+              <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "-8px" }}>
                 O campo <strong>Nome</strong> é sempre obrigatório. Marque abaixo os demais campos que devem ser obrigatórios.
               </p>
 
@@ -403,13 +403,13 @@ export default function PortariaConfig() {
                   }}>
                     {requireFields[key] && <CheckCircle2 className="w-3.5 h-3.5" style={{ color: p.text }} />}
                   </div>
-                  <Icon className="w-4 h-4" style={{ color: requireFields[key] ? "#7c3aed" : "#94a3b8", flexShrink: 0 }} />
-                  <p style={{ fontWeight: 600, fontSize: "13px", color: "#0f172a", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{label}</p>
+                  <Icon className="w-5 h-5" style={{ color: requireFields[key] ? "#7c3aed" : "#94a3b8", flexShrink: 0 }} />
+                  <p style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)", wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "normal" }}>{label}</p>
                   {requireFields[key] && (
-                    <span style={{ marginLeft: "auto", fontSize: "11px", fontWeight: 700, color: "#7c3aed", background: "#ede9fe", padding: "2px 8px", borderRadius: "6px" }}>Obrigatório</span>
+                    <span style={{ marginLeft: "auto", fontSize: "12px", fontWeight: 700, color: "#7c3aed", background: "#ede9fe", padding: "2px 8px", borderRadius: "6px" }}>Obrigatório</span>
                   )}
                   {!requireFields[key] && (
-                    <span style={{ marginLeft: "auto", fontSize: "11px", fontWeight: 500, color: "#94a3b8" }}>Opcional</span>
+                    <span style={{ marginLeft: "auto", fontSize: "12px", fontWeight: 500, color: "#94a3b8" }}>Opcional</span>
                   )}
                 </div>
               ))}
@@ -425,22 +425,22 @@ export default function PortariaConfig() {
                 background: saved
                   ? "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)"
                   : "#003580",
-                border: "none", color: "#ffffff", fontWeight: 700, fontSize: "15px",
+                border: "none", color: "#ffffff", fontWeight: 700, fontSize: "16px",
                 cursor: saving ? "not-allowed" : "pointer",
                 opacity: saving ? 0.7 : 1,
                 transition: "all 0.3s",
               }}
             >
               {saving ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-6 h-6 animate-spin" />
               ) : saved ? (
                 <>
-                  <CheckCircle2 className="w-5 h-5" />
+                  <CheckCircle2 className="w-6 h-6" />
                   Salvo com Sucesso!
                 </>
               ) : (
                 <>
-                  <Save className="w-5 h-5" />
+                  <Save className="w-6 h-6" />
                   Salvar Configurações
                 </>
               )}

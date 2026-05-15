@@ -65,7 +65,7 @@ export default function CameraWidget() {
         }}
         title="Câmera ao vivo"
       >
-        <Camera style={{ width: 22, height: 22, color: "#0ea5e9" }} />
+        <Camera style={{ width: 26, height: 26, color: "#0ea5e9" }} />
         {/* Live indicator */}
         <span
           style={{
@@ -130,17 +130,17 @@ export default function CameraWidget() {
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
           <button
             onClick={() => setExpanded(!expanded)}
-            style={{ padding: 4, background: "none", border: "none", cursor: "pointer", color: "#64748b" }}
+            style={{ padding: 4, background: "none", border: "none", cursor: "pointer", color: "var(--muted-foreground)" }}
             title={expanded ? "Reduzir" : "Expandir"}
           >
-            {expanded ? <Minimize2 style={{ width: 14, height: 14 }} /> : <Maximize2 style={{ width: 14, height: 14 }} />}
+            {expanded ? <Minimize2 style={{ width: 18, height: 18 }} /> : <Maximize2 style={{ width: 18, height: 18 }} />}
           </button>
           <button
             onClick={() => setMinimized(true)}
-            style={{ padding: 4, background: "none", border: "none", cursor: "pointer", color: "#64748b" }}
+            style={{ padding: 4, background: "none", border: "none", cursor: "pointer", color: "var(--muted-foreground)" }}
             title="Minimizar"
           >
-            <X style={{ width: 14, height: 14 }} />
+            <X style={{ width: 18, height: 18 }} />
           </button>
         </div>
       </div>
@@ -167,7 +167,7 @@ export default function CameraWidget() {
           />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Camera style={{ width: 32, height: 32, color: "#334155" }} />
+            <Camera style={{ width: 32, height: 32, color: "var(--card-foreground)" }} />
           </div>
         )}
 
@@ -193,7 +193,7 @@ export default function CameraWidget() {
                 color: "#fff",
               }}
             >
-              <ChevronLeft style={{ width: 16, height: 16 }} />
+              <ChevronLeft style={{ width: 20, height: 20 }} />
             </button>
             <button
               onClick={next}
@@ -214,7 +214,7 @@ export default function CameraWidget() {
                 color: "#fff",
               }}
             >
-              <ChevronRight style={{ width: 16, height: 16 }} />
+              <ChevronRight style={{ width: 20, height: 20 }} />
             </button>
           </>
         )}

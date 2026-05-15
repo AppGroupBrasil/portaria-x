@@ -92,9 +92,9 @@ export default function MasterLogs() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="px-4 h-16 flex items-center gap-3">
           <button onClick={() => navigate("/dashboard")} className="p-1">
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <FileText className="w-5 h-5" />
+          <FileText className="w-6 h-6" />
           <span className="font-semibold text-sm">Logs de Auditoria</span>
           <TutorialButton title="Logs de Auditoria">
             <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
@@ -155,7 +155,7 @@ export default function MasterLogs() {
       <main className="flex-1 px-4 pb-6 space-y-2">
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-7 h-7 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : logs.length === 0 ? (
           <div className="flex flex-col items-center py-12 text-center">
@@ -182,7 +182,7 @@ export default function MasterLogs() {
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${meta.color}`}>
-                      <IconComp className="w-4 h-4" />
+                      <IconComp className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -190,14 +190,14 @@ export default function MasterLogs() {
                           {meta.label}
                         </span>
                         <span className="text-[9px] text-muted-foreground ml-auto flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
+                          <Clock className="w-4 h-4" />
                           {formatDate(log.created_at)}
                         </span>
                       </div>
                       <p className="text-xs text-foreground/80 mt-1">{log.details}</p>
                       {log.user_name && (
                         <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
-                          <User className="w-3 h-3" />
+                          <User className="w-4 h-4" />
                           {log.user_name} ({log.user_email})
                         </p>
                       )}

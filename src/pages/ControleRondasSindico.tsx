@@ -337,9 +337,9 @@ export default function ControleRondasSindico() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <Shield className="w-5 h-5" />
+          <Shield className="w-6 h-6" />
           <span style={{ fontWeight: 700, fontSize: 16 }}>Controle de Rondas</span>
           <TutorialButton title="Controle de Rondas (Síndico)">
             <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
@@ -354,7 +354,7 @@ export default function ControleRondasSindico() {
               <TStep n={6}>Repita para todos os pontos de verificação do condomínio</TStep>
               <TStep n={7}><strong>Aba Horários:</strong> Defina em quais horários as rondas são obrigatórias (ex: 22h, 02h, 06h)</TStep>
               <TStep n={8}>Ative <strong>alertas</strong> para ser notificado quando uma ronda não for realizada no horário</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 O porteiro/funcionário vê os checkpoints na tela de "Registro de Ronda" e executa escaneando cada QR Code.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 O porteiro/funcionário vê os checkpoints na tela de "Registro de Ronda" e executa escaneando cada QR Code.</p>
             </TSection>
             <TSection icon={<span>🔧</span>} title="FUNÇÕES DISPONÍVEIS">
               <TBullet><strong>Adicionar/Editar/Excluir</strong> checkpoints com nome e localização</TBullet>
@@ -385,7 +385,7 @@ export default function ControleRondasSindico() {
               className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
               title="Imprimir todos QR Codes"
             >
-              <Printer className="w-4 h-4" />
+              <Printer className="w-5 h-5" />
             </button>
           )}
           <button
@@ -403,7 +403,7 @@ export default function ControleRondasSindico() {
             }}
             className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -424,7 +424,7 @@ export default function ControleRondasSindico() {
           style={{
             flex: 1,
             padding: "14px 16px",
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 700,
             border: "none",
             background: tab === "checkpoints" ? "#f0f9ff" : "#fff",
@@ -437,14 +437,14 @@ export default function ControleRondasSindico() {
             gap: "6px",
           }}
         >
-          <MapPin style={{ width: 14, height: 14 }} /> Pontos de Ronda ({checkpoints.length})
+          <MapPin style={{ width: 18, height: 18 }} /> Pontos de Ronda ({checkpoints.length})
         </button>
         <button
           onClick={() => setTab("schedules")}
           style={{
             flex: 1,
             padding: "14px 16px",
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 700,
             border: "none",
             background: tab === "schedules" ? "#f0f9ff" : "#fff",
@@ -457,14 +457,14 @@ export default function ControleRondasSindico() {
             gap: "6px",
           }}
         >
-          <Clock style={{ width: 14, height: 14 }} /> Horários ({schedules.length})
+          <Clock style={{ width: 18, height: 18 }} /> Horários ({schedules.length})
         </button>
         <button
           onClick={() => setTab("historico")}
           style={{
             flex: 1,
             padding: "14px 16px",
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 700,
             border: "none",
             background: tab === "historico" ? "#f0f9ff" : "#fff",
@@ -477,7 +477,7 @@ export default function ControleRondasSindico() {
             gap: "6px",
           }}
         >
-          <FileText style={{ width: 14, height: 14 }} /> Histórico
+          <FileText style={{ width: 18, height: 18 }} /> Histórico
         </button>
       </div>
 
@@ -504,24 +504,24 @@ export default function ControleRondasSindico() {
                 border: "none",
                 background: "linear-gradient(135deg, #6366f1, #4f46e5)",
                 color: "#fff",
-                fontSize: "14px",
+                fontSize: "15px",
                 fontWeight: 700,
                 cursor: "pointer",
               }}
             >
-              <FileText style={{ width: 18, height: 18 }} /> Gerar Relatório PDF
+              <FileText style={{ width: 22, height: 22 }} /> Gerar Relatório PDF
             </button>
 
             {/* Filters */}
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", background: "#f8fafc", borderRadius: "14px", padding: "14px" }}>
               <div style={{ display: "flex", gap: "12px" }}>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", display: "block", marginBottom: "4px" }}>De</span>
+                  <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--muted-foreground)", display: "block", marginBottom: "4px" }}>De</span>
                   <input type="date" value={filtroDataInicio} onChange={(e) => setFiltroDataInicio(e.target.value)}
                     className="w-full h-9 rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", display: "block", marginBottom: "4px" }}>Até</span>
+                  <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--muted-foreground)", display: "block", marginBottom: "4px" }}>Até</span>
                   <input type="date" value={filtroDataFim} onChange={(e) => setFiltroDataFim(e.target.value)}
                     className="w-full h-9 rounded-lg border border-gray-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" />
                 </div>
@@ -542,22 +542,22 @@ export default function ControleRondasSindico() {
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
                     <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #dbeafe, #eff6ff)" }}>
                       <p style={{ fontSize: "24px", fontWeight: 800, color: "#003580" }}>{filtered.length}</p>
-                      <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Registros</p>
+                      <p style={{ fontSize: "12px", fontWeight: 600, color: "var(--muted-foreground)" }}>Registros</p>
                     </div>
                     <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #dcfce7, #f0fdf4)" }}>
                       <p style={{ fontSize: "24px", fontWeight: 800, color: "#16a34a" }}>{uniqueFuncionarios.size}</p>
-                      <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Funcionários</p>
+                      <p style={{ fontSize: "12px", fontWeight: 600, color: "var(--muted-foreground)" }}>Funcionários</p>
                     </div>
                     <div style={{ textAlign: "center", padding: "14px 8px", borderRadius: "14px", background: "linear-gradient(135deg, #fef3c7, #fffbeb)" }}>
                       <p style={{ fontSize: "24px", fontWeight: 800, color: "#d97706" }}>{uniqueCheckpoints.size}</p>
-                      <p style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>Pontos</p>
+                      <p style={{ fontSize: "12px", fontWeight: 600, color: "var(--muted-foreground)" }}>Pontos</p>
                     </div>
                   </div>
 
                   {/* Search filters */}
                   <div style={{ display: "flex", gap: "12px" }}>
                     <div style={{ flex: 1, position: "relative" }}>
-                      <Search style={{ width: 14, height: 14, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+                      <Search style={{ width: 18, height: 18, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
                       <input
                         type="text" placeholder="Funcionário..."
                         value={filtroFuncionario} onChange={(e) => setFiltroFuncionario(e.target.value)}
@@ -566,7 +566,7 @@ export default function ControleRondasSindico() {
                       />
                     </div>
                     <div style={{ flex: 1, position: "relative" }}>
-                      <MapPin style={{ width: 14, height: 14, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+                      <MapPin style={{ width: 18, height: 18, color: "#94a3b8", position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
                       <input
                         type="text" placeholder="Ponto..."
                         value={filtroCheckpoint} onChange={(e) => setFiltroCheckpoint(e.target.value)}
@@ -584,8 +584,8 @@ export default function ControleRondasSindico() {
                   ) : filtered.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "48px 24px" }}>
                       <FileText style={{ width: 48, height: 48, color: "#d1d5db", margin: "0 auto 12px" }} />
-                      <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "14px" }}>Nenhum registro encontrado</p>
-                      <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                      <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "15px" }}>Nenhum registro encontrado</p>
+                      <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
                         {registros.length === 0 ? "Nenhuma ronda foi registrada ainda" : "Ajuste os filtros para ver os registros"}
                       </p>
                     </div>
@@ -596,39 +596,39 @@ export default function ControleRondasSindico() {
                         const hora = dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
                         const dataCompleta = dt.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
                         return (
-                          <div key={r.id} style={{ background: "#fff", borderRadius: "14px", padding: "14px", border: "1px solid #e5e7eb" }}>
+                          <div key={r.id} style={{ background: "var(--color-card, #fff)", borderRadius: "14px", padding: "14px", border: "1px solid #e5e7eb" }}>
                             {/* Checkpoint name + badge */}
                             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
                               <div style={{ width: 36, height: 36, borderRadius: "10px", background: "linear-gradient(135deg, #10b981, #059669)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                <CheckCircle2 style={{ width: 18, height: 18, color: "#fff" }} />
+                                <CheckCircle2 style={{ width: 22, height: 22, color: "#fff" }} />
                               </div>
-                              <p style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", flex: 1 }}>{r.checkpoint_nome}</p>
+                              <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)", flex: 1 }}>{r.checkpoint_nome}</p>
                             </div>
 
                             {/* Info grid: funcionário, localização, data/hora */}
                             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#f8fafc", borderRadius: "10px", padding: "10px 12px" }}>
                               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                 <User style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
-                                <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{r.funcionario_nome}</span>
+                                <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>{r.funcionario_nome}</span>
                               </div>
                               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                 <Calendar style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
-                                <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{dataCompleta}</span>
+                                <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>{dataCompleta}</span>
                               </div>
                               {r.localizacao && (
                                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                   <MapPin style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
-                                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#1e293b" }}>{r.localizacao}</span>
+                                  <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>{r.localizacao}</span>
                                 </div>
                               )}
                               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                 <Clock style={{ width: 13, height: 13, color: "#003580", flexShrink: 0 }} />
-                                <span style={{ fontSize: "13px", fontWeight: 700, color: "#003580" }}>{hora}</span>
+                                <span style={{ fontSize: "14px", fontWeight: 700, color: "#003580" }}>{hora}</span>
                               </div>
                             </div>
 
                             {r.observacao && (
-                              <p style={{ fontSize: "12px", color: "#475569", marginTop: "8px", background: "#f0f9ff", padding: "8px 10px", borderRadius: "8px", borderLeft: "3px solid #003580" }}>
+                              <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "8px", background: "#f0f9ff", padding: "8px 10px", borderRadius: "8px", borderLeft: "3px solid #003580" }}>
                                 💬 {r.observacao}
                               </p>
                             )}
@@ -636,7 +636,7 @@ export default function ControleRondasSindico() {
                         );
                       })}
                       {filtered.length > 100 && (
-                        <p style={{ textAlign: "center", fontSize: "12px", color: "#94a3b8", padding: "8px" }}>
+                        <p style={{ textAlign: "center", fontSize: "13px", color: "#94a3b8", padding: "8px" }}>
                           Mostrando 100 de {filtered.length} registros
                         </p>
                       )}
@@ -652,8 +652,8 @@ export default function ControleRondasSindico() {
             {checkpoints.length === 0 ? (
               <div style={{ textAlign: "center", padding: "48px 24px" }}>
                 <MapPin style={{ width: 48, height: 48, color: "#d1d5db", margin: "0 auto 12px" }} />
-                <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "14px" }}>Nenhum ponto de ronda cadastrado</p>
-                <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "15px" }}>Nenhum ponto de ronda cadastrado</p>
+                <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
                   Cadastre os pontos que o segurança precisa checar durante a ronda
                 </p>
                 <button
@@ -661,7 +661,7 @@ export default function ControleRondasSindico() {
                   className="mt-4 flex items-center gap-2 mx-auto rounded-xl text-white text-sm font-bold"
                   style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}
                 >
-                  <Plus className="w-4 h-4" /> Cadastrar Ponto
+                  <Plus className="w-5 h-5" /> Cadastrar Ponto
                 </button>
               </div>
             ) : (
@@ -689,22 +689,22 @@ export default function ControleRondasSindico() {
                         flexShrink: 0,
                       }}
                     >
-                      <MapPin style={{ width: 22, height: 22, color: "#fff" }} />
+                      <MapPin style={{ width: 26, height: 26, color: "#fff" }} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <p style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a" }}>{cp.nome}</p>
+                        <p style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)" }}>{cp.nome}</p>
                         {!cp.ativo && (
-                          <span style={{ fontSize: "10px", fontWeight: 700, padding: "2px 8px", borderRadius: "6px", background: "#fef2f2", color: "#dc2626" }}>
+                          <span style={{ fontSize: "12px", fontWeight: 700, padding: "2px 8px", borderRadius: "6px", background: "#fef2f2", color: "#dc2626" }}>
                             INATIVO
                           </span>
                         )}
                       </div>
                       {cp.localizacao && (
-                        <p style={{ fontSize: "12px", color: "#64748b", marginTop: "2px" }}>📍 {cp.localizacao}</p>
+                        <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "2px" }}>📍 {cp.localizacao}</p>
                       )}
                       {cp.descricao && (
-                        <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "2px" }}>{cp.descricao}</p>
+                        <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>{cp.descricao}</p>
                       )}
                     </div>
                     <button
@@ -712,9 +712,9 @@ export default function ControleRondasSindico() {
                       title={cp.ativo ? "Desativar" : "Ativar"}
                     >
                       {cp.ativo ? (
-                        <ToggleRight style={{ width: 24, height: 24, color: "#003580" }} />
+                        <ToggleRight style={{ width: 28, height: 28, color: "#003580" }} />
                       ) : (
-                        <ToggleLeft style={{ width: 24, height: 24, color: "#d1d5db" }} />
+                        <ToggleLeft style={{ width: 28, height: 28, color: "#d1d5db" }} />
                       )}
                     </button>
                   </div>
@@ -734,12 +734,12 @@ export default function ControleRondasSindico() {
                         border: "none",
                         background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                         color: "#fff",
-                        fontSize: "12px",
+                        fontSize: "13px",
                         fontWeight: 700,
                         cursor: "pointer",
                       }}
                     >
-                      <QrCode style={{ width: 14, height: 14 }} /> Ver QR Code
+                      <QrCode style={{ width: 18, height: 18 }} /> Ver QR Code
                     </button>
                     <button
                       onClick={() => {
@@ -753,14 +753,14 @@ export default function ControleRondasSindico() {
                         height: "38px",
                         borderRadius: "10px",
                         border: "1px solid #e5e7eb",
-                        background: "#fff",
+                        background: "var(--color-card, #fff)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         cursor: "pointer",
                       }}
                     >
-                      <Edit3 style={{ width: 14, height: 14, color: "#6b7280" }} />
+                      <Edit3 style={{ width: 18, height: 18, color: "#6b7280" }} />
                     </button>
                     <button
                       onClick={() => handleDeleteCheckpoint(cp.id)}
@@ -776,7 +776,7 @@ export default function ControleRondasSindico() {
                         cursor: "pointer",
                       }}
                     >
-                      <Trash2 style={{ width: 14, height: 14, color: "#dc2626" }} />
+                      <Trash2 style={{ width: 18, height: 18, color: "#dc2626" }} />
                     </button>
                   </div>
                 </div>
@@ -789,8 +789,8 @@ export default function ControleRondasSindico() {
             {schedules.length === 0 ? (
               <div style={{ textAlign: "center", padding: "48px 24px" }}>
                 <Clock style={{ width: 48, height: 48, color: "#d1d5db", margin: "0 auto 12px" }} />
-                <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "14px" }}>Nenhum horário de ronda cadastrado</p>
-                <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "15px" }}>Nenhum horário de ronda cadastrado</p>
+                <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
                   Configure os horários em que os seguranças devem fazer a ronda
                 </p>
                 <button
@@ -798,7 +798,7 @@ export default function ControleRondasSindico() {
                   className="mt-4 flex items-center gap-2 mx-auto rounded-xl text-white text-sm font-bold"
                   style={{ padding: "12px 24px", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}
                 >
-                  <Plus className="w-4 h-4" /> Novo Horário
+                  <Plus className="w-5 h-5" /> Novo Horário
                 </button>
               </div>
             ) : (
@@ -825,17 +825,17 @@ export default function ControleRondasSindico() {
                         flexShrink: 0,
                       }}
                     >
-                      <Clock style={{ width: 22, height: 22, color: p.text }} />
+                      <Clock style={{ width: 26, height: 26, color: p.text }} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a" }}>{s.nome}</p>
+                      <p style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)" }}>{s.nome}</p>
                       <p style={{ fontSize: "20px", fontWeight: 800, color: "#0369a1", marginTop: "2px" }}>{s.horario}</p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                       {s.som_alerta ? (
-                        <Volume2 style={{ width: 16, height: 16, color: "#f59e0b" }} />
+                        <Volume2 style={{ width: 20, height: 20, color: "#f59e0b" }} />
                       ) : (
-                        <BellOff style={{ width: 16, height: 16, color: "#d1d5db" }} />
+                        <BellOff style={{ width: 20, height: 20, color: "#d1d5db" }} />
                       )}
                     </div>
                   </div>
@@ -850,7 +850,7 @@ export default function ControleRondasSindico() {
                           style={{
                             flex: 1,
                             textAlign: "center",
-                            fontSize: "10px",
+                            fontSize: "12px",
                             fontWeight: 700,
                             padding: "4px 0",
                             borderRadius: "6px",
@@ -888,14 +888,14 @@ export default function ControleRondasSindico() {
                         padding: "8px",
                         borderRadius: "10px",
                         border: "1px solid #e5e7eb",
-                        background: "#fff",
-                        fontSize: "12px",
+                        background: "var(--color-card, #fff)",
+                        fontSize: "13px",
                         fontWeight: 600,
                         cursor: "pointer",
                         color: "#374151",
                       }}
                     >
-                      <Edit3 style={{ width: 12, height: 12 }} /> Editar
+                      <Edit3 style={{ width: 16, height: 16 }} /> Editar
                     </button>
                     <button
                       onClick={() => handleDeleteSchedule(s.id)}
@@ -911,7 +911,7 @@ export default function ControleRondasSindico() {
                         cursor: "pointer",
                       }}
                     >
-                      <Trash2 style={{ width: 14, height: 14, color: "#dc2626" }} />
+                      <Trash2 style={{ width: 18, height: 18, color: "#dc2626" }} />
                     </button>
                   </div>
                 </div>
@@ -926,9 +926,9 @@ export default function ControleRondasSindico() {
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center" style={{ padding: "16px" }}>
           <div className="bg-white rounded-3xl w-full max-w-sm" style={{ padding: "24px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>QR Code</h3>
+              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>QR Code</h3>
               <button onClick={() => setShowQR(null)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-                <X style={{ width: 20, height: 20, color: "#6b7280" }} />
+                <X style={{ width: 24, height: 24, color: "#6b7280" }} />
               </button>
             </div>
 
@@ -938,9 +938,9 @@ export default function ControleRondasSindico() {
                 alt={`QR Code - ${showQR.nome}`}
                 style={{ width: "280px", height: "280px", margin: "0 auto", borderRadius: "12px", border: "2px solid #e2e8f0" }}
               />
-              <p style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a", marginTop: "12px" }}>{showQR.nome}</p>
+              <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)", marginTop: "12px" }}>{showQR.nome}</p>
               {showQR.localizacao && (
-                <p style={{ fontSize: "13px", color: "#64748b", marginTop: "4px" }}>📍 {showQR.localizacao}</p>
+                <p style={{ fontSize: "14px", color: "var(--muted-foreground)", marginTop: "4px" }}>📍 {showQR.localizacao}</p>
               )}
             </div>
 
@@ -958,12 +958,12 @@ export default function ControleRondasSindico() {
                   border: "none",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                   color: "#fff",
-                  fontSize: "13px",
+                  fontSize: "14px",
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
               >
-                <Download style={{ width: 16, height: 16 }} /> Baixar
+                <Download style={{ width: 20, height: 20 }} /> Baixar
               </button>
               <button
                 onClick={() => handlePrintQR(showQR)}
@@ -978,12 +978,12 @@ export default function ControleRondasSindico() {
                   border: "none",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
                   color: "#fff",
-                  fontSize: "13px",
+                  fontSize: "14px",
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
               >
-                <Printer style={{ width: 16, height: 16 }} /> Imprimir
+                <Printer style={{ width: 20, height: 20 }} /> Imprimir
               </button>
             </div>
           </div>
@@ -995,23 +995,23 @@ export default function ControleRondasSindico() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
           <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px 24px 120px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>
+              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>
                 {editingCheckpoint ? "Editar Ponto" : "Novo Ponto de Ronda"}
               </h3>
               <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-                <X style={{ width: 20, height: 20, color: "#6b7280" }} />
+                <X style={{ width: 24, height: 24, color: "#6b7280" }} />
               </button>
             </div>
 
             {error && (
-              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "#fef2f2", color: "#dc2626", fontSize: "13px", marginBottom: "12px" }}>
+              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "#fef2f2", color: "#dc2626", fontSize: "14px", marginBottom: "12px" }}>
                 {error}
               </div>
             )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Nome do Ponto *
                 </span>
                 <input
@@ -1023,7 +1023,7 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Localização
                 </span>
                 <input
@@ -1035,7 +1035,7 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Descrição (opcional)
                 </span>
                 <textarea
@@ -1073,23 +1073,23 @@ export default function ControleRondasSindico() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
           <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl" style={{ padding: "24px 24px 120px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>
+              <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)" }}>
                 {editingSchedule ? "Editar Horário" : "Novo Horário de Ronda"}
               </h3>
               <button onClick={() => setShowScheduleForm(false)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-                <X style={{ width: 20, height: 20, color: "#6b7280" }} />
+                <X style={{ width: 24, height: 24, color: "#6b7280" }} />
               </button>
             </div>
 
             {error && (
-              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "#fef2f2", color: "#dc2626", fontSize: "13px", marginBottom: "12px" }}>
+              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "#fef2f2", color: "#dc2626", fontSize: "14px", marginBottom: "12px" }}>
                 {error}
               </div>
             )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Nome *
                 </span>
                 <input
@@ -1101,7 +1101,7 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
+                <span style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "4px", display: "block" }}>
                   Horário *
                 </span>
                 <input
@@ -1112,7 +1112,7 @@ export default function ControleRondasSindico() {
                 />
               </div>
               <div>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#374151", marginBottom: "8px", display: "block" }}>
+                <span style={{ fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "8px", display: "block" }}>
                   Dias da Semana
                 </span>
                 <div style={{ display: "flex", gap: "4px" }}>
@@ -1130,7 +1130,7 @@ export default function ControleRondasSindico() {
                           border: active ? "2px solid #2d3354" : "1px solid #e5e7eb",
                           background: active ? "rgba(45,51,84,0.1)" : "#fff",
                           color: active ? "#2d3354" : "#9ca3af",
-                          fontSize: "11px",
+                          fontSize: "12px",
                           fontWeight: 700,
                           cursor: "pointer",
                         }}
@@ -1152,7 +1152,7 @@ export default function ControleRondasSindico() {
                   ) : (
                     <ToggleLeft style={{ width: 28, height: 28, color: "#d1d5db" }} />
                   )}
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: schedForm.som_alerta ? "#0f172a" : "#9ca3af" }}>
+                  <span style={{ fontSize: "14px", fontWeight: 600, color: schedForm.som_alerta ? "#0f172a" : "#9ca3af" }}>
                     Alerta sonoro na hora da ronda
                   </span>
                 </button>

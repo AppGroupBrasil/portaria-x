@@ -191,14 +191,14 @@ export default function PersonalizarDashboard() {
             alignItems: "center", justifyContent: "center", flexShrink: 0,
           }}
         >
-          <IconComp className="w-5 h-5" style={{ color: isHidden ? "#94a3b8" : "#003580" }} />
+          <IconComp className="w-6 h-6" style={{ color: isHidden ? "#94a3b8" : "#003580" }} />
         </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontWeight: 600, fontSize: "14px", color: isHidden ? "#94a3b8" : "var(--color-foreground, #0f172a)" }}>
+          <p style={{ fontWeight: 600, fontSize: "15px", color: isHidden ? "#94a3b8" : "var(--color-foreground, #0f172a)" }}>
             {item.label}
           </p>
-          <p style={{ fontSize: "11px", color: "#64748b" }}>
+          <p style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>
             {zone === "dashboard" ? "No dashboard" : zone === "bottomBar" ? "Na barra inferior" : "Oculto"}
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function PersonalizarDashboard() {
                   cursor: index === 0 ? "default" : "pointer", opacity: index === 0 ? 0.3 : 1,
                 }}
               >
-                <ChevronUp className="w-4 h-4" style={{ color: "#64748b" }} />
+                <ChevronUp className="w-5 h-5" style={{ color: "var(--muted-foreground)" }} />
               </button>
               <button
                 onClick={() => move(list, setList, index, 1)}
@@ -228,7 +228,7 @@ export default function PersonalizarDashboard() {
                   cursor: index === list.length - 1 ? "default" : "pointer", opacity: index === list.length - 1 ? 0.3 : 1,
                 }}
               >
-                <ChevronDown className="w-4 h-4" style={{ color: "#64748b" }} />
+                <ChevronDown className="w-5 h-5" style={{ color: "var(--muted-foreground)" }} />
               </button>
               <button
                 onClick={() => zone === "dashboard" ? transferToBottomBar(id) : transferToDashboard(id)}
@@ -242,7 +242,7 @@ export default function PersonalizarDashboard() {
                   opacity: zone === "dashboard" && bottomBarIds.length >= 5 ? 0.3 : 1,
                 }}
               >
-                <ArrowRightLeft className="w-4 h-4" style={{ color: "#003580" }} />
+                <ArrowRightLeft className="w-5 h-5" style={{ color: "#003580" }} />
               </button>
             </>
           )}
@@ -258,7 +258,7 @@ export default function PersonalizarDashboard() {
               cursor: "pointer",
             }}
           >
-            {isHidden ? <Eye className="w-4 h-4" style={{ color: "#10b981" }} /> : <EyeOff className="w-4 h-4" style={{ color: "#ef4444" }} />}
+            {isHidden ? <Eye className="w-5 h-5" style={{ color: "#10b981" }} /> : <EyeOff className="w-5 h-5" style={{ color: "#ef4444" }} />}
           </button>
         </div>
       </div>
@@ -277,10 +277,10 @@ export default function PersonalizarDashboard() {
             onClick={() => navigate(-1)}
             style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3">
-            <Palette className="w-6 h-6" />
+            <Palette className="w-7 h-7" />
             <div>
               <h1 style={{ fontWeight: 700, fontSize: 18 }}>Personalizar Dashboard</h1>
               <p style={{ color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }}>Reorganize seus ícones de atalho</p>
@@ -295,22 +295,22 @@ export default function PersonalizarDashboard() {
         <div style={{
           padding: "14px 18px", borderRadius: "14px",
           border: "2px solid #003580", background: "transparent",
-          fontSize: "13px", color: "var(--color-foreground, #0f172a)", lineHeight: 1.5,
+          fontSize: "14px", color: "var(--color-foreground, #0f172a)", lineHeight: 1.5,
         }}>
           Use as <strong>setas ↑↓</strong> para reordenar, o botão <strong>⇄</strong> para mover entre dashboard e barra, e o <strong>olho</strong> para ocultar/mostrar.
           <br />
-          <span style={{ color: "#64748b", fontSize: "12px" }}>Máximo de 5 itens na barra inferior.</span>
+          <span style={{ color: "var(--muted-foreground)", fontSize: "13px" }}>Máximo de 5 itens na barra inferior.</span>
         </div>
 
         {/* ═══ Dashboard Section ═══ */}
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
-            <Grip className="w-5 h-5" style={{ color: "#003580" }} />
+            <Grip className="w-6 h-6" style={{ color: "#003580" }} />
             <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>
               Dashboard Principal
             </h2>
             <span style={{
-              fontSize: "12px", fontWeight: 700, padding: "2px 10px",
+              fontSize: "13px", fontWeight: 700, padding: "2px 10px",
               borderRadius: "999px", background: "rgba(0,53,128,0.1)", color: "#003580",
             }}>
               {dashboardIds.length}
@@ -324,12 +324,12 @@ export default function PersonalizarDashboard() {
         {/* ═══ Bottom Bar Section ═══ */}
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
-            <Grip className="w-5 h-5" style={{ color: "#003580" }} />
+            <Grip className="w-6 h-6" style={{ color: "#003580" }} />
             <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>
               Barra Inferior
             </h2>
             <span style={{
-              fontSize: "12px", fontWeight: 700, padding: "2px 10px",
+              fontSize: "13px", fontWeight: 700, padding: "2px 10px",
               borderRadius: "999px", background: bottomBarIds.length >= 5 ? "rgba(239,68,68,0.15)" : "rgba(0,53,128,0.1)",
               color: bottomBarIds.length >= 5 ? "#ef4444" : "#003580",
             }}>
@@ -345,12 +345,12 @@ export default function PersonalizarDashboard() {
         {hiddenIds.length > 0 && (
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
-              <EyeOff className="w-5 h-5" style={{ color: "#94a3b8" }} />
+              <EyeOff className="w-6 h-6" style={{ color: "#94a3b8" }} />
               <h2 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>
                 Ocultos
               </h2>
               <span style={{
-                fontSize: "12px", fontWeight: 700, padding: "2px 10px",
+                fontSize: "13px", fontWeight: 700, padding: "2px 10px",
                 borderRadius: "999px", background: "rgba(148,163,184,0.15)", color: "#94a3b8",
               }}>
                 {hiddenIds.length}
@@ -375,19 +375,19 @@ export default function PersonalizarDashboard() {
           style={{
             width: "100%", padding: "14px", borderRadius: "14px",
             background: saved ? "#10b981" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
-            color: "#fff", fontWeight: 700, fontSize: "15px",
+            color: "#fff", fontWeight: 700, fontSize: "16px",
             display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
             cursor: "pointer", border: "none", transition: "all 0.3s",
           }}
         >
           {saved ? (
             <>
-              <CheckCircle2 className="w-5 h-5" />
+              <CheckCircle2 className="w-6 h-6" />
               Salvo com sucesso!
             </>
           ) : (
             <>
-              <Save className="w-5 h-5" />
+              <Save className="w-6 h-6" />
               Salvar Layout
             </>
           )}

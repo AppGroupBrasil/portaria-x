@@ -122,7 +122,7 @@ export default function DashboardSindico() {
         <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "4rem", gap: 16 }}>
           <div className="flex items-center" style={{ gap: 14 }}>
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
-              <Building2 style={{ width: 22, height: 22, color: p.text }} />
+              <Building2 style={{ width: 26, height: 26, color: p.text }} />
             </div>
             <div style={{ minWidth: 0 }}>
               <span
@@ -144,7 +144,7 @@ export default function DashboardSindico() {
                 {user?.condominio_nome || "Meu Condomínio"}
               </span>
               <span className="flex items-center" style={{ fontSize: 13, color: p.textDim, gap: 6, marginTop: 6 }}>
-                <Shield style={{ width: 14, height: 14 }} />
+                <Shield style={{ width: 18, height: 18 }} />
                 {getRoleLabel(user?.role || "sindico")}
               </span>
             </div>
@@ -157,7 +157,7 @@ export default function DashboardSindico() {
               onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
-              <Bell style={{ width: 20, height: 20, color: p.text }} />
+              <Bell style={{ width: 24, height: 24, color: p.text }} />
               <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
             </button>
             <button
@@ -167,7 +167,7 @@ export default function DashboardSindico() {
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
             >
-              <LogOut style={{ width: 20, height: 20, color: p.text }} />
+              <LogOut style={{ width: 24, height: 24, color: p.text }} />
             </button>
           </div>
         </div>
@@ -206,11 +206,11 @@ export default function DashboardSindico() {
               onMouseEnter={(e) => { e.currentTarget.style.background = surfaceHoverBg; e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = surfaceIdleBg; e.currentTarget.style.transform = "translateY(0)"; }}
             >
-              <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, background: p.iconBoxBg, border: p.btnBorder, marginBottom: 8 }}>
-                <s.icon style={{ width: 18, height: 18, color: p.text }} />
+              <div className="flex items-center justify-center" style={{ width: 52, height: 52, borderRadius: 12, background: p.iconBoxBg, border: p.btnBorder, marginBottom: 10 }}>
+                <s.icon style={{ width: 30, height: 30, color: p.text }} />
               </div>
-              <span style={{ fontSize: 28, fontWeight: 800, color: p.text }}>{s.value}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: p.textDim, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
+              <span style={{ fontSize: 34, fontWeight: 800, color: p.text }}>{s.value}</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: p.textDim, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
             </button>
           ))}
           {/* Liberações card */}
@@ -229,7 +229,7 @@ export default function DashboardSindico() {
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
           >
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, background: pendingCount > 0 ? "rgba(239,68,68,0.2)" : p.iconBoxBg, border: pendingCount > 0 ? "1px solid rgba(239,68,68,0.3)" : p.iconBoxBorder, marginBottom: 8 }}>
-              <ShieldCheck style={{ width: 18, height: 18, color: pendingCount > 0 ? "#f87171" : inactiveAlertColor }} />
+              <ShieldCheck style={{ width: 22, height: 22, color: pendingCount > 0 ? "#f87171" : inactiveAlertColor }} />
             </div>
             <span style={{ fontSize: 28, fontWeight: 800, color: pendingCount > 0 ? "#f87171" : inactiveAlertColor }}>{pendingCount}</span>
             <span style={{ fontSize: 12, fontWeight: 600, color: pendingCount > 0 ? "rgba(248,113,113,0.7)" : inactiveAlertSubtle, marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>Liberações</span>
@@ -274,7 +274,7 @@ export default function DashboardSindico() {
                       onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
                     >
                       <div className="flex items-center justify-center shrink-0" style={{ width: 34, height: 34, borderRadius: 10, background: p.iconBoxBg, border: p.iconBoxBorder }}>
-                        <BarIcon style={{ width: 16, height: 16, color: bar.color }} />
+                        <BarIcon style={{ width: 20, height: 20, color: bar.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p style={{ fontSize: 14, fontWeight: 600, color: p.text, marginBottom: 4 }}>{bar.label}</p>
@@ -321,14 +321,14 @@ export default function DashboardSindico() {
                   onMouseEnter={(e) => { e.currentTarget.style.background = surfaceHoverBg; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = index === activeModule ? surfaceHoverBg : "transparent"; }}
                 >
-                  <div className="flex items-center justify-center shrink-0" style={{ width: 34, height: 34, borderRadius: 10, background: p.iconBoxBg, border: p.iconBoxBorder }}>
-                    <Layers style={{ width: 16, height: 16, color: "#60a5fa" }} />
+                  <div className="flex items-center justify-center shrink-0" style={{ width: 44, height: 44, borderRadius: 10, background: p.iconBoxBg, border: p.iconBoxBorder }}>
+                    <Layers style={{ width: 26, height: 26, color: "#60a5fa" }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p style={{ fontSize: 14, fontWeight: 600, color: p.text }}>{bloco.nome}</p>
-                    <p style={{ fontSize: 11, color: p.textDim }}>{getBlocoSummary(bloco.moradores)}</p>
+                    <p style={{ fontSize: 17, fontWeight: 600, color: p.text }}>{bloco.nome}</p>
+                    <p style={{ fontSize: 13, color: p.textDim }}>{getBlocoSummary(bloco.moradores)}</p>
                   </div>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: "#34d399" }}>{bloco.moradores}</span>
+                  <span style={{ fontSize: 22, fontWeight: 800, color: "#34d399" }}>{bloco.moradores}</span>
                 </button>
               ))}
             </div>
@@ -359,7 +359,7 @@ export default function DashboardSindico() {
               onMouseLeave={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(239,68,68,0.15), rgba(220,38,38,0.08))"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               <div className="flex items-center justify-center shrink-0" style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                <ShieldCheck style={{ width: 22, height: 22, color: "#f87171" }} />
+                <ShieldCheck style={{ width: 26, height: 26, color: "#f87171" }} />
               </div>
               <div className="flex-1 text-left min-w-0">
                 <p style={{ fontWeight: 700, fontSize: 15 }}>Cadastros Pendentes</p>
@@ -397,12 +397,12 @@ export default function DashboardSindico() {
                   onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
                   onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
                 >
-                  <div className="flex items-center justify-center shrink-0" style={{ width: 52, height: 52, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
-                    <item.icon style={{ width: 26, height: 26 }} />
+                  <div className="flex items-center justify-center shrink-0" style={{ width: 64, height: 64, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
+                    <item.icon style={{ width: 36, height: 36 }} />
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{item.label}</p>
-                    <p style={{ color: p.textDim, fontSize: 11, lineHeight: 1.3 }}>{item.description}</p>
+                    <p style={{ fontWeight: 700, fontSize: 17, marginBottom: 4 }}>{item.label}</p>
+                    <p style={{ color: p.textDim, fontSize: 13, lineHeight: 1.3 }}>{item.description}</p>
                   </div>
                 </button>
               </div>
@@ -428,7 +428,7 @@ export default function DashboardSindico() {
               style={{ gap: 6, fontSize: 12, fontWeight: 600, background: "none", border: "none", color: p.isDarkBase ? "#ffffff" : "#000000", transition: "all 0.2s" }}
             >
               <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, transition: "all 0.2s" }}>
-                <item.icon style={{ width: 22, height: 22 }} />
+                <item.icon style={{ width: 26, height: 26 }} />
               </div>
               <span>{item.label}</span>
             </button>

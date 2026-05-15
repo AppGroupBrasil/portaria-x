@@ -313,11 +313,11 @@ export default function MoradorAutorizacoes() {
       <header className="sticky top-0 z-40" style={{ background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", color: isDark ? '#fff' : "#1e293b", paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="px-4 h-16 flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="flex-1">
             <h1 className="font-bold text-base" style={{ color: isDark ? '#fff' : "#1e293b" }}>Autorizar Visitante</h1>
-            <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: '10px' }}>Pré-autorize a entrada de visitantes</p>
+            <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: "12px" }}>Pré-autorize a entrada de visitantes</p>
           </div>
           <TutorialButton title="Autorizar Visitante">
             <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
@@ -329,13 +329,13 @@ export default function MoradorAutorizacoes() {
               <TStep n={3}>Defina a <strong>data e horário</strong> previsto da visita</TStep>
               <TStep n={4}>Adicione <strong>CPF e veículo</strong> (opcional — ajuda na identificação)</TStep>
               <TStep n={5}>Toque em <strong>"Enviar"</strong> — a autorização vai automaticamente para a portaria</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> A autorização aparece na tela do porteiro com status "Ativa" e todos os dados. Quando o visitante chegar, o porteiro libera com um toque.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#166534" }}>👉 <strong>Portaria vê:</strong> A autorização aparece na tela do porteiro com status "Ativa" e todos os dados. Quando o visitante chegar, o porteiro libera com um toque.</p>
             </FlowMorador>
             <FlowPortaria>
               <TStep n={1}>Visitante chega na portaria e se identifica</TStep>
               <TStep n={2}>Porteiro busca na lista de autorizações e confirma identidade</TStep>
               <TStep n={3}>Libera a entrada com um toque</TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> No seu app, o status muda para "Utilizada" com a data e hora exata da entrada.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 <strong>Você vê:</strong> No seu app, o status muda para "Utilizada" com a data e hora exata da entrada.</p>
             </FlowPortaria>
             <TSection icon={<span>🔍</span>} title="STATUS DAS SUAS AUTORIZAÇÕES">
               <TBullet><strong style={{ color: "#16a34a" }}>Ativa</strong> — Visitante autorizado, aguardando chegada</TBullet>
@@ -355,7 +355,7 @@ export default function MoradorAutorizacoes() {
             onClick={() => { setShowForm(true); setError(""); setFormType("simples"); }}
             style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -377,7 +377,7 @@ export default function MoradorAutorizacoes() {
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
             style={{ minHeight: "52px", background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))', border: '1.5px solid rgba(59,130,246,0.4)', color: isDark ? '#fff' : "#1e293b" }}
           >
-            <ShieldCheck className="w-4 h-4" />
+            <ShieldCheck className="w-5 h-5" />
             Autorização Simples
           </button>
           <button
@@ -385,7 +385,7 @@ export default function MoradorAutorizacoes() {
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
             style={{ minHeight: "52px", background: 'linear-gradient(135deg, #25d366, #128C7E)', border: '1.5px solid #25d366', color: isDark ? '#fff' : "#1e293b" }}
           >
-            <Link2 className="w-4 h-4" />
+            <Link2 className="w-5 h-5" />
             Enviar Link WhatsApp
           </button>
         </div>
@@ -394,8 +394,8 @@ export default function MoradorAutorizacoes() {
       {/* ═══ Pending Visitors from Portaria ═══ */}
       {pendingVisitors.length > 0 && (
         <div style={{ padding: "0 24px 12px" }}>
-          <h3 style={{ fontWeight: 700, fontSize: "14px", color: "#fbbf24", marginBottom: "10px", display: "flex", alignItems: "center", gap: "12px" }}>
-            <AlertCircle className="w-4 h-4" style={{ color: "#f59e0b" }} />
+          <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#fbbf24", marginBottom: "10px", display: "flex", alignItems: "center", gap: "12px" }}>
+            <AlertCircle className="w-5 h-5" style={{ color: "#f59e0b" }} />
             Solicitações da Portaria ({pendingVisitors.length})
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -416,18 +416,18 @@ export default function MoradorAutorizacoes() {
                       width: "48px", height: "48px", borderRadius: "50%", background: "rgba(245,158,11,0.15)",
                       display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid rgba(245,158,11,0.4)",
                     }}>
-                      <User className="w-5 h-5" style={{ color: "#fbbf24" }} />
+                      <User className="w-6 h-6" style={{ color: "#fbbf24" }} />
                     </div>
                   )}
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontWeight: 700, fontSize: "14px", color: p.text }}>{v.nome}</p>
+                    <p style={{ fontWeight: 700, fontSize: "15px", color: p.text }}>{v.nome}</p>
                     {v.documento && (
-                      <p style={{ fontSize: "11px", color: isDark ? "#93c5fd" : "#475569" }}>Doc: {v.documento}</p>
+                      <p style={{ fontSize: "12px", color: isDark ? "#93c5fd" : "#475569" }}>Doc: {v.documento}</p>
                     )}
                     {v.telefone && (
-                      <p style={{ fontSize: "11px", color: isDark ? "#93c5fd" : "#475569" }}>Tel: {v.telefone}</p>
+                      <p style={{ fontSize: "12px", color: isDark ? "#93c5fd" : "#475569" }}>Tel: {v.telefone}</p>
                     )}
-                    <p style={{ fontSize: "10px", color: isDark ? '#7dd3fc' : '#475569', marginTop: "2px" }}>
+                    <p style={{ fontSize: "12px", color: isDark ? '#7dd3fc' : '#475569', marginTop: "2px" }}>
                       {new Date(v.created_at).toLocaleString("pt-BR")}
                     </p>
                   </div>
@@ -435,13 +435,13 @@ export default function MoradorAutorizacoes() {
 
                 <div style={{
                   padding: "8px 12px", borderRadius: "10px",
-                  background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", fontSize: "12px", color: "#fcd34d", fontWeight: 500,
+                  background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", fontSize: "13px", color: "#fcd34d", fontWeight: 500,
                 }}>
                   ⚠️ A portaria está solicitando autorização para a entrada deste visitante.
                 </div>
 
                 {v.quem_autorizou && (
-                  <p style={{ fontSize: "11px", color: isDark ? "#93c5fd" : "#475569", fontStyle: "italic" }}>
+                  <p style={{ fontSize: "12px", color: isDark ? "#93c5fd" : "#475569", fontStyle: "italic" }}>
                     💬 Porteiro: {v.quem_autorizou}
                   </p>
                 )}
@@ -454,16 +454,16 @@ export default function MoradorAutorizacoes() {
                       flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                       padding: "14px 16px", borderRadius: "12px",
                       background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                      border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                      border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                       cursor: "pointer", boxShadow: "0 2px 8px rgba(34,197,94,0.3)",
                       opacity: respondingVisitorId === v.id ? 0.6 : 1,
                       minHeight: "48px",
                     }}
                   >
                     {respondingVisitorId === v.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-5 h-5" />
                     )}
                     Liberar
                   </button>
@@ -474,16 +474,16 @@ export default function MoradorAutorizacoes() {
                       flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                       padding: "14px 16px", borderRadius: "12px",
                       background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-                      border: "none", color: "#fff", fontWeight: 700, fontSize: "14px",
+                      border: "none", color: "#fff", fontWeight: 700, fontSize: "15px",
                       cursor: "pointer", boxShadow: "0 2px 8px rgba(239,68,68,0.3)",
                       opacity: respondingVisitorId === v.id ? 0.6 : 1,
                       minHeight: "48px",
                     }}
                   >
                     {respondingVisitorId === v.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
-                      <Ban className="w-4 h-4" />
+                      <Ban className="w-5 h-5" />
                     )}
                     Recusar
                   </button>
@@ -498,15 +498,15 @@ export default function MoradorAutorizacoes() {
       <main className="flex-1 overflow-y-auto" style={{ padding: "0 24px 100px" }}>
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'rgba(255,255,255,0.3)', borderTopColor: 'transparent' }} />
+            <div className="w-7 h-7 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'rgba(255,255,255,0.3)', borderTopColor: 'transparent' }} />
           </div>
         ) : auths.length === 0 && !showForm ? (
           <div className="text-center py-16">
             <div style={{ width: 72, height: 72, borderRadius: 22, background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', border: isDark ? '1.5px solid rgba(255,255,255,0.2)' : '1.5px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
               <ShieldCheck className="w-8 h-8" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
             </div>
-            <p style={{ color: isDark ? '#fff' : "#1e293b", fontSize: '14px', marginBottom: 4 }}>Nenhuma autorização prévia</p>
-            <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: '12px', marginBottom: 16 }}>
+            <p style={{ color: isDark ? '#fff' : "#1e293b", fontSize: "15px", marginBottom: 4 }}>Nenhuma autorização prévia</p>
+            <p style={{ color: isDark ? '#93c5fd' : "#475569", fontSize: "13px", marginBottom: 16 }}>
               Pré-autorize a entrada do seu visitante para agilizar na portaria.
             </p>
             <button
@@ -514,7 +514,7 @@ export default function MoradorAutorizacoes() {
               className="mx-auto flex items-center justify-center gap-2 rounded-xl text-sm font-semibold"
               style={{ height: "44px", width: "240px", background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))', border: '1.5px solid rgba(59,130,246,0.4)', color: isDark ? '#fff' : "#1e293b" }}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-5 h-5" />
               Criar Autorização
             </button>
           </div>
@@ -557,12 +557,12 @@ export default function MoradorAutorizacoes() {
 
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px]" style={{ color: isDark ? '#93c5fd' : "#475569" }}>
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
+                      <Calendar className="w-4 h-4" />
                       {formatDate(a.data_inicio)} a {formatDate(a.data_fim)}
                     </span>
                     {a.hora_inicio && (
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
+                        <Clock className="w-4 h-4" />
                         {a.hora_inicio} às {a.hora_fim || "--"}
                       </span>
                     )}
@@ -579,14 +579,14 @@ export default function MoradorAutorizacoes() {
 
                   {a.observacao && (
                     <p className="text-[10px] mt-2 italic" style={{ color: isDark ? '#7dd3fc' : '#475569' }}>
-                      <MessageSquare className="w-3 h-3 inline mr-1" />
+                      <MessageSquare className="w-4 h-4 inline mr-1" />
                       {a.observacao}
                     </p>
                   )}
 
                   {a.status === "utilizada" && a.entrada_confirmada_at && (
                     <p className="text-[10px] mt-2 flex items-center gap-1" style={{ color: "#94a3b8" }}>
-                      <CheckCircle2 className="w-3 h-3" />
+                      <CheckCircle2 className="w-4 h-4" />
                       Entrada confirmada em {new Date(a.entrada_confirmada_at).toLocaleString("pt-BR")}
                     </p>
                   )}
@@ -605,18 +605,18 @@ export default function MoradorAutorizacoes() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {editingId ? (
-                  <Pencil className="w-5 h-5" style={{ color: "#f59e0b" }} />
+                  <Pencil className="w-6 h-6" style={{ color: "#f59e0b" }} />
                 ) : formType === "auto_cadastro" ? (
-                  <Link2 className="w-5 h-5" style={{ color: "#25d366" }} />
+                  <Link2 className="w-6 h-6" style={{ color: "#25d366" }} />
                 ) : (
-                  <ShieldCheck className="w-5 h-5" style={{ color: "#6366f1" }} />
+                  <ShieldCheck className="w-6 h-6" style={{ color: "#6366f1" }} />
                 )}
                 <h2 className="font-bold text-base" style={{ color: isDark ? '#fff' : "#1e293b" }}>
                   {editingId ? "Editar Autorização" : formType === "auto_cadastro" ? "Enviar Link de Cadastro" : "Autorização Simples"}
                 </h2>
               </div>
               <button onClick={() => { setShowForm(false); setEditingId(null); }} style={{ background: 'none', border: 'none' }}>
-                <X className="w-5 h-5" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
+                <X className="w-6 h-6" style={{ color: isDark ? '#7dd3fc' : '#475569' }} />
               </button>
             </div>
 
@@ -746,10 +746,10 @@ export default function MoradorAutorizacoes() {
               }}
             >
               {saving ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : editingId ? (
                 <>
-                  <Pencil className="w-4 h-4" />
+                  <Pencil className="w-5 h-5" />
                   Salvar Alterações
                 </>
               ) : formType === "auto_cadastro" ? (
@@ -759,7 +759,7 @@ export default function MoradorAutorizacoes() {
                 </>
               ) : (
                 <>
-                  <ShieldCheck className="w-4 h-4" />
+                  <ShieldCheck className="w-5 h-5" />
                   Criar Autorização
                 </>
               )}

@@ -223,7 +223,7 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
   return (
     <div
       style={{
-        background: "#ffffff",
+        background: "var(--color-card, #fff)",
         borderRadius: "20px", padding: "36px 28px",
         border: "2px solid #003580",
         position: "relative",
@@ -234,7 +234,7 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
         <div style={{
           position: "absolute", top: "-14px", left: "50%", transform: "translateX(-50%)",
           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", color: "white",
-          fontSize: "12px", fontWeight: 700, padding: "5px 20px", borderRadius: "999px",
+          fontSize: "13px", fontWeight: 700, padding: "5px 20px", borderRadius: "999px",
           boxShadow: "0 4px 16px rgba(99,102,241,0.3)",
         }}>
           MAIS POPULAR
@@ -254,7 +254,7 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
           background: "linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)",
           border: "1px solid #22c55e",
           color: "#166534",
-          fontSize: "12px",
+          fontSize: "13px",
           fontWeight: 800,
         }}
       >
@@ -263,9 +263,9 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
       </div>
 
       <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginBottom: "8px" }}>
-        <span style={{ fontSize: "14px", color: "#003580" }}>R$</span>
+        <span style={{ fontSize: "15px", color: "#003580" }}>R$</span>
         <span style={{ fontSize: "48px", fontWeight: 900, color: "#003580", lineHeight: 1 }}>{plan.price}</span>
-        <span style={{ fontSize: "14px", color: "#003580" }}>/mês</span>
+        <span style={{ fontSize: "15px", color: "#003580" }}>/mês</span>
       </div>
 
       <div style={{
@@ -273,14 +273,14 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
         marginBottom: "28px", marginTop: "20px",
       }}>
         {plan.features.map((feat) => (
-          <div key={feat} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: "#003580" }}>
+          <div key={feat} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#003580" }}>
             <Check style={{ width: "16px", height: "16px", color: "#10b981", flexShrink: 0 }} />
             {feat}
           </div>
         ))}
       </div>
 
-      <p style={{ fontSize: "11px", color: "#336699", lineHeight: 1.5, marginBottom: "20px" }}>
+      <p style={{ fontSize: "12px", color: "#336699", lineHeight: 1.5, marginBottom: "20px" }}>
         * Sujeito ao uso responsável da plataforma e às políticas de envio do WhatsApp.
       </p>
 
@@ -290,7 +290,7 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
           width: "100%", padding: "14px", borderRadius: "12px", border: "none",
           background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
           color: "#ffffff",
-          fontWeight: 700, fontSize: "15px", cursor: "pointer",
+          fontWeight: 700, fontSize: "16px", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
           transition: "transform 0.2s",
         }}
@@ -422,7 +422,7 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
           onClick={() => onNavigate("/register/condominio")}
           style={{
             padding: "16px 32px", borderRadius: "14px",
-            border: "2px solid #003580", background: "#ffffff",
+            border: "2px solid #003580", background: "var(--color-card, #fff)",
             color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
             display: "flex", alignItems: "center", gap: "12px",
             transition: "transform 0.2s",
@@ -465,7 +465,7 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
             display: "flex", alignItems: "center", gap: "10px",
             background: b.bg, border: `2px solid ${b.border}`,
             borderRadius: "14px", padding: "12px 28px",
-            fontSize: "15px", fontWeight: 600, color: b.textColor,
+            fontSize: "16px", fontWeight: 600, color: b.textColor,
             minWidth: "220px", justifyContent: "center",
           }}>
             <b.icon style={{ width: "20px", height: "20px", color: b.iconColor }} /> {b.text}
@@ -481,7 +481,7 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
           { icon: Eye, text: "Monitoramento em tempo real" },
           { icon: Bell, text: "Notificações automáticas" },
         ].map((b) => (
-          <div key={b.text} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: t.text3 }}>
+          <div key={b.text} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", color: t.text3 }}>
             <b.icon style={{ width: "16px", height: "16px" }} /> {b.text}
           </div>
         ))}
@@ -530,7 +530,7 @@ function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
               Comece a usar agora mesmo
             </h3>
           </div>
-          <p style={{ fontSize: "15px", color: mode === "dark" ? "#475569" : "rgba(255,255,255,0.8)", lineHeight: 1.6, maxWidth: "400px", margin: "0 auto" }}>
+          <p style={{ fontSize: "16px", color: mode === "dark" ? "#475569" : "rgba(255,255,255,0.8)", lineHeight: 1.6, maxWidth: "400px", margin: "0 auto" }}>
             Acesse pelo navegador e transforme a gestão de portaria do seu condomínio.
           </p>
         </div>
@@ -541,7 +541,7 @@ function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
             <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.07l2.834 1.639a1 1 0 0 1 0 1.448l-2.834 1.639-2.532-2.532 2.532-2.194zM5.864 2.658L16.8 8.99l-2.302 2.302-8.635-8.635z"/></svg>
           </div>
           <div style={{ textAlign: "center" }}>
-            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", color: mode === "dark" ? "#64748b" : "rgba(255,255,255,0.7)", textTransform: "uppercase", marginBottom: "6px" }}>INSTALAR APP</p>
+            <p style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", color: mode === "dark" ? "#64748b" : "rgba(255,255,255,0.7)", textTransform: "uppercase", marginBottom: "6px" }}>INSTALAR APP</p>
             <button
               onClick={handleInstallApp}
               disabled={installing}
@@ -556,7 +556,7 @@ function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
                 border: `2px solid ${mode === "dark" ? "#16a34a" : "#ffffff"}`,
                 background: mode === "dark" ? "#16a34a" : "rgba(255,255,255,0.12)",
                 color: "#ffffff",
-                fontSize: "15px",
+                fontSize: "16px",
                 fontWeight: 800,
                 cursor: installing ? "wait" : "pointer",
                 boxShadow: "0 8px 24px rgba(34,197,94,0.24)",
@@ -574,9 +574,9 @@ function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
             <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 17.938A8.004 8.004 0 0 1 4.062 13H7.1a14.9 14.9 0 0 0 .9 4.24 10.18 10.18 0 0 0 3 2.698zm0-3.476A8.24 8.24 0 0 1 8.14 13H11v3.462zm0-5.462H8.14A8.24 8.24 0 0 1 11 7.538V11zm0-5.462A10.18 10.18 0 0 0 8 8.24 14.9 14.9 0 0 0 7.1 11H4.062A8.004 8.004 0 0 1 11 4.062zM19.938 11H16.9a14.9 14.9 0 0 0-.9-2.76A10.18 10.18 0 0 0 13 5.538V4.062A8.004 8.004 0 0 1 19.938 11zM13 7.538A8.24 8.24 0 0 1 15.86 11H13V7.538zM13 13h2.86A8.24 8.24 0 0 1 13 16.462V13zm0 6.938v-1.476a10.18 10.18 0 0 0 3-2.698A14.9 14.9 0 0 0 16.9 13h3.038A8.004 8.004 0 0 1 13 19.938z"/></svg>
           </div>
           <div style={{ textAlign: "center" }}>
-            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", color: mode === "dark" ? "#64748b" : "rgba(255,255,255,0.7)", textTransform: "uppercase", marginBottom: "6px" }}>ACESSE PELO NAVEGADOR</p>
+            <p style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", color: mode === "dark" ? "#64748b" : "rgba(255,255,255,0.7)", textTransform: "uppercase", marginBottom: "6px" }}>ACESSE PELO NAVEGADOR</p>
             <div style={{ border: `2px dashed ${mode === "dark" ? "#003580" : "#ffffff"}`, borderRadius: "10px", padding: "8px 20px" }}>
-              <p style={{ fontSize: "15px", fontWeight: 700, color: mode === "dark" ? "#003580" : "#ffffff" }}>www.portariax.com.br</p>
+              <p style={{ fontSize: "16px", fontWeight: 700, color: mode === "dark" ? "#003580" : "#ffffff" }}>www.portariax.com.br</p>
             </div>
           </div>
         </div>
@@ -589,7 +589,7 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
   return (
     <section style={{ background: "linear-gradient(135deg, #0a1628 0%, #0d2847 50%, #0a1628 100%)", padding: "80px 24px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: "#ffffff" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "14px", color: "#ffffff" }}>
           <Play style={{ width: "14px", height: "14px" }} /> Teste Agora
         </div>
         <h2 style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", fontWeight: 800, color: "#ffffff", marginBottom: "12px", lineHeight: 1.2 }}>
@@ -617,8 +617,8 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
               <Building2 style={{ width: "32px", height: "32px", color: "#ffffff" }} />
             </div>
             <span style={{ fontSize: "18px", fontWeight: 800, color: "#ffffff" }}>{demoLoading === "sindico" ? "Carregando..." : "Síndico"}</span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Gestão completa do condomínio, configurações e relatórios</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "13px" }}>
+            <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Gestão completa do condomínio, configurações e relatórios</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "14px" }}>
               Explorar <ArrowRight style={{ width: "14px", height: "14px" }} />
             </div>
           </button>
@@ -640,8 +640,8 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
               <Shield style={{ width: "32px", height: "32px", color: "#ffffff" }} />
             </div>
             <span style={{ fontSize: "18px", fontWeight: 800, color: "#ffffff" }}>{demoLoading === "portaria" ? "Carregando..." : "Portaria"}</span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Visitantes, veículos, correspondências, rondas e livro de protocolo</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "13px" }}>
+            <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Visitantes, veículos, correspondências, rondas e livro de protocolo</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "14px" }}>
               Explorar <ArrowRight style={{ width: "14px", height: "14px" }} />
             </div>
           </button>
@@ -663,14 +663,14 @@ function DemoSection({ demoLoading, onDemoLogin }: Readonly<{ demoLoading: strin
               <Users style={{ width: "32px", height: "32px", color: "#ffffff" }} />
             </div>
             <span style={{ fontSize: "18px", fontWeight: 800, color: "#ffffff" }}>{demoLoading === "morador" ? "Carregando..." : "Morador"}</span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Autorizações, veículos, delivery e correspondências</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "13px" }}>
+            <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Autorizações, veículos, delivery e correspondências</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", color: "#ffffff", fontWeight: 700, fontSize: "14px" }}>
               Explorar <ArrowRight style={{ width: "14px", height: "14px" }} />
             </div>
           </button>
         </div>
 
-        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginTop: "24px" }}>
+        <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", marginTop: "24px" }}>
           * Dados fictícios para demonstração. Nenhuma ação real será executada.
         </p>
       </div>
@@ -683,7 +683,7 @@ function FeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonly<{ mod
     <section style={{ background: t.sectionGrad1, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "14px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
             <Zap style={{ width: "14px", height: "14px" }} /> Funcionalidades
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -703,7 +703,7 @@ function FeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonly<{ mod
                   onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
                 >
                   <PrIcon style={{ width: "14px", height: "14px", color: "#ffffff" }} />
-                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>{pr.label}</span>
+                  <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>{pr.label}</span>
                 </button>
               );
             })}
@@ -747,7 +747,7 @@ function FeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonly<{ mod
                   <Icon style={{ width: "24px", height: "24px", color: mode === "dark" ? "#ffffff" : "#003580" }} />
                 </div>
                 <h3 style={{ fontWeight: 700, fontSize: "16px", marginBottom: "8px", color: t.text2 }}>{f.title}</h3>
-                <p style={{ fontSize: "14px", color: t.text3, lineHeight: 1.6, flex: 1 }} dangerouslySetInnerHTML={{ __html: f.desc }} />
+                <p style={{ fontSize: "15px", color: t.text3, lineHeight: 1.6, flex: 1 }} dangerouslySetInnerHTML={{ __html: f.desc }} />
 
                 {/* Profile badges */}
                 <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "16px", paddingTop: "14px", borderTop: `1px solid ${mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,53,128,0.08)"}` }}>
@@ -767,7 +767,7 @@ function FeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonly<{ mod
                         onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = `0 1px 6px ${pr.color}35`; }}
                       >
                         <PrIcon style={{ width: "12px", height: "12px", color: "#ffffff" }} />
-                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#ffffff" }}>{pr.label}</span>
+                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#ffffff" }}>{pr.label}</span>
                       </button>
                     );
                   })}
@@ -785,7 +785,7 @@ function FeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonly<{ mod
                     border: mode === "dark" ? "2px solid #ffffff" : "2px solid #003580",
                     background: "transparent",
                     color: mode === "dark" ? "#ffffff" : "#003580",
-                    fontWeight: 700, fontSize: "13px", cursor: "pointer",
+                    fontWeight: 700, fontSize: "14px", cursor: "pointer",
                     display: "flex", alignItems: "center", gap: "6px",
                     transition: "background 0.2s", alignSelf: "flex-start",
                   }}
@@ -809,7 +809,7 @@ function PremiumFeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonl
     <section style={{ background: t.sectionGrad2, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "linear-gradient(135deg, #7c3aed, #6d28d9)", border: "1.5px solid rgba(124,58,237,0.4)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: "linear-gradient(135deg, #7c3aed, #6d28d9)", border: "1.5px solid rgba(124,58,237,0.4)", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>
             <Star style={{ width: "14px", height: "14px" }} /> Premium
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -857,7 +857,7 @@ function PremiumFeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonl
                   <Icon style={{ width: "24px", height: "24px", color: "#7c3aed" }} />
                 </div>
                 <h3 style={{ fontWeight: 700, fontSize: "16px", marginBottom: "8px", color: t.text2 }}>{f.title}</h3>
-                <p style={{ fontSize: "14px", color: t.text3, lineHeight: 1.6, flex: 1 }} dangerouslySetInnerHTML={{ __html: f.desc }} />
+                <p style={{ fontSize: "15px", color: t.text3, lineHeight: 1.6, flex: 1 }} dangerouslySetInnerHTML={{ __html: f.desc }} />
 
                 {/* Profile badges */}
                 <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "16px", paddingTop: "14px", borderTop: `1px solid ${mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,53,128,0.08)"}` }}>
@@ -877,7 +877,7 @@ function PremiumFeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonl
                         onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = `0 1px 6px ${pr.color}35`; }}
                       >
                         <PrIcon style={{ width: "12px", height: "12px", color: "#ffffff" }} />
-                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#ffffff" }}>{pr.label}</span>
+                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#ffffff" }}>{pr.label}</span>
                       </button>
                     );
                   })}
@@ -895,7 +895,7 @@ function PremiumFeaturesSection({ mode, t, onNavigate, onOpenTutorial }: Readonl
                     border: "2px solid #7c3aed",
                     background: "transparent",
                     color: "#7c3aed",
-                    fontWeight: 700, fontSize: "13px", cursor: "pointer",
+                    fontWeight: 700, fontSize: "14px", cursor: "pointer",
                     display: "flex", alignItems: "center", gap: "6px",
                     transition: "background 0.2s", alignSelf: "flex-start",
                   }}
@@ -919,7 +919,7 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
     <section style={{ background: mode === "dark" ? "#ffffff" : "#003580", padding: "80px 24px", transition: "background 0.4s" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
         {/* Badge */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "rgba(255,255,255,0.1)", border: "1.5px solid #ffffff", borderRadius: "999px", padding: "8px 20px", marginBottom: "24px", fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "rgba(255,255,255,0.1)", border: "1.5px solid #ffffff", borderRadius: "999px", padding: "8px 20px", marginBottom: "24px", fontSize: "15px", fontWeight: 600, color: "#ffffff" }}>
           <Zap style={{ width: "16px", height: "16px" }} /> Apresentação Completa
         </div>
 
@@ -948,10 +948,10 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
               <FileText style={{ width: "26px", height: "26px", color: "#fff" }} />
             </div>
             <h3 style={{ fontWeight: 800, fontSize: "17px", color: mode === "dark" ? "#ffffff" : "#003580" }}>Baixar Apresentação</h3>
-            <p style={{ fontSize: "13px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
+            <p style={{ fontSize: "14px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
               Abra a apresentação completa e salve como PDF para enviar por e-mail.
             </p>
-            <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: 600, color: "#f97316", marginTop: "auto" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "15px", fontWeight: 600, color: "#f97316", marginTop: "auto" }}>
               <FileText style={{ width: "14px", height: "14px" }} /> Abrir e exportar PDF <ArrowRight style={{ width: "14px", height: "14px" }} />
             </span>
           </button>
@@ -972,10 +972,10 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
               <QrCode style={{ width: "26px", height: "26px", color: "#fff" }} />
             </div>
             <h3 style={{ fontWeight: 800, fontSize: "17px", color: mode === "dark" ? "#ffffff" : "#003580" }}>Copiar Link</h3>
-            <p style={{ fontSize: "13px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
+            <p style={{ fontSize: "14px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
               Copie o link da apresentação e envie para quem desejar.
             </p>
-            <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: 600, color: "#818cf8", marginTop: "auto" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "15px", fontWeight: 600, color: "#818cf8", marginTop: "auto" }}>
               <ChevronRight style={{ width: "14px", height: "14px" }} /> Copiar para área de transferência <ArrowRight style={{ width: "14px", height: "14px" }} />
             </span>
           </button>
@@ -996,10 +996,10 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
                 <MessageCircle style={{ width: "26px", height: "26px", color: "#fff" }} />
               </div>
               <h3 style={{ fontWeight: 800, fontSize: "17px", color: mode === "dark" ? "#ffffff" : "#003580" }}>Enviar via WhatsApp</h3>
-              <p style={{ fontSize: "13px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
+              <p style={{ fontSize: "14px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
                 Compartilhe a apresentação diretamente pelo WhatsApp.
               </p>
-              <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: 600, color: "#25D366", marginTop: "auto" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "15px", fontWeight: 600, color: "#25D366", marginTop: "auto" }}>
                 <ArrowRight style={{ width: "14px", height: "14px" }} /> Compartilhar agora <ArrowRight style={{ width: "14px", height: "14px" }} />
               </span>
           </a>
@@ -1024,10 +1024,10 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
               <BookOpen style={{ width: "26px", height: "26px", color: "#fff" }} />
             </div>
             <h3 style={{ fontWeight: 800, fontSize: "17px", color: mode === "dark" ? "#ffffff" : "#003580" }}>Modelo de Contrato</h3>
-            <p style={{ fontSize: "13px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
+            <p style={{ fontSize: "14px", color: mode === "dark" ? "rgba(255,255,255,0.7)" : "#336699", lineHeight: 1.6 }}>
               Veja o modelo de contrato de prestação de serviços do Portaria X.
             </p>
-            <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: 600, color: "#0ea5e9", marginTop: "auto" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "15px", fontWeight: 600, color: "#0ea5e9", marginTop: "auto" }}>
               <BookOpen style={{ width: "14px", height: "14px" }} /> Ver contrato <ArrowRight style={{ width: "14px", height: "14px" }} />
             </span>
           </button>
@@ -1042,7 +1042,7 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
     <section id="integracoes" style={{ background: t.sectionGrad1, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "14px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
             <Cpu style={{ width: "14px", height: "14px" }} /> Integrações IoT
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -1101,14 +1101,14 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
                     </div>
                     <div>
                       <h3 style={{ fontWeight: 700, fontSize: "16px", color: t.text2, margin: 0 }}>{brand.name}</h3>
-                      <span style={{ fontSize: "11px", color: t.text3 }}>{brand.country}</span>
+                      <span style={{ fontSize: "12px", color: t.text3 }}>{brand.country}</span>
                     </div>
                   </div>
                   {/* Integration type badge */}
                   <div style={{
                     display: "flex", alignItems: "center", gap: "4px",
                     background: mode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,53,128,0.06)",
-                    padding: "4px 10px", borderRadius: "999px", fontSize: "11px",
+                    padding: "4px 10px", borderRadius: "999px", fontSize: "12px",
                     color: t.text3, fontWeight: 600,
                   }}>
                     <IntegIcon style={{ width: "12px", height: "12px" }} />
@@ -1117,17 +1117,17 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
                 </div>
 
                 {/* Description */}
-                <p style={{ fontSize: "13px", color: t.text3, lineHeight: 1.6, marginBottom: "18px", minHeight: "60px" }}>
+                <p style={{ fontSize: "14px", color: t.text3, lineHeight: 1.6, marginBottom: "18px", minHeight: "60px" }}>
                   {brand.description}
                 </p>
 
                 {/* Difficulty gauge */}
                 <div style={{ marginBottom: "14px" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: t.text3, display: "flex", alignItems: "center", gap: "4px" }}>
+                    <span style={{ fontSize: "13px", fontWeight: 600, color: t.text3, display: "flex", alignItems: "center", gap: "4px" }}>
                       <Wrench style={{ width: "12px", height: "12px" }} /> Dificuldade
                     </span>
-                    <span style={{ fontSize: "12px", fontWeight: 700, color: diffColor }}>
+                    <span style={{ fontSize: "13px", fontWeight: 700, color: diffColor }}>
                       {brand.difficulty}/10 — {diffLabel}
                     </span>
                   </div>
@@ -1149,11 +1149,11 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   paddingTop: "14px", borderTop: `1px solid ${mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,53,128,0.08)"}`,
                 }}>
-                  <span style={{ fontSize: "12px", fontWeight: 600, color: mode === "dark" ? "#60a5fa" : "#003580", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ fontSize: "13px", fontWeight: 600, color: mode === "dark" ? "#60a5fa" : "#003580", display: "flex", alignItems: "center", gap: "4px" }}>
                     Ver dispositivos <ArrowRight style={{ width: "13px", height: "13px" }} />
                   </span>
                   <span style={{
-                    fontSize: "11px", fontWeight: 600, color: diffColor,
+                    fontSize: "12px", fontWeight: 600, color: diffColor,
                     background: `${diffColor}18`, padding: "3px 8px", borderRadius: "6px",
                   }}>
                     {brand.protocols.length > 1 ? `${brand.protocols.length} protocolos` : INTEGRATION_LABELS[brand.integrationType]}
@@ -1173,7 +1173,7 @@ function IntegrationsSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | 
               border: mode === "dark" ? "2px solid rgba(255,255,255,0.5)" : "2px solid #003580",
               background: mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,53,128,0.06)",
               color: mode === "dark" ? "#ffffff" : "#003580",
-              fontWeight: 700, fontSize: "15px", cursor: "pointer",
+              fontWeight: 700, fontSize: "16px", cursor: "pointer",
               display: "inline-flex", alignItems: "center", gap: "12px",
               transition: "background 0.2s, transform 0.2s",
             }}
@@ -1195,7 +1195,7 @@ function PlansSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light"
     <section id="precos" style={{ background: t.bg1, transition: "background 0.4s" }}>
       <div className="landing-section">
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "13px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "12px", background: mode === "dark" ? "#003580" : "#ffffff", border: mode === "dark" ? "1.5px solid #ffffff" : "1.5px solid #003580", borderRadius: "999px", padding: "6px 16px", marginBottom: "16px", fontSize: "14px", color: mode === "dark" ? "#ffffff" : "#003580" }}>
             <Star style={{ width: "14px", height: "14px" }} /> Preços
           </div>
           <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)", fontWeight: 800, marginBottom: "12px", color: t.text2 }}>
@@ -1219,7 +1219,7 @@ function PlansSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light"
 function CustomDevCtaSection() {
   return (
     <section style={{
-      background: "#ffffff",
+      background: "var(--color-card, #fff)",
       padding: "80px 24px", textAlign: "center",
     }}>
       <div style={{ maxWidth: "700px", margin: "0 auto" }}>
@@ -1263,7 +1263,7 @@ function FaqSection({ openFaq, onToggleFaq }: Readonly<{ openFaq: number | null;
                 onClick={() => onToggleFaq(i)}
                 style={{
                   width: "100%", padding: "18px 20px", border: "none", background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)",
-                  color: "#ffffff", fontWeight: 600, fontSize: "15px", cursor: "pointer",
+                  color: "#ffffff", fontWeight: 600, fontSize: "16px", cursor: "pointer",
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   textAlign: "left", borderRadius: openFaq === i ? "12px 12px 0 0" : "12px",
                 }}
@@ -1276,7 +1276,7 @@ function FaqSection({ openFaq, onToggleFaq }: Readonly<{ openFaq: number | null;
                 }} />
               </button>
               {openFaq === i && (
-                <div style={{ padding: "16px 20px 18px", fontSize: "14px", color: "#003580", lineHeight: 1.6, background: "#ffffff" }}>
+                <div style={{ padding: "16px 20px 18px", fontSize: "15px", color: "#003580", lineHeight: 1.6, background: "var(--color-card, #fff)" }}>
                   {faq.a}
                 </div>
               )}
@@ -1290,7 +1290,7 @@ function FaqSection({ openFaq, onToggleFaq }: Readonly<{ openFaq: number | null;
 
 function AppsSection() {
   return (
-    <section style={{ background: "#ffffff", transition: "background 0.4s" }}>
+    <section style={{ background: "var(--color-card, #fff)", transition: "background 0.4s" }}>
       <div className="landing-section" style={{ maxWidth: "900px", textAlign: "center" }}>
         <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, marginBottom: "12px", color: "#003580" }}>
           Nossos Aplicativos
@@ -1304,44 +1304,44 @@ function AppsSection() {
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.08)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "var(--color-card, #fff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <img src="/logo-portariax.png" alt="Portaria X" style={{ width: "80px", height: "80px", objectFit: "contain" }} />
             </div>
-            <span style={{ fontWeight: 700, fontSize: "14px", color: "#003580" }}>Portaria X</span>
-            <span style={{ fontSize: "12px", color: "#336699" }}>portariax.com.br</span>
+            <span style={{ fontWeight: 700, fontSize: "15px", color: "#003580" }}>Portaria X</span>
+            <span style={{ fontSize: "13px", color: "#336699" }}>portariax.com.br</span>
           </a>
           {/* Gestão e Limpeza */}
           <a href="https://www.gestaoelimpeza.com.br" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "160px", transition: "transform 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.08)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "var(--color-card, #fff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <img src="/logo-gestaoelimpeza.png" alt="Gestão e Limpeza" style={{ width: "80px", height: "80px", objectFit: "contain" }} />
             </div>
-            <span style={{ fontWeight: 700, fontSize: "14px", color: "#003580" }}>Gestão e Limpeza</span>
-            <span style={{ fontSize: "12px", color: "#336699" }}>gestaoelimpeza.com.br</span>
+            <span style={{ fontWeight: 700, fontSize: "15px", color: "#003580" }}>Gestão e Limpeza</span>
+            <span style={{ fontSize: "13px", color: "#336699" }}>gestaoelimpeza.com.br</span>
           </a>
           {/* App Correspondência */}
           <a href="https://www.appcorrespondencia.com.br" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "160px", transition: "transform 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.08)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "var(--color-card, #fff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <img src="/logo-appcorrespondencia.png" alt="App Correspondência" style={{ width: "80px", height: "80px", objectFit: "contain" }} />
             </div>
-            <span style={{ fontWeight: 700, fontSize: "14px", color: "#003580" }}>App Correspondência</span>
-            <span style={{ fontSize: "12px", color: "#336699" }}>appcorrespondencia.com.br</span>
+            <span style={{ fontWeight: 700, fontSize: "15px", color: "#003580" }}>App Correspondência</span>
+            <span style={{ fontSize: "13px", color: "#336699" }}>appcorrespondencia.com.br</span>
           </a>
           {/* Manutenção X */}
           <a href="https://www.manutencaox.com.br" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "160px", transition: "transform 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.08)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: "90px", height: "90px", borderRadius: "20px", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,53,128,0.15)", background: "var(--color-card, #fff)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <img src="/logo-manutencaox.png" alt="Manutenção X" style={{ width: "80px", height: "80px", objectFit: "contain" }} />
             </div>
-            <span style={{ fontWeight: 700, fontSize: "14px", color: "#003580" }}>Manutenção X</span>
-            <span style={{ fontSize: "12px", color: "#336699" }}>manutencaox.com.br</span>
+            <span style={{ fontWeight: 700, fontSize: "15px", color: "#003580" }}>Manutenção X</span>
+            <span style={{ fontSize: "13px", color: "#336699" }}>manutencaox.com.br</span>
           </a>
         </div>
 
@@ -1352,13 +1352,13 @@ function AppsSection() {
 
 function FooterSection({ onNavigate }: Readonly<{ onNavigate: (path: string) => void }>) {
   return (
-    <footer style={{ background: "#ffffff", borderTop: "1px solid rgba(0,53,128,0.15)", padding: "48px 24px", transition: "background 0.4s" }}>
+    <footer style={{ background: "var(--color-card, #fff)", borderTop: "1px solid rgba(0,53,128,0.15)", padding: "48px 24px", transition: "background 0.4s" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", flexWrap: "wrap", gap: "32px", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <p style={{ fontWeight: 800, fontSize: "18px", color: "#003580", marginBottom: "4px" }}>
             Portaria X
           </p>
-          <p style={{ fontSize: "13px", color: "#336699" }}>
+          <p style={{ fontSize: "14px", color: "#336699" }}>
             © 2026 — www.portariax.com.br
           </p>
         </div>
@@ -1368,7 +1368,7 @@ function FooterSection({ onNavigate }: Readonly<{ onNavigate: (path: string) => 
             style={{
               padding: "10px 20px", borderRadius: "10px",
               border: "1px solid #003580", background: "transparent",
-              color: "#003580", fontWeight: 600, fontSize: "14px", cursor: "pointer",
+              color: "#003580", fontWeight: 600, fontSize: "15px", cursor: "pointer",
             }}
           >
             Entrar

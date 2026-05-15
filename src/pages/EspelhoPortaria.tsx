@@ -91,9 +91,9 @@ export default function EspelhoPortaria() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <Eye className="w-5 h-5" />
+          <Eye className="w-6 h-6" />
           <span style={{ fontWeight: 700, fontSize: 16 }}>Espelho da Portaria</span>
           <div className="flex-1" />
           <TutorialButton title="Espelho da Portaria">
@@ -146,7 +146,7 @@ export default function EspelhoPortaria() {
                 borderBottom: isActive ? "3px solid " + p.accent : "3px solid transparent",
               }}
             >
-              <Icon className="w-6 h-6" />
+              <Icon className="w-7 h-7" />
               <span className="hidden sm:inline">{tab.label}</span>
               <span
                 className="ml-1 text-sm font-bold"
@@ -163,8 +163,8 @@ export default function EspelhoPortaria() {
 
       {/* Search */}
       <div style={{ padding: "12px 24px" }}>
-        <div className="flex items-center gap-2 h-10 rounded-lg" style={{ paddingLeft: "16px", paddingRight: "12px", background: "#ffffff", border: "1px solid #e2e8f0" }}>
-          <Search className="w-4 h-4 shrink-0" style={{ color: "#64748b" }} />
+        <div className="flex items-center gap-2 h-10 rounded-lg" style={{ paddingLeft: "16px", paddingRight: "12px", background: "var(--color-card, #fff)", border: "1px solid #e2e8f0" }}>
+          <Search className="w-5 h-5 shrink-0" style={{ color: "var(--muted-foreground)" }} />
           <input
             type="text"
             placeholder="Buscar..."
@@ -188,10 +188,10 @@ export default function EspelhoPortaria() {
               filteredCorrespondencias.map((c) => {
                 const st = statusStyle[c.status] || { bg: "#f3f4f6", text: "#374151" };
                 return (
-                  <div key={c.id} className="rounded-xl overflow-hidden" style={{ padding: "16px", background: "#ffffff" }}>
+                  <div key={c.id} className="rounded-xl overflow-hidden" style={{ padding: "16px", background: "var(--color-card, #fff)" }}>
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ border: "2px solid " + p.accent }}>
-                        <Package className="w-5 h-5" style={{ color: p.accent }} />
+                        <Package className="w-6 h-6" style={{ color: p.accent }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium" style={{ color: "#111827" }}>{c.morador}</p>
@@ -201,7 +201,7 @@ export default function EspelhoPortaria() {
                           <span className="text-xs" style={{ color: "#374151" }}>{c.origem}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-2">
-                          <Clock className="w-3 h-3" style={{ color: "#374151" }} />
+                          <Clock className="w-4 h-4" style={{ color: "#374151" }} />
                           <span className="text-[11px]" style={{ color: "#374151" }}>{c.dataRecebimento}</span>
                         </div>
                       </div>
@@ -228,10 +228,10 @@ export default function EspelhoPortaria() {
               filteredAutorizacoes.map((a) => {
                 const st = statusStyle[a.status] || { bg: "#f3f4f6", text: "#374151" };
                 return (
-                  <div key={a.id} className="rounded-xl overflow-hidden" style={{ padding: "16px", background: "#ffffff" }}>
+                  <div key={a.id} className="rounded-xl overflow-hidden" style={{ padding: "16px", background: "var(--color-card, #fff)" }}>
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ border: "2px solid " + p.accent }}>
-                        <UserCheck className="w-5 h-5" style={{ color: p.accent }} />
+                        <UserCheck className="w-6 h-6" style={{ color: p.accent }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium" style={{ color: "#111827" }}>{a.visitante}</p>
@@ -242,7 +242,7 @@ export default function EspelhoPortaria() {
                           <span className="text-[11px]" style={{ color: "#374151" }}>{a.dataAutorizacao}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <Clock className="w-3 h-3" style={{ color: "#374151" }} />
+                          <Clock className="w-4 h-4" style={{ color: "#374151" }} />
                           <span className="text-[11px]" style={{ color: "#374151" }}>{a.horario}</span>
                         </div>
                       </div>
@@ -269,10 +269,10 @@ export default function EspelhoPortaria() {
               filteredAcesso.map((a) => {
                 const st = tipoAcessoStyle[a.tipo] || { bg: "#f3f4f6", text: "#374151" };
                 return (
-                  <div key={a.id} className="rounded-xl overflow-hidden" style={{ padding: "16px", background: "#ffffff" }}>
+                  <div key={a.id} className="rounded-xl overflow-hidden" style={{ padding: "16px", background: "var(--color-card, #fff)" }}>
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ border: "2px solid " + p.accent }}>
-                        <DoorOpen className="w-5 h-5" style={{ color: p.accent }} />
+                        <DoorOpen className="w-6 h-6" style={{ color: p.accent }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">

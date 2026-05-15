@@ -309,7 +309,7 @@ export default function AutoCadastroPreAuth() {
       >
         <div className="flex flex-col items-center gap-2 mb-3">
           <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-            <ShieldCheck className="w-6 h-6" />
+            <ShieldCheck className="w-7 h-7" />
           </div>
           <div>
             <h1 className="font-bold text-xl">Auto Cadastro</h1>
@@ -320,7 +320,7 @@ export default function AutoCadastroPreAuth() {
         {auth && (
           <div className="rounded-lg bg-white/10 px-4 py-3 mt-2">
             <div className="flex items-center justify-center gap-2 text-sm">
-              <Building className="w-4 h-4" />
+              <Building className="w-5 h-5" />
               <span>
                 {auth.bloco} Apt {auth.apartamento} — Morador: {auth.morador_name}
               </span>
@@ -345,8 +345,8 @@ export default function AutoCadastroPreAuth() {
       <div style={{ padding: "24px 24px 100px" }}>
         {/* ── Biometria Facial ── */}
         <div style={{ marginBottom: "32px" }}>
-          <span className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "#1e293b" }}>
-            <ScanFace className="w-5 h-5" style={{ color: "#6366f1" }} />
+          <span className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "var(--card-foreground)" }}>
+            <ScanFace className="w-6 h-6" style={{ color: "#6366f1" }} />
             Biometria Facial
           </span>
 
@@ -362,7 +362,7 @@ export default function AutoCadastroPreAuth() {
                 className="mx-auto mt-2 flex items-center justify-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold text-white w-fit"
                 style={{ backgroundColor: "#22c55e" }}
               >
-                <CheckCircle2 className="w-3 h-3" />
+                <CheckCircle2 className="w-4 h-4" />
                 Biometria Capturada
               </div>
               <button
@@ -410,7 +410,7 @@ export default function AutoCadastroPreAuth() {
                 onClick={stopCamera}
                 className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center"
               >
-                <XCircle className="w-4 h-4" />
+                <XCircle className="w-5 h-5" />
               </button>
             </div>
           ) : (
@@ -433,7 +433,7 @@ export default function AutoCadastroPreAuth() {
                 <p className="text-sm font-semibold" style={{ color: "#6366f1" }}>
                   Tirar Foto com Biometria
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "#64748b" }}>
+                <p className="text-xs mt-0.5" style={{ color: "var(--muted-foreground)" }}>
                   Sua biometria será usada na portaria para liberar sua entrada
                 </p>
               </div>
@@ -443,8 +443,8 @@ export default function AutoCadastroPreAuth() {
 
         {/* ── Foto do Documento ── */}
         <div style={{ marginBottom: "32px" }}>
-          <span className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "#1e293b" }}>
-            <Image className="w-5 h-5" style={{ color: "#f59e0b" }} />
+          <span className="text-base font-bold mb-3 flex items-center gap-2 uppercase tracking-wider" style={{ color: "var(--card-foreground)" }}>
+            <Image className="w-6 h-6" style={{ color: "#f59e0b" }} />
             Foto do Documento
           </span>
 
@@ -458,9 +458,9 @@ export default function AutoCadastroPreAuth() {
               </div>
               <button
                 onClick={() => setDocumentoFoto("")}
-                className="absolute top-2 right-2 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center"
+                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center"
               >
-                <XCircle className="w-4 h-4" />
+                <XCircle className="w-5 h-5" />
               </button>
             </div>
           ) : showDocCamera ? (
@@ -501,12 +501,12 @@ export default function AutoCadastroPreAuth() {
                 padding: "0 16px",
               }}
             >
-              <Camera className="w-6 h-6" style={{ color: "#f59e0b" }} />
+              <Camera className="w-7 h-7" style={{ color: "#f59e0b" }} />
               <div className="text-left">
                 <p className="text-sm font-semibold" style={{ color: "#b45309" }}>
                   Fotografar RG / CPF / CNH
                 </p>
-                <p className="text-xs" style={{ color: "#64748b" }}>Use a câmera traseira</p>
+                <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Use a câmera traseira</p>
               </div>
             </button>
           )}
@@ -514,45 +514,45 @@ export default function AutoCadastroPreAuth() {
 
         {/* ── Nome ── */}
         <div style={{ marginBottom: "20px" }}>
-          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
-            <User className="w-4 h-4" style={{ color: "#6366f1" }} /> Nome Completo *
+          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "var(--card-foreground)" }}>
+            <User className="w-5 h-5" style={{ color: "#6366f1" }} /> Nome Completo *
           </span>
           <input
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             placeholder="Seu nome completo"
-            style={{ backgroundColor: "#ffffff", color: "#0f172a", borderColor: "#cbd5e1" }}
+            style={{ backgroundColor: "#ffffff", color: "var(--card-foreground)", borderColor: "#cbd5e1" }}
             className="w-full h-12 rounded-lg border px-4 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
           />
         </div>
 
         {/* ── Documento ── */}
         <div style={{ marginBottom: "20px" }}>
-          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
-            <FileText className="w-4 h-4" style={{ color: "#6366f1" }} /> Documento (CPF / RG)
+          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "var(--card-foreground)" }}>
+            <FileText className="w-5 h-5" style={{ color: "#6366f1" }} /> Documento (CPF / RG)
           </span>
           <input
             type="text"
             value={documento}
             onChange={(e) => setDocumento(e.target.value)}
             placeholder="000.000.000-00"
-            style={{ backgroundColor: "#ffffff", color: "#0f172a", borderColor: "#cbd5e1" }}
+            style={{ backgroundColor: "#ffffff", color: "var(--card-foreground)", borderColor: "#cbd5e1" }}
             className="w-full h-12 rounded-lg border px-4 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
           />
         </div>
 
         {/* ── Telefone ── */}
         <div style={{ marginBottom: "32px" }}>
-          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "#1e293b" }}>
-            <Phone className="w-4 h-4" style={{ color: "#6366f1" }} /> Telefone
+          <span className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "var(--card-foreground)" }}>
+            <Phone className="w-5 h-5" style={{ color: "#6366f1" }} /> Telefone
           </span>
           <input
             type="tel"
             value={telefone}
             onChange={(e) => setTelefone(formatPhone(e.target.value))}
             placeholder="(00) 00000-0000"
-            style={{ backgroundColor: "#ffffff", color: "#0f172a", borderColor: "#cbd5e1" }}
+            style={{ backgroundColor: "#ffffff", color: "var(--card-foreground)", borderColor: "#cbd5e1" }}
             className="w-full h-12 rounded-lg border px-4 text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
           />
         </div>
@@ -567,7 +567,7 @@ export default function AutoCadastroPreAuth() {
             border: foto ? "1px solid #bbf7d0" : "1px solid #fde68a",
           }}
         >
-          <ScanFace className="w-6 h-6 shrink-0" style={{ color: foto ? "#16a34a" : "#d97706" }} />
+          <ScanFace className="w-7 h-7 shrink-0" style={{ color: foto ? "#16a34a" : "#d97706" }} />
           <div className="flex-1">
             {foto ? (
               <>
@@ -594,10 +594,10 @@ export default function AutoCadastroPreAuth() {
           }}
         >
           {submitting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <>
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-5 h-5" />
               Enviar Meus Dados
             </>
           )}

@@ -16,15 +16,15 @@ export default function DemoBanner() {
       flexWrap: "wrap", position: "sticky", top: 0, zIndex: 9999,
     }}>
       <Eye style={{ width: "16px", height: "16px", color: "#ffffff" }} />
-      <span style={{ fontSize: "13px", fontWeight: 600, color: "#ffffff" }}>
+      <span style={{ fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>
         Modo Demonstração — Explorando com dados fictícios
       </span>
       <button
         onClick={() => { navigate("/register/condominio"); }}
         style={{
-          background: "#ffffff", color: "#003580", border: "none",
+          background: "var(--color-card, #fff)", color: "#003580", border: "none",
           padding: "5px 14px", borderRadius: "8px", fontWeight: 700,
-          fontSize: "12px", cursor: "pointer",
+          fontSize: "13px", cursor: "pointer",
           display: "flex", alignItems: "center", gap: "4px",
         }}
       >
@@ -36,7 +36,7 @@ export default function DemoBanner() {
         style={{
           background: "rgba(255,255,255,0.15)", color: "#ffffff", border: "1px solid rgba(255,255,255,0.3)",
           padding: "5px 14px", borderRadius: "8px", fontWeight: 600,
-          fontSize: "12px", cursor: "pointer",
+          fontSize: "13px", cursor: "pointer",
           display: "flex", alignItems: "center", gap: "4px",
         }}
       >

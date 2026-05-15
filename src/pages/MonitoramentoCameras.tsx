@@ -175,7 +175,7 @@ export default function MonitoramentoCameras() {
             <>
               {loadingFeed && (
                 <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#475569" }} />
+                  <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--muted-foreground)" }} />
                 </div>
               )}
               <img
@@ -216,14 +216,14 @@ export default function MonitoramentoCameras() {
             }}>
               <Video className="w-7 h-7" style={{ color: "#6366f1" }} />
             </div>
-            <p style={{ fontSize: "13px", fontWeight: 600, color: "#94a3b8" }}>
+            <p style={{ fontSize: "14px", fontWeight: 600, color: "#94a3b8" }}>
               {camera.nome}
             </p>
             {!camera.url_stream && (
-              <p style={{ fontSize: "11px", color: "#475569" }}>URL não configurada</p>
+              <p style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>URL não configurada</p>
             )}
             {error && (
-              <p style={{ fontSize: "11px", color: "#ef4444" }}>Sem conexão</p>
+              <p style={{ fontSize: "12px", color: "#ef4444" }}>Sem conexão</p>
             )}
           </div>
         )}
@@ -241,13 +241,13 @@ export default function MonitoramentoCameras() {
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
                 <span style={{
-                  fontSize: "9px", fontWeight: 600, padding: "1px 6px", borderRadius: "4px",
+                  fontSize: "11px", fontWeight: 600, padding: "1px 6px", borderRadius: "4px",
                   background: "rgba(99,102,241,0.3)", color: "#a5b4fc",
                 }}>
                   {SETOR_LABELS[camera.setor] || camera.setor}
                 </span>
                 {camera.localizacao && (
-                  <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>
+                  <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)" }}>
                     {camera.localizacao}
                   </span>
                 )}
@@ -259,7 +259,7 @@ export default function MonitoramentoCameras() {
                 background: error ? "#ef4444" : "#10b981",
                 boxShadow: error ? "0 0 6px #ef4444" : "0 0 6px #10b981",
               }} />
-              <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)", fontVariantNumeric: "tabular-nums" }}>
+              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)", fontVariantNumeric: "tabular-nums" }}>
                 REC
               </span>
             </div>
@@ -296,20 +296,20 @@ export default function MonitoramentoCameras() {
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}
             >
-              <ArrowLeft className="w-5 h-5" style={{ color: "#fff" }} />
+              <ArrowLeft className="w-6 h-6" style={{ color: "#fff" }} />
             </button>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <Monitor className="w-5 h-5" style={{ color: "#6366f1" }} />
+                <Monitor className="w-6 h-6" style={{ color: "#6366f1" }} />
                 <span style={{ fontWeight: 700, fontSize: "16px", color: "#fff" }}>Monitoramento</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "2px" }}>
-                <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", fontVariantNumeric: "tabular-nums" }}>
-                  <Clock className="w-3 h-3 inline" style={{ verticalAlign: "-1px", marginRight: "4px" }} />
+                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", fontVariantNumeric: "tabular-nums" }}>
+                  <Clock className="w-4 h-4 inline" style={{ verticalAlign: "-1px", marginRight: "4px" }} />
                   {currentTime.toLocaleTimeString("pt-BR")}
                 </span>
-                <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.25)" }}>·</span>
-                <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
+                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)" }}>·</span>
+                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
                   {cameras.length} câmera{cameras.length !== 1 ? "s" : ""}
                 </span>
               </div>
@@ -360,7 +360,7 @@ export default function MonitoramentoCameras() {
                   padding: "6px 10px", borderRadius: "8px", border: "none",
                   background: layout === opt.value ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.06)",
                   color: layout === opt.value ? "#a5b4fc" : "rgba(255,255,255,0.4)",
-                  fontSize: "11px", fontWeight: 600, cursor: "pointer",
+                  fontSize: "12px", fontWeight: 600, cursor: "pointer",
                 }}
               >
                 {opt.label}
@@ -376,7 +376,7 @@ export default function MonitoramentoCameras() {
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
               }}
             >
-              <Settings className="w-4 h-4" style={{ color: showSettings ? "#a5b4fc" : "rgba(255,255,255,0.5)" }} />
+              <Settings className="w-5 h-5" style={{ color: showSettings ? "#a5b4fc" : "rgba(255,255,255,0.5)" }} />
             </button>
           </div>
         </div>
@@ -394,7 +394,7 @@ export default function MonitoramentoCameras() {
                 value={filterSetor}
                 onChange={(e) => setFilterSetor(e.target.value)}
                 style={{
-                  padding: "5px 28px 5px 8px", borderRadius: "8px", fontSize: "12px",
+                  padding: "5px 28px 5px 8px", borderRadius: "8px", fontSize: "13px",
                   background: "rgba(255,255,255,0.06)", color: "#e2e8f0",
                   border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer",
                   appearance: "none" as const,
@@ -409,7 +409,7 @@ export default function MonitoramentoCameras() {
 
             {/* Ronda Virtual */}
             <div style={{ display: "flex", alignItems: "center", gap: "6px", marginLeft: "auto" }}>
-              <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: 600 }}>Ronda Virtual:</span>
+              <span style={{ fontSize: "13px", color: "#94a3b8", fontWeight: 600 }}>Ronda Virtual:</span>
               {!rondaActive ? (
                 <button
                   onClick={startRonda}
@@ -418,7 +418,7 @@ export default function MonitoramentoCameras() {
                     padding: "5px 12px", borderRadius: "8px", border: "none",
                     background: activeCams.length >= 2 ? "rgba(16,185,129,0.2)" : "rgba(255,255,255,0.04)",
                     color: activeCams.length >= 2 ? "#10b981" : "#475569",
-                    fontSize: "12px", fontWeight: 600, cursor: activeCams.length >= 2 ? "pointer" : "not-allowed",
+                    fontSize: "13px", fontWeight: 600, cursor: activeCams.length >= 2 ? "pointer" : "not-allowed",
                     display: "flex", alignItems: "center", gap: "4px",
                   }}
                 >
@@ -431,7 +431,7 @@ export default function MonitoramentoCameras() {
                     style={{
                       padding: "5px 12px", borderRadius: "8px", border: "none",
                       background: "rgba(239,68,68,0.2)", color: "#ef4444",
-                      fontSize: "12px", fontWeight: 600, cursor: "pointer",
+                      fontSize: "13px", fontWeight: 600, cursor: "pointer",
                       display: "flex", alignItems: "center", gap: "4px",
                     }}
                   >
@@ -442,7 +442,7 @@ export default function MonitoramentoCameras() {
                     style={{
                       padding: "5px 10px", borderRadius: "8px", border: "none",
                       background: "rgba(255,255,255,0.08)", color: "#e2e8f0",
-                      fontSize: "12px", cursor: "pointer",
+                      fontSize: "13px", cursor: "pointer",
                       display: "flex", alignItems: "center",
                     }}
                   >
@@ -456,7 +456,7 @@ export default function MonitoramentoCameras() {
                 value={rondaInterval}
                 onChange={(e) => setRondaInterval(Number.parseInt(e.target.value))}
                 style={{
-                  padding: "5px 8px", borderRadius: "8px", fontSize: "12px",
+                  padding: "5px 8px", borderRadius: "8px", fontSize: "13px",
                   background: "rgba(255,255,255,0.06)", color: "#e2e8f0",
                   border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer",
                 }}
@@ -515,7 +515,7 @@ export default function MonitoramentoCameras() {
             <p style={{ fontSize: "16px", fontWeight: 600, color: "#94a3b8" }}>
               Nenhuma câmera ativa
             </p>
-            <p style={{ fontSize: "13px", color: "#475569", textAlign: "center", maxWidth: "300px" }}>
+            <p style={{ fontSize: "14px", color: "var(--muted-foreground)", textAlign: "center", maxWidth: "300px" }}>
               Peça ao síndico para cadastrar as câmeras do condomínio
             </p>
             {(user?.role === "sindico" || user?.role === "master" || user?.role === "administradora") && (
@@ -524,7 +524,7 @@ export default function MonitoramentoCameras() {
                 style={{
                   padding: "10px 24px", borderRadius: "10px", border: "none",
                   background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", color: "#fff",
-                  fontWeight: 600, fontSize: "13px", cursor: "pointer", marginTop: "8px",
+                  fontWeight: 600, fontSize: "14px", cursor: "pointer", marginTop: "8px",
                 }}
               >
                 Cadastrar Câmeras
@@ -566,7 +566,7 @@ export default function MonitoramentoCameras() {
               <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
                 {selectedCamera.nome}
               </p>
-              <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>
+              <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)" }}>
                 {SETOR_LABELS[selectedCamera.setor]}
                 {selectedCamera.localizacao ? ` · ${selectedCamera.localizacao}` : ""}
               </p>
@@ -590,8 +590,8 @@ export default function MonitoramentoCameras() {
                 }}
               >
                 {fullscreen
-                  ? <Minimize2 className="w-5 h-5" style={{ color: "#fff" }} />
-                  : <Maximize2 className="w-5 h-5" style={{ color: "#fff" }} />}
+                  ? <Minimize2 className="w-6 h-6" style={{ color: "#fff" }} />
+                  : <Maximize2 className="w-6 h-6" style={{ color: "#fff" }} />}
               </button>
               <button
                 onClick={() => {
@@ -601,7 +601,7 @@ export default function MonitoramentoCameras() {
                 style={{
                   padding: "8px 16px", borderRadius: "10px", border: "none",
                   background: "rgba(255,255,255,0.1)", cursor: "pointer",
-                  color: "#fff", fontSize: "13px", fontWeight: 600,
+                  color: "#fff", fontSize: "14px", fontWeight: 600,
                 }}
               >
                 Fechar
@@ -627,7 +627,7 @@ export default function MonitoramentoCameras() {
                 background: "#ef4444", boxShadow: "0 0 8px #ef4444",
                 animation: "blink 1s ease-in-out infinite",
               }} />
-              <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
+              <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
                 AO VIVO
               </span>
               <style>{`
@@ -638,7 +638,7 @@ export default function MonitoramentoCameras() {
               `}</style>
             </div>
             <span style={{
-              fontSize: "13px", color: "rgba(255,255,255,0.4)",
+              fontSize: "14px", color: "rgba(255,255,255,0.4)",
               fontVariantNumeric: "tabular-nums", fontFamily: "monospace",
             }}>
               {currentTime.toLocaleDateString("pt-BR")} {currentTime.toLocaleTimeString("pt-BR")}

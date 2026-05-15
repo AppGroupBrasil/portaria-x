@@ -174,17 +174,17 @@ export default function SindicoFeaturesConfig() {
         <div className="flex items-center justify-between" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <div className="flex items-center gap-3">
             <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowLeft className="w-7 h-7" />
             </button>
             <div>
               <span style={{ fontWeight: 700, fontSize: 18 }} className="block">Config. Funcionalidades</span>
               <span style={{ fontSize: 12, color: isDark ? "rgba(255,255,255,0.6)" : "#64748b" }}>Ativar/desativar por perfil</span>
             </div>
           </div>
-          {saving && <Loader2 className="w-5 h-5 animate-spin text-white/60" />}
+          {saving && <Loader2 className="w-6 h-6 animate-spin text-white/60" />}
           {!saving && saved && (
             <div className="flex items-center gap-1 text-emerald-300 text-sm font-medium">
-              <Check className="w-4 h-4" /> Salvo
+              <Check className="w-5 h-5" /> Salvo
             </div>
           )}
         </div>
@@ -214,7 +214,7 @@ export default function SindicoFeaturesConfig() {
               style={{
                 flex: 1,
                 padding: "12px 8px",
-                fontSize: "13px",
+                fontSize: "14px",
                 fontWeight: 700,
                 border: "none",
                 background: tabBg,
@@ -229,7 +229,7 @@ export default function SindicoFeaturesConfig() {
             >
               {t.label}
               <span style={{
-                fontSize: "10px",
+                fontSize: "12px",
                 fontWeight: 700,
                 padding: "1px 6px",
                 borderRadius: "6px",
@@ -247,8 +247,8 @@ export default function SindicoFeaturesConfig() {
         {/* Info + bulk actions */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <Settings className="w-4 h-4" style={{ color: currentTab.color }} />
-            <span style={{ fontSize: "13px", fontWeight: 600, color: p.textHeading }}>
+            <Settings className="w-5 h-5" style={{ color: currentTab.color }} />
+            <span style={{ fontSize: "14px", fontWeight: 600, color: p.textHeading }}>
               {enabledCount} de {currentTab.features.length} ativas
             </span>
           </div>
@@ -256,7 +256,7 @@ export default function SindicoFeaturesConfig() {
             <button
               onClick={() => toggleAll(currentTab.features, true)}
               style={{
-                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                fontSize: "12px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
                 border: "none", background: `${currentTab.color}15`, color: currentTab.color, cursor: "pointer",
               }}
             >
@@ -265,7 +265,7 @@ export default function SindicoFeaturesConfig() {
             <button
               onClick={() => toggleAll(currentTab.features, false)}
               style={{
-                fontSize: "11px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
+                fontSize: "12px", fontWeight: 700, padding: "6px 12px", borderRadius: "8px",
                 border: "1px solid #e5e7eb", background: isDark ? "rgba(255,255,255,0.04)" : "#fff", color: "#dc2626", cursor: "pointer",
               }}
             >
@@ -317,7 +317,7 @@ export default function SindicoFeaturesConfig() {
                   display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                   transition: "all 0.2s ease",
                 }}>
-                  <Icon className="w-5 h-5" style={{ color: iconColor }} />
+                  <Icon className="w-6 h-6" style={{ color: iconColor }} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 14, fontWeight: 600, color: p.textHeading, marginBottom: 2 }}>{feature.label}</p>
@@ -329,7 +329,7 @@ export default function SindicoFeaturesConfig() {
                   transition: "all 0.2s ease",
                 }}>
                   <div style={{
-                    width: 22, height: 22, borderRadius: "50%", background: "#fff",
+                    width: 26, height: 26, borderRadius: "50%", background: "var(--color-card, #fff)",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "all 0.2s ease",
                     transform: enabled ? "translateX(20px)" : "translateX(0)",
                   }} />

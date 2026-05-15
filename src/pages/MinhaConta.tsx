@@ -146,12 +146,12 @@ export default function MinhaConta() {
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px", borderRadius: "12px",
-    border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff",
-    color: "#0f172a", outline: "none", boxSizing: "border-box",
+    border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)",
+    color: "var(--card-foreground)", outline: "none", boxSizing: "border-box",
   };
 
   const labelStyle: React.CSSProperties = {
-    fontWeight: 600, fontSize: "13px", color: "#475569", marginBottom: "6px",
+    fontWeight: 600, fontSize: "14px", color: "var(--muted-foreground)", marginBottom: "6px",
     display: "flex", alignItems: "center", gap: "6px",
   };
 
@@ -165,11 +165,11 @@ export default function MinhaConta() {
       }}>
         <button onClick={() => navigate("/dashboard")}
           style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: "10px", padding: "8px", cursor: "pointer", display: "flex" }}>
-          <ArrowLeft className="w-5 h-5" style={{ color: p.text }} />
+          <ArrowLeft className="w-6 h-6" style={{ color: p.text }} />
         </button>
         <div style={{ flex: 1 }}>
           <h1 style={{ fontSize: "18px", fontWeight: 700, margin: 0 }}>Minha Conta</h1>
-          <p style={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", margin: 0 }}>Gerencie seus dados pessoais</p>
+          <p style={{ fontSize: "13px", color: isDark ? "rgba(255,255,255,0.6)" : "#64748b", margin: 0 }}>Gerencie seus dados pessoais</p>
         </div>
         <div style={{
           width: "42px", height: "42px", borderRadius: "50%",
@@ -186,18 +186,18 @@ export default function MinhaConta() {
         <div style={{
           margin: "16px 16px 0", padding: "12px 16px", borderRadius: "12px",
           background: "#ecfdf5", border: "1px solid #86efac", color: "#15803d",
-          fontSize: "13px", fontWeight: 500, display: "flex", alignItems: "center", gap: "12px",
+          fontSize: "14px", fontWeight: 500, display: "flex", alignItems: "center", gap: "12px",
         }}>
-          <CheckCircle2 className="w-4 h-4" /> {success}
+          <CheckCircle2 className="w-5 h-5" /> {success}
         </div>
       )}
       {error && (
         <div style={{
           margin: "16px 16px 0", padding: "12px 16px", borderRadius: "12px",
           background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c",
-          fontSize: "13px", fontWeight: 500, display: "flex", alignItems: "center", gap: "12px",
+          fontSize: "14px", fontWeight: 500, display: "flex", alignItems: "center", gap: "12px",
         }}>
-          <AlertTriangle className="w-4 h-4" /> {error}
+          <AlertTriangle className="w-5 h-5" /> {error}
         </div>
       )}
 
@@ -206,19 +206,19 @@ export default function MinhaConta() {
         {/* ═══════ CONDOMÍNIO ═══════ */}
         {isMorador && (
           <div style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
+            background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
             border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
           }}>
             <h2 style={{
-              fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: "0 0 16px",
+              fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 16px",
               display: "flex", alignItems: "center", gap: "12px",
             }}>
-              <Building2 className="w-4 h-4" style={{ color: "#003580" }} />
+              <Building2 className="w-5 h-5" style={{ color: "#003580" }} />
               Condomínio
             </h2>
 
             <p style={{
-              fontSize: "14px", fontWeight: 600, color: "#334155", margin: "0 0 14px",
+              fontSize: "15px", fontWeight: 600, color: "var(--card-foreground)", margin: "0 0 14px",
             }}>
               {user?.condominio_nome || "Meu Condomínio"}
             </p>
@@ -244,19 +244,19 @@ export default function MinhaConta() {
 
         {isMorador && (
           <div style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
+            background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
             border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
           }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", marginBottom: "8px" }}>
               <div>
                 <h2 style={{
-                  fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: "0 0 4px",
+                  fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 4px",
                   display: "flex", alignItems: "center", gap: "12px",
                 }}>
-                  <Car className="w-4 h-4" style={{ color: "#003580" }} />
+                  <Car className="w-5 h-5" style={{ color: "#003580" }} />
                   Meus Veículos
                 </h2>
-                <p style={{ fontSize: "12px", color: "#64748b", margin: 0 }}>
+                <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: 0 }}>
                   Acesse o cadastro dos seus veículos próprios
                 </p>
               </div>
@@ -278,28 +278,28 @@ export default function MinhaConta() {
               }}
             >
               <div style={{ textAlign: "left" }}>
-                <p style={{ fontSize: "14px", fontWeight: 700, color: "#1e3a8a", margin: 0 }}>
+                <p style={{ fontSize: "15px", fontWeight: 700, color: "#1e3a8a", margin: 0 }}>
                   Cadastrar ou editar veículos
                 </p>
-                <p style={{ fontSize: "12px", color: "#475569", margin: "4px 0 0" }}>
+                <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: "4px 0 0" }}>
                   Placa, modelo, cor e dados de acesso do veículo
                 </p>
               </div>
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-6 h-6" />
             </button>
           </div>
         )}
 
         {/* ═══════ DADOS PESSOAIS ═══════ */}
         <div style={{
-          background: "#fff", borderRadius: "16px", padding: "20px",
+          background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
           border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}>
           <h2 style={{
-            fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: "0 0 16px",
+            fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: "0 0 16px",
             display: "flex", alignItems: "center", gap: "12px",
           }}>
-            <User className="w-4 h-4" style={{ color: "#6366f1" }} />
+            <User className="w-5 h-5" style={{ color: "#6366f1" }} />
             Dados Pessoais
           </h2>
 
@@ -340,12 +340,12 @@ export default function MinhaConta() {
               style={{
                 width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                 background: saving ? "#94a3b8" : "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
-                color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: saving ? "wait" : "pointer",
+                color: "#ffffff", fontWeight: 700, fontSize: "16px", cursor: saving ? "wait" : "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 boxShadow: "0 4px 12px rgba(99,102,241,0.3)", marginTop: "4px",
               }}
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               {saving ? "Salvando..." : "Salvar Alterações"}
             </button>
           </div>
@@ -353,16 +353,16 @@ export default function MinhaConta() {
 
         {/* ═══════ TEMA VISUAL ═══════ */}
         <div style={{
-          background: "#fff", borderRadius: "16px", padding: "20px",
+          background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
           border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
-            <Palette className="w-4 h-4" style={{ color: "#003580" }} />
+            <Palette className="w-5 h-5" style={{ color: "#003580" }} />
             <div>
-              <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0 }}>
+              <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: 0 }}>
                 Tema Visual
               </h2>
-              <p style={{ fontSize: "12px", color: "#64748b", margin: "2px 0 0" }}>
+              <p style={{ fontSize: "13px", color: "var(--muted-foreground)", margin: "2px 0 0" }}>
                 Escolha a aparência do sistema
               </p>
             </div>
@@ -398,9 +398,9 @@ export default function MinhaConta() {
                     alignItems: "center",
                     justifyContent: "center",
                   }}>
-                    {isActive && <Check style={{ width: 16, height: 16, color: t.id === "light" ? "#003580" : "#fff" }} />}
+                    {isActive && <Check style={{ width: 20, height: 20, color: t.id === "light" ? "#003580" : "#fff" }} />}
                   </div>
-                  <span style={{ fontSize: "13px", fontWeight: isActive ? 700 : 500, color: isActive ? "#003580" : "#1e293b" }}>
+                  <span style={{ fontSize: "14px", fontWeight: isActive ? 700 : 500, color: isActive ? "#003580" : "#1e293b" }}>
                     {t.name}
                   </span>
                 </button>
@@ -411,7 +411,7 @@ export default function MinhaConta() {
 
         {/* ═══════ ALTERAR SENHA ═══════ */}
         <div style={{
-          background: "#fff", borderRadius: "16px", padding: "20px",
+          background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
           border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}>
           <button
@@ -422,14 +422,14 @@ export default function MinhaConta() {
             }}
           >
             <h2 style={{
-              fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0,
+              fontSize: "16px", fontWeight: 700, color: "var(--card-foreground)", margin: 0,
               display: "flex", alignItems: "center", gap: "12px",
             }}>
-              <Lock className="w-4 h-4" style={{ color: "#f59e0b" }} />
+              <Lock className="w-5 h-5" style={{ color: "#f59e0b" }} />
               Alterar Senha
             </h2>
             <svg
-              className="w-5 h-5"
+              className="w-6 h-6"
               style={{
                 color: "#94a3b8", transition: "transform 0.2s",
                 transform: showPasswordSection ? "rotate(180deg)" : "rotate(0)",
@@ -461,7 +461,7 @@ export default function MinhaConta() {
                       background: "none", border: "none", cursor: "pointer", padding: "2px",
                     }}
                   >
-                    {showCurrentPw ? <EyeOff className="w-4 h-4" style={{ color: "#94a3b8" }} /> : <Eye className="w-4 h-4" style={{ color: "#94a3b8" }} />}
+                    {showCurrentPw ? <EyeOff className="w-5 h-5" style={{ color: "#94a3b8" }} /> : <Eye className="w-5 h-5" style={{ color: "#94a3b8" }} />}
                   </button>
                 </div>
               </div>
@@ -485,7 +485,7 @@ export default function MinhaConta() {
                       background: "none", border: "none", cursor: "pointer", padding: "2px",
                     }}
                   >
-                    {showNewPw ? <EyeOff className="w-4 h-4" style={{ color: "#94a3b8" }} /> : <Eye className="w-4 h-4" style={{ color: "#94a3b8" }} />}
+                    {showNewPw ? <EyeOff className="w-5 h-5" style={{ color: "#94a3b8" }} /> : <Eye className="w-5 h-5" style={{ color: "#94a3b8" }} />}
                   </button>
                 </div>
               </div>
@@ -509,12 +509,12 @@ export default function MinhaConta() {
                 style={{
                   width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                   background: savingPw ? "#94a3b8" : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
-                  color: "#fff", fontWeight: 700, fontSize: "15px", cursor: savingPw ? "wait" : "pointer",
+                  color: "#fff", fontWeight: 700, fontSize: "16px", cursor: savingPw ? "wait" : "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                   boxShadow: "0 4px 12px rgba(245,158,11,0.3)",
                 }}
               >
-                {savingPw ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
+                {savingPw ? <Loader2 className="w-5 h-5 animate-spin" /> : <Lock className="w-5 h-5" />}
                 {savingPw ? "Alterando..." : "Alterar Senha"}
               </button>
             </div>
@@ -524,7 +524,7 @@ export default function MinhaConta() {
         {/* ═══════ EXCLUIR CONTA — somente morador ═══════ */}
         {isMorador && (
           <div style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
+            background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
             border: "1px solid #fecaca", boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
           }}>
             <button
@@ -535,14 +535,14 @@ export default function MinhaConta() {
               }}
             >
               <h2 style={{
-                fontSize: "15px", fontWeight: 700, color: "#dc2626", margin: 0,
+                fontSize: "16px", fontWeight: 700, color: "#dc2626", margin: 0,
                 display: "flex", alignItems: "center", gap: "12px",
               }}>
-                <Trash2 className="w-4 h-4" style={{ color: "#dc2626" }} />
+                <Trash2 className="w-5 h-5" style={{ color: "#dc2626" }} />
                 Excluir Minha Conta
               </h2>
               <svg
-                className="w-5 h-5"
+                className="w-6 h-6"
                 style={{
                   color: "#fca5a5", transition: "transform 0.2s",
                   transform: showDeleteConfirm ? "rotate(180deg)" : "rotate(0)",
@@ -559,7 +559,7 @@ export default function MinhaConta() {
                   padding: "12px 16px", borderRadius: "10px", background: "#fef2f2",
                   border: "1px solid #fecaca",
                 }}>
-                  <p style={{ fontSize: "13px", color: "#991b1b", margin: 0, lineHeight: 1.6 }}>
+                  <p style={{ fontSize: "14px", color: "#991b1b", margin: 0, lineHeight: 1.6 }}>
                     <strong>⚠️ Atenção:</strong> Esta ação é irreversível. Todos os seus dados, autorizações e histórico serão permanentemente excluídos.
                   </p>
                 </div>
@@ -586,13 +586,13 @@ export default function MinhaConta() {
                       ? (deleting ? "#94a3b8" : "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)")
                       : "#e2e8f0",
                     color: deleteConfirmText === "EXCLUIR" ? "#fff" : "#94a3b8",
-                    fontWeight: 700, fontSize: "15px",
+                    fontWeight: 700, fontSize: "16px",
                     cursor: deleteConfirmText === "EXCLUIR" && !deleting ? "pointer" : "not-allowed",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     boxShadow: deleteConfirmText === "EXCLUIR" ? "0 4px 12px rgba(220,38,38,0.3)" : "none",
                   }}
                 >
-                  {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                  {deleting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
                   {deleting ? "Excluindo..." : "Excluir Minha Conta"}
                 </button>
               </div>

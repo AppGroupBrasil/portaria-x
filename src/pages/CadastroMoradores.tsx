@@ -206,7 +206,7 @@ export default function CadastroMoradores() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18 }}>Cadastro de Moradores</span>
           <div style={{ marginLeft: "auto" }}>
@@ -219,7 +219,7 @@ export default function CadastroMoradores() {
                 <TStep n={2}><strong>Via Link</strong> — Gere um link exclusivo e envie ao morador por WhatsApp. Ele clica, preenche os próprios dados e já está cadastrado. Ideal para moradores que preferem se cadastrar sozinhos.</TStep>
                 <TStep n={3}><strong>Via QR Code</strong> — Gere um QR Code que pode ser impresso e colado no mural, elevador ou recepção. O morador escaneia com o celular e se cadastra automaticamente.</TStep>
                 <TStep n={4}><strong>Planilha (Lote)</strong> — Baixe o modelo Excel, preencha com os dados de todos os moradores e faça upload. Ideal para condomínios grandes com muitos moradores.</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 Clique no método desejado na tela para acessar a página específica com instruções detalhadas.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 Clique no método desejado na tela para acessar a página específica com instruções detalhadas.</p>
               </TSection>
               <TSection icon={<span>🔧</span>} title="GERENCIANDO MORADORES">
                 <TBullet><strong>Lista completa</strong> — Todos os moradores aparecem organizados por bloco e unidade</TBullet>
@@ -256,7 +256,7 @@ export default function CadastroMoradores() {
               }}
             >
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 shrink-0" style={{ color: "#f59e0b", marginTop: 2 }} />
+                <AlertCircle className="w-6 h-6 shrink-0" style={{ color: "#f59e0b", marginTop: 2 }} />
                 <div style={{ flex: 1 }}>
                   <p className="text-sm font-semibold" style={{ color: isDark ? "#ffffff" : "#9a3412" }}>
                     Cadastro de moradores desabilitado
@@ -363,7 +363,7 @@ export default function CadastroMoradores() {
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
                       style={{ color: isDark ? "rgba(255,255,255,0.5)" : "#64748b" }}>
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
@@ -381,7 +381,7 @@ export default function CadastroMoradores() {
                   </button>
                   <button type="submit" disabled={isLoading}
                     style={{ flex: 1, height: 48, borderRadius: 12, backgroundColor: "#ffffff", color: "#003580", fontWeight: 700, fontSize: 15, border: "none", cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1 }}>
-                    {isLoading ? <div className="w-5 h-5 border-2 border-[#003580] border-t-transparent rounded-full animate-spin" style={{ margin: "0 auto" }} /> : "Salvar"}
+                    {isLoading ? <div className="w-6 h-6 border-2 border-[#003580] border-t-transparent rounded-full animate-spin" style={{ margin: "0 auto" }} /> : "Salvar"}
                   </button>
                 </div>
               </form>
@@ -422,26 +422,26 @@ export default function CadastroMoradores() {
               </h3>
 
               {listaFiltrada.length === 0 ? (
-                <p className="text-center text-sm py-6" style={{ color: "#64748b" }}>
+                <p className="text-center text-sm py-6" style={{ color: "var(--muted-foreground)" }}>
                   Nenhum morador encontrado para "{busca}".
                 </p>
               ) : (
               listaFiltrada.map((m) => (
                 <div key={m.id} className="flex items-center gap-4 rounded-xl" style={{ backgroundColor: "#ffffff", padding: "24px 20px", marginBottom: "19px" }}>
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}>
-                    <Users className="w-5 h-5 text-white" strokeWidth={1.5} />
+                    <Users className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-base font-medium truncate" style={{ color: "#003580" }}>{m.name}</p>
-                    <p className="text-sm truncate" style={{ color: "#64748b" }}>
+                    <p className="text-sm truncate" style={{ color: "var(--muted-foreground)" }}>
                       {m.block} · {m.unit} · {m.perfil || "Sem perfil"} · {m.email}
                     </p>
                   </div>
                   <button onClick={() => startEdit(m)} className="p-2.5 transition-colors" style={{ color: "#eab308" }}>
-                    <Pencil className="w-5 h-5" />
+                    <Pencil className="w-6 h-6" />
                   </button>
                   <button onClick={() => handleDelete(m.id, m.name)} className="p-2.5 transition-colors" style={{ color: "#ef4444" }}>
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-6 h-6" />
                   </button>
                 </div>
               ))

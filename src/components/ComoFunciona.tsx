@@ -18,14 +18,14 @@ export default function ComoFunciona({ steps }: Props) {
         style={{ padding: "14px 16px", color: p.text, background: "transparent", border: "none", minHeight: "48px" }}
       >
         <div className="flex items-center" style={{ gap: 8 }}>
-          <HelpCircle style={{ width: 16, height: 16, color: p.accentBright }} />
+          <HelpCircle style={{ width: 20, height: 20, color: p.accentBright }} />
           <span style={{ fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em" }}>
             Como Funciona
           </span>
         </div>
         {open
-          ? <ChevronUp style={{ width: 16, height: 16, color: p.textDim }} />
-          : <ChevronDown style={{ width: 16, height: 16, color: p.textDim }} />}
+          ? <ChevronUp style={{ width: 20, height: 20, color: p.textDim }} />
+          : <ChevronDown style={{ width: 20, height: 20, color: p.textDim }} />}
       </button>
       {open && (
         <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${p.divider}` }}>

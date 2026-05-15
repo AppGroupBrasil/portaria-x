@@ -154,7 +154,7 @@ export default function CadastroBlocos() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18 }}>Cadastro de Blocos</span>
           <div style={{ marginLeft: "auto" }}>
@@ -166,7 +166,7 @@ export default function CadastroBlocos() {
                 <TStep n={1}>Digite o nome do bloco no campo de texto (ex: "Bloco A", "Torre 1", "Prédio Norte")</TStep>
                 <TStep n={2}>Clique no botão <strong>"Adicionar"</strong> para salvar</TStep>
                 <TStep n={3}>O bloco aparece na lista imediatamente e já pode receber moradores</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 Repita o processo para cada bloco/torre do condomínio.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 Repita o processo para cada bloco/torre do condomínio.</p>
               </TSection>
               <TSection icon={<span>🔧</span>} title="GERENCIANDO BLOCOS">
                 <TBullet><strong>Editar nome</strong> — Toque no ícone de lápis (✏️) ao lado do bloco para alterar o nome</TBullet>
@@ -190,7 +190,7 @@ export default function CadastroBlocos() {
         <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
           {/* Texto explicativo */}
           <div className="flex items-start gap-3 p-5 rounded-xl">
-            <Info className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+            <Info className="w-6 h-6 text-red-500 mt-0.5 shrink-0" />
             <div className="text-sm text-red-500 leading-relaxed space-y-2">
               <p>
                 <strong>Blocos</strong> representam as divisões físicas do seu condomínio
@@ -214,7 +214,7 @@ export default function CadastroBlocos() {
                     value={formCondominioId}
                     onChange={(e) => setFormCondominioId(e.target.value)}
                     className="w-full h-10 rounded-md border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                    style={isDark ? { paddingLeft: "19px", background: "#ffffff", color: "#000000" } : { paddingLeft: "19px" }}
+                    style={isDark ? { paddingLeft: "19px", background: "var(--color-card, #fff)", color: "#000000" } : { paddingLeft: "19px" }}
                   >
                     <option value="" style={{ color: "#000000" }}>Selecione o condomínio</option>
                     {condominios.map((c) => (
@@ -236,7 +236,7 @@ export default function CadastroBlocos() {
                   }`}
                 >
                   <span
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ${
+                    className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-transform duration-200 ${
                       personalizar ? "translate-x-5" : "translate-x-1"
                     }`}
                   />
@@ -275,7 +275,7 @@ export default function CadastroBlocos() {
                       onChange={(e) => setQuantidade(e.target.value)}
                       style={{ paddingLeft: "19px" }}
                     />
-                    <p style={{ color: "#facc15", fontSize: "13px", marginTop: "4px" }}>
+                    <p style={{ color: "#facc15", fontSize: "14px", marginTop: "4px" }}>
                       O sistema criará automaticamente Bloco 1, Bloco 2, Bloco 3...
                       até a quantidade informada.
                     </p>
@@ -288,21 +288,21 @@ export default function CadastroBlocos() {
                 <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
                   <button type="button" aria-label="Fechar aviso" onClick={() => setError("")} style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", border: "none" }} />
                   <dialog open className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
-                    <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-5 h-5" /></button>
+                    <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-6 h-6" /></button>
                     <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(239,68,68,0.35)" }}>
                       <AlertCircle className="w-9 h-9 text-white" strokeWidth={2} />
                     </div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Atenção</h2>
                     <p style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", marginBottom: 28, lineHeight: 1.5 }}>{error}</p>
-                    <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "#ffffff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
+                    <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "var(--color-card, #fff)", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
                   </dialog>
                 </div>
               )}
 
               {/* Success */}
               {success && (
-                <div className="flex items-center gap-2 p-3 text-emerald-500 animate-fade-in" style={{ fontSize: "15px" }}>
-                  <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <div className="flex items-center gap-2 p-3 text-emerald-500 animate-fade-in" style={{ fontSize: "16px" }}>
+                  <CheckCircle2 className="w-6 h-6 shrink-0" />
                   {success}
                 </div>
               )}
@@ -315,7 +315,7 @@ export default function CadastroBlocos() {
                 style={isDark ? { marginTop: "1rem", backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : { marginTop: "1rem" }}
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                  <div className="w-6 h-6 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                 ) : (
                   "Cadastrar Blocos"
                 )}
@@ -333,12 +333,12 @@ export default function CadastroBlocos() {
               {/* Filtro por condomínio */}
               {shouldShowCondominioSelector && (
                 <div className="flex items-center gap-3 p-4 rounded-xl border border-border/50" style={{ marginBottom: "19px" }}>
-                  <Filter className="w-5 h-5 text-sky-400 shrink-0" />
+                  <Filter className="w-6 h-6 text-sky-400 shrink-0" />
                   <select
                     value={selectedCondominioId ?? ""}
                     onChange={(e) => setSelectedCondominioId(Number(e.target.value))}
                     className="flex-1 h-10 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-                    style={isDark ? { paddingLeft: "19px", background: "#ffffff", color: "#000000" } : { paddingLeft: "19px" }}
+                    style={isDark ? { paddingLeft: "19px", background: "var(--color-card, #fff)", color: "#000000" } : { paddingLeft: "19px" }}
                   >
                     {condominios.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
@@ -349,14 +349,14 @@ export default function CadastroBlocos() {
 
               <div style={{ display: "flex", flexDirection: "column" }}>
               {listaFiltrada.length === 0 ? (
-                <p className="text-center text-sm py-6" style={{ color: "#64748b" }}>
+                <p className="text-center text-sm py-6" style={{ color: "var(--muted-foreground)" }}>
                   Nenhum bloco encontrado para este condomínio.
                 </p>
               ) : (
                 listaFiltrada.map((b) => (
                 <div key={b.id} className="flex items-center gap-4 rounded-xl" style={{ backgroundColor: "#ffffff", padding: "24px 20px", marginBottom: "19px" }}>
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}>
-                    <Building2 className="w-5 h-5 text-white" strokeWidth={1.5} />
+                    <Building2 className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
                   {editingBlocoId === b.id ? (
                     <>
@@ -376,10 +376,10 @@ export default function CadastroBlocos() {
                         }}
                       />
                       <button onClick={() => handleSaveBloco(b.id)} className="p-2 text-emerald-400 hover:text-emerald-300 transition-colors">
-                        <Check className="w-4 h-4" />
+                        <Check className="w-5 h-5" />
                       </button>
                       <button onClick={() => setEditingBlocoId(null)} className="p-2 hover:text-foreground transition-colors" style={{ color: "#94a3b8" }}>
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </button>
                     </>
                   ) : (
@@ -388,10 +388,10 @@ export default function CadastroBlocos() {
                         <p className="text-base font-medium truncate" style={{ color: "#003580" }}>{b.name}</p>
                       </div>
                       <button onClick={() => { setEditingBlocoId(b.id); setEditingBlocoName(b.name); }} className="p-2.5 transition-colors" style={{ color: "#eab308" }}>
-                        <Pencil className="w-5 h-5" />
+                        <Pencil className="w-6 h-6" />
                       </button>
                       <button onClick={() => handleDeleteBloco(b.id, b.name)} className="p-2.5 transition-colors" style={{ color: "#ef4444" }}>
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-6 h-6" />
                       </button>
                     </>
                   )}
@@ -422,7 +422,7 @@ export default function CadastroBlocos() {
             }}
           >
             <button onClick={() => setModalData(null)} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}>
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
             <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", boxShadow: "0 8px 24px rgba(16,185,129,0.35)" }}>
               <Building2 className="w-9 h-9 text-white" strokeWidth={2} />
@@ -439,7 +439,7 @@ export default function CadastroBlocos() {
               <button onClick={() => setModalData(null)} style={{ flex: 1, height: 46, borderRadius: 12, border: "2px solid rgba(255,255,255,0.2)", background: "transparent", color: "#ffffff", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
                 Cadastrar outro
               </button>
-              <button onClick={() => { setModalData(null); navigate("/cadastros"); }} style={{ flex: 1, height: 46, borderRadius: 12, border: "none", background: "#ffffff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
+              <button onClick={() => { setModalData(null); navigate("/cadastros"); }} style={{ flex: 1, height: 46, borderRadius: 12, border: "none", background: "var(--color-card, #fff)", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
                 Ver lista
               </button>
             </div>

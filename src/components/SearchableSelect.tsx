@@ -69,7 +69,7 @@ export default function SearchableSelect({
         onClick={() => setIsOpen(!isOpen)}
         style={{
           width: "100%", padding: "12px 14px", paddingLeft: "0.5cm", borderRadius: "12px",
-          border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff",
+          border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)",
           color: selectedOption ? "#0f172a" : "#94a3b8", outline: "none",
           boxSizing: "border-box", cursor: "pointer", textAlign: "left",
           display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -88,7 +88,7 @@ export default function SearchableSelect({
             </span>
           )}
           <ChevronDown
-            className="w-4 h-4"
+            className="w-5 h-5"
             style={{
               color: "#94a3b8",
               transition: "transform 0.2s",
@@ -102,7 +102,7 @@ export default function SearchableSelect({
       {isOpen && (
         <div style={{
           position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
-          zIndex: 50, background: "#fff", borderRadius: "12px",
+          zIndex: 50, background: "var(--color-card, #fff)", borderRadius: "12px",
           border: "1px solid #e2e8f0", boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
           maxHeight: "320px", display: "flex", flexDirection: "column",
           overflow: "hidden",
@@ -112,7 +112,7 @@ export default function SearchableSelect({
             padding: "10px 12px", borderBottom: "1px solid #f1f5f9",
             display: "flex", alignItems: "center", gap: "8px",
           }}>
-            <Search className="w-4 h-4" style={{ color: "#94a3b8", flexShrink: 0 }} />
+            <Search className="w-5 h-5" style={{ color: "#94a3b8", flexShrink: 0 }} />
             <input
               ref={searchInputRef}
               type="text"
@@ -120,8 +120,8 @@ export default function SearchableSelect({
               onChange={(e) => setSearch(e.target.value)}
               placeholder={searchPlaceholder}
               style={{
-                flex: 1, border: "none", outline: "none", fontSize: "14px",
-                color: "#0f172a", background: "transparent",
+                flex: 1, border: "none", outline: "none", fontSize: "15px",
+                color: "var(--card-foreground)", background: "transparent",
               }}
             />
             {search && (
@@ -137,7 +137,7 @@ export default function SearchableSelect({
 
           {/* Results count */}
           <div style={{
-            padding: "4px 14px", fontSize: "11px", color: "#94a3b8", fontWeight: 500,
+            padding: "4px 14px", fontSize: "12px", color: "#94a3b8", fontWeight: 500,
             background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
           }}>
             {filtered.length} {filtered.length === 1 ? "resultado" : "resultados"}
@@ -149,7 +149,7 @@ export default function SearchableSelect({
             {filtered.length === 0 ? (
               <div style={{
                 padding: "20px 14px", textAlign: "center",
-                color: "#94a3b8", fontSize: "13px",
+                color: "#94a3b8", fontSize: "14px",
               }}>
                 Nenhum morador encontrado
               </div>
@@ -162,7 +162,7 @@ export default function SearchableSelect({
                   style={{
                     width: "100%", padding: "10px 14px", border: "none",
                     background: opt.value === value ? "#eef0f5" : "transparent",
-                    color: "#0f172a", fontSize: "14px", cursor: "pointer",
+                    color: "var(--card-foreground)", fontSize: "15px", cursor: "pointer",
                     textAlign: "left", display: "block",
                     borderBottom: "1px solid #f8fafc",
                     fontWeight: opt.value === value ? 600 : 400,

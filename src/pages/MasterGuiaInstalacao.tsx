@@ -243,7 +243,7 @@ export default function MasterGuiaInstalacao() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem 2rem", height: "4.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <button onClick={() => navigate(-1)} style={{ padding: "0.625rem", borderRadius: 14, background: isDark ? "rgba(255,255,255,0.08)" : "#f8fafc", border: isDark ? "1px solid rgba(255,255,255,0.12)" : "1px solid #cbd5e1", color: isDark ? "#fff" : "#1e293b", cursor: "pointer" }}>
-              <ArrowLeft style={{ width: 24, height: 24 }} />
+              <ArrowLeft style={{ width: 28, height: 28 }} />
             </button>
             <div>
               <span style={{ fontWeight: 800, fontSize: "1.125rem", color: isDark ? "#fff" : "#1e293b", display: "block" }}>Como Instalar</span>
@@ -251,7 +251,7 @@ export default function MasterGuiaInstalacao() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Shield style={{ width: 20, height: 20, color: isDark ? "rgba(255,255,255,0.4)" : "#94a3b8" }} />
+            <Shield style={{ width: 24, height: 24, color: isDark ? "rgba(255,255,255,0.4)" : "#94a3b8" }} />
             <span style={{ fontSize: "0.75rem", color: isDark ? "rgba(255,255,255,0.4)" : "#94a3b8", fontWeight: 700, letterSpacing: "0.05em" }}>PORTARIA X</span>
           </div>
         </div>
@@ -286,12 +286,12 @@ export default function MasterGuiaInstalacao() {
           >
             {copied ? (
               <>
-                <CheckCircle2 style={{ width: 18, height: 18 }} />
+                <CheckCircle2 style={{ width: 22, height: 22 }} />
                 Link copiado!
               </>
             ) : (
               <>
-                <Copy style={{ width: 18, height: 18 }} />
+                <Copy style={{ width: 22, height: 22 }} />
                 Copiar link do guia
               </>
             )}
@@ -309,7 +309,7 @@ export default function MasterGuiaInstalacao() {
               cursor: "pointer", transition: "all 0.2s",
             }}
           >
-            <Printer style={{ width: 18, height: 18 }} />
+            <Printer style={{ width: 22, height: 22 }} />
             Imprimir guia
           </button>
         </div>
@@ -324,7 +324,7 @@ export default function MasterGuiaInstalacao() {
             border: isDark ? "1px solid rgba(59,130,246,0.2)" : "1px solid #bfdbfe",
           }}
         >
-          <Link2 style={{ width: 18, height: 18, color: isDark ? "#93c5fd" : "#3b82f6", flexShrink: 0 }} />
+          <Link2 style={{ width: 22, height: 22, color: isDark ? "#93c5fd" : "#3b82f6", flexShrink: 0 }} />
           <span style={{ fontSize: 13, color: isDark ? "#93c5fd" : "#1e40af", wordBreak: "break-all", fontFamily: "monospace" }}>
             {guideUrl}
           </span>
@@ -395,8 +395,8 @@ export default function MasterGuiaInstalacao() {
                   </div>
                   <span className="no-print">
                     {isExpanded
-                      ? <ChevronUp style={{ width: 20, height: 20, color: isDark ? "#93c5fd" : "#94a3b8" }} />
-                      : <ChevronDown style={{ width: 20, height: 20, color: isDark ? "#93c5fd" : "#94a3b8" }} />
+                      ? <ChevronUp style={{ width: 24, height: 24, color: isDark ? "#93c5fd" : "#94a3b8" }} />
+                      : <ChevronDown style={{ width: 24, height: 24, color: isDark ? "#93c5fd" : "#94a3b8" }} />
                     }
                   </span>
                 </button>
@@ -432,7 +432,7 @@ export default function MasterGuiaInstalacao() {
                         border: isDark ? "1px solid rgba(59,130,246,0.2)" : "1px solid #bfdbfe",
                         display: "flex", gap: 10, alignItems: "flex-start",
                       }}>
-                        <Info style={{ width: 18, height: 18, color: "#3b82f6", flexShrink: 0, marginTop: 2 }} />
+                        <Info style={{ width: 22, height: 22, color: "#3b82f6", flexShrink: 0, marginTop: 2 }} />
                         <p style={{ fontSize: 13, color: isDark ? "#93c5fd" : "#1e40af", lineHeight: 1.6, whiteSpace: "pre-line" }}>
                           {step.tip}
                         </p>
@@ -446,7 +446,7 @@ export default function MasterGuiaInstalacao() {
                         border: isDark ? "1px solid rgba(245,158,11,0.2)" : "1px solid #fde68a",
                         display: "flex", gap: 10, alignItems: "flex-start",
                       }}>
-                        <AlertTriangle style={{ width: 18, height: 18, color: "#f59e0b", flexShrink: 0, marginTop: 2 }} />
+                        <AlertTriangle style={{ width: 22, height: 22, color: "#f59e0b", flexShrink: 0, marginTop: 2 }} />
                         <p style={{ fontSize: 13, color: isDark ? "#fcd34d" : "#92400e", lineHeight: 1.6 }}>
                           {step.warning}
                         </p>

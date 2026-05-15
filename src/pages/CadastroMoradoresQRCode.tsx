@@ -143,7 +143,7 @@ export default function CadastroMoradoresQRCode() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros/moradores")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           <span style={{ fontWeight: 700, fontSize: 18 }}>Cadastro via QR Code</span>
           <div style={{ marginLeft: "auto" }}>
@@ -160,7 +160,7 @@ export default function CadastroMoradoresQRCode() {
                 <TStep n={3}>Cole o QR Code impresso nos locais do condomínio (mural, portaria, elevadores)</TStep>
                 <TStep n={4}>O morador <strong>escaneia o QR Code</strong> com a câmera do celular</TStep>
                 <TStep n={5}>Abre uma página onde o morador preenche seus dados e se cadastra automaticamente</TStep>
-                <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 O mesmo QR Code serve para todos os moradores — cada um cria seu próprio cadastro.</p>
+                <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 O mesmo QR Code serve para todos os moradores — cada um cria seu próprio cadastro.</p>
               </TSection>
               <TSection icon={<span>🔧</span>} title="FUNÇÕES DISPONÍVEIS">
                 <TBullet><strong>Imprimir QR Code</strong> — Imprime em tamanho ideal para colar em murais e quadros de aviso</TBullet>
@@ -185,7 +185,7 @@ export default function CadastroMoradoresQRCode() {
           {/* Info box */}
           <div className="rounded-xl" style={{ padding: "20px", backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
             <div className="flex gap-3">
-              <QrCode className="w-5 h-5 shrink-0 mt-0.5" style={{ color: "#38bdf8" }} />
+              <QrCode className="w-6 h-6 shrink-0 mt-0.5" style={{ color: "#38bdf8" }} />
               <div className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.7)" : "#64748b" }}>
                 <p>
                   Gere um <strong style={{ color: isDark ? "#ffffff" : "#003580" }}>QR Code</strong> para
@@ -216,7 +216,7 @@ export default function CadastroMoradoresQRCode() {
                   style={isDark ? { backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : undefined}
                 >
                   {isGenerating ? (
-                    <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                    <div className="w-6 h-6 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                   ) : (
                     "Gerar QR Code"
                   )}
@@ -225,7 +225,7 @@ export default function CadastroMoradoresQRCode() {
             ) : (
               <div className="flex flex-col items-center gap-5 animate-fade-in">
                 <div className="flex items-center gap-2 text-sm self-start" style={{ color: "#34d399" }}>
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-5 h-5" />
                   QR Code gerado!
                 </div>
 
@@ -252,7 +252,7 @@ export default function CadastroMoradoresQRCode() {
                   className="w-full h-12 font-semibold gap-2"
                   style={isDark ? { backgroundColor: "#ffffff", color: "#003580", border: "2px solid #ffffff" } : undefined}
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="w-5 h-5" />
                   Imprimir / Salvar PDF
                 </Button>
 

@@ -371,9 +371,9 @@ export default function MasterGateConfig() {
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                   >
                     {showSecrets ? (
-                      <EyeOff className="w-6 h-6" />
+                      <EyeOff className="w-7 h-7" />
                     ) : (
-                      <Eye className="w-6 h-6" />
+                      <Eye className="w-7 h-7" />
                     )}
                   </button>
                 </div>
@@ -432,7 +432,7 @@ export default function MasterGateConfig() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className={`w-6 h-6 ${oauthAuthorized ? "text-green-500" : "text-blue-500"}`} />
+                  <ShieldCheck className={`w-7 h-7 ${oauthAuthorized ? "text-green-500" : "text-blue-500"}`} />
                   <div>
                     <p className={`text-base font-semibold ${oauthAuthorized ? "text-green-600 dark:text-green-400" : "text-blue-600 dark:text-blue-400"}`}>
                       {oauthAuthorized ? "Autorizado com eWeLink" : "Autorização Pendente"}
@@ -451,9 +451,9 @@ export default function MasterGateConfig() {
                     className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl bg-[#003580] text-white text-base font-semibold disabled:opacity-50"
                   >
                     {authorizing ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className="w-6 h-6 animate-spin" />
                     ) : (
-                      <ExternalLink className="w-5 h-5" />
+                      <ExternalLink className="w-6 h-6" />
                     )}
                     Autorizar com eWeLink
                   </button>
@@ -464,7 +464,7 @@ export default function MasterGateConfig() {
                     disabled={authorizing}
                     className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-muted-foreground border border-border"
                   >
-                    <RefreshCw className="w-4 h-4" />
+                    <RefreshCw className="w-5 h-5" />
                     Reautorizar
                   </button>
                 )}
@@ -483,9 +483,9 @@ export default function MasterGateConfig() {
                 className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#003580] text-white text-lg font-semibold disabled:opacity-50"
               >
                 {testing ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <Loader2 className="w-7 h-7 animate-spin" />
                 ) : (
-                  <TestTube className="w-6 h-6" />
+                  <TestTube className="w-7 h-7" />
                 )}
                 Testar Conexão
               </button>
@@ -497,9 +497,9 @@ export default function MasterGateConfig() {
                 }`}
               >
                 {saving ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <Loader2 className="w-7 h-7 animate-spin" />
                 ) : (
-                  <Save className="w-6 h-6" />
+                  <Save className="w-7 h-7" />
                 )}
                 {saved ? "Salvo!" : "Salvar"}
               </button>
@@ -514,9 +514,9 @@ export default function MasterGateConfig() {
                 }`}
               >
                 {testResult.success ? (
-                  <Check className="w-6 h-6 mt-0.5 shrink-0" />
+                  <Check className="w-7 h-7 mt-0.5 shrink-0" />
                 ) : (
-                  <AlertCircle className="w-6 h-6 mt-0.5 shrink-0" />
+                  <AlertCircle className="w-7 h-7 mt-0.5 shrink-0" />
                 )}
                 <span>{testResult.message || testResult.error}</span>
               </div>
@@ -569,9 +569,9 @@ export default function MasterGateConfig() {
                 className="flex items-center gap-2 text-base text-primary font-medium"
               >
                 {loadingDevices ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
-                  <RefreshCw className="w-5 h-5" />
+                  <RefreshCw className="w-6 h-6" />
                 )}
                 Atualizar
               </button>
@@ -613,16 +613,16 @@ export default function MasterGateConfig() {
                           <div className="flex items-center gap-3 mt-2">
                             {d.online ? (
                               <span className="flex items-center gap-1.5 text-sm text-green-500">
-                                <Wifi className="w-5 h-5" /> Online
+                                <Wifi className="w-6 h-6" /> Online
                               </span>
                             ) : (
                               <span className="flex items-center gap-1.5 text-sm text-red-400">
-                                <WifiOff className="w-5 h-5" /> Offline
+                                <WifiOff className="w-6 h-6" /> Offline
                               </span>
                             )}
                             {assigned && (
                               <span className="flex items-center gap-1.5 text-sm text-sky-500">
-                                <Link2 className="w-5 h-5" />{" "}
+                                <Link2 className="w-6 h-6" />{" "}
                                 {assigned.condominio_name}
                               </span>
                             )}
@@ -754,9 +754,9 @@ export default function MasterGateConfig() {
                 className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#003580] text-white text-lg font-semibold disabled:opacity-50"
               >
                 {assigning ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <Loader2 className="w-7 h-7 animate-spin" />
                 ) : (
-                  <Zap className="w-6 h-6" />
+                  <Zap className="w-7 h-7" />
                 )}
                 Atribuir
               </button>

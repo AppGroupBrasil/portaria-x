@@ -113,7 +113,7 @@ export default function AprovarVeiculo() {
         <h1 style={{ fontSize: "24px", fontWeight: 800, color: isApproved ? "#15803d" : "#b91c1c", marginBottom: "8px" }}>
           {isApproved ? "Acesso Aprovado!" : "Acesso Negado"}
         </h1>
-        <p style={{ fontSize: "15px", color: isApproved ? "#166534" : "#991b1b", maxWidth: "400px" }}>
+        <p style={{ fontSize: "16px", color: isApproved ? "#166534" : "#991b1b", maxWidth: "400px" }}>
           {isApproved
             ? "O acesso do veículo foi autorizado. A portaria será notificada."
             : "O acesso do veículo foi negado. A portaria será informada."}
@@ -124,10 +124,10 @@ export default function AprovarVeiculo() {
             background: "rgba(255,255,255,0.8)", backdropFilter: "blur(8px)",
             border: "1px solid rgba(0,0,0,0.05)",
           }}>
-            <p style={{ fontSize: "28px", fontWeight: 800, letterSpacing: "4px", fontFamily: "monospace", color: "#0c4a6e" }}>
+            <p style={{ fontSize: "28px", fontWeight: 800, letterSpacing: "4px", fontFamily: "monospace", color: "var(--card-foreground)" }}>
               {vehicle.placa}
             </p>
-            {vehicle.modelo && <p style={{ fontSize: "14px", color: "#64748b", marginTop: "4px" }}>{vehicle.modelo} {vehicle.cor ? `· ${vehicle.cor}` : ""}</p>}
+            {vehicle.modelo && <p style={{ fontSize: "15px", color: "var(--muted-foreground)", marginTop: "4px" }}>{vehicle.modelo} {vehicle.cor ? `· ${vehicle.cor}` : ""}</p>}
           </div>
         )}
         {morador_observacao && (
@@ -135,7 +135,7 @@ export default function AprovarVeiculo() {
             marginTop: "16px", padding: "12px 16px", borderRadius: "10px",
             background: "rgba(255,255,255,0.6)", maxWidth: "400px",
           }}>
-            <p style={{ fontSize: "13px", color: "#475569", fontStyle: "italic" }}>💬 Sua observação: {morador_observacao}</p>
+            <p style={{ fontSize: "14px", color: "var(--muted-foreground)", fontStyle: "italic" }}>💬 Sua observação: {morador_observacao}</p>
           </div>
         )}
       </div>
@@ -162,7 +162,7 @@ export default function AprovarVeiculo() {
           marginTop: "20px", padding: "16px 24px", borderRadius: "14px",
           background: "rgba(255,255,255,0.8)", border: "1px solid rgba(0,0,0,0.05)",
         }}>
-          <p style={{ fontSize: "28px", fontWeight: 800, letterSpacing: "4px", fontFamily: "monospace", color: "#0c4a6e" }}>
+          <p style={{ fontSize: "28px", fontWeight: 800, letterSpacing: "4px", fontFamily: "monospace", color: "var(--card-foreground)" }}>
             {vehicle.placa}
           </p>
         </div>
@@ -183,7 +183,7 @@ export default function AprovarVeiculo() {
       }}>
         <Car style={{ width: "40px", height: "40px", marginBottom: "8px", opacity: 0.9 }} />
         <h1 style={{ fontSize: "20px", fontWeight: 800, marginBottom: "4px" }}>Solicitação de Acesso</h1>
-        <p style={{ fontSize: "13px", opacity: 0.8 }}>A portaria solicita autorização para o veículo abaixo</p>
+        <p style={{ fontSize: "14px", opacity: 0.8 }}>A portaria solicita autorização para o veículo abaixo</p>
       </header>
 
       <main style={{
@@ -193,7 +193,7 @@ export default function AprovarVeiculo() {
         {error && (
           <div style={{
             padding: "10px 14px", borderRadius: "10px", background: "#fef2f2",
-            border: "1px solid #fecaca", color: "#b91c1c", fontSize: "13px", fontWeight: 500,
+            border: "1px solid #fecaca", color: "#b91c1c", fontSize: "14px", fontWeight: 500,
           }}>
             {error}
           </div>
@@ -202,7 +202,7 @@ export default function AprovarVeiculo() {
         {/* Vehicle info card */}
         {vehicle && (
           <div style={{
-            background: "#fff", borderRadius: "16px", padding: "20px",
+            background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
             border: "2px solid #0ea5e920", display: "flex", flexDirection: "column", gap: "16px",
             boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
           }}>
@@ -211,7 +211,7 @@ export default function AprovarVeiculo() {
               <div style={{
                 display: "inline-block", padding: "12px 28px", borderRadius: "14px",
                 background: "#f0f9ff", border: "3px solid #0ea5e9",
-                fontWeight: 800, fontSize: "32px", color: "#0c4a6e",
+                fontWeight: 800, fontSize: "32px", color: "var(--card-foreground)",
                 letterSpacing: "5px", fontFamily: "monospace",
               }}>
                 {vehicle.placa}
@@ -222,32 +222,32 @@ export default function AprovarVeiculo() {
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {vehicle.modelo && (
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: "13px", color: "#64748b" }}>Modelo</span>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>{vehicle.modelo}</span>
+                  <span style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>Modelo</span>
+                  <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>{vehicle.modelo}</span>
                 </div>
               )}
               {vehicle.cor && (
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: "13px", color: "#64748b" }}>Cor</span>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>{vehicle.cor}</span>
+                  <span style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>Cor</span>
+                  <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>{vehicle.cor}</span>
                 </div>
               )}
               {vehicle.motorista_nome && (
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: "13px", color: "#64748b" }}>Motorista</span>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>{vehicle.motorista_nome}</span>
+                  <span style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>Motorista</span>
+                  <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>{vehicle.motorista_nome}</span>
                 </div>
               )}
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "13px", color: "#64748b" }}>Destino</span>
-                <span style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>
+                <span style={{ fontSize: "14px", color: "var(--muted-foreground)" }}>Destino</span>
+                <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)" }}>
                   Bloco {vehicle.bloco} · Apto {vehicle.apartamento}
                 </span>
               </div>
             </div>
 
             {vehicle.observacao && (
-              <p style={{ fontSize: "12px", color: "#64748b", fontStyle: "italic", padding: "8px 12px", background: "#f8fafc", borderRadius: "10px" }}>
+              <p style={{ fontSize: "13px", color: "var(--muted-foreground)", fontStyle: "italic", padding: "8px 12px", background: "#f8fafc", borderRadius: "10px" }}>
                 💬 Portaria: {vehicle.observacao}
               </p>
             )}
@@ -256,13 +256,13 @@ export default function AprovarVeiculo() {
 
         {/* Observação do morador */}
         <div style={{
-          background: "#fff", borderRadius: "16px", padding: "20px",
+          background: "var(--color-card, #fff)", borderRadius: "16px", padding: "20px",
           border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "10px",
         }}>
-          <span style={{ fontWeight: 700, fontSize: "14px", color: "#0c4a6e" }}>
+          <span style={{ fontWeight: 700, fontSize: "15px", color: "var(--card-foreground)" }}>
             Observação (opcional)
           </span>
-          <p style={{ fontSize: "12px", color: "#64748b", marginTop: "-4px" }}>
+          <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "-4px" }}>
             Informe à portaria onde o veículo deve estacionar ou outra instrução.
           </p>
           <textarea
@@ -272,8 +272,8 @@ export default function AprovarVeiculo() {
             rows={4}
             style={{
               width: "100%", padding: "14px", borderRadius: "12px",
-              border: "1px solid #cbd5e1", fontSize: "14px", background: "#fff",
-              color: "#0f172a", outline: "none", boxSizing: "border-box", resize: "vertical",
+              border: "1px solid #cbd5e1", fontSize: "15px", background: "var(--color-card, #fff)",
+              color: "var(--card-foreground)", outline: "none", boxSizing: "border-box", resize: "vertical",
             }}
           />
         </div>

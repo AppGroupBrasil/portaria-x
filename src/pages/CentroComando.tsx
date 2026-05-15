@@ -206,7 +206,7 @@ export default function CentroComando() {
               onClick={() => navigate("/dashboard")}
               style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}
             >
-              <ArrowLeft className="w-6 h-6" />
+              <ArrowLeft className="w-7 h-7" />
             </button>
             <div>
               <h1 style={{ fontWeight: 700, fontSize: 18 }}>Centro de Comando</h1>
@@ -220,7 +220,7 @@ export default function CentroComando() {
             disabled={refreshing}
             style={{ width: 44, height: 44, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}
           >
-            <RefreshCw className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-6 h-6 ${refreshing ? "animate-spin" : ""}`} />
           </button>
         </div>
       </header>
@@ -533,7 +533,7 @@ function PendingSection({
     <div className="mb-16">
       <div className="flex items-center justify-between mb-7">
         <div className="flex items-center gap-3">
-          <Icon className="w-5 h-5" style={{ color }} />
+          <Icon className="w-6 h-6" style={{ color }} />
           <h2 className="font-bold text-base" style={{ color: p.text }}>{title}</h2>
           <span
             className="text-sm font-bold px-2.5 py-0.5 rounded-full"
@@ -548,7 +548,7 @@ function PendingSection({
           style={{ color }}
         >
           Ver todos
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-5 h-5" />
         </button>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>{children}</div>

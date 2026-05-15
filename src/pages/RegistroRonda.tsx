@@ -511,9 +511,9 @@ export default function RegistroRonda() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <Shield className="w-5 h-5" />
+          <Shield className="w-6 h-6" />
           <span style={{ fontWeight: 700, fontSize: 16 }}>Registro de Ronda</span>
           <TutorialButton title="Registro de Ronda">
             <TSection icon={<span>📋</span>} title="O QUE É ESTA FUNÇÃO?">
@@ -527,7 +527,7 @@ export default function RegistroRonda() {
               <TStep n={5}>Se houver algo a reportar, adicione <strong>observações</strong> (texto) e tire <strong>fotos</strong></TStep>
               <TStep n={6}>Vá até o <strong>próximo checkpoint</strong> e repita o escaneamento</TStep>
               <TStep n={7}>Após visitar todos os pontos, clique em <strong>"Finalizar Ronda"</strong></TStep>
-              <p style={{ marginTop: "8px", fontSize: "13px", color: "#2d3354" }}>👉 O síndico recebe o registro completo da ronda com todos os checkpoints, horários, fotos e observações.</p>
+              <p style={{ marginTop: "8px", fontSize: "14px", color: "#2d3354" }}>👉 O síndico recebe o registro completo da ronda com todos os checkpoints, horários, fotos e observações.</p>
             </TSection>
             <TSection icon={<span>🔧</span>} title="FUNÇÕES DISPONÍVEIS">
               <TBullet><strong>Escanear QR Code</strong> — Aponte a câmera para o QR Code do checkpoint</TBullet>
@@ -557,14 +557,14 @@ export default function RegistroRonda() {
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
             title={alertEnabled ? "Desativar alertas" : "Ativar alertas"}
           >
-            {alertEnabled ? <Bell className="w-5 h-5" /> : <BellOff className="w-5 h-5" />}
+            {alertEnabled ? <Bell className="w-6 h-6" /> : <BellOff className="w-6 h-6" />}
           </button>
           <button
             onClick={() => setShowReport(true)}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
             title="Relatório"
           >
-            <FileText className="w-5 h-5" />
+            <FileText className="w-6 h-6" />
           </button>
         </div>
       </header>
@@ -591,7 +591,7 @@ export default function RegistroRonda() {
           }}
         >
           <div style={{ fontSize: "20px", fontWeight: 800, color: "#16a34a" }}>{todayCount}</div>
-          <div style={{ fontSize: "10px", fontWeight: 600, color: "#166534" }}>Registros Hoje</div>
+          <div style={{ fontSize: "12px", fontWeight: 600, color: "#166534" }}>Registros Hoje</div>
         </div>
         <div
           style={{
@@ -603,7 +603,7 @@ export default function RegistroRonda() {
           }}
         >
           <div style={{ fontSize: "20px", fontWeight: 800, color: "#2d3354" }}>{todayCheckpoints.size}/{activeCheckpoints.length}</div>
-          <div style={{ fontSize: "10px", fontWeight: 600, color: "#2d3354" }}>Pontos Visitados</div>
+          <div style={{ fontSize: "12px", fontWeight: 600, color: "#2d3354" }}>Pontos Visitados</div>
         </div>
         <div
           style={{
@@ -614,8 +614,8 @@ export default function RegistroRonda() {
             border: "1px solid #fbbf24",
           }}
         >
-          <div style={{ fontSize: "14px", fontWeight: 800, color: "#b45309" }}>{nextAlert || "—"}</div>
-          <div style={{ fontSize: "10px", fontWeight: 600, color: "#92400e" }}>Próxima Ronda</div>
+          <div style={{ fontSize: "15px", fontWeight: 800, color: "#b45309" }}>{nextAlert || "—"}</div>
+          <div style={{ fontSize: "12px", fontWeight: 600, color: "#92400e" }}>Próxima Ronda</div>
         </div>
       </div>
 
@@ -640,17 +640,17 @@ export default function RegistroRonda() {
           }}
         >
           {scanResult === "success" ? (
-            <CheckCircle2 style={{ width: 20, height: 20, color: "#16a34a", flexShrink: 0 }} />
+            <CheckCircle2 style={{ width: 24, height: 24, color: "#16a34a", flexShrink: 0 }} />
           ) : scanResult === "error" ? (
-            <XCircle style={{ width: 20, height: 20, color: "#dc2626", flexShrink: 0 }} />
+            <XCircle style={{ width: 24, height: 24, color: "#dc2626", flexShrink: 0 }} />
           ) : (
-            <Bell style={{ width: 20, height: 20, color: "#2d3354", flexShrink: 0 }} />
+            <Bell style={{ width: 24, height: 24, color: "#2d3354", flexShrink: 0 }} />
           )}
-          <span style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a", flex: 1 }}>
+          <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--card-foreground)", flex: 1 }}>
             {scanMessage}
           </span>
           <button onClick={() => setScanMessage("")} style={{ background: "none", border: "none", cursor: "pointer" }}>
-            <X style={{ width: 14, height: 14, color: "#6b7280" }} />
+            <X style={{ width: 18, height: 18, color: "#6b7280" }} />
           </button>
         </div>
       )}
@@ -662,7 +662,7 @@ export default function RegistroRonda() {
           style={{
             flex: 1,
             padding: "14px 16px",
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 700,
             border: "none",
             background: tab === "scan" ? "#f0fdf4" : "#fff",
@@ -675,14 +675,14 @@ export default function RegistroRonda() {
             gap: "6px",
           }}
         >
-          <QrCode style={{ width: 14, height: 14 }} /> Registrar Ronda
+          <QrCode style={{ width: 18, height: 18 }} /> Registrar Ronda
         </button>
         <button
           onClick={() => setTab("historico")}
           style={{
             flex: 1,
             padding: "14px 16px",
-            fontSize: "13px",
+            fontSize: "14px",
             fontWeight: 700,
             border: "none",
             background: tab === "historico" ? "#f0fdf4" : "#fff",
@@ -695,7 +695,7 @@ export default function RegistroRonda() {
             gap: "6px",
           }}
         >
-          <Clock style={{ width: 14, height: 14 }} /> Histórico
+          <Clock style={{ width: 18, height: 18 }} /> Histórico
         </button>
       </div>
 
@@ -747,7 +747,7 @@ export default function RegistroRonda() {
                 <div style={{ fontSize: "16px", fontWeight: 800 }}>
                   {scanning ? "PARAR SCANNER" : "ESCANEAR QR CODE"}
                 </div>
-                <div style={{ fontSize: "11px", opacity: 0.85, fontWeight: 400 }}>
+                <div style={{ fontSize: "12px", opacity: 0.85, fontWeight: 400 }}>
                   {scanning
                     ? "Aponte a câmera para o QR Code do ponto de ronda"
                     : "Abra a câmera para registrar passagem no ponto de ronda"}
@@ -787,7 +787,7 @@ export default function RegistroRonda() {
                   />
                 </div>
                 <div style={{ position: "absolute", bottom: 8, left: 0, right: 0, textAlign: "center" }}>
-                  <span style={{ fontSize: "11px", color: p.text, background: "rgba(0,0,0,0.6)", padding: "4px 12px", borderRadius: "8px" }}>
+                  <span style={{ fontSize: "12px", color: p.text, background: "rgba(0,0,0,0.6)", padding: "4px 12px", borderRadius: "8px" }}>
                     Aponte para o QR Code do ponto de ronda
                   </span>
                 </div>
@@ -796,13 +796,13 @@ export default function RegistroRonda() {
 
             {/* Checkpoint Checklist */}
             <div>
-              <h3 style={{ fontSize: "13px", fontWeight: 700, color: p.text, marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <MapPin style={{ width: 14, height: 14, color: p.text }} />
+              <h3 style={{ fontSize: "14px", fontWeight: 700, color: p.text, marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
+                <MapPin style={{ width: 18, height: 18, color: p.text }} />
                 Pontos de Ronda — Checklist
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {activeCheckpoints.length === 0 ? (
-                  <p style={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569", textAlign: "center", padding: "24px" }}>
+                  <p style={{ fontSize: "13px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569", textAlign: "center", padding: "24px" }}>
                     Nenhum ponto de ronda configurado pelo síndico.
                   </p>
                 ) : (
@@ -842,21 +842,21 @@ export default function RegistroRonda() {
                           }}
                         >
                           {checked ? (
-                            <CheckCircle2 style={{ width: 18, height: 18, color: p.text }} />
+                            <CheckCircle2 style={{ width: 22, height: 22, color: p.text }} />
                           ) : (
-                            <MapPin style={{ width: 16, height: 16, color: "#94a3b8" }} />
+                            <MapPin style={{ width: 20, height: 20, color: "#94a3b8" }} />
                           )}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontWeight: 600, fontSize: "13px", color: checked ? "#16a34a" : "#0f172a" }}>
+                          <p style={{ fontWeight: 600, fontSize: "14px", color: checked ? "#16a34a" : "#0f172a" }}>
                             {cp.nome}
                           </p>
                           {cp.localizacao && (
-                            <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "1px" }}>📍 {cp.localizacao}</p>
+                            <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "1px" }}>📍 {cp.localizacao}</p>
                           )}
                         </div>
                         {checked && (
-                          <span style={{ fontSize: "10px", fontWeight: 700, color: "#16a34a", padding: "2px 8px", borderRadius: "6px", background: "#dcfce7" }}>
+                          <span style={{ fontSize: "12px", fontWeight: 700, color: "#16a34a", padding: "2px 8px", borderRadius: "6px", background: "#dcfce7" }}>
                             ✓ FEITO
                           </span>
                         )}
@@ -869,12 +869,12 @@ export default function RegistroRonda() {
 
             {/* Observações input - multiple fields with audio */}
             <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "12px" }}>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: p.text, marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
-                <MessageSquare style={{ width: 12, height: 12, color: p.text }} /> Observações (opcional)
+              <span style={{ fontSize: "13px", fontWeight: 600, color: p.text, marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
+                <MessageSquare style={{ width: 16, height: 16, color: p.text }} /> Observações (opcional)
               </span>
 
               {observacoes.length === 0 && (
-                <p style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "8px" }}>
+                <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "8px" }}>
                   Adicione observações com texto ou áudio (30s máx.)
                 </p>
               )}
@@ -892,14 +892,14 @@ export default function RegistroRonda() {
                   >
                     {/* Header with number and delete */}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                      <span style={{ fontSize: "11px", fontWeight: 700, color: "#16a34a" }}>
+                      <span style={{ fontSize: "12px", fontWeight: 700, color: "#16a34a" }}>
                         Observação {idx + 1}
                       </span>
                       <button
                         onClick={() => removeObservacao(obs.id)}
                         style={{ background: "none", border: "none", cursor: "pointer", padding: "2px" }}
                       >
-                        <Trash2 style={{ width: 14, height: 14, color: "#ef4444" }} />
+                        <Trash2 style={{ width: 18, height: 18, color: "#ef4444" }} />
                       </button>
                     </div>
 
@@ -910,7 +910,7 @@ export default function RegistroRonda() {
                       placeholder="Descreva o que observou..."
                       rows={2}
                       className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300"
-                      style={{ resize: "none", color: p.text, background: "#fff", marginBottom: "8px" }}
+                      style={{ resize: "none", color: p.text, background: "var(--color-card, #fff)", marginBottom: "8px" }}
                     />
 
                     {/* Audio controls */}
@@ -924,14 +924,14 @@ export default function RegistroRonda() {
                               display: "flex", alignItems: "center", gap: "6px",
                               padding: "6px 14px", borderRadius: "10px", border: "none",
                               background: "linear-gradient(135deg, #dc2626, #b91c1c)",
-                              color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer",
+                              color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
                             }}
                           >
-                            <Square style={{ width: 12, height: 12 }} /> Parar
+                            <Square style={{ width: 16, height: 16 }} /> Parar
                           </button>
                           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                             <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#dc2626", animation: "pulse 1s infinite" }} />
-                            <span style={{ fontSize: "12px", fontWeight: 700, color: "#dc2626" }}>
+                            <span style={{ fontSize: "13px", fontWeight: 700, color: "#dc2626" }}>
                               {recordingSeconds}s / 30s
                             </span>
                           </div>
@@ -947,16 +947,16 @@ export default function RegistroRonda() {
                               background: playingAudioId === obs.id
                                 ? "linear-gradient(135deg, #f59e0b, #d97706)"
                                 : "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                              color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer",
+                              color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
                             }}
                           >
                             {playingAudioId === obs.id ? (
-                              <><Pause style={{ width: 12, height: 12 }} /> Pausar</>
+                              <><Pause style={{ width: 16, height: 16 }} /> Pausar</>
                             ) : (
-                              <><Play style={{ width: 12, height: 12 }} /> Ouvir</>
+                              <><Play style={{ width: 16, height: 16 }} /> Ouvir</>
                             )}
                           </button>
-                          <span style={{ fontSize: "11px", color: "#6b7280" }}>
+                          <span style={{ fontSize: "12px", color: "#6b7280" }}>
                             🎤 {obs.audioDuration}s
                           </span>
                           <button
@@ -964,7 +964,7 @@ export default function RegistroRonda() {
                             style={{
                               display: "flex", alignItems: "center", gap: "4px",
                               padding: "4px 10px", borderRadius: "8px", border: "1px solid #e5e7eb",
-                              background: "#fff", color: "#6b7280", fontSize: "10px", cursor: "pointer",
+                              background: "var(--color-card, #fff)", color: "#6b7280", fontSize: "12px", cursor: "pointer",
                             }}
                           >
                             <Mic style={{ width: 10, height: 10 }} /> Regravar
@@ -978,10 +978,10 @@ export default function RegistroRonda() {
                             display: "flex", alignItems: "center", gap: "6px",
                             padding: "6px 14px", borderRadius: "10px", border: "none",
                             background: "linear-gradient(135deg, #22c55e, #16a34a)",
-                            color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer",
+                            color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
                           }}
                         >
-                          <Mic style={{ width: 12, height: 12 }} /> Gravar Áudio (30s)
+                          <Mic style={{ width: 16, height: 16 }} /> Gravar Áudio (30s)
                         </button>
                       )}
                     </div>
@@ -996,10 +996,10 @@ export default function RegistroRonda() {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                   width: "100%", padding: "10px", marginTop: "8px", borderRadius: "12px",
                   border: "2px dashed #c7d2fe", background: "#eef2ff",
-                  color: "#4f46e5", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                  color: "#4f46e5", fontSize: "13px", fontWeight: 700, cursor: "pointer",
                 }}
               >
-                <Plus style={{ width: 14, height: 14 }} /> Adicionar Observação
+                <Plus style={{ width: 18, height: 18 }} /> Adicionar Observação
               </button>
             </div>
           </div>
@@ -1009,8 +1009,8 @@ export default function RegistroRonda() {
             {registros.length === 0 ? (
               <div style={{ textAlign: "center", padding: "48px 24px" }}>
                 <Clock style={{ width: 48, height: 48, color: "#d1d5db", margin: "0 auto 12px" }} />
-                <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "14px" }}>Nenhum registro de ronda</p>
-                <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>
+                <p style={{ fontWeight: 700, color: "#6b7280", fontSize: "15px" }}>Nenhum registro de ronda</p>
+                <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
                   Seus registros aparecerão aqui depois de escanear os QR Codes
                 </p>
               </div>
@@ -1028,11 +1028,11 @@ export default function RegistroRonda() {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <CheckCircle2 style={{ width: 18, height: 18, color: "#16a34a", flexShrink: 0 }} />
+                      <CheckCircle2 style={{ width: 22, height: 22, color: "#16a34a", flexShrink: 0 }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 600, fontSize: "13px", color: "#0f172a" }}>{r.checkpoint_nome}</p>
+                        <p style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)" }}>{r.checkpoint_nome}</p>
                         {r.localizacao && (
-                          <p style={{ fontSize: "11px", color: "#94a3b8" }}>📍 {r.localizacao}</p>
+                          <p style={{ fontSize: "12px", color: "#94a3b8" }}>📍 {r.localizacao}</p>
                         )}
                         {r.observacao && (() => {
                           // Try to parse as JSON array of observations
@@ -1042,7 +1042,7 @@ export default function RegistroRonda() {
                               return (
                                 <div style={{ marginTop: "4px" }}>
                                   {items.map((item: any, i: number) => (
-                                    <div key={i} style={{ fontSize: "11px", color: "#6b7280", marginTop: "2px" }}>
+                                    <div key={i} style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>
                                       {item.texto && <p style={{ fontStyle: "italic" }}>💬 {item.texto}</p>}
                                       {item.audio && (
                                         <div style={{ marginTop: "2px" }}>
@@ -1057,17 +1057,17 @@ export default function RegistroRonda() {
                           } catch {}
                           // Fallback: plain text
                           return (
-                            <p style={{ fontSize: "11px", color: "#6b7280", marginTop: "2px", fontStyle: "italic" }}>
+                            <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px", fontStyle: "italic" }}>
                               💬 {r.observacao}
                             </p>
                           );
                         })()}
                       </div>
                       <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <p style={{ fontSize: "12px", fontWeight: 700, color: "#374151" }}>
+                        <p style={{ fontSize: "13px", fontWeight: 700, color: "#374151" }}>
                           {new Date(r.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                         </p>
-                        <p style={{ fontSize: "10px", color: "#94a3b8" }}>
+                        <p style={{ fontSize: "12px", color: "#94a3b8" }}>
                           {new Date(r.created_at).toLocaleDateString("pt-BR")}
                         </p>
                       </div>

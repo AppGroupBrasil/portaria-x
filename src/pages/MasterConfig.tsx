@@ -101,9 +101,9 @@ export default function MasterConfig() {
       <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
         <div className="px-4 h-16 flex items-center gap-3">
           <button onClick={() => navigate("/dashboard")} className="p-1">
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
-          <Settings className="w-5 h-5" />
+          <Settings className="w-6 h-6" />
           <span className="font-semibold text-sm">Configurações do Sistema</span>
         </div>
       </header>
@@ -111,7 +111,7 @@ export default function MasterConfig() {
       <main className="flex-1 px-4 py-4 flex flex-col gap-4">
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-7 h-7 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <>
@@ -133,7 +133,7 @@ export default function MasterConfig() {
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-full bg-[#003580]/10 border border-[#003580]/20 flex items-center justify-center shrink-0 mt-0.5">
-                      <IconComp className="w-5 h-5 text-sky-400" />
+                      <IconComp className="w-6 h-6 text-sky-400" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground">{meta.label}</p>
@@ -181,7 +181,7 @@ export default function MasterConfig() {
                 saved ? "bg-emerald-500" : "btn-grad-blue"
               } disabled:opacity-50`}
             >
-              <Save className="w-5 h-5" />
+              <Save className="w-6 h-6" />
               {saving ? "Salvando..." : saved ? "Salvo com sucesso!" : "Salvar Configurações"}
             </button>
           </>

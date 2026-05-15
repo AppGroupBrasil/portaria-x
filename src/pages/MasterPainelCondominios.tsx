@@ -234,7 +234,7 @@ export default function MasterPainelCondominios() {
     { label: "Inadimplentes", value: summary.inadimplentes, icon: AlertTriangle, bg: "#fef3c7", color: "#d97706" },
     { label: "Bloqueados", value: summary.bloqueados, icon: Ban, bg: "#fee2e2", color: "#dc2626" },
     { label: "Ativos 30d", value: summary.ativos30d, icon: Activity, bg: "#f0fdf4", color: "#15803d" },
-    { label: "Sem Acesso", value: summary.semAcesso, icon: XCircle, bg: "#f1f5f9", color: "#64748b" },
+    { label: "Sem Acesso", value: summary.semAcesso, icon: XCircle, bg: "#f1f5f9", color: "var(--muted-foreground)" },
   ], [summary]);
 
   return (
@@ -249,10 +249,10 @@ export default function MasterPainelCondominios() {
             onClick={() => navigate("/dashboard")}
             className="p-2 rounded-xl bg-white/15 hover:bg-white/25 transition-all"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <BarChart3 className="w-6 h-6" />
+            <BarChart3 className="w-7 h-7" />
             <div>
               <h1 className="font-bold text-lg">Painel de Condomínios</h1>
               <p className="text-white/60 text-xs">Gestão, métricas e controle financeiro</p>
@@ -263,7 +263,7 @@ export default function MasterPainelCondominios() {
             className="p-2 rounded-xl bg-white/15 hover:bg-white/25 transition-all"
             title="Atualizar"
           >
-            <RefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-6 h-6 ${loading ? "animate-spin" : ""}`} />
           </button>
           <TutorialButton title="Painel de Condomínios">
             <TSection icon={<span>📊</span>} title="O QUE É ESTE PAINEL?">
@@ -310,7 +310,7 @@ export default function MasterPainelCondominios() {
                   <Icon style={{ width: "16px", height: "16px", color: isDark ? "#003580" : card.color }} />
                 </div>
                 <span style={{ fontSize: "22px", fontWeight: 800, color: isDark ? "#003580" : card.color }}>{card.value}</span>
-                <span style={{ fontSize: "10px", fontWeight: 600, color: isDark ? "#1e293b" : "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{card.label}</span>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: isDark ? "#1e293b" : "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{card.label}</span>
               </div>
             );
           })}
@@ -333,7 +333,7 @@ export default function MasterPainelCondominios() {
               onChange={e => setSearch(e.target.value)}
               style={{
                 flex: 1, border: "none", background: "transparent", outline: "none",
-                fontSize: "14px", color: isDark ? "#1e293b" : "var(--color-foreground, #0f172a)",
+                fontSize: "15px", color: isDark ? "#1e293b" : "var(--color-foreground, #0f172a)",
               }}
             />
           </div>
@@ -345,7 +345,7 @@ export default function MasterPainelCondominios() {
                 onChange={e => setFilterPagamento(e.target.value)}
                 style={{
                   width: "100%", height: "38px", borderRadius: "10px", padding: "0 12px",
-                  border: isDark ? "none" : p.btnBorder, fontSize: "12px", fontWeight: 600,
+                  border: isDark ? "none" : p.btnBorder, fontSize: "13px", fontWeight: 600,
                   background: isDark ? "#ffffff" : "var(--color-card, #fff)", color: isDark ? "#1e293b" : "var(--color-foreground, #0f172a)",
                   appearance: "none", cursor: "pointer",
                 }}
@@ -362,7 +362,7 @@ export default function MasterPainelCondominios() {
                 onChange={e => setFilterBloqueado(e.target.value)}
                 style={{
                   width: "100%", height: "38px", borderRadius: "10px", padding: "0 12px",
-                  border: isDark ? "none" : p.btnBorder, fontSize: "12px", fontWeight: 600,
+                  border: isDark ? "none" : p.btnBorder, fontSize: "13px", fontWeight: 600,
                   background: isDark ? "#ffffff" : "var(--color-card, #fff)", color: isDark ? "#1e293b" : "var(--color-foreground, #0f172a)",
                   appearance: "none", cursor: "pointer",
                 }}
@@ -389,7 +389,7 @@ export default function MasterPainelCondominios() {
                 onClick={() => handleSort(s.field)}
                 style={{
                   display: "flex", alignItems: "center", gap: "4px",
-                  padding: "6px 10px", borderRadius: "8px", fontSize: "11px", fontWeight: 600,
+                  padding: "6px 10px", borderRadius: "8px", fontSize: "12px", fontWeight: 600,
                   border: isDark ? "none" : (sortField === s.field ? "2px solid #2d3354" : p.btnBorder),
                   background: isDark ? "#ffffff" : (sortField === s.field ? "rgba(45,51,84,0.08)" : "var(--color-card, #fff)"),
                   color: isDark ? (sortField === s.field ? "#003580" : "#475569") : (sortField === s.field ? "#2d3354" : "#64748b"),
@@ -411,10 +411,10 @@ export default function MasterPainelCondominios() {
         {/* ═══ Condominios List ═══ */}
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", padding: "48px" }}>
-            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#64748b" }} />
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--muted-foreground)" }} />
           </div>
         ) : condominios.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "48px", color: "#94a3b8", fontSize: "14px" }}>
+          <div style={{ textAlign: "center", padding: "48px", color: "#94a3b8", fontSize: "15px" }}>
             Nenhum condomínio encontrado.
           </div>
         ) : (
@@ -466,25 +466,25 @@ export default function MasterPainelCondominios() {
                     {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                        <p style={{ fontWeight: 700, fontSize: "14px", color: isDark ? "#1e293b" : "var(--color-foreground, #0f172a)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <p style={{ fontWeight: 700, fontSize: "15px", color: isDark ? "#1e293b" : "var(--color-foreground, #0f172a)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {condo.name}
                         </p>
                         {condo.bloqueado === 1 && (
                           <span style={{
-                            fontSize: "9px", fontWeight: 700, padding: "2px 6px", borderRadius: "6px",
+                            fontSize: "11px", fontWeight: 700, padding: "2px 6px", borderRadius: "6px",
                             background: "#dc2626", color: p.text, textTransform: "uppercase", flexShrink: 0,
                           }}>Bloqueado</span>
                         )}
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "2px", flexWrap: "wrap" }}>
-                        <span style={{ fontSize: "11px", color: isDark ? "#475569" : "#64748b" }}>
+                        <span style={{ fontSize: "12px", color: isDark ? "#475569" : "#64748b" }}>
                           <Users style={{ width: "10px", height: "10px", display: "inline", marginRight: "2px" }} />
                           {condo.total_users}
                         </span>
-                        <span style={{ fontSize: "11px", color: acesso.color, fontWeight: 600 }}>
+                        <span style={{ fontSize: "12px", color: acesso.color, fontWeight: 600 }}>
                           {acesso.text}
                         </span>
-                        <span style={{ fontSize: "11px", color: isDark ? "#475569" : "#94a3b8" }}>
+                        <span style={{ fontSize: "12px", color: isDark ? "#475569" : "#94a3b8" }}>
                           {tempoRelativo(condo.dias_cadastro)}
                         </span>
                       </div>
@@ -529,16 +529,16 @@ export default function MasterPainelCondominios() {
                       {condo.admin_name && (
                         <div style={{
                           padding: "10px 14px", borderRadius: "10px", background: "#f1f5f9",
-                          fontSize: "12px",
+                          fontSize: "13px",
                         }}>
-                          <span style={{ fontWeight: 600, color: "#475569" }}>Síndico: </span>
-                          <span style={{ color: "#0f172a" }}>{condo.admin_name}</span>
-                          {condo.admin_email && <span style={{ color: "#64748b" }}> ({condo.admin_email})</span>}
+                          <span style={{ fontWeight: 600, color: "var(--muted-foreground)" }}>Síndico: </span>
+                          <span style={{ color: "var(--card-foreground)" }}>{condo.admin_name}</span>
+                          {condo.admin_email && <span style={{ color: "var(--muted-foreground)" }}> ({condo.admin_email})</span>}
                         </div>
                       )}
 
                       {/* CNPJ / Location */}
-                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", fontSize: "11px", color: "#64748b" }}>
+                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", fontSize: "12px", color: "var(--muted-foreground)" }}>
                         {condo.cnpj && <span>CNPJ: {condo.cnpj}</span>}
                         {condo.city && <span>📍 {condo.city}{condo.state ? ` - ${condo.state}` : ""}</span>}
                       </div>
@@ -547,7 +547,7 @@ export default function MasterPainelCondominios() {
                       {condo.bloqueado === 1 && condo.bloqueado_motivo && (
                         <div style={{
                           padding: "10px 14px", borderRadius: "10px", background: "#fef2f2",
-                          fontSize: "12px", color: "#991b1b", display: "flex", alignItems: "center", gap: "12px",
+                          fontSize: "13px", color: "#991b1b", display: "flex", alignItems: "center", gap: "12px",
                         }}>
                           <Ban style={{ width: "14px", height: "14px", flexShrink: 0 }} />
                           <div>
@@ -571,7 +571,7 @@ export default function MasterPainelCondominios() {
                           style={{
                             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                             padding: "10px", borderRadius: "12px", border: "none", cursor: "pointer",
-                            fontWeight: 700, fontSize: "12px",
+                            fontWeight: 700, fontSize: "13px",
                             background: condo.status_pagamento === "adimplente"
                               ? "linear-gradient(135deg, #f59e0b, #d97706)"
                               : "linear-gradient(135deg, #22c55e, #16a34a)",
@@ -579,7 +579,7 @@ export default function MasterPainelCondominios() {
                             opacity: isLoading ? 0.7 : 1,
                           }}
                         >
-                          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <DollarSign style={{ width: "14px", height: "14px" }} />}
+                          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <DollarSign style={{ width: "14px", height: "14px" }} />}
                           {condo.status_pagamento === "adimplente" ? "Marcar Inadimplente" : "Marcar Adimplente"}
                         </button>
 
@@ -591,13 +591,13 @@ export default function MasterPainelCondominios() {
                             style={{
                               flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                               padding: "10px", borderRadius: "12px", border: "none", cursor: "pointer",
-                              fontWeight: 700, fontSize: "12px",
+                              fontWeight: 700, fontSize: "13px",
                               background: "linear-gradient(135deg, #22c55e, #16a34a)",
                               color: "#fff",
                               opacity: isLoading ? 0.7 : 1,
                             }}
                           >
-                            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Unlock style={{ width: "14px", height: "14px" }} />}
+                            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Unlock style={{ width: "14px", height: "14px" }} />}
                             Desbloquear
                           </button>
                         ) : (
@@ -607,7 +607,7 @@ export default function MasterPainelCondominios() {
                             style={{
                               flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                               padding: "10px", borderRadius: "12px", border: "none", cursor: "pointer",
-                              fontWeight: 700, fontSize: "12px",
+                              fontWeight: 700, fontSize: "13px",
                               background: "linear-gradient(135deg, #ef4444, #dc2626)",
                               color: "#fff",
                               opacity: isLoading ? 0.7 : 1,
@@ -654,14 +654,14 @@ export default function MasterPainelCondominios() {
               </div>
               <div>
                 <h3 style={{ fontWeight: 700, fontSize: "16px", color: "var(--color-foreground, #0f172a)" }}>Bloquear Condomínio</h3>
-                <p style={{ fontSize: "12px", color: "#64748b" }}>
+                <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>
                   Todos os usuários perderão acesso imediatamente.
                 </p>
               </div>
             </div>
 
             <div>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "#475569", marginBottom: "6px", display: "block" }}>
+              <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--muted-foreground)", marginBottom: "6px", display: "block" }}>
                 Motivo do bloqueio
               </span>
               <input
@@ -671,7 +671,7 @@ export default function MasterPainelCondominios() {
                 onChange={e => setBlockMotivo(e.target.value)}
                 style={{
                   width: "100%", height: "44px", borderRadius: "12px", padding: "0 16px",
-                  border: "2px solid #e2e8f0", fontSize: "14px", outline: "none",
+                  border: "2px solid #e2e8f0", fontSize: "15px", outline: "none",
                   background: "var(--color-background, #f8fafc)", color: "var(--color-foreground, #0f172a)",
                   boxSizing: "border-box",
                 }}
@@ -684,7 +684,7 @@ export default function MasterPainelCondominios() {
                 style={{
                   flex: 1, padding: "14px 16px", borderRadius: "12px",
                   border: "2px solid #e2e8f0", background: "var(--color-card, #fff)",
-                  fontWeight: 700, fontSize: "14px", cursor: "pointer",
+                  fontWeight: 700, fontSize: "15px", cursor: "pointer",
                   color: "var(--color-foreground, #0f172a)",
                 }}
               >
@@ -696,7 +696,7 @@ export default function MasterPainelCondominios() {
                 style={{
                   flex: 1, padding: "14px 16px", borderRadius: "12px", border: "none",
                   background: "linear-gradient(135deg, #ef4444, #dc2626)",
-                  fontWeight: 700, fontSize: "14px", cursor: "pointer", color: "#fff",
+                  fontWeight: 700, fontSize: "15px", cursor: "pointer", color: "#fff",
                   opacity: actionLoading === showBlockModal ? 0.7 : 1,
                 }}
               >
@@ -719,8 +719,8 @@ function DetailItem({ icon: Icon, label, value }: { icon: any; label: string; va
     }}>
       <Icon style={{ width: "14px", height: "14px", color: "#94a3b8", flexShrink: 0 }} />
       <div style={{ minWidth: 0 }}>
-        <p style={{ fontSize: "9px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>{label}</p>
-        <p style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</p>
+        <p style={{ fontSize: "11px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>{label}</p>
+        <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--card-foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</p>
       </div>
     </div>
   );

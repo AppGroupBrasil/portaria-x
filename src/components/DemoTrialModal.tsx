@@ -24,7 +24,7 @@ export default function DemoTrialModal({ open, onClose }: Props) {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background: "#ffffff", borderRadius: "20px", padding: "40px 32px",
+          background: "var(--color-card, #fff)", borderRadius: "20px", padding: "40px 32px",
           maxWidth: "440px", width: "100%", textAlign: "center",
           boxShadow: "0 24px 64px rgba(0,0,0,0.25)",
           position: "relative",
@@ -53,7 +53,7 @@ export default function DemoTrialModal({ open, onClose }: Props) {
         <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#003580", marginBottom: "8px" }}>
           Gostou do que viu?
         </h2>
-        <p style={{ fontSize: "15px", color: "#475569", lineHeight: 1.6, marginBottom: "28px" }}>
+        <p style={{ fontSize: "16px", color: "var(--muted-foreground)", lineHeight: 1.6, marginBottom: "28px" }}>
           Cadastre-se agora e <strong style={{ color: "#003580" }}>teste integralmente por 7 dias grátis</strong>. 
           Sem cartão de crédito, sem compromisso.
         </p>
@@ -64,7 +64,7 @@ export default function DemoTrialModal({ open, onClose }: Props) {
             style={{
               width: "100%", padding: "14px", borderRadius: "12px",
               background: "linear-gradient(135deg, #003580, #0062d1)",
-              color: "#ffffff", fontWeight: 700, fontSize: "15px",
+              color: "#ffffff", fontWeight: 700, fontSize: "16px",
               border: "none", cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
             }}
@@ -78,7 +78,7 @@ export default function DemoTrialModal({ open, onClose }: Props) {
             style={{
               width: "100%", padding: "14px", borderRadius: "12px",
               background: "transparent",
-              color: "#003580", fontWeight: 700, fontSize: "15px",
+              color: "#003580", fontWeight: 700, fontSize: "16px",
               border: "2px solid #003580", cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
             }}
@@ -88,7 +88,7 @@ export default function DemoTrialModal({ open, onClose }: Props) {
           </button>
         </div>
 
-        <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "16px" }}>
+        <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "16px" }}>
           Você está no modo demonstração. Cadastre-se para ter acesso completo.
         </p>
       </div>

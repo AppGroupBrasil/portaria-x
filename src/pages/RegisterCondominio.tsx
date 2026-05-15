@@ -214,7 +214,7 @@ export default function RegisterCondominio() {
               <h2 style={{ fontSize: "20px", fontWeight: 800, marginBottom: "4px" }}>
                 Condomínio Criado com Sucesso!
               </h2>
-              <p style={{ fontSize: "13px", opacity: 0.9 }}>
+              <p style={{ fontSize: "14px", opacity: 0.9 }}>
                 Criamos acessos de exemplo para você testar
               </p>
             </div>
@@ -228,19 +228,19 @@ export default function RegisterCondominio() {
                   background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)",
                   borderRadius: "12px", padding: "16px", marginBottom: "12px",
                 }}>
-                  <p style={{ fontSize: "12px", color: "#818cf8", fontWeight: 700, marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  <p style={{ fontSize: "13px", color: "#818cf8", fontWeight: 700, marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                     🛡️ Acesso Porteiro (Exemplo)
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>E-mail:</span>
-                      <span style={{ color: "#f1f5f9", fontWeight: 600, fontSize: "12px" }}>{samplePorteiro.email}</span>
+                      <span style={{ color: "#f1f5f9", fontWeight: 600, fontSize: "13px" }}>{samplePorteiro.email}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>Senha:</span>
                       <span style={{ color: "#f1f5f9", fontWeight: 600 }}>{password}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>Cargo:</span>
                       <span style={{ color: "#f1f5f9", fontWeight: 600 }}>{samplePorteiro.cargo}</span>
                     </div>
@@ -250,7 +250,7 @@ export default function RegisterCondominio() {
                     style={{
                       width: "100%", padding: "10px", borderRadius: "8px", marginTop: "12px",
                       border: "1px solid rgba(99,102,241,0.3)", background: "rgba(99,102,241,0.15)",
-                      color: "#818cf8", fontWeight: 600, fontSize: "13px",
+                      color: "#818cf8", fontWeight: 600, fontSize: "14px",
                       cursor: "pointer", display: "flex", alignItems: "center",
                       justifyContent: "center", gap: "6px",
                     }}
@@ -267,23 +267,23 @@ export default function RegisterCondominio() {
                   background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)",
                   borderRadius: "12px", padding: "16px", marginBottom: "12px",
                 }}>
-                  <p style={{ fontSize: "12px", color: "#10b981", fontWeight: 700, marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  <p style={{ fontSize: "13px", color: "#10b981", fontWeight: 700, marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                     🏠 Acesso Morador (Exemplo)
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>E-mail:</span>
-                      <span style={{ color: "#f1f5f9", fontWeight: 600, fontSize: "12px" }}>{sampleMorador.email}</span>
+                      <span style={{ color: "#f1f5f9", fontWeight: 600, fontSize: "13px" }}>{sampleMorador.email}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>Senha:</span>
                       <span style={{ color: "#f1f5f9", fontWeight: 600 }}>{password}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>Bloco:</span>
                       <span style={{ color: "#f1f5f9", fontWeight: 600 }}>{sampleMorador.block}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px" }}>
                       <span style={{ color: "#94a3b8" }}>Apartamento:</span>
                       <span style={{ color: "#f1f5f9", fontWeight: 600 }}>{sampleMorador.unit}</span>
                     </div>
@@ -293,7 +293,7 @@ export default function RegisterCondominio() {
                     style={{
                       width: "100%", padding: "10px", borderRadius: "8px", marginTop: "12px",
                       border: "1px solid rgba(16,185,129,0.3)", background: "rgba(16,185,129,0.15)",
-                      color: "#10b981", fontWeight: 600, fontSize: "13px",
+                      color: "#10b981", fontWeight: 600, fontSize: "14px",
                       cursor: "pointer", display: "flex", alignItems: "center",
                       justifyContent: "center", gap: "6px",
                     }}
@@ -304,7 +304,7 @@ export default function RegisterCondominio() {
                 </div>
               )}
 
-              <p style={{ fontSize: "13px", color: "#94a3b8", textAlign: "center", marginBottom: "16px", lineHeight: "1.5" }}>
+              <p style={{ fontSize: "14px", color: "#94a3b8", textAlign: "center", marginBottom: "16px", lineHeight: "1.5" }}>
                 Faça logout e entre com estes dados para ver como o <strong style={{ color: "#818cf8" }}>porteiro</strong> e o <strong style={{ color: "#10b981" }}>morador</strong> vêem o app. A senha é a mesma que você cadastrou.
               </p>
 
@@ -314,7 +314,7 @@ export default function RegisterCondominio() {
                 style={{
                   width: "100%", padding: "14px", borderRadius: "10px",
                   border: "none", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                  color: "white", fontWeight: 700, fontSize: "15px",
+                  color: "white", fontWeight: 700, fontSize: "16px",
                   cursor: "pointer", display: "flex", alignItems: "center",
                   justifyContent: "center", gap: "12px",
                 }}
@@ -382,10 +382,10 @@ export default function RegisterCondominio() {
                       }}
                     />
                     {cnpjLoading && (
-                      <Loader2 className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground animate-spin" />
+                      <Loader2 className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground animate-spin" />
                     )}
                     {cnpjFound && !cnpjLoading && (
-                      <CheckCircle2 className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400" />
                     )}
                   </div>
                   {cnpjLoading && (
@@ -521,7 +521,7 @@ export default function RegisterCondominio() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
@@ -546,7 +546,7 @@ export default function RegisterCondominio() {
             {/* Error */}
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                <AlertCircle className="w-5 h-5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -560,26 +560,26 @@ export default function RegisterCondominio() {
                   onClick={() => { setStep(1); setError(""); }}
                   className="flex-1"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="w-5 h-5" />
                   Voltar
                 </Button>
               )}
               {step === 1 ? (
                 <Button type="button" onClick={handleNext} className="w-full">
                   Continuar
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-5 h-5" />
                 </Button>
               ) : (
                 <Button type="submit" disabled={isLoading} className="flex-1">
                   {isLoading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       Criando...
                     </>
                   ) : (
                     <>
                       Cadastrar
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-5 h-5" />
                     </>
                   )}
                 </Button>

@@ -331,7 +331,7 @@ export default function PortariaAcessoAuto() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1rem 1.5rem", height: "4.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <button onClick={() => navigate(-1)} style={{ padding: "0.5rem", borderRadius: 12, background: isDark ? "rgba(255,255,255,0.08)" : "#f8fafc", border: isDark ? "1px solid rgba(255,255,255,0.12)" : "1px solid #cbd5e1", color: isDark ? "#fff" : "#1e293b", cursor: "pointer" }}>
-              <ArrowLeft style={{ width: 22, height: 22 }} />
+              <ArrowLeft style={{ width: 26, height: 26 }} />
             </button>
             <div>
               <span style={{ fontWeight: 800, fontSize: "1.05rem", color: isDark ? "#fff" : "#1e293b", display: "block" }}>Acesso Automático</span>
@@ -339,7 +339,7 @@ export default function PortariaAcessoAuto() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Shield style={{ width: 18, height: 18, color: isDark ? "rgba(255,255,255,0.4)" : "#94a3b8" }} />
+            <Shield style={{ width: 22, height: 22, color: isDark ? "rgba(255,255,255,0.4)" : "#94a3b8" }} />
             <span style={{ fontSize: "0.7rem", color: isDark ? "rgba(255,255,255,0.4)" : "#94a3b8", fontWeight: 700, letterSpacing: "0.05em" }}>PORTARIA X</span>
           </div>
         </div>
@@ -360,12 +360,12 @@ export default function PortariaAcessoAuto() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-              <HelpCircle style={{ width: 22, height: 22, color: "#fff" }} />
+              <HelpCircle style={{ width: 26, height: 26, color: "#fff" }} />
               <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "#fff" }}>Como funciona?</span>
             </div>
             {showHelp
-              ? <ChevronUp style={{ width: 20, height: 20, color: "#fff" }} />
-              : <ChevronDown style={{ width: 20, height: 20, color: "#fff" }} />}
+              ? <ChevronUp style={{ width: 24, height: 24, color: "#fff" }} />
+              : <ChevronDown style={{ width: 24, height: 24, color: "#fff" }} />}
           </button>
           {showHelp && (
             <div style={{
@@ -404,7 +404,7 @@ export default function PortariaAcessoAuto() {
               border: "none", cursor: "pointer", transition: "all 0.2s",
             }}
           >
-            <User style={{ width: 18, height: 18 }} />
+            <User style={{ width: 22, height: 22 }} />
             Facial
           </button>
           <button
@@ -417,7 +417,7 @@ export default function PortariaAcessoAuto() {
               border: "none", cursor: "pointer", transition: "all 0.2s",
             }}
           >
-            <Car style={{ width: 18, height: 18 }} />
+            <Car style={{ width: 22, height: 22 }} />
             LPR (Placa)
           </button>
         </div>
@@ -445,7 +445,7 @@ export default function PortariaAcessoAuto() {
                   background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
                   display: "flex", alignItems: "center", gap: 6,
                 }}>
-                  <Camera style={{ width: 14, height: 14, color: "#93c5fd" }} />
+                  <Camera style={{ width: 18, height: 18, color: "#93c5fd" }} />
                   <span style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{currentFaceCam.nome}</span>
                 </div>
                 {/* Face scan overlay lines */}
@@ -466,20 +466,20 @@ export default function PortariaAcessoAuto() {
                 {activeFaceCams.length > 1 && (
                   <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 8 }}>
                     <button onClick={() => setFaceCamIdx((i) => (i - 1 + activeFaceCams.length) % activeFaceCams.length)} style={{ padding: 6, borderRadius: 10, background: "rgba(0,0,0,0.5)", border: "none", color: "#fff", cursor: "pointer" }}>
-                      <ChevronLeft style={{ width: 20, height: 20 }} />
+                      <ChevronLeft style={{ width: 24, height: 24 }} />
                     </button>
                     <span style={{ padding: "6px 12px", borderRadius: 10, background: "rgba(0,0,0,0.5)", fontSize: 12, color: "#fff", fontWeight: 600, display: "flex", alignItems: "center" }}>
                       {(faceCamIdx % activeFaceCams.length) + 1}/{activeFaceCams.length}
                     </span>
                     <button onClick={() => setFaceCamIdx((i) => (i + 1) % activeFaceCams.length)} style={{ padding: 6, borderRadius: 10, background: "rgba(0,0,0,0.5)", border: "none", color: "#fff", cursor: "pointer" }}>
-                      <ChevronRight style={{ width: 20, height: 20 }} />
+                      <ChevronRight style={{ width: 24, height: 24 }} />
                     </button>
                   </div>
                 )}
               </>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: 260, gap: 12 }}>
-                <Camera style={{ width: 40, height: 40, color: "#475569" }} />
+                <Camera style={{ width: 40, height: 40, color: "var(--muted-foreground)" }} />
                 <p style={{ color: "#94a3b8", fontSize: 14 }}>Nenhuma câmera disponível</p>
               </div>
             )
@@ -498,7 +498,7 @@ export default function PortariaAcessoAuto() {
                   background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
                   display: "flex", alignItems: "center", gap: 6,
                 }}>
-                  <Camera style={{ width: 14, height: 14, color: "#93c5fd" }} />
+                  <Camera style={{ width: 18, height: 18, color: "#93c5fd" }} />
                   <span style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{currentLprCam.nome}</span>
                 </div>
                 {/* LPR scan area overlay */}
@@ -508,26 +508,26 @@ export default function PortariaAcessoAuto() {
                     border: "2px dashed rgba(59,130,246,0.7)", borderRadius: 12,
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <ScanLine style={{ width: 24, height: 24, color: "rgba(59,130,246,0.8)" }} className="animate-pulse" />
+                    <ScanLine style={{ width: 28, height: 28, color: "rgba(59,130,246,0.8)" }} className="animate-pulse" />
                   </div>
                 )}
                 {activeLprCams.length > 1 && (
                   <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 8 }}>
                     <button onClick={() => setLprCamIdx((i) => (i - 1 + activeLprCams.length) % activeLprCams.length)} style={{ padding: 6, borderRadius: 10, background: "rgba(0,0,0,0.5)", border: "none", color: "#fff", cursor: "pointer" }}>
-                      <ChevronLeft style={{ width: 20, height: 20 }} />
+                      <ChevronLeft style={{ width: 24, height: 24 }} />
                     </button>
                     <span style={{ padding: "6px 12px", borderRadius: 10, background: "rgba(0,0,0,0.5)", fontSize: 12, color: "#fff", fontWeight: 600, display: "flex", alignItems: "center" }}>
                       {(lprCamIdx % activeLprCams.length) + 1}/{activeLprCams.length}
                     </span>
                     <button onClick={() => setLprCamIdx((i) => (i + 1) % activeLprCams.length)} style={{ padding: 6, borderRadius: 10, background: "rgba(0,0,0,0.5)", border: "none", color: "#fff", cursor: "pointer" }}>
-                      <ChevronRight style={{ width: 20, height: 20 }} />
+                      <ChevronRight style={{ width: 24, height: 24 }} />
                     </button>
                   </div>
                 )}
               </>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: 260, gap: 12 }}>
-                <Camera style={{ width: 40, height: 40, color: "#475569" }} />
+                <Camera style={{ width: 40, height: 40, color: "var(--muted-foreground)" }} />
                 <p style={{ color: "#94a3b8", fontSize: 14 }}>Nenhuma câmera disponível</p>
               </div>
             )
@@ -606,17 +606,17 @@ export default function PortariaAcessoAuto() {
         >
           {(result.status === "capturing" || result.status === "processing") ? (
             <>
-              <Loader2 style={{ width: 22, height: 22 }} className="animate-spin" />
+              <Loader2 style={{ width: 26, height: 26 }} className="animate-spin" />
               Processando...
             </>
           ) : tab === "face" ? (
             <>
-              <Scan style={{ width: 22, height: 22 }} />
+              <Scan style={{ width: 26, height: 26 }} />
               Escanear Rosto
             </>
           ) : (
             <>
-              <ScanLine style={{ width: 22, height: 22 }} />
+              <ScanLine style={{ width: 26, height: 26 }} />
               Ler Placa
             </>
           )}
@@ -630,7 +630,7 @@ export default function PortariaAcessoAuto() {
           border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e2e8f0",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Zap style={{ width: 18, height: 18, color: autoScan ? "#22c55e" : (isDark ? "#93c5fd" : "#64748b") }} />
+            <Zap style={{ width: 22, height: 22, color: autoScan ? "#22c55e" : (isDark ? "#93c5fd" : "#64748b") }} />
             <div>
               <p style={{ fontWeight: 700, fontSize: 14, color: isDark ? "#fff" : "#1e293b" }}>Escaneamento Automático</p>
               <p style={{ fontSize: 12, color: isDark ? "#93c5fd" : "#64748b" }}>Escaneia a cada 5 segundos</p>
@@ -646,7 +646,7 @@ export default function PortariaAcessoAuto() {
             }}
           >
             <div style={{
-              width: 24, height: 24, borderRadius: 12, background: "#fff",
+              width: 28, height: 28, borderRadius: 12, background: "var(--color-card, #fff)",
               transition: "transform 0.2s",
               transform: autoScan ? "translateX(24px)" : "translateX(0px)",
               boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
@@ -661,7 +661,7 @@ export default function PortariaAcessoAuto() {
           border: isDark ? "1px solid rgba(59,130,246,0.15)" : "1px solid #bfdbfe",
           display: "flex", gap: 12, alignItems: "flex-start",
         }}>
-          <DoorOpen style={{ width: 20, height: 20, color: "#3b82f6", flexShrink: 0, marginTop: 2 }} />
+          <DoorOpen style={{ width: 24, height: 24, color: "#3b82f6", flexShrink: 0, marginTop: 2 }} />
           <div style={{ fontSize: 13, color: isDark ? "#93c5fd" : "#1e40af", lineHeight: 1.6 }}>
             {tab === "face" ? (
               <>

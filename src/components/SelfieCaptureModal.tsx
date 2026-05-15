@@ -138,7 +138,7 @@ export default function SelfieCaptureModal({
           borderBottom: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e2e8f0",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <ScanFace style={{ width: 22, height: 22, color: isDark ? "#60a5fa" : "#2563eb" }} />
+            <ScanFace style={{ width: 26, height: 26, color: isDark ? "#60a5fa" : "#2563eb" }} />
             <div>
               <p style={{ fontWeight: 700, fontSize: "0.95rem", color: isDark ? "#fff" : "#1e293b" }}>{title}</p>
               {subtitle && <p style={{ fontSize: "0.75rem", color: isDark ? "#93c5fd" : "#64748b", marginTop: 2 }}>{subtitle}</p>}
@@ -153,7 +153,7 @@ export default function SelfieCaptureModal({
               color: isDark ? "#fff" : "#1e293b", cursor: "pointer",
             }}
           >
-            <X style={{ width: 18, height: 18 }} />
+            <X style={{ width: 22, height: 22 }} />
           </button>
         </div>
 
@@ -244,7 +244,7 @@ export default function SelfieCaptureModal({
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               }}
             >
-              <RotateCcw style={{ width: 16, height: 16 }} /> Tentar Novamente
+              <RotateCcw style={{ width: 20, height: 20 }} /> Tentar Novamente
             </button>
           ) : status === "waiting" || (status === "counting" && countdown !== null && countdown > 0) ? (
             <p style={{ fontSize: 14, fontWeight: 600, color: isDark ? "#93c5fd" : "#475569", textAlign: "center" }}>
@@ -252,7 +252,7 @@ export default function SelfieCaptureModal({
             </p>
           ) : status === "verifying" || loading ? (
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Loader2 style={{ width: 18, height: 18, color: "#10b981", animation: "spin 1s linear infinite" }} />
+              <Loader2 style={{ width: 22, height: 22, color: "#10b981", animation: "spin 1s linear infinite" }} />
               <p style={{ fontSize: 14, fontWeight: 600, color: "#10b981" }}>Verificando identidade...</p>
             </div>
           ) : null}

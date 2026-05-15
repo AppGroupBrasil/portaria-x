@@ -192,7 +192,7 @@ export default function DashboardMorador() {
                 onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
               >
                 <div className="flex items-center justify-center shrink-0" style={{ width: 48, height: 48, borderRadius: 14, background: p.featureIconBoxBg, border: p.featureIconBoxBorder }}>
-                  <Icon style={{ width: 22, height: 22, color: p.textAccent, stroke: p.textAccent }} />
+                  <Icon style={{ width: 26, height: 26, color: p.textAccent, stroke: p.textAccent }} />
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <p style={{ fontWeight: 700, fontSize: 13, marginBottom: 2, lineHeight: 1.2 }}>{feature.label}</p>
@@ -213,14 +213,14 @@ export default function DashboardMorador() {
         <div className="flex items-center justify-between" style={{ padding: "20px 28px", height: "4rem" }}>
           <div className="flex items-center" style={{ gap: 14 }}>
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>
-              <Home style={{ width: 22, height: 22, color: p.text }} />
+              <Home style={{ width: 26, height: 26, color: p.text }} />
             </div>
             <div>
               <span className="block" style={{ fontWeight: 800, fontSize: 20, letterSpacing: "-0.01em", color: p.isDarkBase ? "#ffffff" : "#1e293b" }}>
                 {user?.name?.split(" ")[0] || "Morador"}
               </span>
               <span className="flex items-center" style={{ fontSize: 13, color: p.isDarkBase ? "#ffffff" : "#334155", gap: 6 }}>
-                <Shield style={{ width: 14, height: 14 }} />
+                <Shield style={{ width: 18, height: 18 }} />
                 {getRoleLabel(user?.role || "morador")}
               </span>
             </div>
@@ -233,7 +233,7 @@ export default function DashboardMorador() {
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
             >
-              <Bell style={{ width: 20, height: 20, color: p.text }} />
+              <Bell style={{ width: 24, height: 24, color: p.text }} />
               <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
             </button>
             <button
@@ -243,7 +243,7 @@ export default function DashboardMorador() {
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
             >
-              <LogOut style={{ width: 20, height: 20, color: p.text }} />
+              <LogOut style={{ width: 24, height: 24, color: p.text }} />
             </button>
           </div>
         </div>
@@ -274,7 +274,7 @@ export default function DashboardMorador() {
               style={{ gap: 6, fontSize: 12, fontWeight: 600, background: "none", border: "none", color: p.isDarkBase ? "#ffffff" : "#000000", transition: "all 0.2s" }}
             >
               <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 12, transition: "all 0.2s" }}>
-                <item.icon style={{ width: 22, height: 22 }} />
+                <item.icon style={{ width: 26, height: 26 }} />
               </div>
               <span>{item.label}</span>
             </button>

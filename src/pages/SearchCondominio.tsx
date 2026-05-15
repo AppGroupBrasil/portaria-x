@@ -149,12 +149,12 @@ export default function SearchCondominio() {
               >
                 {isSearching ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                     Buscando...
                   </>
                 ) : (
                   <>
-                    <Search className="w-4 h-4" />
+                    <Search className="w-5 h-5" />
                     Buscar condomínio
                   </>
                 )}
@@ -164,7 +164,7 @@ export default function SearchCondominio() {
             {/* Error */}
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm animate-fade-in">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                <AlertCircle className="w-5 h-5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -174,12 +174,12 @@ export default function SearchCondominio() {
               <div className="animate-fade-in space-y-4">
                 <div className="p-4 rounded-lg bg-emerald-500/10 space-y-2">
                   <div className="flex items-center gap-2 text-emerald-400">
-                    <CheckCircle2 className="w-4 h-4" />
+                    <CheckCircle2 className="w-5 h-5" />
                     <span className="text-sm font-medium">Condomínio encontrado!</span>
                   </div>
                   <div className="space-y-1 mt-2">
                     <div className="flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
+                      <Building2 className="w-5 h-5 text-muted-foreground shrink-0" />
                       <p className="text-sm font-semibold text-foreground">{condominio.name}</p>
                     </div>
                     {buildAddress() && (
@@ -216,7 +216,7 @@ export default function SearchCondominio() {
                   disabled={condominio.blocks.length === 0}
                 >
                   {condominio.blocks.length === 0 ? "Cadastre um bloco primeiro" : "Continuar cadastro"}
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-5 h-5" />
                 </Button>
               </div>
             )}

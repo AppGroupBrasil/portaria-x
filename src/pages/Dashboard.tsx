@@ -263,7 +263,7 @@ export default function Dashboard() {
                 {user?.name || "Painel Master"}
               </span>
               <span className="flex items-center gap-1.5" style={{ fontSize: 13, color: p.textDim, marginTop: 6, flexWrap: "wrap" }}>
-                <Shield className="w-4 h-4" />
+                <Shield className="w-5 h-5" />
                 {getRoleLabel(user?.role || "master")}
               </span>
             </div>
@@ -271,11 +271,11 @@ export default function Dashboard() {
           <div className="flex items-center gap-3" style={{ flexShrink: 0 }}>
             <ThemePicker />
             <button className="p-3 rounded-xl transition-all relative" style={{ width: 40, height: 40, background: p.btnBg, border: p.btnBorder, display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}>
-              <Bell className="w-6 h-6" style={{ color: p.text }} />
+              <Bell className="w-7 h-7" style={{ color: p.text }} />
               <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-emerald-400 rounded-full" />
             </button>
             <button className="p-3 rounded-xl transition-all" style={{ width: 40, height: 40, background: p.btnBg, border: p.btnBorder, display: "flex", alignItems: "center", justifyContent: "center" }} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }} onClick={handleLogout}>
-              <LogOut className="w-6 h-6" style={{ color: p.text }} />
+              <LogOut className="w-7 h-7" style={{ color: p.text }} />
             </button>
           </div>
         </div>
@@ -308,7 +308,7 @@ export default function Dashboard() {
                 ].map((s) => (
                   <button type="button" key={s.label} onClick={() => navigate(s.route)} className="ui-card-mini rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform" style={{ padding: "0.75rem 0.5rem", minWidth: 0, border: "1.5px solid transparent", backgroundImage: "linear-gradient(var(--background), var(--background)), linear-gradient(135deg, #2d3354, #10b981, #8b5cf6)", backgroundOrigin: "border-box", backgroundClip: "padding-box, border-box" }}>
                     <span className="text-2xl sm:text-3xl font-extrabold" style={{ color: "#2563eb" }}>{s.value}</span>
-                    <span className="font-medium uppercase tracking-wider text-center" style={{ fontSize: "11px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word", color: p.isDarkBase ? "rgba(255,255,255,0.7)" : "#374151" }}>{s.label}</span>
+                    <span className="font-medium uppercase tracking-wider text-center" style={{ fontSize: "12px", marginTop: "0.35rem", lineHeight: 1.2, wordBreak: "break-word", color: p.isDarkBase ? "rgba(255,255,255,0.7)" : "#374151" }}>{s.label}</span>
                   </button>
                 ))}
               </div>
@@ -374,7 +374,7 @@ export default function Dashboard() {
               style={{ minWidth: 52, padding: "0 4px" }}
             >
               <div className="p-2 rounded-xl transition-all duration-200">
-                <item.icon className="w-5 h-5" style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }} />
+                <item.icon className="w-6 h-6" style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }} />
               </div>
               <span style={{ color: p.isDarkBase ? "#ffffff" : "#000000" }}>{item.label}</span>
             </button>

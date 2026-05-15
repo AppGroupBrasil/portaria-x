@@ -222,7 +222,7 @@ export default function FuncoesIndex({ userRole, featureConfig = {}, onlyDefault
         }}
       >
         <div className="flex items-center" style={{ gap: 10 }}>
-          <List style={{ width: 18, height: 18, color: p.accentBright }} />
+          <List style={{ width: 22, height: 22, color: p.accentBright }} />
           <span style={{ fontWeight: 700, fontSize: 14, textTransform: "uppercase", letterSpacing: "0.08em" }}>
             Funções Portaria X
           </span>
@@ -238,8 +238,8 @@ export default function FuncoesIndex({ userRole, featureConfig = {}, onlyDefault
           </span>
         </div>
         {open
-          ? <ChevronUp style={{ width: 18, height: 18, color: p.textDim }} />
-          : <ChevronDown style={{ width: 18, height: 18, color: p.textDim }} />
+          ? <ChevronUp style={{ width: 22, height: 22, color: p.textDim }} />
+          : <ChevronDown style={{ width: 22, height: 22, color: p.textDim }} />
         }
       </button>
 
@@ -297,8 +297,8 @@ export default function FuncoesIndex({ userRole, featureConfig = {}, onlyDefault
                     </span>
                   </div>
                   {isExpanded
-                    ? <ChevronUp style={{ width: 14, height: 14, color: p.textDim }} />
-                    : <ChevronDown style={{ width: 14, height: 14, color: p.textDim }} />
+                    ? <ChevronUp style={{ width: 18, height: 18, color: p.textDim }} />
+                    : <ChevronDown style={{ width: 18, height: 18, color: p.textDim }} />
                   }
                 </button>
 
@@ -324,7 +324,7 @@ export default function FuncoesIndex({ userRole, featureConfig = {}, onlyDefault
                       onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
                     >
                       <div className="flex items-center justify-center shrink-0" style={{ width: 28, height: 28, borderRadius: 8, background: roleInfo.bg }}>
-                        <Icon style={{ width: 14, height: 14, color: roleInfo.text }} />
+                        <Icon style={{ width: 18, height: 18, color: roleInfo.text }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.3 }}>{item.label}</p>

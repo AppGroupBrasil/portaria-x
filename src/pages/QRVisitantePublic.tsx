@@ -63,7 +63,7 @@ export default function QRVisitantePublic() {
   return (
     <div style={{ minHeight: "100dvh", background: "#f1f5f9", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "20px" }}>
       <div style={{
-        background: "#fff", borderRadius: "20px", padding: "28px",
+        background: "var(--color-card, #fff)", borderRadius: "20px", padding: "28px",
         border: "3px solid #6366f1", textAlign: "center", width: "100%", maxWidth: "380px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
       }}>
@@ -71,20 +71,20 @@ export default function QRVisitantePublic() {
         <div style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", borderRadius: "14px", padding: "16px", marginBottom: "20px" }}>
           <QrCode style={{ width: "32px", height: "32px", color: "#fff", margin: "0 auto" }} />
           <p style={{ color: "#fff", fontWeight: 800, fontSize: "16px", marginTop: "6px" }}>AUTORIZAÇÃO DE ENTRADA</p>
-          {data.condominio_nome && <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "12px" }}>{data.condominio_nome}</p>}
+          {data.condominio_nome && <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "13px" }}>{data.condominio_nome}</p>}
         </div>
 
         {/* Visitor info */}
         <p style={{ fontWeight: 800, fontSize: "18px", color: "#374151" }}>{data.visitor_name}</p>
-        {data.visitor_doc && <p style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>Doc: {data.visitor_doc}</p>}
-        {data.visitor_parentesco && <p style={{ fontSize: "13px", color: "#6b7280" }}>Parentesco: {data.visitor_parentesco}</p>}
+        {data.visitor_doc && <p style={{ fontSize: "14px", color: "#6b7280", marginTop: "4px" }}>Doc: {data.visitor_doc}</p>}
+        {data.visitor_parentesco && <p style={{ fontSize: "14px", color: "#6b7280" }}>Parentesco: {data.visitor_parentesco}</p>}
 
         {/* Validity */}
         <div style={{ margin: "20px 0", background: "#f8fafc", borderRadius: "12px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
-          <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>VÁLIDO DE</p>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{data.data_inicio} às {data.hora_inicio}</p>
-          <p style={{ fontSize: "12px", color: "#6b7280", fontWeight: 700, marginTop: "8px", marginBottom: "4px" }}>ATÉ</p>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "#374151" }}>{data.data_fim} às {data.hora_fim}</p>
+          <p style={{ fontSize: "13px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>VÁLIDO DE</p>
+          <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>{data.data_inicio} às {data.hora_inicio}</p>
+          <p style={{ fontSize: "13px", color: "#6b7280", fontWeight: 700, marginTop: "8px", marginBottom: "4px" }}>ATÉ</p>
+          <p style={{ fontSize: "15px", fontWeight: 700, color: "#374151" }}>{data.data_fim} às {data.hora_fim}</p>
         </div>
 
         {/* QR Code */}
@@ -97,12 +97,12 @@ export default function QRVisitantePublic() {
           />
         </div>
 
-        <p style={{ fontSize: "11px", color: "#9ca3af" }}>
+        <p style={{ fontSize: "12px", color: "#9ca3af" }}>
           Morador: {data.morador_nome || "N/A"} · Bloco {data.bloco || "—"} Apt {data.unidade || "—"}
         </p>
       </div>
 
-      <p style={{ marginTop: "16px", fontSize: "13px", color: "#6b7280", textAlign: "center" }}>
+      <p style={{ marginTop: "16px", fontSize: "14px", color: "#6b7280", textAlign: "center" }}>
         Apresente este QR Code na portaria do condomínio.
       </p>
     </div>
