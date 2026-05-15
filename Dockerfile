@@ -49,8 +49,8 @@ COPY --from=builder /app/dist ./dist
 # Copy compiled server from builder
 COPY --from=builder /app/dist-server ./dist-server
 
-# Copy Firebase service account (needed by pushService at runtime)
-COPY server/firebase-service-account.json ./server/firebase-service-account.json
+# Firebase service account is mounted at runtime via Coolify volume mount
+# (was: COPY server/firebase-service-account.json — removed because file is gitignored)
 
 # Copy public assets (logo, etc.)
 COPY public ./public
