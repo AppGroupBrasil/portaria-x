@@ -1,11 +1,13 @@
 import { Router, Request, Response } from "express";
 import db from "./db.js";
 import crypto from "crypto";
+import { logger } from "./logger.js";
+import { authenticate } from "./middleware.js";
 
 const router = Router();
 
 /* ─── POST /api/visitor-qr/share — create short share token ─── */
-router.post("/share", (req: Request, res: Response) => {
+router.post("/share", authenticate, (req: Request, res: Response) => {
   try {
     const {
       qr_data,
@@ -50,7 +52,7 @@ router.post("/share", (req: Request, res: Response) => {
 
     res.json({ token });
   } catch (err) {
-    console.error("Erro ao criar share token:", err);
+    logger.error("Erro ao criar share token:", err);
     res.status(500).json({ error: "Erro interno." });
   }
 });
@@ -83,7 +85,7 @@ router.get("/:token", (req: Request, res: Response) => {
       qr_data: row.qr_data,
     });
   } catch (err) {
-    console.error("Erro ao buscar share:", err);
+    logger.error("Erro ao buscar share:", err);
     res.status(500).json({ error: "Erro interno." });
   }
 });

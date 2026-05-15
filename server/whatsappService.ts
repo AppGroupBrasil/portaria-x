@@ -7,16 +7,9 @@
  */
 
 import db from "./db.js";
+import { logger } from "./logger.js";
 
 // ─── Types ───
-interface WhatsAppTemplate {
-  id: string;
-  /** Gupshup template name (pre-approved on Meta) */
-  templateName: string;
-  /** Parameters to fill template placeholders */
-  params?: string[];
-}
-
 interface WhatsAppResult {
   success: boolean;
   messageId?: string;
@@ -269,7 +262,7 @@ export async function sendWhatsApp(
   logMessage(condominioId, dest, templateName, result.success ? "sent" : "failed", result.messageId, result.error);
 
   if (!result.success) {
-    console.warn(`⚠️ WhatsApp send failed [${templateName}] → ${dest}:`, result.error);
+    logger.warn(`⚠️ WhatsApp send failed [${templateName}] → ${dest}:`, result.error);
   }
 
   return result;

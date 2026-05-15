@@ -1,9 +1,37 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import db, { type DbUser } from "./db.js";
-
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production-32chars!!";
+import { JWT_SECRET } from "./jwtSecret.js";
 const COOKIE_NAME = "session_token";
+
+// ─── DEMO MUTATION GUARD ─────────────────────────────────
+// Server-side enforcement: users from the shared demo condominio
+// (CNPJ 00000000000100) cannot mutate data. The client-side guard
+// in src/lib/api.ts is defense-in-depth, not the trust boundary.
+const DEMO_CONDO_CNPJ = "00000000000100";
+const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+let demoCondoIdCache: number | null | undefined;
+
+function getDemoCondoId(): number | null {
+  if (demoCondoIdCache !== undefined) return demoCondoIdCache;
+  const row = db.prepare("SELECT id FROM condominios WHERE cnpj = ?")
+    .get(DEMO_CONDO_CNPJ) as { id: number } | undefined;
+  demoCondoIdCache = row?.id ?? null;
+  return demoCondoIdCache;
+}
+
+function rejectIfDemoMutation(req: Request, res: Response): boolean {
+  if (!MUTATING_METHODS.has(req.method)) return false;
+  if (!req.user?.condominio_id) return false;
+  const demoId = getDemoCondoId();
+  if (demoId === null || req.user.condominio_id !== demoId) return false;
+  res.status(403).json({
+    code: "DEMO_MUTATION_BLOCKED",
+    error: "Modo demonstração — ação bloqueada. Crie uma conta real para alterar dados.",
+    demo: true,
+  });
+  return true;
+}
 
 // ─── ROLES HIERARCHY ─────────────────────────────────────
 // master > administradora > sindico > funcionario > morador
@@ -51,7 +79,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     if (decoded.funcId) {
       const func = db.prepare("SELECT * FROM funcionarios WHERE id = ?").get(decoded.funcId) as any;
       if (!func) {
-        res.clearCookie(COOKIE_NAME);
+        res.clearCookie(COOKIE_NAME, { path: "/" });
         res.status(401).json({ error: "Funcionário não encontrado." });
         return;
       }
@@ -73,6 +101,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
         created_at: func.created_at,
         updated_at: func.updated_at,
       } as DbUser;
+      if (rejectIfDemoMutation(req, res)) return;
       next();
       return;
     }
@@ -81,7 +110,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(decoded.userId) as DbUser | undefined;
 
     if (!user) {
-      res.clearCookie(COOKIE_NAME);
+      res.clearCookie(COOKIE_NAME, { path: "/" });
       res.status(401).json({ error: "Usuário não encontrado." });
       return;
     }
@@ -100,9 +129,10 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     }
 
     req.user = user;
+    if (rejectIfDemoMutation(req, res)) return;
     next();
   } catch {
-    res.clearCookie(COOKIE_NAME);
+    res.clearCookie(COOKIE_NAME, { path: "/" });
     res.status(401).json({ error: "Sessão inválida." });
   }
 }
@@ -209,6 +239,36 @@ export function condominioScope(user: DbUser, columnName = "condominio_id"): { c
     return { clause: "1=0", params: [] };
   }
   return { clause: `${columnName} = ?`, params: [user.condominio_id] };
+}
+
+/**
+ * Validates that the user can act on the given condominio.
+ * - master: any condominio
+ * - administradora: only condominios under their administration (or sub-users)
+ * - sindico/funcionario/morador: only their own condominio_id
+ *
+ * Returns the resolved condominio ID (e.g. from user.condominio_id when user has only one),
+ * or null if access is denied. Always use the returned value, not the input.
+ */
+export function resolveAccessibleCondominio(user: DbUser, requested: number | null | undefined): number | null {
+  // Users with a fixed condominio_id ignore the request (cannot escape their tenant).
+  if (user.condominio_id) {
+    if (requested && Number(requested) !== user.condominio_id) return null;
+    return user.condominio_id;
+  }
+  // No requested ID: cannot proceed for non-master/non-administradora.
+  if (!requested) {
+    return user.role === "master" ? null : null;
+  }
+  const reqId = Number(requested);
+  if (!Number.isFinite(reqId) || reqId <= 0) return null;
+  if (user.role === "master") return reqId;
+  if (user.role === "administradora") {
+    const allowed = getAccessibleCondominioIds(user);
+    if (allowed && allowed.includes(reqId)) return reqId;
+    return null;
+  }
+  return null;
 }
 
 /**

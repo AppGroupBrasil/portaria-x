@@ -7,8 +7,9 @@
 
 import { Router, Request, Response } from "express";
 import db from "./db.js";
-import { authenticate, authorize, getAccessibleCondominioIds } from "./middleware.js";
+import { authenticate, authorize, getAccessibleCondominioIds, resolveAccessibleCondominio } from "./middleware.js";
 import { testWhatsAppConnection, getGlobalCredentials } from "./whatsappService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -47,7 +48,7 @@ router.get(
 
       res.json(config);
     } catch (err: any) {
-      console.error("Erro ao buscar global config WhatsApp:", err);
+      logger.error("Erro ao buscar global config WhatsApp:", err);
       res.status(500).json({ error: "Erro interno" });
     }
   }
@@ -85,7 +86,7 @@ router.put(
 
       res.json({ success: true });
     } catch (err: any) {
-      console.error("Erro ao salvar global config WhatsApp:", err);
+      logger.error("Erro ao salvar global config WhatsApp:", err);
       res.status(500).json({ error: "Erro ao salvar" });
     }
   }
@@ -135,7 +136,7 @@ router.get(
 
       res.json(cfgMap);
     } catch (err: any) {
-      console.error("Erro ao buscar config WhatsApp:", err);
+      logger.error("Erro ao buscar config WhatsApp:", err);
       res.status(500).json({ error: "Erro interno" });
     }
   }
@@ -183,7 +184,7 @@ router.put(
 
       res.json({ success: true });
     } catch (err: any) {
-      console.error("Erro ao salvar config WhatsApp:", err);
+      logger.error("Erro ao salvar config WhatsApp:", err);
       res.status(500).json({ error: "Erro ao salvar configuração" });
     }
   }
@@ -213,7 +214,7 @@ router.post(
         res.status(400).json({ success: false, error: result.error });
       }
     } catch (err: any) {
-      console.error("Erro ao testar WhatsApp:", err);
+      logger.error("Erro ao testar WhatsApp:", err);
       res.status(500).json({ error: "Erro interno" });
     }
   }
@@ -246,7 +247,7 @@ router.get(
 
       res.json({ logs, total });
     } catch (err: any) {
-      console.error("Erro ao buscar logs WhatsApp:", err);
+      logger.error("Erro ao buscar logs WhatsApp:", err);
       res.status(500).json({ error: "Erro interno" });
     }
   }
@@ -259,10 +260,10 @@ router.get(
   authorize("master", "administradora", "sindico"),
   (req: Request, res: Response) => {
     try {
-      const condominioId = req.query.condominio_id
-        ? Number(req.query.condominio_id)
-        : req.user!.condominio_id;
-      if (!condominioId) return res.status(400).json({ error: "Sem condomínio" });
+      const condominioId = resolveAccessibleCondominio(req.user!, req.query.condominio_id ? Number(req.query.condominio_id) : null);
+      if (!condominioId) return res.status(req.query.condominio_id ? 403 : 400).json({
+        error: req.query.condominio_id ? "Sem permissão para este condomínio." : "Sem condomínio",
+      });
 
       const costPerMsg = Number(
         (db.prepare(
@@ -301,7 +302,7 @@ router.get(
         estimatedCostToday: +(today.sent * costPerMsg).toFixed(2),
       });
     } catch (err: any) {
-      console.error("Erro stats WhatsApp:", err);
+      logger.error("Erro stats WhatsApp:", err);
       res.status(500).json({ error: "Erro interno" });
     }
   }
@@ -398,7 +399,7 @@ router.get(
         },
       });
     } catch (err: any) {
-      console.error("Erro stats/all WhatsApp:", err);
+      logger.error("Erro stats/all WhatsApp:", err);
       res.status(500).json({ error: "Erro interno" });
     }
   }
@@ -411,8 +412,8 @@ router.put(
   authorize("master", "administradora"),
   (req: Request, res: Response) => {
     try {
-      const condominioId = Number(req.params.condominioId);
-      if (!condominioId) return res.status(400).json({ error: "ID inválido" });
+      const condominioId = resolveAccessibleCondominio(req.user!, Number(req.params.condominioId));
+      if (!condominioId) return res.status(403).json({ error: "Sem permissão para este condomínio." });
 
       const allowedKeys = new Set([
         "whatsapp_enabled",
@@ -442,7 +443,7 @@ router.put(
 
       res.json({ success: true });
     } catch (err: any) {
-      console.error("Erro ao salvar config WhatsApp condomínio:", err);
+      logger.error("Erro ao salvar config WhatsApp condomínio:", err);
       res.status(500).json({ error: "Erro ao salvar" });
     }
   }

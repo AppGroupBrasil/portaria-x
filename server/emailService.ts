@@ -8,6 +8,7 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import db from "./db.js";
+import { logger } from "./logger.js";
 
 // ─── Configuration ───
 const SMTP_USER = process.env.SMTP_USER || "";
@@ -20,8 +21,8 @@ let transporter: Transporter | null = null;
 
 function initSmtp() {
   if (!SMTP_USER || !SMTP_PASS) {
-    console.warn("⚠️  Gmail SMTP credentials not found. Email sending disabled.");
-    console.warn("   Set SMTP_USER and SMTP_PASS in .env");
+    logger.warn("⚠️  Gmail SMTP credentials not found. Email sending disabled.");
+    logger.warn("   Set SMTP_USER and SMTP_PASS in .env");
     return;
   }
 
@@ -33,9 +34,9 @@ function initSmtp() {
         pass: SMTP_PASS,
       },
     });
-    console.log(`  📧 Gmail SMTP initialized (from: ${FROM_EMAIL})`);
+    logger.info(`  📧 Gmail SMTP initialized (from: ${FROM_EMAIL})`);
   } catch (err) {
-    console.error("SMTP init error:", err);
+    logger.error("SMTP init error:", err);
   }
 }
 
@@ -148,7 +149,7 @@ async function sendEmail(to: string | string[], subject: string, htmlBody: strin
     });
     return true;
   } catch (err: any) {
-    console.error(`[EMAIL] Erro ao enviar para ${validEmails.join(", ")}:`, err.message || err);
+    logger.error(`[EMAIL] Erro ao enviar para ${validEmails.join(", ")}:`, err.message || err);
     return false;
   }
 }
@@ -192,14 +193,6 @@ function getSindicoEmail(condominioId: number): string | null {
     "SELECT email FROM users WHERE condominio_id = ? AND role = 'sindico' LIMIT 1"
   ).get(condominioId) as { email: string } | undefined;
   return user?.email || null;
-}
-
-// ─── Helper: get all morador emails for condominio ───
-function getAllMoradorEmails(condominioId: number): string[] {
-  const users = db.prepare(
-    "SELECT email FROM users WHERE condominio_id = ? AND role = 'morador'"
-  ).all(condominioId) as { email: string }[];
-  return users.map((u) => u.email).filter(Boolean);
 }
 
 // ─── Helper: get condominio name ───

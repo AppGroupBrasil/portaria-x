@@ -14,6 +14,7 @@ import { createRequire } from "module";
 import { Canvas, Image, createCanvas, loadImage } from "canvas";
 import path from "path";
 import { fileURLToPath } from "url";
+import { logger } from "./logger.js";
 
 const require2 = createRequire(import.meta.url);
 
@@ -40,8 +41,8 @@ export async function loadModels(): Promise<void> {
   modelsLoading = true;
 
   const modelsPath = path.resolve(__dirname, "../public/models");
-  console.log("[FaceService] Carregando modelos de:", modelsPath);
-  console.log("[FaceService] Backend TF.js:", faceapi.tf?.getBackend?.() || "wasm");
+  logger.info("[FaceService] Carregando modelos de:", modelsPath);
+  logger.info("[FaceService] Backend TF.js:", faceapi.tf?.getBackend?.() || "wasm");
 
   try {
     // Configurar WASM backend path
@@ -53,16 +54,16 @@ export async function loadModels(): Promise<void> {
     // Aguardar backend estar pronto
     if (faceapi.tf?.ready) {
       await faceapi.tf.ready();
-      console.log("[FaceService] Backend pronto:", faceapi.tf.getBackend());
+      logger.info("[FaceService] Backend pronto:", faceapi.tf.getBackend());
     }
 
     await faceapi.nets.ssdMobilenetv1.loadFromDisk(modelsPath);
     await faceapi.nets.faceLandmark68Net.loadFromDisk(modelsPath);
     await faceapi.nets.faceRecognitionNet.loadFromDisk(modelsPath);
     modelsLoaded = true;
-    console.log("[FaceService] ✅ Modelos carregados com sucesso");
+    logger.info("[FaceService] ✅ Modelos carregados com sucesso");
   } catch (err) {
-    console.error("[FaceService] ❌ Erro ao carregar modelos:", err);
+    logger.error("[FaceService] ❌ Erro ao carregar modelos:", err);
     modelsLoading = false;
     throw err;
   }
@@ -100,7 +101,7 @@ export async function extractDescriptor(base64Photo: string): Promise<number[] |
 
     return Array.from(detection.descriptor);
   } catch (err) {
-    console.error("[FaceService] Erro ao extrair descriptor:", err);
+    logger.error("[FaceService] Erro ao extrair descriptor:", err);
     return null;
   }
 }

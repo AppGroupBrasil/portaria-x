@@ -9,6 +9,7 @@
  */
 import eWeLink from "ewelink-api-next";
 import db from "./db.js";
+import { logger } from "./logger.js";
 
 export interface EwelinkCredentials {
   appId: string;
@@ -82,7 +83,7 @@ function loadTokenFromDB(): TokenData | null {
       };
     }
   } catch (err) {
-    console.error("Error loading eWeLink token from DB:", err);
+    logger.error("Error loading eWeLink token from DB:", err);
   }
   return null;
 }
@@ -125,7 +126,7 @@ export async function exchangeCodeForToken(
       code,
     });
     
-    console.log("eWeLink OAuth getToken response:", JSON.stringify(res));
+    logger.info("eWeLink OAuth getToken response:", JSON.stringify(res));
     
     if (res.error && res.error !== 0) {
       return { success: false, error: `eWeLink OAuth failed: ${res.msg || JSON.stringify(res)}` };
@@ -152,7 +153,7 @@ export async function exchangeCodeForToken(
     
     return { success: true };
   } catch (err: any) {
-    console.error("exchangeCodeForToken error:", err);
+    logger.error("exchangeCodeForToken error:", err);
     return { success: false, error: err.message || String(err) };
   }
 }
@@ -195,7 +196,7 @@ async function getAccessToken(creds: EwelinkCredentials): Promise<string> {
         return newToken.accessToken;
       }
     } catch (err) {
-      console.error("Token refresh error:", err);
+      logger.error("Token refresh error:", err);
     }
   }
   
@@ -237,7 +238,7 @@ export async function toggleDevice(
       params,
     });
 
-    console.log("toggleDevice response:", JSON.stringify(res));
+    logger.info("toggleDevice response:", JSON.stringify(res));
 
     if (res.error && res.error !== 0) {
       return { success: false, error: res.msg || `Error: ${res.error}` };
@@ -272,7 +273,7 @@ export async function pulseDevice(
           pulses: [{ pulse: "on", switch: "on", outlet: channel, width }],
         },
       });
-      console.log("pulseDevice multi-ch pulse config:", JSON.stringify(pulseRes));
+      logger.info("pulseDevice multi-ch pulse config:", JSON.stringify(pulseRes));
 
       const pulseSupported = !pulseRes.error || pulseRes.error === 0;
 
@@ -282,7 +283,7 @@ export async function pulseDevice(
         id: deviceId,
         params: { switches: [{ switch: "on", outlet: channel }] },
       });
-      console.log("pulseDevice multi-ch ON:", JSON.stringify(onRes));
+      logger.info("pulseDevice multi-ch ON:", JSON.stringify(onRes));
 
       if (onRes.error && onRes.error !== 0) {
         return { success: false, error: onRes.msg || `Error: ${onRes.error}` };
@@ -290,7 +291,7 @@ export async function pulseDevice(
 
       if (!pulseSupported) {
         // Device doesn't support pulse mode (e.g. UIID 138) — manual OFF after delay
-        console.log(`pulseDevice: pulse não suportado, fallback manual OFF em ${width}ms`);
+        logger.info(`pulseDevice: pulse não suportado, fallback manual OFF em ${width}ms`);
         setTimeout(async () => {
           try {
             const offRes = await client.device.setThingStatus({
@@ -298,9 +299,9 @@ export async function pulseDevice(
               id: deviceId,
               params: { switches: [{ switch: "off", outlet: channel }] },
             });
-            console.log("pulseDevice manual OFF:", JSON.stringify(offRes));
+            logger.info("pulseDevice manual OFF:", JSON.stringify(offRes));
           } catch (err) {
-            console.error("pulseDevice manual OFF error:", err);
+            logger.error("pulseDevice manual OFF error:", err);
           }
         }, width);
       }
@@ -317,7 +318,7 @@ export async function pulseDevice(
         pulseWidth: width,
       },
     });
-    console.log("pulseDevice single-ch pulse config:", JSON.stringify(pulseRes));
+    logger.info("pulseDevice single-ch pulse config:", JSON.stringify(pulseRes));
 
     const pulseSupported = !pulseRes.error || pulseRes.error === 0;
 
@@ -326,7 +327,7 @@ export async function pulseDevice(
       id: deviceId,
       params: { switch: "on" },
     });
-    console.log("pulseDevice single-ch ON:", JSON.stringify(onRes));
+    logger.info("pulseDevice single-ch ON:", JSON.stringify(onRes));
 
     if (onRes.error && onRes.error !== 0) {
       return { success: false, error: onRes.msg || `Error: ${onRes.error}` };
@@ -334,7 +335,7 @@ export async function pulseDevice(
 
     if (!pulseSupported) {
       // Fallback: manual OFF after delay
-      console.log(`pulseDevice: pulse não suportado, fallback manual OFF em ${width}ms`);
+      logger.info(`pulseDevice: pulse não suportado, fallback manual OFF em ${width}ms`);
       setTimeout(async () => {
         try {
           const offRes = await client.device.setThingStatus({
@@ -342,9 +343,9 @@ export async function pulseDevice(
             id: deviceId,
             params: { switch: "off" },
           });
-          console.log("pulseDevice manual OFF:", JSON.stringify(offRes));
+          logger.info("pulseDevice manual OFF:", JSON.stringify(offRes));
         } catch (err) {
-          console.error("pulseDevice manual OFF error:", err);
+          logger.error("pulseDevice manual OFF error:", err);
         }
       }, width);
     }
@@ -368,7 +369,7 @@ export async function getDeviceStatus(
       thingList: [{ itemType: 1, id: deviceId }],
     });
 
-    console.log("getDeviceStatus response:", JSON.stringify(res).slice(0, 300));
+    logger.info("getDeviceStatus response:", JSON.stringify(res).slice(0, 300));
 
     if (res.error && res.error !== 0) {
       return { online: false, error: res.msg || `Error: ${res.error}` };
@@ -402,7 +403,7 @@ export async function listDevices(
       lang: "en",
     });
 
-    console.log("listDevices SDK response:", JSON.stringify(res).slice(0, 500));
+    logger.info("listDevices SDK response:", JSON.stringify(res).slice(0, 500));
 
     if (res.error && res.error !== 0) {
       return { devices: [], error: res.msg || `Error: ${res.error}` };
@@ -428,7 +429,7 @@ export async function listDevices(
 
     return { devices };
   } catch (err: any) {
-    console.error("listDevices error:", err);
+    logger.error("listDevices error:", err);
     return { devices: [], error: err.message };
   }
 }

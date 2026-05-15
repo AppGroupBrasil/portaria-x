@@ -2,6 +2,7 @@
 import db from "./db.js";
 import { authenticate } from "./middleware.js";
 import { emailCorrespondenciaChegou } from "./emailService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -46,7 +47,7 @@ router.get("/", authenticate, (req: Request, res: Response) => {
     const results = db.prepare(query).all(...params);
     res.json(results);
   } catch (err: any) {
-    console.error("Erro em correspondencias :", err);
+    logger.error("Erro em correspondencias :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -110,7 +111,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
         tipo: tipo || "encomenda",
         remetente: remetente || undefined,
         descricao: descricao || undefined,
-      }).catch((err) => console.error("[EMAIL] Erro correspondência:", err));
+      }).catch((err) => logger.error("[EMAIL] Erro correspondência:", err));
     }
 
     res.status(201).json({
@@ -119,7 +120,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
       message: "Correspondência registrada com sucesso.",
     });
   } catch (err: any) {
-    console.error("Erro em correspondencias :", err);
+    logger.error("Erro em correspondencias :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -152,7 +153,7 @@ router.put("/:id/retirar", authenticate, (req: Request, res: Response) => {
 
     res.json({ message: "Correspondência marcada como retirada." });
   } catch (err: any) {
-    console.error("Erro ao atualizar correspondência:", err);
+    logger.error("Erro ao atualizar correspondência:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -182,7 +183,7 @@ router.delete("/:id", authenticate, (req: Request, res: Response) => {
     db.prepare("DELETE FROM correspondencias WHERE id = ? AND condominio_id = ?").run(id, user.condominio_id);
     res.json({ message: "Correspondência removida." });
   } catch (err: any) {
-    console.error("Erro ao excluir correspondência:", err);
+    logger.error("Erro ao excluir correspondência:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -212,7 +213,7 @@ router.get("/foto/:protocolo", (req: Request, res: Response) => {
     res.setHeader("Content-Length", buffer.length);
     res.send(buffer);
   } catch (err: any) {
-    console.error("Erro em correspondencias :", err);
+    logger.error("Erro em correspondencias :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });

@@ -9,9 +9,10 @@
 
 import { Router, Request, Response } from "express";
 import db from "./db.js";
-import { authenticate, authorize, hasMinRole } from "./middleware.js";
+import { authenticate, authorize } from "./middleware.js";
 import { sendPushToPortaria } from "./pushService.js";
 import { notifyPortariaWhatsApp } from "./whatsappService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -81,7 +82,7 @@ router.get("/config", authenticate, async (req: Request, res: Response) => {
       radius_default: parseInt(configMap["estou_chegando_radius"] || "200"),
     });
   } catch (err) {
-    console.error("estou-chegando config GET error:", err);
+    logger.error("estou-chegando config GET error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -120,7 +121,7 @@ router.put("/config", authenticate, authorize("sindico", "administradora", "mast
 
     res.json({ success: true });
   } catch (err) {
-    console.error("estou-chegando config PUT error:", err);
+    logger.error("estou-chegando config PUT error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -309,7 +310,7 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
       message: "Portaria notificada!",
     });
   } catch (err) {
-    console.error("estou-chegando notify error:", err);
+    logger.error("estou-chegando notify error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -337,7 +338,7 @@ router.post("/confirm/:id", authenticate, authorize("funcionario", "sindico", "a
 
     res.json({ success: true, event_id: eventId });
   } catch (err) {
-    console.error("estou-chegando confirm error:", err);
+    logger.error("estou-chegando confirm error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -368,7 +369,7 @@ router.post("/cancel/:id", authenticate, async (req: Request, res: Response) => 
 
     res.json({ success: true });
   } catch (err) {
-    console.error("estou-chegando cancel error:", err);
+    logger.error("estou-chegando cancel error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -395,7 +396,7 @@ router.get("/active", authenticate, authorize("funcionario", "sindico", "adminis
 
     res.json(events);
   } catch (err) {
-    console.error("estou-chegando active error:", err);
+    logger.error("estou-chegando active error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -433,7 +434,7 @@ router.get("/history", authenticate, async (req: Request, res: Response) => {
 
     res.json(events);
   } catch (err) {
-    console.error("estou-chegando history error:", err);
+    logger.error("estou-chegando history error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -453,7 +454,7 @@ router.get("/my-active", authenticate, async (req: Request, res: Response) => {
 
     res.json(event || null);
   } catch (err) {
-    console.error("estou-chegando my-active error:", err);
+    logger.error("estou-chegando my-active error:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });

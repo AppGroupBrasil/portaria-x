@@ -44,6 +44,7 @@ import {
   isOAuthAuthorized,
 } from "./ewelinkService.js";
 import { extractDescriptor, compareFaces, isReady as faceModelsReady } from "./faceService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -196,7 +197,7 @@ router.post(
         res.status(500).json({ error: "Falha ao abrir o portão. Tente novamente." });
       }
     } catch (err: any) {
-      console.error("Erro ao abrir portão:", err);
+      logger.error("Erro ao abrir portão:", err);
       res.status(500).json({ error: "Erro interno ao abrir o portão." });
     }
   }
@@ -235,7 +236,7 @@ router.post(
         res.status(500).json({ error: "Falha ao controlar dispositivo." });
       }
     } catch (err: any) {
-      console.error("Erro toggle portão:", err);
+      logger.error("Erro toggle portão:", err);
       res.status(500).json({ error: "Erro interno." });
     }
   }
@@ -278,7 +279,7 @@ router.get(
         deviceName: config.gate_device_name || "Portão",
       });
     } catch (err: any) {
-      console.error("Erro status portão:", err);
+      logger.error("Erro status portão:", err);
       res.status(500).json({ error: "Erro ao verificar status." });
     }
   }
@@ -317,7 +318,7 @@ router.get(
 
       res.json({ logs, total });
     } catch (err: any) {
-      console.error("Erro logs portão:", err);
+      logger.error("Erro logs portão:", err);
       res.status(500).json({ error: "Erro ao buscar logs." });
     }
   }
@@ -346,7 +347,7 @@ router.get(
         gate_device_configured: !!config.gate_device_id,
       });
     } catch (err: any) {
-      console.error("Erro config portão:", err);
+      logger.error("Erro config portão:", err);
       res.status(500).json({ error: "Erro ao buscar configuração." });
     }
   }
@@ -391,7 +392,7 @@ router.put(
 
       res.json({ success: true, message: "Configuração atualizada." });
     } catch (err: any) {
-      console.error("Erro atualizar config portão:", err);
+      logger.error("Erro atualizar config portão:", err);
       res.status(500).json({ error: "Erro ao atualizar configuração." });
     }
   }
@@ -425,7 +426,7 @@ router.get(
         gate_ewelink_region: config.gate_ewelink_region || "us",
       });
     } catch (err: any) {
-      console.error("Erro master config portão:", err);
+      logger.error("Erro master config portão:", err);
       res.status(500).json({ error: "Erro ao buscar configuração." });
     }
   }
@@ -462,7 +463,7 @@ router.put(
 
       res.json({ success: true, message: "Configuração global atualizada." });
     } catch (err: any) {
-      console.error("Erro salvar master config:", err);
+      logger.error("Erro salvar master config:", err);
       res.status(500).json({ error: "Erro ao salvar configuração." });
     }
   }
@@ -496,7 +497,7 @@ router.get(
 
       res.json({ url, redirectUrl });
     } catch (err: any) {
-      console.error("Erro gerar OAuth URL:", err);
+      logger.error("Erro gerar OAuth URL:", err);
       res.status(500).json({ error: "Erro ao gerar URL de autorização." });
     }
   }
@@ -505,6 +506,8 @@ router.get(
 // ─── POST /oauth-exchange — Troca code por token (chamado pelo frontend callback) ─
 router.post(
   "/oauth-exchange",
+  authenticate,
+  authorize("master", "administradora"),
   async (req: Request, res: Response) => {
     try {
       const { code, redirectUrl, region } = req.body;
@@ -519,7 +522,7 @@ router.post(
 
       res.json(result);
     } catch (err: any) {
-      console.error("Erro OAuth exchange:", err);
+      logger.error("Erro OAuth exchange:", err);
       res.json({ success: false, error: err.message });
     }
   }
@@ -530,7 +533,7 @@ router.get(
   "/oauth-callback",
   async (req: Request, res: Response) => {
     try {
-      const { code, state, region } = req.query;
+      const { code, region } = req.query;
 
       if (!code || typeof code !== "string") {
         res.status(400).send("Código de autorização não recebido. Tente novamente.");
@@ -549,7 +552,7 @@ router.get(
         res.redirect(`/master/portao?oauth=error&msg=${encodeURIComponent(result.error || "Erro desconhecido")}`);
       }
     } catch (err: any) {
-      console.error("Erro OAuth callback:", err);
+      logger.error("Erro OAuth callback:", err);
       res.redirect(`/master/portao?oauth=error&msg=${encodeURIComponent(err.message)}`);
     }
   }
@@ -587,7 +590,7 @@ router.get(
       const result = await listDevices(0, creds);
       res.json(result);
     } catch (err: any) {
-      console.error("Erro listar dispositivos:", err);
+      logger.error("Erro listar dispositivos:", err);
       res.status(500).json({ error: "Erro ao listar dispositivos." });
     }
   }
@@ -632,7 +635,7 @@ router.post(
         });
       }
     } catch (err: any) {
-      console.error("Erro teste conexão:", err);
+      logger.error("Erro teste conexão:", err);
       res.json({ success: false, error: err.message });
     }
   }
@@ -676,7 +679,7 @@ router.post(
         message: `Dispositivo atribuído ao condomínio com sucesso.`,
       });
     } catch (err: any) {
-      console.error("Erro assign device:", err);
+      logger.error("Erro assign device:", err);
       res.status(500).json({ error: "Erro ao atribuir dispositivo." });
     }
   }
@@ -706,7 +709,7 @@ router.get(
 
       res.json(rows);
     } catch (err: any) {
-      console.error("Erro all assignments:", err);
+      logger.error("Erro all assignments:", err);
       res.status(500).json({ error: "Erro ao buscar atribuições." });
     }
   }
@@ -761,7 +764,7 @@ router.post(
 
       res.json({ success: true, message: "Pontos de acesso padrão criados.", seeded: true });
     } catch (err: any) {
-      console.error("Erro seed access points:", err);
+      logger.error("Erro seed access points:", err);
       res.status(500).json({ error: "Erro ao criar pontos de acesso." });
     }
   }
@@ -808,7 +811,7 @@ router.get(
 
       res.json(rows);
     } catch (err: any) {
-      console.error("Erro listar access points:", err);
+      logger.error("Erro listar access points:", err);
       res.status(500).json({ error: "Erro ao listar pontos de acesso." });
     }
   }
@@ -855,7 +858,7 @@ router.post(
 
       res.json({ success: true, id: result.lastInsertRowid });
     } catch (err: any) {
-      console.error("Erro criar access point:", err);
+      logger.error("Erro criar access point:", err);
       res.status(500).json({ error: "Erro ao criar ponto de acesso." });
     }
   }
@@ -918,7 +921,7 @@ router.put(
 
       res.json({ success: true });
     } catch (err: any) {
-      console.error("Erro atualizar access point:", err);
+      logger.error("Erro atualizar access point:", err);
       res.status(500).json({ error: "Erro ao atualizar ponto de acesso." });
     }
   }
@@ -952,7 +955,7 @@ router.delete(
 
       res.json({ success: true });
     } catch (err: any) {
-      console.error("Erro excluir access point:", err);
+      logger.error("Erro excluir access point:", err);
       res.status(500).json({ error: "Erro ao excluir ponto de acesso." });
     }
   }
@@ -1068,7 +1071,7 @@ router.post(
         res.status(500).json({ error: `Falha ao abrir ${ap.name}. Tente novamente.` });
       }
     } catch (err: any) {
-      console.error("Erro abrir access point:", err);
+      logger.error("Erro abrir access point:", err);
       res.status(500).json({ error: "Erro interno ao abrir acesso." });
     }
   }
@@ -1144,7 +1147,7 @@ router.post(
         res.status(500).json({ error: `Falha ao ${state === "on" ? "ligar" : "desligar"} ${ap.name}.` });
       }
     } catch (err: any) {
-      console.error("Erro toggle access point:", err);
+      logger.error("Erro toggle access point:", err);
       res.status(500).json({ error: "Erro interno." });
     }
   }
@@ -1278,7 +1281,7 @@ router.post(
         res.json({ matched: true, opened: false, person: matchName, error: `Falha ao abrir ${ap.name}.` });
       }
     } catch (err: any) {
-      console.error("Erro face-open:", err);
+      logger.error("Erro face-open:", err);
       res.status(500).json({ error: "Erro interno no reconhecimento facial." });
     }
   }
@@ -1405,7 +1408,7 @@ router.post(
         res.json({ found: true, authorized: true, opened: false, vehicle, error: `Falha ao abrir ${ap.name}.` });
       }
     } catch (err: any) {
-      console.error("Erro lpr-open:", err);
+      logger.error("Erro lpr-open:", err);
       res.status(500).json({ error: "Erro interno na leitura de placa." });
     }
   }
@@ -1520,7 +1523,7 @@ router.post(
         res.json({ matched: true, opened: false, error: `Identidade confirmada, mas falha ao abrir ${ap.name}.` });
       }
     } catch (err: any) {
-      console.error("Erro selfie-open:", err);
+      logger.error("Erro selfie-open:", err);
       res.status(500).json({ error: "Erro interno na autenticação facial." });
     }
   }

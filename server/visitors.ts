@@ -1,12 +1,25 @@
 ﻿import { Router, Request, Response } from "express";
+import rateLimit from "express-rate-limit";
 import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import crypto from "crypto";
 import { captureSnapshotForCondominio } from "./cameraSnapshot.js";
 import { emailVisitantePendente } from "./emailService.js";
 import { notifyWhatsApp, notifyPortariaWhatsApp } from "./whatsappService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
+
+// Rate limit for public self-register: 10 registrations / 10 min / IP.
+// Public endpoint with DB writes — must protect against spam pollution.
+const selfRegisterLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Muitos registros. Aguarde alguns minutos e tente novamente." },
+  skip: () => process.env.NODE_ENV === "test",
+});
 
 // ─── GET all visitors (with search) ──────────────────────
 router.get("/", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
@@ -33,7 +46,7 @@ router.get("/", authenticate, authorize("master", "administradora", "sindico", "
     const visitors = db.prepare(query).all(...params);
     res.json(visitors);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -80,7 +93,7 @@ router.post("/", authenticate, authorize("master", "administradora", "sindico", 
         visitanteNome: nome,
         visitanteDocumento: documento || undefined,
         token,
-      }).catch((err) => console.error("[EMAIL] Erro visitante pendente:", err));
+      }).catch((err) => logger.error("[EMAIL] Erro visitante pendente:", err));
     }
 
     // 📱 WhatsApp: notificar moradores do bloco/apartamento sobre visitante
@@ -96,7 +109,7 @@ router.post("/", authenticate, authorize("master", "administradora", "sindico", 
 
     res.status(201).json(visitor);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -113,7 +126,7 @@ router.get("/auth/:token", (req: Request, res: Response) => {
 
     res.json(visitor);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -145,19 +158,28 @@ router.post("/auth/:token/respond", (req: Request, res: Response) => {
     const updated = db.prepare("SELECT id, nome, documento, foto, bloco, apartamento, status FROM visitors WHERE token = ?").get(req.params.token);
     res.json(updated);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
 
 // ─── SELF-REGISTER visitor (PUBLIC) ──────────────────────
-router.post("/self-register", (req: Request, res: Response) => {
+router.post("/self-register", selfRegisterLimiter, (req: Request, res: Response) => {
   try {
     const { nome, documento, telefone, foto, documento_foto, bloco, apartamento, condominio_id, face_descriptor, observacoes } = req.body;
 
-    if (!nome) {
+    if (!nome || typeof nome !== "string" || nome.trim().length < 2) {
       res.status(400).json({ error: "Nome é obrigatório." });
       return;
+    }
+
+    // Validate condominio_id exists (prevents pollution with bogus IDs)
+    if (condominio_id !== undefined && condominio_id !== null) {
+      const condo = db.prepare("SELECT id FROM condominios WHERE id = ?").get(condominio_id) as { id: number } | undefined;
+      if (!condo) {
+        res.status(400).json({ error: "Condomínio inválido." });
+        return;
+      }
     }
 
     const token = crypto.randomUUID();
@@ -182,7 +204,7 @@ router.post("/self-register", (req: Request, res: Response) => {
 
     res.status(201).json(visitor);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -201,7 +223,7 @@ router.get("/moradores-bloco", authenticate, authorize("master", "administradora
     ).all(String(bloco), condominioId) as { id: number; name: string; unit: string; phone: string | null }[];
     res.json(moradores);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -249,7 +271,7 @@ router.get("/face-descriptors", authenticate, authorize("master", "administrador
       face_descriptor: v.face_descriptor ? JSON.parse(v.face_descriptor) : null,
     })));
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -268,7 +290,7 @@ router.patch("/:id/face-descriptor", authenticate, authorize("master", "administ
     );
     res.json({ ok: true });
   } catch (err: any) {
-    console.error("Erro ao salvar face_descriptor:", err);
+    logger.error("Erro ao salvar face_descriptor:", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -286,7 +308,7 @@ router.get("/pendentes-morador", authenticate, (req: Request, res: Response) => 
     ).all(user.condominio_id, user.block, user.unit);
     res.json(visitors);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -327,7 +349,7 @@ router.post("/:id/responder-morador", authenticate, (req: Request, res: Response
     const updated = db.prepare("SELECT id, nome, documento, foto, bloco, apartamento, status FROM visitors WHERE id = ?").get(req.params.id);
     res.json(updated);
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -338,7 +360,7 @@ router.delete("/:id", authenticate, authorize("master", "administradora", "sindi
     db.prepare("DELETE FROM visitors WHERE id = ? AND condominio_id = ?").run(req.params.id, req.user!.condominio_id);
     res.json({ success: true });
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -379,7 +401,7 @@ router.get("/auth/:token/camera", (req: Request, res: Response) => {
       setor: camera.setor,
     });
   } catch (err: any) {
-    console.error("Erro em visitors :", err);
+    logger.error("Erro em visitors :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });

@@ -2,6 +2,7 @@
 import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import { captureSnapshot, captureSnapshotForCondominio } from "./cameraSnapshot.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.get("/", authenticate, (req: Request, res: Response) => {
 
     res.json(masked);
   } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -68,7 +69,7 @@ router.get("/:id", authenticate, (req: Request, res: Response) => {
       usuario: isAdmin ? camera.usuario : "***",
     });
   } catch (err: any) {
-    console.error("Erro ao buscar câmera:", err);
+    logger.error("Erro ao buscar câmera:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -109,7 +110,7 @@ router.post(
       const camera = db.prepare("SELECT * FROM cameras WHERE id = ?").get(result.lastInsertRowid) as Camera;
       res.status(201).json(camera);
     } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
@@ -159,7 +160,7 @@ router.put(
       const camera = db.prepare("SELECT * FROM cameras WHERE id = ?").get(req.params.id) as Camera;
       res.json(camera);
     } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
@@ -183,7 +184,7 @@ router.delete(
 
       res.json({ message: "Câmera removida com sucesso" });
     } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
@@ -211,7 +212,7 @@ router.patch(
       const camera = db.prepare("SELECT * FROM cameras WHERE id = ?").get(req.params.id) as Camera;
       res.json(camera);
     } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
@@ -245,7 +246,7 @@ router.get(
 
       res.json({ snapshot, camera_nome: camera.nome, captured_at: new Date().toISOString() });
     } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
@@ -266,7 +267,7 @@ router.get(
       }
       res.json({ ...result, captured_at: new Date().toISOString() });
     } catch (err: any) {
-    console.error("Erro em cameras :", err);
+    logger.error("Erro em cameras :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
     }
   }

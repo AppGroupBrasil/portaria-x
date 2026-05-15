@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import { logger } from "./logger.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -692,10 +693,10 @@ export function performBackup(): string | null {
       fs.unlinkSync(path.join(backupDir, file));
     }
 
-    console.log(`[BACKUP] Backup criado: ${backupPath}`);
+    logger.info(`[BACKUP] Backup criado: ${backupPath}`);
     return backupPath;
   } catch (err) {
-    console.error("[BACKUP] Erro ao criar backup:", err);
+    logger.error("[BACKUP] Erro ao criar backup:", err);
     return null;
   }
 }
@@ -709,11 +710,11 @@ export function cleanupDemoAccounts(): number {
         AND created_at < datetime('now', '-30 days')
     `).run();
     if (result.changes > 0) {
-      console.log(`[CLEANUP] ${result.changes} conta(s) demo removida(s) (30+ dias)`);
+      logger.info(`[CLEANUP] ${result.changes} conta(s) demo removida(s) (30+ dias)`);
     }
     return result.changes;
   } catch (err) {
-    console.error("[CLEANUP] Erro ao limpar contas demo:", err);
+    logger.error("[CLEANUP] Erro ao limpar contas demo:", err);
     return 0;
   }
 }
@@ -771,7 +772,7 @@ export function cleanupExpiredAuthorizations(): number {
     }
 
     if (total > 0) {
-      console.log(`[CLEANUP] ${total} autorização(ões) expirada(s)`);
+      logger.info(`[CLEANUP] ${total} autorização(ões) expirada(s)`);
     }
 
     // ── Auto-cancel by time-of-day (vehicle_auto_cancel_time) ──
@@ -802,7 +803,7 @@ export function cleanupExpiredAuthorizations(): number {
           AND data_fim = ?
       `).run(cfg.condominio_id, todayStr);
       if (autoCancelResult.changes > 0) {
-        console.log(`[CLEANUP] Auto-cancel ${autoCancelResult.changes} ve\u00EDculo(s) cond\u00F4minio ${cfg.condominio_id} (hor\u00E1rio ${cfg.value})`);
+        logger.info(`[CLEANUP] Auto-cancel ${autoCancelResult.changes} ve\u00EDculo(s) cond\u00F4minio ${cfg.condominio_id} (hor\u00E1rio ${cfg.value})`);
         total += autoCancelResult.changes;
 
         // Notify moradores via Push (lazy import to avoid circular dep)
@@ -816,13 +817,13 @@ export function cleanupExpiredAuthorizations(): number {
               data: { type: "vehicle_cancelled", vehicleId: String(v.id) },
             }).catch(() => {});
           }
-        }).catch((err) => console.error("[CLEANUP] Erro ao notificar moradores:", err));
+        }).catch((err) => logger.error("[CLEANUP] Erro ao notificar moradores:", err));
       }
     }
 
     return total;
   } catch (err) {
-    console.error("[CLEANUP] Erro ao expirar autorizações:", err);
+    logger.error("[CLEANUP] Erro ao expirar autorizações:", err);
     return 0;
   }
 }
@@ -835,11 +836,11 @@ export function cleanupOldAuditLogs(): number {
       WHERE created_at < datetime('now', '-90 days')
     `).run();
     if (result.changes > 0) {
-      console.log(`[CLEANUP] ${result.changes} log(s) de auditoria removido(s) (90+ dias)`);
+      logger.info(`[CLEANUP] ${result.changes} log(s) de auditoria removido(s) (90+ dias)`);
     }
     return result.changes;
   } catch (err) {
-    console.error("[CLEANUP] Erro ao limpar logs:", err);
+    logger.error("[CLEANUP] Erro ao limpar logs:", err);
     return 0;
   }
 }

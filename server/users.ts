@@ -1,7 +1,8 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import db, { type DbUser } from "./db.js";
-import { authenticate, authorize, condominioScope } from "./middleware.js";
+import { authenticate, authorize } from "./middleware.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -31,7 +32,7 @@ router.post("/administradora", authorize("master"), async (req, res) => {
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const result = db.prepare(
       "INSERT INTO users (name, email, phone, password, role) VALUES (?, ?, ?, ?, 'administradora')"
@@ -45,7 +46,7 @@ router.post("/administradora", authorize("master"), async (req, res) => {
       message: "Administradora cadastrada com sucesso!",
     });
   } catch (err) {
-    console.error("Erro ao cadastrar administradora:", err);
+    logger.error("Erro ao cadastrar administradora:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -60,7 +61,7 @@ router.get("/administradoras", authorize("master"), (_req, res) => {
     ).all();
     res.json(admins);
   } catch (err) {
-    console.error("Erro ao listar administradoras:", err);
+    logger.error("Erro ao listar administradoras:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -79,7 +80,7 @@ router.get("/administradora/:id/sub-usuarios", authorize("master"), (req, res) =
     ).all(parentId);
     res.json(subUsers);
   } catch (err) {
-    console.error("Erro ao listar sub-usuários:", err);
+    logger.error("Erro ao listar sub-usuários:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -115,7 +116,7 @@ router.post("/administradora/:id/sub-usuario", authorize("master"), async (req, 
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const result = db.prepare(
       "INSERT INTO users (name, email, phone, password, role, parent_administradora_id) VALUES (?, ?, ?, ?, 'administradora', ?)"
@@ -130,7 +131,7 @@ router.post("/administradora/:id/sub-usuario", authorize("master"), async (req, 
       message: `Sub-usuário criado para "${parent.name}" com sucesso!`,
     });
   } catch (err) {
-    console.error("Erro ao criar sub-usuário:", err);
+    logger.error("Erro ao criar sub-usuário:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -152,7 +153,7 @@ router.put("/administradora/:id", authorize("master"), async (req, res) => {
 
     if (password) {
       if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
-      const hashed = await bcrypt.hash(password, 10);
+      const hashed = await bcrypt.hash(password, 12);
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, password = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), phone || null, hashed, parseInt(id));
     } else {
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), phone || null, parseInt(id));
@@ -160,7 +161,7 @@ router.put("/administradora/:id", authorize("master"), async (req, res) => {
 
     res.json({ success: true, message: "Administradora atualizada." });
   } catch (err) {
-    console.error("Erro ao atualizar administradora:", err);
+    logger.error("Erro ao atualizar administradora:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -188,7 +189,7 @@ router.delete("/administradora/:id", authorize("master"), (req, res) => {
     db.prepare("DELETE FROM users WHERE id = ?").run(parseInt(id));
     res.json({ success: true, message: user.parent_administradora_id ? "Sub-usuário excluído." : "Administradora excluída." });
   } catch (err) {
-    console.error("Erro ao excluir administradora:", err);
+    logger.error("Erro ao excluir administradora:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -235,7 +236,7 @@ router.post("/sindico", authorize("master", "administradora"), async (req, res) 
       }
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const result = db.prepare(
       "INSERT INTO users (name, email, phone, password, role, condominio_id) VALUES (?, ?, ?, ?, 'sindico', ?)"
@@ -264,7 +265,7 @@ router.post("/sindico", authorize("master", "administradora"), async (req, res) 
       message: "Síndico cadastrado com sucesso!",
     });
   } catch (err) {
-    console.error("Erro ao cadastrar síndico:", err);
+    logger.error("Erro ao cadastrar síndico:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -297,7 +298,7 @@ router.get("/sindicos", authorize("master", "administradora"), (req, res) => {
     }
     res.json(sindicos);
   } catch (err) {
-    console.error("Erro ao listar síndicos:", err);
+    logger.error("Erro ao listar síndicos:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -346,7 +347,7 @@ router.put("/sindico/:id", authorize("master", "administradora"), async (req, re
 
     if (password) {
       if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
-      const hashed = await bcrypt.hash(password, 10);
+      const hashed = await bcrypt.hash(password, 12);
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, password = ?, condominio_id = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), phone || null, hashed, condominioId || null, parseInt(id));
     } else {
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, condominio_id = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), phone || null, condominioId || null, parseInt(id));
@@ -358,7 +359,7 @@ router.put("/sindico/:id", authorize("master", "administradora"), async (req, re
 
     res.json({ success: true, message: "Síndico atualizado." });
   } catch (err) {
-    console.error("Erro ao atualizar síndico:", err);
+    logger.error("Erro ao atualizar síndico:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -395,7 +396,7 @@ router.delete("/sindico/:id", authorize("master", "administradora"), (req, res) 
     db.prepare("DELETE FROM users WHERE id = ?").run(parseInt(id));
     res.json({ success: true, message: "Síndico excluído." });
   } catch (err) {
-    console.error("Erro ao excluir síndico:", err);
+    logger.error("Erro ao excluir síndico:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });

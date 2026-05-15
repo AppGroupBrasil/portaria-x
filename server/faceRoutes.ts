@@ -10,6 +10,7 @@ import { Router, Request, Response } from "express";
 import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import { extractDescriptor, compareFaces, isReady } from "./faceService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -124,7 +125,7 @@ router.post("/compare-visitors", authenticate, authorize("master", "administrado
       descriptor: descriptor, // retorna para o frontend salvar se cadastrar novo
     });
   } catch (err: any) {
-    console.error("[FaceRoutes] Erro em compare-visitors:", err);
+    logger.error("[FaceRoutes] Erro em compare-visitors:", err);
     res.status(500).json({ error: "Erro ao processar reconhecimento facial." });
   }
 });
@@ -183,7 +184,7 @@ router.post("/compare-preauths", authenticate, authorize("master", "administrado
 
     res.json({ matched: false });
   } catch (err: any) {
-    console.error("[FaceRoutes] Erro em compare-preauths:", err);
+    logger.error("[FaceRoutes] Erro em compare-preauths:", err);
     res.status(500).json({ error: "Erro ao processar reconhecimento facial." });
   }
 });
@@ -213,7 +214,7 @@ router.post("/extract", authenticate, authorize("master", "administradora", "sin
 
     res.json({ success: true, descriptor });
   } catch (err: any) {
-    console.error("[FaceRoutes] Erro em extract:", err);
+    logger.error("[FaceRoutes] Erro em extract:", err);
     res.status(500).json({ error: "Erro ao extrair descriptor facial." });
   }
 });
@@ -253,7 +254,7 @@ router.post("/compare-two", authenticate, authorize("master", "administradora", 
 
     res.json({ matched, similarity, distance });
   } catch (err: any) {
-    console.error("[FaceRoutes] Erro em compare-two:", err);
+    logger.error("[FaceRoutes] Erro em compare-two:", err);
     res.status(500).json({ error: "Erro ao comparar fotos." });
   }
 });
@@ -290,7 +291,7 @@ router.post(
 
       res.json({ success: true, message: "Rosto cadastrado com sucesso!" });
     } catch (err: any) {
-      console.error("[FaceRoutes] Erro ao registrar rosto:", err);
+      logger.error("[FaceRoutes] Erro ao registrar rosto:", err);
       res.status(500).json({ error: "Erro ao registrar rosto." });
     }
   }
@@ -349,7 +350,7 @@ router.post(
         distance: result.distance,
       });
     } catch (err: any) {
-      console.error("[FaceRoutes] Erro selfie-auth:", err);
+      logger.error("[FaceRoutes] Erro selfie-auth:", err);
       res.status(500).json({ error: "Erro ao autenticar por selfie." });
     }
   }

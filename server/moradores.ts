@@ -1,8 +1,9 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import db, { type DbUser } from "./db.js";
-import { authenticate, authorize, condominioScope, moradorSelfScope } from "./middleware.js";
+import { authenticate, authorize, condominioScope, moradorSelfScope, resolveAccessibleCondominio } from "./middleware.js";
 import { emailContaCriada } from "./emailService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -44,10 +45,14 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       return;
     }
 
-    // Verificar se o bloco existe no condomínio
-    const condoId = user.condominio_id || (req.body.condominioId ? Number(req.body.condominioId) : null);
+    // Verificar se o bloco existe no condomínio (e se user tem acesso ao condomínio)
+    const condoId = resolveAccessibleCondominio(user, req.body.condominioId);
     if (!condoId) {
-      res.status(400).json({ error: "Selecione um condomínio." });
+      res.status(req.body.condominioId ? 403 : 400).json({
+        error: req.body.condominioId
+          ? "Sem permissão para este condomínio."
+          : "Selecione um condomínio.",
+      });
       return;
     }
     const blockCount = db.prepare("SELECT COUNT(*) as count FROM blocks WHERE condominio_id = ?").get(condoId) as { count: number };
@@ -62,7 +67,7 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const result = db.prepare(
       "INSERT INTO users (name, email, phone, password, role, perfil, unit, block, condominio_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -89,7 +94,7 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       bloco,
       apartamento: unidade.trim(),
       senhaProvisoria: password,
-    }).catch((err) => console.error("[EMAIL] Erro conta criada:", err));
+    }).catch((err) => logger.error("[EMAIL] Erro conta criada:", err));
 
     res.status(201).json({
       id: result.lastInsertRowid,
@@ -101,7 +106,7 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       message: "Morador cadastrado com sucesso!",
     });
   } catch (err: any) {
-    console.error("Erro ao cadastrar morador:", err);
+    logger.error("Erro ao cadastrar morador:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -125,7 +130,7 @@ router.get("/", (req, res) => {
     ).all(...scope.params, ...selfScope.params);
     res.json(moradores);
   } catch (err) {
-    console.error("Erro ao listar moradores:", err);
+    logger.error("Erro ao listar moradores:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -163,7 +168,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
 
     if (password) {
       if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
-      const hashed = await bcrypt.hash(password, 10);
+      const hashed = await bcrypt.hash(password, 12);
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ?, password = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, hashed, id);
     } else {
       db.prepare("UPDATE users SET name = ?, email = ?, phone = ?, perfil = ?, unit = ?, block = ? WHERE id = ?").run(nome.trim(), email.toLowerCase().trim(), whatsapp || null, perfil, unidade.trim(), bloco, id);
@@ -171,7 +176,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
 
     res.json({ success: true, message: "Morador atualizado." });
   } catch (err) {
-    console.error("Erro ao atualizar morador:", err);
+    logger.error("Erro ao atualizar morador:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -195,7 +200,7 @@ router.delete("/:id", authorize("master", "administradora", "sindico"), (req, re
     db.prepare("DELETE FROM users WHERE id = ?").run(id);
     res.json({ success: true, message: "Morador excluído." });
   } catch (err) {
-    console.error("Erro ao excluir morador:", err);
+    logger.error("Erro ao excluir morador:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -204,10 +209,10 @@ router.delete("/:id", authorize("master", "administradora", "sindico"), (req, re
 router.post("/gerar-link", authorize("master", "administradora", "sindico"), (req, res) => {
   try {
     const user = getAuthenticatedUser(req.user);
-    let condoId = user.condominio_id;
-    // Administradora/master may not have condominio_id directly — try from body or query
+    const condoId = resolveAccessibleCondominio(user, req.body.condominio_id);
     if (!condoId && req.body.condominio_id) {
-      condoId = req.body.condominio_id;
+      res.status(403).json({ error: "Sem permissão para este condomínio." });
+      return;
     }
     const token = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
     // Use Referer/Origin header to build frontend URL, or fallback to request host
@@ -216,7 +221,7 @@ router.post("/gerar-link", authorize("master", "administradora", "sindico"), (re
     const link = `${origin}/register/morador?ref=${token}${condoQuery}`;
     res.json({ link, token });
   } catch (err) {
-    console.error("Erro ao gerar link:", err);
+    logger.error("Erro ao gerar link:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -234,7 +239,7 @@ router.get("/pendentes", authorize("master", "administradora", "sindico"), (req,
     ).all(...scope.params);
     res.json(pendentes);
   } catch (err) {
-    console.error("Erro ao listar pendentes:", err);
+    logger.error("Erro ao listar pendentes:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -249,7 +254,7 @@ router.get("/pendentes/count", authorize("master", "administradora", "sindico"),
     ).get(...scope.params) as { count: number };
     res.json({ count: result.count });
   } catch (err) {
-    console.error("Erro ao contar pendentes:", err);
+    logger.error("Erro ao contar pendentes:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -270,7 +275,7 @@ router.put("/:id/aprovar", authorize("master", "administradora", "sindico"), (re
     db.prepare("UPDATE users SET aprovado = 1, updated_at = datetime('now') WHERE id = ?").run(id);
     res.json({ success: true, message: `Cadastro de ${morador.name} aprovado com sucesso!` });
   } catch (err) {
-    console.error("Erro ao aprovar morador:", err);
+    logger.error("Erro ao aprovar morador:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -291,7 +296,7 @@ router.delete("/:id/rejeitar", authorize("master", "administradora", "sindico"),
     db.prepare("DELETE FROM users WHERE id = ?").run(id);
     res.json({ success: true, message: `Cadastro de ${morador.name} rejeitado e removido.` });
   } catch (err) {
-    console.error("Erro ao rejeitar morador:", err);
+    logger.error("Erro ao rejeitar morador:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -314,7 +319,7 @@ router.post("/importar", authorize("master", "administradora", "sindico"), async
         return;
       }
     }
-    const defaultPassword = await bcrypt.hash("1234", 10); // Senha padrão para importação
+    const defaultPassword = await bcrypt.hash("1234", 12); // Senha padrão para importação
     let imported = 0;
     let errors = 0;
 
@@ -357,7 +362,7 @@ router.post("/importar", authorize("master", "administradora", "sindico"), async
       message: `${imported} morador(es) importado(s)${importErrorsMessage}.`,
     });
   } catch (err) {
-    console.error("Erro ao importar moradores:", err);
+    logger.error("Erro ao importar moradores:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });

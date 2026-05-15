@@ -10,6 +10,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import db from "./db.js";
+import { logger } from "./logger.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,17 +20,15 @@ let firebaseInitialized = false;
 function initFirebase() {
   if (firebaseInitialized) return;
 
-  const serviceAccountPath = path.join(__dirname, "..", "server", "firebase-service-account.json");
-  // In production (Docker), try /app/server/
-  const altPath = path.join(__dirname, "firebase-service-account.json");
+  const candidates = [
+    process.env.FIREBASE_CREDENTIALS_PATH,
+    path.join(__dirname, "..", "server", "firebase-service-account.json"),
+    path.join(__dirname, "firebase-service-account.json"),
+  ].filter((p): p is string => !!p);
 
-  let credentialPath = "";
-  if (fs.existsSync(serviceAccountPath)) {
-    credentialPath = serviceAccountPath;
-  } else if (fs.existsSync(altPath)) {
-    credentialPath = altPath;
-  } else {
-    console.warn("⚠️  Firebase service account not found. Push notifications disabled.");
+  const credentialPath = candidates.find(p => fs.existsSync(p));
+  if (!credentialPath) {
+    logger.warn("⚠️  Firebase service account not found. Push notifications disabled.");
     return;
   }
 
@@ -39,9 +38,9 @@ function initFirebase() {
       credential: admin.credential.cert(serviceAccount),
     });
     firebaseInitialized = true;
-    console.log("  🔔 Firebase Admin SDK initialized (push ready)");
+    logger.info("  🔔 Firebase Admin SDK initialized (push ready)");
   } catch (err) {
-    console.error("Firebase init error:", err);
+    logger.error("Firebase init error:", err);
   }
 }
 
@@ -146,7 +145,7 @@ async function sendPushToTokens(tokens: string[], payload: PushPayload): Promise
 
     return response.successCount;
   } catch (err) {
-    console.error("FCM send error:", err);
+    logger.error("FCM send error:", err);
     return 0;
   }
 }

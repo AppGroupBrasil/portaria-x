@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import db from "./db.js";
 import { authenticate, authorize, getAccessibleCondominioIds } from "./middleware.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -152,7 +153,7 @@ export function applyDefaultConfig(targetCondominioId: number): void {
     });
     tx();
   } catch (err) {
-    console.error(`[CONFIG] Erro ao aplicar config padrão ao condomínio ${targetCondominioId}:`, err);
+    logger.error(`[CONFIG] Erro ao aplicar config padrão ao condomínio ${targetCondominioId}:`, err);
   }
 }
 
@@ -180,7 +181,7 @@ router.get("/public", (req: Request, res: Response) => {
     }
     res.json(config);
   } catch (err: any) {
-    console.error("Erro ao buscar config pública:", err);
+    logger.error("Erro ao buscar config pública:", err);
     res.status(500).json({ error: "Erro interno" });
   }
 });
@@ -222,7 +223,7 @@ router.get("/", authenticate, (req: Request, res: Response) => {
 
     res.json(config);
   } catch (err: any) {
-    console.error("Erro ao buscar config:", err);
+    logger.error("Erro ao buscar config:", err);
     res.status(500).json({ error: "Erro ao buscar configuração" });
   }
 });
@@ -231,7 +232,7 @@ router.get("/", authenticate, (req: Request, res: Response) => {
 router.put(
   "/",
   authenticate,
-  authorize("master", "administradora", "sindico", "funcionario"),
+  authorize("master", "administradora", "sindico"),
   (req: Request, res: Response) => {
     try {
       const condominioIds = getUserCondominioIds(req.user);
@@ -278,7 +279,7 @@ router.put(
 
       res.json(config);
     } catch (err: any) {
-      console.error("Erro ao atualizar config:", err);
+      logger.error("Erro ao atualizar config:", err);
       res.status(500).json({ error: "Erro ao atualizar configuração" });
     }
   }

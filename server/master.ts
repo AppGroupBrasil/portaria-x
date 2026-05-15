@@ -1,14 +1,25 @@
 import { Router } from "express";
-import db, { type DbUser, type DbCondominio } from "./db.js";
-import { authenticate, authorize } from "./middleware.js";
+import db, { type DbUser } from "./db.js";
+import { authenticate, authorize, resolveAccessibleCondominio } from "./middleware.js";
 import bcrypt from "bcryptjs";
 import { emailCondominioBloqueado, emailCondominioDesbloqueado } from "./emailService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
 // All master routes require authentication + master or administradora role
 router.use(authenticate);
 router.use(authorize("master", "administradora"));
+
+// ─── TENANT GUARD ─────────────────────────────────────────
+// Administradora must only operate on condominios under her administration.
+// Master bypasses (full access).
+function ensureCondoAccess(req: any, res: any, condoId: number): boolean {
+  if (req.user.role === "master") return true;
+  if (resolveAccessibleCondominio(req.user, condoId) === condoId) return true;
+  res.status(403).json({ error: "Sem permissão para este condomínio." });
+  return false;
+}
 
 // ─── AUDIT LOG HELPER ────────────────────────────────────
 function logAction(userId: number, action: string, entityType: string, entityId: number | null, details: string) {
@@ -66,7 +77,7 @@ router.get("/stats", (req, res) => {
       recentUsers,
     });
   } catch (err) {
-    console.error("Erro ao buscar estatísticas:", err);
+    logger.error("Erro ao buscar estatísticas:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -154,7 +165,7 @@ router.get("/condominios-dashboard", (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Erro ao buscar dashboard de condomínios:", err);
+    logger.error("Erro ao buscar dashboard de condomínios:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -176,6 +187,8 @@ router.put("/condominios/:id/status-pagamento", (req, res) => {
       return;
     }
 
+    if (!ensureCondoAccess(req, res, condo.id)) return;
+
     db.prepare("UPDATE condominios SET status_pagamento = ?, updated_at = datetime('now') WHERE id = ?")
       .run(status_pagamento, parseInt(id));
 
@@ -184,7 +197,7 @@ router.put("/condominios/:id/status-pagamento", (req, res) => {
 
     res.json({ success: true, message: `Status alterado para ${status_pagamento}.` });
   } catch (err) {
-    console.error("Erro ao atualizar status de pagamento:", err);
+    logger.error("Erro ao atualizar status de pagamento:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -201,6 +214,8 @@ router.put("/condominios/:id/bloquear", (req, res) => {
       return;
     }
 
+    if (!ensureCondoAccess(req, res, condo.id)) return;
+
     if (bloqueado) {
       db.prepare(`
         UPDATE condominios 
@@ -216,7 +231,7 @@ router.put("/condominios/:id/bloquear", (req, res) => {
         condominioId: parseInt(id),
         condominioNome: condo.name,
         motivo: motivo || "Inadimplência",
-      }).catch((err) => console.error("[EMAIL] Erro condomínio bloqueado:", err));
+      }).catch((err) => logger.error("[EMAIL] Erro condomínio bloqueado:", err));
     } else {
       db.prepare(`
         UPDATE condominios 
@@ -231,7 +246,7 @@ router.put("/condominios/:id/bloquear", (req, res) => {
       emailCondominioDesbloqueado({
         condominioId: parseInt(id),
         condominioNome: condo.name,
-      }).catch((err) => console.error("[EMAIL] Erro condomínio desbloqueado:", err));
+      }).catch((err) => logger.error("[EMAIL] Erro condomínio desbloqueado:", err));
     }
 
     res.json({
@@ -239,7 +254,7 @@ router.put("/condominios/:id/bloquear", (req, res) => {
       message: bloqueado ? `Condomínio "${condo.name}" bloqueado.` : `Condomínio "${condo.name}" desbloqueado.`,
     });
   } catch (err) {
-    console.error("Erro ao bloquear/desbloquear condomínio:", err);
+    logger.error("Erro ao bloquear/desbloquear condomínio:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -313,7 +328,7 @@ router.get("/users", (req, res) => {
 
     res.json({ users, total: total.count, page: parseInt(page as string), limit: parseInt(limit as string) });
   } catch (err) {
-    console.error("Erro ao listar usuários:", err);
+    logger.error("Erro ao listar usuários:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -350,6 +365,13 @@ router.put("/users/:id", async (req, res) => {
       return;
     }
 
+    // Administradora must only edit users inside her condominios.
+    // Also: cannot move a user to a condominio she doesn't own.
+    if (req.user!.role === "administradora") {
+      if (user.condominio_id && !ensureCondoAccess(req, res, user.condominio_id)) return;
+      if (condominio_id && !ensureCondoAccess(req, res, Number(condominio_id))) return;
+    }
+
     const updates: string[] = [];
     const params: any[] = [];
 
@@ -362,7 +384,7 @@ router.put("/users/:id", async (req, res) => {
     if (block !== undefined) { updates.push("block = ?"); params.push(block?.trim() || null); }
     if (condominio_id !== undefined) { updates.push("condominio_id = ?"); params.push(condominio_id || null); }
     if (password) {
-      const hash = await bcrypt.hash(password, 10);
+      const hash = await bcrypt.hash(password, 12);
       updates.push("password = ?");
       params.push(hash);
     }
@@ -385,7 +407,7 @@ router.put("/users/:id", async (req, res) => {
       res.status(409).json({ error: "Email já cadastrado." });
       return;
     }
-    console.error("Erro ao editar usuário:", err);
+    logger.error("Erro ao editar usuário:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -401,7 +423,7 @@ router.delete("/users/:id", (req, res) => {
       return;
     }
 
-    const user = db.prepare("SELECT id, name, email, role FROM users WHERE id = ?").get(userId) as DbUser | undefined;
+    const user = db.prepare("SELECT id, name, email, role, condominio_id FROM users WHERE id = ?").get(userId) as DbUser | undefined;
     if (!user) {
       res.status(404).json({ error: "Usuário não encontrado." });
       return;
@@ -419,13 +441,18 @@ router.delete("/users/:id", (req, res) => {
       return;
     }
 
+    // Administradora must only delete users inside her condominios.
+    if (req.user!.role === "administradora" && user.condominio_id) {
+      if (!ensureCondoAccess(req, res, user.condominio_id)) return;
+    }
+
     db.prepare("DELETE FROM users WHERE id = ?").run(userId);
 
     logAction(req.user!.id, "DELETE_USER", "user", userId, `Excluiu usuário "${user.name}" (${user.email}) role=${user.role}`);
 
     res.json({ success: true, message: `Usuário "${user.name}" excluído.` });
   } catch (err) {
-    console.error("Erro ao excluir usuário:", err);
+    logger.error("Erro ao excluir usuário:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -439,7 +466,7 @@ router.get("/config", (req, res) => {
     const configs = db.prepare("SELECT * FROM system_config ORDER BY key ASC").all();
     res.json(configs);
   } catch (err) {
-    console.error("Erro ao buscar configurações:", err);
+    logger.error("Erro ao buscar configurações:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -472,7 +499,7 @@ router.put("/config", (req, res) => {
 
     res.json({ success: true, message: "Configurações salvas." });
   } catch (err) {
-    console.error("Erro ao salvar configurações:", err);
+    logger.error("Erro ao salvar configurações:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -513,7 +540,7 @@ router.get("/logs", (req, res) => {
 
     res.json({ logs, total: total.count, page: parseInt(page as string), limit: parseInt(limit as string) });
   } catch (err) {
-    console.error("Erro ao buscar logs:", err);
+    logger.error("Erro ao buscar logs:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });

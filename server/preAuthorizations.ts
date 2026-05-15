@@ -3,6 +3,7 @@ import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import crypto from "crypto";
 import { notifyPortariaWhatsApp, notifyUserWhatsApp } from "./whatsappService.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -40,7 +41,7 @@ router.get("/", authenticate, (req: Request, res: Response) => {
     const results = db.prepare(query).all(...params);
     res.json(results);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -112,7 +113,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
 
     res.status(201).json(auth);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -176,7 +177,7 @@ router.put("/:id", authenticate, (req: Request, res: Response) => {
     const updated = db.prepare("SELECT * FROM pre_authorizations WHERE id = ?").get(req.params.id);
     res.json(updated);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -195,7 +196,7 @@ router.get("/auto-cadastro/:token", (req: Request, res: Response) => {
 
     res.json(auth);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -241,7 +242,7 @@ router.post("/auto-cadastro/:token", (req: Request, res: Response) => {
 
     res.json(updated);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -284,7 +285,7 @@ router.post("/:id/confirmar-entrada", authenticate, authorize("master", "adminis
 
     res.json(updated);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -309,7 +310,7 @@ router.delete("/:id", authenticate, (req: Request, res: Response) => {
     db.prepare("UPDATE pre_authorizations SET status = 'cancelada' WHERE id = ?").run(req.params.id);
     res.json({ success: true });
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
@@ -333,7 +334,7 @@ router.get("/face-descriptors", authenticate, authorize("master", "administrador
 
     res.json(parsed);
   } catch (err: any) {
-    console.error("Erro em preAuthorizations :", err);
+    logger.error("Erro em preAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });

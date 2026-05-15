@@ -1,6 +1,7 @@
 import { Router } from "express";
 import db from "./db.js";
 import { authenticate, authorize, condominioScope } from "./middleware.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -43,7 +44,7 @@ router.get("/public", (req, res) => {
 
     res.json(result);
   } catch (err) {
-    console.error("Erro ao listar blocos (public):", err);
+    logger.error("Erro ao listar blocos (public):", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -100,7 +101,7 @@ router.post("/automatico", authorize("master", "administradora", "sindico"), asy
       message: `${created.length} bloco(s) criado(s)${duplicates.length > 0 ? `, ${duplicates.length} já existiam` : ""}.`,
     });
   } catch (err: any) {
-    console.error("Erro ao cadastrar blocos:", err);
+    logger.error("Erro ao cadastrar blocos:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -151,7 +152,7 @@ router.post("/personalizado", authorize("master", "administradora", "sindico"), 
       message: `${created.length} bloco(s) criado(s)${duplicates.length > 0 ? `, ${duplicates.length} já existiam` : ""}.`,
     });
   } catch (err: any) {
-    console.error("Erro ao cadastrar blocos:", err);
+    logger.error("Erro ao cadastrar blocos:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -176,7 +177,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), (req, res) 
     db.prepare("UPDATE blocks SET name = ? WHERE id = ?").run(name.trim(), parseInt(id));
     res.json({ success: true, message: "Bloco renomeado." });
   } catch (err) {
-    console.error("Erro ao renomear bloco:", err);
+    logger.error("Erro ao renomear bloco:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -195,7 +196,7 @@ router.delete("/:id", authorize("master", "administradora", "sindico"), (req, re
     db.prepare("DELETE FROM blocks WHERE id = ?").run(parseInt(id));
     res.json({ success: true, message: "Bloco excluído." });
   } catch (err) {
-    console.error("Erro ao excluir bloco:", err);
+    logger.error("Erro ao excluir bloco:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -209,7 +210,7 @@ router.get("/", (req, res) => {
     ).all(...scope.params);
     res.json(blocos);
   } catch (err) {
-    console.error("Erro ao listar blocos:", err);
+    logger.error("Erro ao listar blocos:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });

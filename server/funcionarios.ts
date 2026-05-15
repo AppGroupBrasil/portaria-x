@@ -2,6 +2,7 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import db from "./db.js";
 import { authenticate, authorize, condominioScope } from "./middleware.js";
+import { logger } from "./logger.js";
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
     const condoId = req.user!.condominio_id || null;
 
     const result = db.prepare(
@@ -58,7 +59,7 @@ router.post("/", authorize("master", "administradora", "sindico"), async (req, r
       message: "Funcionário cadastrado com sucesso!",
     });
   } catch (err: any) {
-    console.error("Erro ao cadastrar funcionário:", err);
+    logger.error("Erro ao cadastrar funcionário:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -110,7 +111,7 @@ router.get("/", (req, res) => {
 
     res.json(funcionarios);
   } catch (err) {
-    console.error("Erro ao listar funcionários:", err);
+    logger.error("Erro ao listar funcionários:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -139,7 +140,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
 
     if (password) {
       if (!/^\d{6}$/.test(password)) { res.status(400).json({ error: "Senha deve ter exatamente 6 dígitos." }); return; }
-      const hashed = await bcrypt.hash(password, 10);
+      const hashed = await bcrypt.hash(password, 12);
       db.prepare("UPDATE funcionarios SET nome = ?, sobrenome = ?, cargo = ?, login = ?, password = ? WHERE id = ?").run(nome.trim(), sobrenome.trim(), cargo, login, hashed, parseInt(id));
     } else {
       db.prepare("UPDATE funcionarios SET nome = ?, sobrenome = ?, cargo = ?, login = ? WHERE id = ?").run(nome.trim(), sobrenome.trim(), cargo, login, parseInt(id));
@@ -147,7 +148,7 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
 
     res.json({ success: true, message: "Funcionário atualizado." });
   } catch (err) {
-    console.error("Erro ao atualizar funcionário:", err);
+    logger.error("Erro ao atualizar funcionário:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });
@@ -170,7 +171,7 @@ router.delete("/:id", authorize("master", "administradora", "sindico"), (req, re
     db.prepare("DELETE FROM funcionarios WHERE id = ?").run(parseInt(id));
     res.json({ success: true, message: "Funcionário excluído." });
   } catch (err) {
-    console.error("Erro ao excluir funcionário:", err);
+    logger.error("Erro ao excluir funcionário:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
   }
 });

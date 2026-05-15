@@ -31,8 +31,8 @@ import jwt from "jsonwebtoken";
 import db, { type DbUser } from "./db.js";
 import { sendPushToPortaria } from "./pushService.js";
 import { pulseDevice } from "./ewelinkService.js";
-
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production-32chars!!";
+import { JWT_SECRET } from "./jwtSecret.js";
+import { logger } from "./logger.js";
 const COOKIE_NAME = "session_token";
 
 interface ArrivalWsClient {
@@ -143,11 +143,11 @@ export function initArrivalWebSocket(server?: Server) {
   const wss = new WebSocketServer({ server: wsServer, path: "/ws/estou-chegando", perMessageDeflate: false });
 
   if (server) {
-    console.log("  \u{1F4CD} Estou Chegando WebSocket mounted on main server at /ws/estou-chegando");
+    logger.info("  \u{1F4CD} Estou Chegando WebSocket mounted on main server at /ws/estou-chegando");
   } else {
     const WS_PORT = Number.parseInt(process.env.WS_ARRIVAL_PORT || "3003");
     standaloneWsServer.listen(WS_PORT, "0.0.0.0", () => {
-      console.log(`  \u{1F4CD} Estou Chegando WebSocket ready at ${hasCerts ? 'wss' : 'ws'}://0.0.0.0:${WS_PORT}/ws/estou-chegando`);
+      logger.info(`  \u{1F4CD} Estou Chegando WebSocket ready at ${hasCerts ? 'wss' : 'ws'}://0.0.0.0:${WS_PORT}/ws/estou-chegando`);
     });
   }
 
@@ -350,7 +350,7 @@ export function initArrivalWebSocket(server?: Server) {
                 ).get(client.userId, `-${AUTO_GATE_COOLDOWN_MINUTES} minutes`) as { id: number; gate_auto_opened_at: string } | undefined;
 
                 if (recentAutoOpen) {
-                  console.log(`  [Estou Chegando] Auto-open skipped for ${authUser.name}: cooldown active (${recentAutoOpen.gate_auto_opened_at})`);
+                  logger.info(`  [Estou Chegando] Auto-open skipped for ${authUser.name}: cooldown active (${recentAutoOpen.gate_auto_opened_at})`);
                   break;
                 }
 
@@ -386,7 +386,7 @@ export function initArrivalWebSocket(server?: Server) {
                   if (creds.appId && creds.email) {
                     const duration = ap.pulse_duration || 1000;
                     const openResult = await pulseDevice(client.condominioId!, creds, ap.device_id, duration, ap.channel);
-                    console.log(`  [Estou Chegando] Auto-open gate for ${authUser.name}: ${ap.name} → ${openResult.success ? 'OK' : openResult.error}`);
+                    logger.info(`  [Estou Chegando] Auto-open gate for ${authUser.name}: ${ap.name} → ${openResult.success ? 'OK' : openResult.error}`);
 
                     if (openResult.success) {
                       db.prepare(
@@ -410,7 +410,7 @@ export function initArrivalWebSocket(server?: Server) {
                   }
                 }
               } catch (gateErr) {
-                console.error("[Estou Chegando] Auto-open gate error:", gateErr);
+                logger.error("[Estou Chegando] Auto-open gate error:", gateErr);
               }
             }
             break;
@@ -461,7 +461,7 @@ export function initArrivalWebSocket(server?: Server) {
           }
         }
       } catch (err) {
-        console.error("[WS Estou Chegando] Error:", err);
+        logger.error("[WS Estou Chegando] Error:", err);
       }
     });
 
@@ -494,5 +494,5 @@ export function initArrivalWebSocket(server?: Server) {
     });
   });
 
-  console.log("  📍 Estou Chegando WebSocket connections active");
+  logger.info("  📍 Estou Chegando WebSocket connections active");
 }

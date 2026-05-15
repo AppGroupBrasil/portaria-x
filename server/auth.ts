@@ -6,9 +6,10 @@ import { authenticate } from "./middleware.js";
 import { emailBoasVindasMorador, emailBoasVindasSindico, emailSenhaAlterada } from "./emailService.js";
 import { applyDefaultConfig } from "./condominioConfig.js";
 import { ERROR_CODES, sendError } from "./errorCodes.js";
+import { JWT_SECRET } from "./jwtSecret.js";
+import { logger } from "./logger.js";
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production-32chars!!";
 const COOKIE_NAME = "session_token";
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
@@ -172,7 +173,7 @@ function ensureDemoData() {
 try {
   ensureDemoData();
 } catch (e) {
-  console.warn("Demo data initialization failed:", e);
+  logger.warn("Demo data initialization failed:", e);
 }
 
 const DEMO_EMAILS: Record<string, string> = {
@@ -202,7 +203,7 @@ router.post("/demo", (req, res) => {
     setCookie(res, token);
     res.json({ user: sanitizeUser(user), token, demo: true });
   } catch (err: any) {
-    console.error("Erro ao iniciar demonstração:", err);
+    logger.error("Erro ao iniciar demonstração:", err);
     sendError(res, 500, ERROR_CODES.DEMO_START_FAILED, "Erro interno ao iniciar demonstração.");
   }
 });
@@ -241,7 +242,7 @@ router.get("/condominio/search", (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Condominio search error:", err);
+    logger.error("Condominio search error:", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
@@ -321,7 +322,7 @@ router.post("/register/morador", async (req, res) => {
       condominioNome: condoName,
       bloco: block?.trim() || undefined,
       apartamento: unit?.trim() || undefined,
-    }).catch((err) => console.error("[EMAIL] Erro boas-vindas morador:", err));
+    }).catch((err) => logger.error("[EMAIL] Erro boas-vindas morador:", err));
 
     if (needsApproval) {
       // Don't auto-login — return a pending message
@@ -337,7 +338,7 @@ router.post("/register/morador", async (req, res) => {
     setCookie(res, token);
     res.json({ user: sanitizeUser(user), token });
   } catch (err) {
-    console.error("Register morador error:", err);
+    logger.error("Register morador error:", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
@@ -414,14 +415,14 @@ router.post("/register/condominio", async (req, res) => {
       email: email.toLowerCase().trim(),
       nome: adminName.trim(),
       condominioNome: condominioName.trim(),
-    }).catch((err) => console.error("[EMAIL] Erro boas-vindas síndico:", err));
+    }).catch((err) => logger.error("[EMAIL] Erro boas-vindas síndico:", err));
 
     res.json({
       user: sanitizeUser(user),
       token,
     });
   } catch (err) {
-    console.error("Register condominio error:", err);
+    logger.error("Register condominio error:", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
@@ -584,7 +585,7 @@ router.post("/login", async (req, res) => {
 
     res.json({ user: sanitizeUser(user), token });
   } catch (err) {
-    console.error("Login error:", err);
+    logger.error("Login error:", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor.");
   }
 });
@@ -611,7 +612,7 @@ router.get("/me", (req, res) => {
     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(decoded.userId) as DbUser | undefined;
 
     if (!user) {
-      res.clearCookie(COOKIE_NAME);
+      res.clearCookie(COOKIE_NAME, { path: "/" });
       sendError(res, 401, ERROR_CODES.AUTH_USER_NOT_FOUND, "Usuário não encontrado.");
       return;
     }
@@ -657,7 +658,7 @@ router.put("/account", authenticate, async (req, res) => {
     const updated = db.prepare("SELECT * FROM users WHERE id = ?").get(user.id) as DbUser;
     res.json({ user: sanitizeUser(updated), message: "Dados atualizados com sucesso." });
   } catch (err: any) {
-    console.error("Erro em auth :", err);
+    logger.error("Erro em auth :", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor");
   }
 });
@@ -684,7 +685,7 @@ router.put("/account/password", authenticate, async (req, res) => {
       return;
     }
 
-    const hash = await bcrypt.hash(newPassword, 10);
+    const hash = await bcrypt.hash(newPassword, 12);
     db.prepare("UPDATE users SET password = ? WHERE id = ?").run(hash, user.id);
 
     // 📧 Email: password changed notification
@@ -692,12 +693,12 @@ router.put("/account/password", authenticate, async (req, res) => {
       emailSenhaAlterada({
         email: user.email,
         nome: user.name,
-      }).catch((err) => console.error("[EMAIL] Erro senha alterada:", err));
+      }).catch((err) => logger.error("[EMAIL] Erro senha alterada:", err));
     }
 
     res.json({ message: "Senha alterada com sucesso." });
   } catch (err: any) {
-    console.error("Erro em auth :", err);
+    logger.error("Erro em auth :", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor");
   }
 });
@@ -719,7 +720,7 @@ router.delete("/account", authenticate, (req, res) => {
     res.clearCookie(COOKIE_NAME, { path: "/" });
     res.json({ message: "Conta excluída com sucesso." });
   } catch (err: any) {
-    console.error("Erro em auth :", err);
+    logger.error("Erro em auth :", err);
     sendError(res, 500, ERROR_CODES.SERVER_INTERNAL_ERROR, "Erro interno do servidor");
   }
 });
