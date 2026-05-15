@@ -357,7 +357,11 @@ router.post("/:id/responder-morador", authenticate, (req: Request, res: Response
 // ─── DELETE visitor ──────────────────────────────────────
 router.delete("/:id", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
-    db.prepare("DELETE FROM visitors WHERE id = ? AND condominio_id = ?").run(req.params.id, req.user!.condominio_id);
+    const result = db.prepare("DELETE FROM visitors WHERE id = ? AND condominio_id = ?").run(req.params.id, req.user!.condominio_id);
+    if (result.changes === 0) {
+      res.status(404).json({ error: "Visitante não encontrado." });
+      return;
+    }
     res.json({ success: true });
   } catch (err: any) {
     logger.error("Erro em visitors :", err);

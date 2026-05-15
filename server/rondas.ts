@@ -101,9 +101,13 @@ router.put("/checkpoints/:id", authenticate, authorize("master", "administradora
 // DELETE checkpoint
 router.delete("/checkpoints/:id", authenticate, authorize("master", "administradora", "sindico"), (req: Request, res: Response) => {
   try {
-    db.prepare(
+    const result = db.prepare(
       "DELETE FROM ronda_checkpoints WHERE id = ? AND condominio_id = ?"
     ).run(req.params.id, req.user!.condominio_id);
+    if (result.changes === 0) {
+      res.status(404).json({ error: "Checkpoint não encontrado." });
+      return;
+    }
     res.json({ success: true });
   } catch (err: any) {
     logger.error("Erro em rondas :", err);
@@ -177,9 +181,13 @@ router.put("/schedules/:id", authenticate, authorize("master", "administradora",
 // DELETE schedule
 router.delete("/schedules/:id", authenticate, authorize("master", "administradora", "sindico"), (req: Request, res: Response) => {
   try {
-    db.prepare(
+    const result = db.prepare(
       "DELETE FROM ronda_schedules WHERE id = ? AND condominio_id = ?"
     ).run(req.params.id, req.user!.condominio_id);
+    if (result.changes === 0) {
+      res.status(404).json({ error: "Schedule não encontrado." });
+      return;
+    }
     res.json({ success: true });
   } catch (err: any) {
     logger.error("Erro em rondas :", err);
