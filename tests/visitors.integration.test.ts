@@ -77,13 +77,13 @@ describe("visitors CRUD + tenant isolation", () => {
     expect(res.status).toBe(403);
   });
 
-  it("DELETE visitor de outro condomínio → 200 mas não remove (filtra por condominio_id)", async () => {
+  it("DELETE visitor de outro condomínio → 404 e não remove", async () => {
     const agent = await login("vis.porteiro.a@test.local");
     const res = await agent.delete(`/api/visitors/${visitorInCondoBId}`);
-    // mesmo se 200, a query DELETE inclui AND condominio_id = ? — não afeta condo B
+    expect(res.status).toBe(404);
+
     const row = db.prepare("SELECT id FROM visitors WHERE id = ?").get(visitorInCondoBId);
     expect(row).toBeTruthy();
-    expect([200, 404]).toContain(res.status);
   });
 
   it("GET /visitors/auth/:token (público) retorna 404 para token inválido", async () => {
