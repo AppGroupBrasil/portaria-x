@@ -15,7 +15,7 @@ import {
   Search,
   Camera,
   X,
-  Send,
+
   QrCode,
   Link2,
   ChevronDown,
@@ -34,7 +34,7 @@ import {
   Building,
   Calendar,
   User,
-  Fingerprint,
+
   MessageSquare,
 } from "lucide-react";
 import { APP_ORIGIN } from "@/lib/config";

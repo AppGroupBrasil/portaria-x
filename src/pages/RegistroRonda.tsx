@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import ReportModal from "@/components/ReportModal";
@@ -12,19 +12,16 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  Camera,
+
   X,
   Bell,
   BellOff,
-  Volume2,
+
   FileText,
-  ChevronDown,
-  Loader2,
-  Send,
-  AlertTriangle,
+
   MessageSquare,
   Mic,
-  MicOff,
+
   Plus,
   Trash2,
   Play,
@@ -34,6 +31,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogAlert } from "@/lib/dialog";
 
 const API = "/api";
 
@@ -429,7 +427,7 @@ export default function RegistroRonda() {
         });
       }, 1000);
     } catch {
-      alert("Não foi possível acessar o microfone.");
+      void dialogAlert("Não foi possível acessar o microfone.");
     }
   };
 
@@ -501,7 +499,7 @@ export default function RegistroRonda() {
       };
       gerarRelatorioRondas(regs, stats, dateFrom, dateTo, user?.condominio_nome);
     } catch {
-      alert("Erro ao gerar relatório.");
+      void dialogAlert("Erro ao gerar relatório.");
     }
   };
 

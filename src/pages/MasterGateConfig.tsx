@@ -22,6 +22,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { dialogAlert } from "@/lib/dialog";
 
 interface DeviceInfo {
   deviceId: string;
@@ -188,10 +189,10 @@ export default function MasterGateConfig() {
         setTimeout(() => setSaved(false), 3000);
       } else {
         const data = await res.json();
-        alert(data.error || "Erro ao salvar.");
+        void dialogAlert(data.error || "Erro ao salvar.");
       }
     } catch (err: any) {
-      alert(err.message);
+      void dialogAlert(err.message);
     }
     setSaving(false);
   }
@@ -245,10 +246,10 @@ export default function MasterGateConfig() {
         if (aRes.ok) setAssignments(await aRes.json());
       } else {
         const data = await res.json();
-        alert(data.error || "Erro ao atribuir.");
+        void dialogAlert(data.error || "Erro ao atribuir.");
       }
     } catch (err: any) {
-      alert(err.message);
+      void dialogAlert(err.message);
     }
     setAssigning(false);
   }

@@ -11,10 +11,11 @@ import {
   X,
   Shield,
   Building2,
-  Filter,
+
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 const API = "/api";
 
@@ -52,7 +53,7 @@ const ALL_ASSIGNABLE_ROLES = [
 ];
 
 export default function MasterUsuarios() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const { user: currentUser, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
@@ -181,10 +182,10 @@ export default function MasterUsuarios() {
 
   async function handleDelete(u: User) {
     if (u.id === currentUser?.id) {
-      alert("Você não pode excluir seu próprio usuário.");
+      void dialogAlert("Você não pode excluir seu próprio usuário.");
       return;
     }
-    if (!confirm(`Excluir "${u.name}" (${u.email})?`)) return;
+    if (!await dialogConfirm(`Excluir "${u.name}" (${u.email})?`)) return;
     try {
       const res = await apiFetch(`${API}/master/users/${u.id}`, {
         method: "DELETE",
@@ -193,7 +194,7 @@ export default function MasterUsuarios() {
       if (!res.ok) throw new Error(data.error);
       fetchUsers();
     } catch (err: any) {
-      alert(err.message || "Erro ao excluir.");
+      void dialogAlert(err.message || "Erro ao excluir.");
     }
   }
 

@@ -9,9 +9,9 @@ import {
   DoorOpen,
   Clock,
   Search,
-  Mail,
+
   ShieldCheck,
-  Camera,
+
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -58,7 +58,7 @@ const tipoAcessoStyle: Record<string, { bg: string; text: string }> = {
 };
 
 export default function EspelhoPortaria() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>("correspondencias");
   const [search, setSearch] = useState("");

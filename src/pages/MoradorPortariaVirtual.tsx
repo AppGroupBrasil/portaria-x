@@ -22,13 +22,14 @@ import {
   HelpCircle,
   ScanFace,
   Fingerprint,
-  LockOpen,
+
   ToggleRight,
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import SelfieCaptureModal from "@/components/SelfieCaptureModal";
 import PlateReader from "@/components/PlateReader";
+import { dialogAlert } from "@/lib/dialog";
 
 // ─── Icon mapping ─────────────────────────────────────────
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -74,7 +75,7 @@ type ActionState = "idle" | "loading" | "success" | "error";
 
 export default function MoradorPortariaVirtual() {
   const { user } = useAuth();
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const [accessPoints, setAccessPoints] = useState<AccessPoint[]>([]);
@@ -329,10 +330,10 @@ export default function MoradorPortariaVirtual() {
         setFaceRegistered(true);
         setRegisterModalOpen(false);
       } else {
-        alert(data.error || "Falha ao registrar rosto. Tente novamente.");
+        void dialogAlert(data.error || "Falha ao registrar rosto. Tente novamente.");
       }
     } catch {
-      alert("Erro de conexão ao registrar rosto.");
+      void dialogAlert("Erro de conexão ao registrar rosto.");
     } finally {
       setRegisterLoading(false);
     }

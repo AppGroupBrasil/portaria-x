@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogConfirm } from "@/lib/dialog";
 
 interface MetodoItem {
   id: string;
@@ -188,7 +189,7 @@ export default function CadastroMoradores() {
   };
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`Excluir morador "${name}"?`)) return;
+    if (!await dialogConfirm(`Excluir morador "${name}"?`)) return;
     try {
       const res = await apiFetch(`/api/moradores/${id}`, { method: "DELETE" });
       const data = await res.json();

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { apiFetch } from "@/lib/api";
 
 const API = "/api/correspondencias";
 
@@ -30,7 +31,7 @@ interface Correspondencia {
 }
 
 export default function MoradorCorrespondencias() {
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ export default function MoradorCorrespondencias() {
   const fetchCorrespondencias = async () => {
     try {
       const url = filter !== "todas" ? `${API}?status=${filter}` : API;
-      const res = await fetch(url, {  });
+      const res = await apiFetch(url, {  });
       if (res.ok) setCorrespondencias(await res.json());
     } catch (err) {
       console.error(err);

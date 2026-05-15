@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+
 import { useTheme } from "@/hooks/useTheme";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -16,11 +16,12 @@ import {
   Loader2,
   Save,
   Video,
-  Monitor,
+
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogConfirm } from "@/lib/dialog";
 
 // ─── Types ───────────────────────────────────────────────
 interface CameraData {
@@ -78,7 +79,7 @@ const emptyForm: Omit<CameraData, "id"> = {
 };
 
 export default function CadastroCameras() {
-  const { user } = useAuth();
+
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
 
@@ -136,7 +137,7 @@ export default function CadastroCameras() {
     try {
       const url = editingId ? `/api/cameras/${editingId}` : "/api/cameras";
       const method = editingId ? "PUT" : "POST";
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -150,7 +151,7 @@ export default function CadastroCameras() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Tem certeza que deseja excluir esta câmera?")) return;
+    if (!await dialogConfirm("Tem certeza que deseja excluir esta câmera?")) return;
     setDeleting(id);
     try {
       await apiFetch(`/api/cameras/${id}`, { method: "DELETE" });

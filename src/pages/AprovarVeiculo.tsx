@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Car, CheckCircle2, XCircle, Shield, Ban, Hourglass } from "lucide-react";
+import { Car, CheckCircle2, XCircle, Shield, Ban } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 

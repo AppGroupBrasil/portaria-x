@@ -9,7 +9,7 @@ import {
   Search,
   Users,
   Shield,
-  ShieldOff,
+
   DollarSign,
   Clock,
   Activity,
@@ -24,7 +24,7 @@ import {
   ArrowUpDown,
   Filter,
   BarChart3,
-  Eye,
+
   Calendar,
   Loader2,
   RefreshCw,

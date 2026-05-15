@@ -17,6 +17,7 @@ import {
   Image,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { dialogAlert } from "@/lib/dialog";
 
 interface PreAuth {
   id: number;
@@ -124,7 +125,7 @@ export default function AutoCadastroPreAuth() {
       // Auto-start capture after 1s (simple photo capture, no ML in browser)
       setTimeout(() => startFaceCapture(), 1000);
     } catch {
-      alert("Não foi possível acessar a câmera.");
+      void dialogAlert("Não foi possível acessar a câmera.");
       setShowCamera(false);
     }
   };
@@ -193,7 +194,7 @@ export default function AutoCadastroPreAuth() {
       }
       setShowDocCamera(true);
     } catch {
-      alert("Não foi possível acessar a câmera.");
+      void dialogAlert("Não foi possível acessar a câmera.");
     }
   };
 
@@ -220,7 +221,7 @@ export default function AutoCadastroPreAuth() {
 
   // ─── Submit ────────────────────────────────────────────
   const handleSubmit = async () => {
-    if (!nome.trim()) return alert("Preencha seu nome.");
+    if (!nome.trim()) return void dialogAlert("Preencha seu nome.");
     setSubmitting(true);
     try {
       const res = await apiFetch(`${API}/pre-authorizations/auto-cadastro/${token}`, {
@@ -239,10 +240,10 @@ export default function AutoCadastroPreAuth() {
         setSuccess(true);
       } else {
         const data = await res.json();
-        alert(data.error || "Erro ao salvar dados.");
+        void dialogAlert(data.error || "Erro ao salvar dados.");
       }
     } catch {
-      alert("Erro de conexão.");
+      void dialogAlert("Erro de conexão.");
     } finally {
       setSubmitting(false);
     }

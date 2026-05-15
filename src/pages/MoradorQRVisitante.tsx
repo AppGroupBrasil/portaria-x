@@ -10,15 +10,13 @@ import {
   QrCode,
   Camera,
   User,
-  FileText,
+
   Clock,
   Calendar,
   Plus,
   Trash2,
   Share2,
-  Download,
-  CheckCircle2,
-  AlertTriangle,
+
   Eye,
   ChevronDown,
   ChevronUp,

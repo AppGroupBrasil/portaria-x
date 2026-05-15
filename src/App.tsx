@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth, hasMinRole, type UserRole } from "@/hooks/useAuth";
 import React, { Suspense, lazy, useState, useEffect } from "react";
 import { onDemoBlocked } from "@/lib/api";
+import { DialogHost } from "@/lib/dialog";
 
 const Login = lazy(() => import("@/pages/Login"));
 const SearchCondominio = lazy(() => import("@/pages/SearchCondominio"));
@@ -261,6 +262,7 @@ export default function App() {
         <AuthProvider>
           <DemoBlockedListener />
           <AppRoutes />
+          <DialogHost />
         </AuthProvider>
       </ErrorBoundary>
     </BrowserRouter>

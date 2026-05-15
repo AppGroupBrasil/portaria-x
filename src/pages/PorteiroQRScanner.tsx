@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
 import {
   ArrowLeft,
-  QrCode,
-  Camera,
+
   User,
   FileText,
-  Clock,
+
   Calendar,
   CheckCircle2,
   XCircle,

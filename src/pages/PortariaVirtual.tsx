@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+
 import TutorialButton, { FlowPortaria, TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   ArrowLeft,
@@ -9,7 +9,7 @@ import {
   DoorOpen,
   Loader2,
   CheckCircle2,
-  XCircle,
+
   Settings,
   BookOpen,
   ChevronDown,
@@ -21,7 +21,7 @@ import {
   Plug,
   Smartphone,
   ClipboardCheck,
-  AlertTriangle,
+
   Info,
   Plus,
   Trash2,
@@ -71,7 +71,7 @@ function saveGates(gates: GateDevice[]) {
 export default function PortariaVirtual() {
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
-  const { user } = useAuth();
+
   const [tab, setTab] = useState<"controle" | "tutorial" | "config">("controle");
 
   // Multi-gate states

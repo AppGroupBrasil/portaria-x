@@ -18,7 +18,7 @@ import {
   DoorOpen,
   Scan,
   MapPin,
-  Phone,
+
   LayoutDashboard,
   Palette,
   EyeOff,

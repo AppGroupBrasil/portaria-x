@@ -19,6 +19,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
+import { dialogConfirm } from "@/lib/dialog";
 
 interface Bloco {
   id: number;
@@ -466,7 +467,7 @@ export default function CadastroBlocos() {
   }
 
   async function handleDeleteBloco(id: number, name: string) {
-    if (!confirm(`Excluir bloco "${name}"?`)) return;
+    if (!await dialogConfirm(`Excluir bloco "${name}"?`)) return;
     try {
       const res = await apiFetch(`/api/blocos/${id}`, { method: "DELETE" });
       const data = await res.json();

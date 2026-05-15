@@ -11,6 +11,7 @@ import {
 import LandingTutorialModal from "@/components/LandingTutorialModal";
 import { BRANDS, INTEGRATION_LABELS } from "@/lib/deviceLibrary";
 import { useAuth } from "@/hooks/useAuth";
+import { dialogAlert } from "@/lib/dialog";
 
 /* ═══════════════════════════════════════════════
    LANDING PAGE — Portaria X
@@ -505,7 +506,7 @@ function StartUsingBanner({ mode }: Readonly<{ mode: "dark" | "light" }>) {
 
   const handleInstallApp = async () => {
     if (!installPrompt) {
-      alert("Se o navegador não mostrar a instalação automática, abra o menu do navegador e escolha 'Instalar app' ou 'Adicionar à tela inicial'.");
+      void dialogAlert("Se o navegador não mostrar a instalação automática, abra o menu do navegador e escolha 'Instalar app' ou 'Adicionar à tela inicial'.");
       return;
     }
 

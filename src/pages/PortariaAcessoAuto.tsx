@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+
 import { useTheme } from "@/hooks/useTheme";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -7,7 +7,7 @@ import {
   Camera,
   ScanLine,
   Car,
-  PersonStanding,
+
   Loader2,
   CheckCircle2,
   XCircle,
@@ -17,7 +17,7 @@ import {
   User,
   ChevronLeft,
   ChevronRight,
-  RefreshCw,
+
   DoorOpen,
   Zap,
   HelpCircle,
@@ -71,7 +71,7 @@ interface ActionResult {
 }
 
 export default function PortariaAcessoAuto() {
-  const { user } = useAuth();
+
   const { isDark } = useTheme();
   const navigate = useNavigate();
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@/hooks/useAuth";
+
 import { useNavigate } from "react-router-dom";
 import TutorialButton, { FlowPortaria, FlowMorador, TSection, TStep, TBullet } from "@/components/TutorialButton";
 import { compressImage } from "@/lib/imageUtils";
@@ -17,6 +17,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogConfirm } from "@/lib/dialog";
 
 const API = "/api/delivery-authorizations";
 
@@ -44,7 +45,7 @@ interface DeliveryAuth {
 
 export default function MoradorDelivery() {
   const { isDark, p } = useTheme();
-  const { user } = useAuth();
+
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -127,7 +128,7 @@ export default function MoradorDelivery() {
   };
 
   const handleCancel = async (id: number) => {
-    if (!confirm("Cancelar esta autorização de delivery?")) return;
+    if (!await dialogConfirm("Cancelar esta autorização de delivery?")) return;
     try {
       await apiFetch(`${API}/${id}`, {
         method: "DELETE",

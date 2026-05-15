@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogConfirm } from "@/lib/dialog";
 
 interface Sindico {
   id: number;
@@ -156,7 +157,7 @@ export default function CadastroSindicos() {
   };
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`Excluir síndico "${name}"?`)) return;
+    if (!await dialogConfirm(`Excluir síndico "${name}"?`)) return;
     try {
       const res = await apiFetch(`/api/users/sindico/${id}`, { method: "DELETE" });
       const data = await res.json();

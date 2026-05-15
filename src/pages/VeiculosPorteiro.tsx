@@ -37,6 +37,7 @@ import { apiFetch } from "@/lib/api";
 import { getConfigBoolean } from "@/lib/featureFlags";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 const API = "/api/vehicle-authorizations";
 const API_BASE = "/api";
@@ -336,13 +337,13 @@ export default function VeiculosPorteiro() {
   };
 
   const handleCancelarDia = async () => {
-    if (!confirm("Tem certeza que deseja encerrar TODAS as libera\u00e7\u00f5es ativas do dia?")) return;
+    if (!await dialogConfirm("Tem certeza que deseja encerrar TODAS as libera\u00e7\u00f5es ativas do dia?")) return;
     setCancellingDay(true);
     try {
       const res = await apiFetch(`${API}/cancelar-dia`, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
-        alert(data.message);
+        void dialogAlert(data.message);
         fetchVehicles();
       }
     } catch {}

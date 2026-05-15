@@ -13,7 +13,7 @@ import {
   Package,
   Clock,
   Search,
-  Copy,
+
   FileText,
   Download,
 } from "lucide-react";
@@ -98,7 +98,7 @@ export default function CorrespondenciasPorteiro() {
   const fetchCorrespondencias = async () => {
     try {
       const url = filter !== "todas" ? `${API}?status=${filter}` : API;
-      const res = await fetch(url, {  });
+      const res = await apiFetch(url, {  });
       if (res.ok) setCorrespondencias(await res.json());
     } catch (err) {
       console.error(err);
@@ -198,7 +198,7 @@ export default function CorrespondenciasPorteiro() {
       const morador = moradores.find((x) => String(x.id) === selectedMoradorId);
       const morador_name = morador ? morador.name : `Morador Bloco ${bloco} Apto ${apartamento}`;
 
-      const res = await fetch(API, {
+      const res = await apiFetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

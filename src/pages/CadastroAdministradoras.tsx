@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogConfirm } from "@/lib/dialog";
 
 interface Administradora {
   id: number;
@@ -180,7 +181,7 @@ export default function CadastroAdministradoras() {
   };
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`Excluir administradora "${name}"?`)) return;
+    if (!await dialogConfirm(`Excluir administradora "${name}"?`)) return;
     try {
       const res = await apiFetch(`/api/users/administradora/${id}`, { method: "DELETE" });
       const data = await res.json();

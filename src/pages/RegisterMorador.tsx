@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { getConfigBoolean } from "@/lib/featureFlags";
 import { APP_ERROR_CODES } from "@/lib/errorCodes";
+import { dialogAlert } from "@/lib/dialog";
+import { apiFetch } from "@/lib/api";
 
 interface LocationState {
   condominioId: number;
@@ -66,7 +68,7 @@ export default function RegisterMorador() {
   useEffect(() => {
     async function loadConfig() {
       try {
-        const res = await fetch(`/api/condominio-config/public?condominio_id=${condominioId}`);
+        const res = await apiFetch(`/api/condominio-config/public?condominio_id=${condominioId}`);
         if (res.ok) {
           const data = await res.json();
           if (getConfigBoolean(data, "notify_whatsapp_enabled", false) && data.notify_whatsapp_phone) {
@@ -139,7 +141,7 @@ export default function RegisterMorador() {
           // Show WhatsApp prompt
           setShowWhatsappPrompt(true);
         } else {
-          alert("Cadastro realizado com sucesso! Aguarde a aprovação do síndico ou administradora para acessar o sistema.");
+          void dialogAlert("Cadastro realizado com sucesso! Aguarde a aprovação do síndico ou administradora para acessar o sistema.");
           navigate("/login");
         }
         return;

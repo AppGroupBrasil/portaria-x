@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+
 import { apiFetch, getToken } from "@/lib/api";
 import { buildWsUrl } from "@/lib/config";
 import { DEFAULT_MAP_CENTER, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID } from "@/lib/googleMaps";
@@ -156,7 +156,7 @@ function buildMarkerIcon(fillColor: string): google.maps.Symbol | undefined {
 
 export default function PortariaEstouChegando() {
   const { p } = useTheme();
-  const { user } = useAuth();
+
   const navigate = useNavigate();
 
   const [events, setEvents] = useState<ArrivalEvent[]>([]);

@@ -9,7 +9,7 @@ import {
   Camera,
   X,
   CheckCircle2,
-  Clock,
+
   Search,
   Package,
   Truck,
@@ -29,6 +29,7 @@ import ReportModal from "@/components/ReportModal";
 import { gerarPdfLivroProtocolo, gerarRelatorioLivroProtocolo, gerarRelatorioLivroProtocoloComGraficos } from "@/lib/pdfUtils";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { apiFetch } from "@/lib/api";
 
 const API = "/api/livro-protocolo";
 
@@ -108,7 +109,7 @@ export default function LivroProtocolo() {
   const fetchEntries = async () => {
     try {
       const url = filter !== "todas" ? `${API}?tipo=${filter}` : API;
-      const res = await fetch(url, {  });
+      const res = await apiFetch(url, {  });
       if (res.ok) setEntries(await res.json());
     } catch (err) {
       console.error(err);
@@ -242,7 +243,7 @@ export default function LivroProtocolo() {
         body.retirada_por = retiradaPor;
       }
 
-      const res = await fetch(API, {
+      const res = await apiFetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

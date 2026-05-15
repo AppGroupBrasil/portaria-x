@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
@@ -11,13 +11,13 @@ import {
   Edit3,
   X,
   Clock,
-  Bell,
+
   BellOff,
   CheckCircle2,
-  AlertTriangle,
+
   Download,
   Printer,
-  GripVertical,
+
   ToggleLeft,
   ToggleRight,
   Shield,
@@ -32,6 +32,7 @@ import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 import ReportModal from "@/components/ReportModal";
 import { gerarRelatorioRondas } from "@/lib/pdfUtils";
+import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 const API = "/api";
 
@@ -58,7 +59,7 @@ interface Schedule {
 const DIAS_SEMANA = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export default function ControleRondasSindico() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [tab, setTab] = useState<"checkpoints" | "schedules" | "historico">("checkpoints");
@@ -151,7 +152,7 @@ export default function ControleRondasSindico() {
       }
       gerarRelatorioRondas(regs, stats, dateFrom, dateTo, user?.condominio_nome);
     } catch {
-      alert("Erro ao gerar relatório.");
+      void dialogAlert("Erro ao gerar relatório.");
     }
   };
 
@@ -164,7 +165,7 @@ export default function ControleRondasSindico() {
         ? `${API}/rondas/checkpoints/${editingCheckpoint.id}`
         : `${API}/rondas/checkpoints`;
       const method = editingCheckpoint ? "PUT" : "POST";
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cpForm),
@@ -182,7 +183,7 @@ export default function ControleRondasSindico() {
   };
 
   const handleDeleteCheckpoint = async (id: number) => {
-    if (!globalThis.confirm("Excluir este ponto de ronda?")) return;
+    if (!await dialogConfirm("Excluir este ponto de ronda?")) return;
     await apiFetch(`${API}/rondas/checkpoints/${id}`, { method: "DELETE" });
     fetchAll();
   };
@@ -205,7 +206,7 @@ export default function ControleRondasSindico() {
         ? `${API}/rondas/schedules/${editingSchedule.id}`
         : `${API}/rondas/schedules`;
       const method = editingSchedule ? "PUT" : "POST";
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -226,7 +227,7 @@ export default function ControleRondasSindico() {
   };
 
   const handleDeleteSchedule = async (id: number) => {
-    if (!globalThis.confirm("Excluir este horário?")) return;
+    if (!await dialogConfirm("Excluir este horário?")) return;
     await apiFetch(`${API}/rondas/schedules/${id}`, { method: "DELETE" });
     fetchAll();
   };
@@ -279,7 +280,7 @@ export default function ControleRondasSindico() {
   // Download QR as image
   const handleDownloadQR = async (cp: Checkpoint) => {
     try {
-      const resp = await fetch(getQRUrl(cp.qr_code_data));
+      const resp = await apiFetch(getQRUrl(cp.qr_code_data));
       const blob = await resp.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");

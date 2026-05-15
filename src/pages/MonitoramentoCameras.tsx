@@ -8,20 +8,17 @@ import {
   Camera,
   Maximize2,
   Minimize2,
-  Grid3X3,
+
   Play,
   Pause,
   SkipForward,
   Settings,
   Loader2,
   Video,
-  VideoOff,
-  Wifi,
-  WifiOff,
-  RefreshCw,
+
   MapPin,
   Clock,
-  LayoutGrid,
+
   Monitor,
   type LucideIcon,
 } from "lucide-react";
@@ -63,7 +60,7 @@ const SETOR_LABELS: Record<string, string> = {
 
 export default function MonitoramentoCameras() {
   const { user } = useAuth();
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const [cameras, setCameras] = useState<CameraData[]>([]);

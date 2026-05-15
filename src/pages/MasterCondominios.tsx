@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 const API = "/api";
 
@@ -138,7 +139,7 @@ export default function MasterCondominios() {
   }
 
   async function handleDelete(c: Condominio) {
-    if (!confirm(`Excluir "${c.name}" e TODOS os dados relacionados?`)) return;
+    if (!await dialogConfirm(`Excluir "${c.name}" e TODOS os dados relacionados?`)) return;
     try {
       const res = await apiFetch(`${API}/condominios/${c.id}`, {
         method: "DELETE",
@@ -147,7 +148,7 @@ export default function MasterCondominios() {
       if (!res.ok) throw new Error(data.error);
       fetchCondominios();
     } catch (err: any) {
-      alert(err.message || "Erro ao excluir.");
+      void dialogAlert(err.message || "Erro ao excluir.");
     }
   }
 

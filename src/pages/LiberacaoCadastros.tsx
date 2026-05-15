@@ -1,11 +1,11 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+
 import { apiFetch } from "@/lib/api";
 import {
   ArrowLeft,
   UserCheck,
-  UserX,
+
   Clock,
   Search,
   CheckCircle2,
@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { getConfigBoolean } from "@/lib/featureFlags";
+import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 interface PendingMorador {
   id: number;
@@ -37,8 +38,8 @@ interface PendingMorador {
 }
 
 export default function LiberacaoCadastros() {
-  const { isDark, p } = useTheme();
-  const { user } = useAuth();
+  const { p } = useTheme();
+
   const navigate = useNavigate();
   const [pendentes, setPendentes] = useState<PendingMorador[]>([]);
   const [loading, setLoading] = useState(true);
@@ -117,11 +118,11 @@ export default function LiberacaoCadastros() {
         setTimeout(() => setSuccessMsg(""), 3000);
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || "Erro ao alterar configuração");
+        void dialogAlert(data.error || "Erro ao alterar configuração");
       }
     } catch (err) {
       console.error("Toggle error:", err);
-      alert("Erro de conexão ao alterar configuração");
+      void dialogAlert("Erro de conexão ao alterar configuração");
     } finally {
       setConfigLoading(false);
     }
@@ -145,11 +146,11 @@ export default function LiberacaoCadastros() {
         setTimeout(() => setSuccessMsg(""), 3000);
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || "Erro ao salvar configuração de e-mail");
+        void dialogAlert(data.error || "Erro ao salvar configuração de e-mail");
       }
     } catch (err) {
       console.error("Email save error:", err);
-      alert("Erro de conexão ao salvar e-mail");
+      void dialogAlert("Erro de conexão ao salvar e-mail");
     } finally {
       setEmailSaving(false);
     }
@@ -173,11 +174,11 @@ export default function LiberacaoCadastros() {
         setTimeout(() => setSuccessMsg(""), 3000);
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || "Erro ao salvar configuração de WhatsApp");
+        void dialogAlert(data.error || "Erro ao salvar configuração de WhatsApp");
       }
     } catch (err) {
       console.error("WhatsApp save error:", err);
-      alert("Erro de conexão ao salvar WhatsApp");
+      void dialogAlert("Erro de conexão ao salvar WhatsApp");
     } finally {
       setWhatsappSaving(false);
     }
@@ -193,17 +194,17 @@ export default function LiberacaoCadastros() {
         setSuccessMsg(data.message || "Aprovado!");
         setTimeout(() => setSuccessMsg(""), 3000);
       } else {
-        alert(data.error || "Erro ao aprovar.");
+        void dialogAlert(data.error || "Erro ao aprovar.");
       }
     } catch (err) {
-      alert("Erro de conexão.");
+      void dialogAlert("Erro de conexão.");
     } finally {
       setActionLoading(null);
     }
   }
 
   async function handleRejeitar(id: number, nome: string) {
-    if (!confirm(`Rejeitar o cadastro de "${nome}"? Isso removerá o registro permanentemente.`)) return;
+    if (!await dialogConfirm(`Rejeitar o cadastro de "${nome}"? Isso removerá o registro permanentemente.`)) return;
     setActionLoading(id);
     try {
       const res = await apiFetch(`/api/moradores/${id}/rejeitar`, { method: "DELETE" });
@@ -213,10 +214,10 @@ export default function LiberacaoCadastros() {
         setSuccessMsg(data.message || "Rejeitado.");
         setTimeout(() => setSuccessMsg(""), 3000);
       } else {
-        alert(data.error || "Erro ao rejeitar.");
+        void dialogAlert(data.error || "Erro ao rejeitar.");
       }
     } catch (err) {
-      alert("Erro de conexão.");
+      void dialogAlert("Erro de conexão.");
     } finally {
       setActionLoading(null);
     }

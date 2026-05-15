@@ -5,16 +5,16 @@ import {
   ArrowLeft,
   ShieldCheck,
   Plus,
-  Send,
+
   Link2,
   X,
   Calendar,
   Clock,
   MessageSquare,
   CheckCircle2,
-  XCircle,
+
   Loader2,
-  ChevronDown,
+
   Trash2,
   Pencil,
   AlertCircle,
@@ -25,6 +25,7 @@ import { APP_ORIGIN } from "@/lib/config";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 interface PreAuth {
   id: number;
@@ -127,10 +128,10 @@ export default function MoradorAutorizacoes() {
         fetchPendingVisitors();
       } else {
         const data = await res.json();
-        alert(data.error || "Erro ao responder.");
+        void dialogAlert(data.error || "Erro ao responder.");
       }
     } catch {
-      alert("Erro de conexão.");
+      void dialogAlert("Erro de conexão.");
     } finally {
       setRespondingVisitorId(null);
     }
@@ -274,7 +275,7 @@ export default function MoradorAutorizacoes() {
   };
 
   const handleCancel = async (id: number) => {
-    if (!confirm("Deseja cancelar esta autorização?")) return;
+    if (!await dialogConfirm("Deseja cancelar esta autorização?")) return;
     try {
       await apiFetch(`${API}/pre-authorizations/${id}`, {
         method: "DELETE",

@@ -194,7 +194,7 @@ const STEPS: Step[] = [
 ];
 
 export default function MasterGuiaInstalacao() {
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);

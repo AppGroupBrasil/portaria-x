@@ -24,6 +24,7 @@ import { gerarPdfDelivery, gerarRelatorioDelivery, gerarRelatorioDeliveryComGraf
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogAlert } from "@/lib/dialog";
 
 const API = "/api/delivery-authorizations";
 
@@ -286,7 +287,7 @@ export default function DeliveryPorteiro() {
       }
     } catch (err) {
       console.error("Erro ao acessar câmera:", err);
-      alert("Não foi possível acessar a câmera.");
+      void dialogAlert("Não foi possível acessar a câmera.");
       setCapturing(false);
     }
   };

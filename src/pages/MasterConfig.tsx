@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogAlert } from "@/lib/dialog";
 
 const API = "/api";
 
@@ -33,7 +34,7 @@ const CONFIG_META: Record<string, { label: string; description: string; type: "t
 };
 
 export default function MasterConfig() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [configs, setConfigs] = useState<ConfigItem[]>([]);
@@ -81,7 +82,7 @@ export default function MasterConfig() {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err: any) {
-      alert(err.message || "Erro ao salvar.");
+      void dialogAlert(err.message || "Erro ao salvar.");
     } finally {
       setSaving(false);
     }

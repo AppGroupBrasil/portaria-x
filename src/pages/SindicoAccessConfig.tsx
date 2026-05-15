@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+
 import { useTheme } from "@/hooks/useTheme";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ import {
   AlertCircle,
   Plus,
   Trash2,
-  GripVertical,
+
   Pencil,
   X,
   Shield,
@@ -28,6 +28,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { dialogConfirm } from "@/lib/dialog";
 
 // ─── Icon mapping ─────────────────────────────────────────
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -88,7 +89,7 @@ interface EwelinkDevice {
 }
 
 export default function SindicoAccessConfig() {
-  const { user } = useAuth();
+
   const { isDark, p } = useTheme();
   const navigate = useNavigate();
 
@@ -289,7 +290,7 @@ export default function SindicoAccessConfig() {
 
   // ─── Delete ─────────────────────────────────────────────
   const deleteAP = async (ap: AccessPoint) => {
-    if (!confirm(`Excluir "${ap.name}"?`)) return;
+    if (!await dialogConfirm(`Excluir "${ap.name}"?`)) return;
     setSaving(ap.id);
     try {
       const res = await apiFetch(`/api/gate/access-points/${ap.id}`, { method: "DELETE" });

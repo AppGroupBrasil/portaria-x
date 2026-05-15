@@ -5,16 +5,15 @@ import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialB
 import {
   FileText,
   ArrowLeft,
-  Search,
-  Filter,
+
   User,
   Building2,
   Trash2,
   Pencil,
   Settings,
-  Shield,
+
   Clock,
-  X,
+
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
@@ -49,7 +48,7 @@ const ACTION_FILTERS = [
 ];
 
 export default function MasterLogs() {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [logs, setLogs] = useState<AuditLog[]>([]);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+
 import { useNavigate } from "react-router-dom";
 import TutorialButton, { FlowPortaria, FlowMorador, TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
@@ -21,6 +21,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import { dialogConfirm } from "@/lib/dialog";
 
 const API = "/api/vehicle-authorizations";
 
@@ -52,8 +53,8 @@ const CORES = [
 ];
 
 export default function MoradorVeiculos() {
-  const { isDark, p } = useTheme();
-  const { user } = useAuth();
+  const { isDark } = useTheme();
+
   const navigate = useNavigate();
 
   const [vehicles, setVehicles] = useState<VehicleAuth[]>([]);
@@ -81,7 +82,7 @@ export default function MoradorVeiculos() {
 
   const fetchVehicles = async () => {
     try {
-      const res = await fetch(API, {  });
+      const res = await apiFetch(API, {  });
       if (res.ok) setVehicles(await res.json());
     } catch (err) {
       console.error(err);
@@ -167,7 +168,7 @@ export default function MoradorVeiculos() {
   };
 
   const handleCancel = async (id: number) => {
-    if (!confirm("Cancelar esta autorização?")) return;
+    if (!await dialogConfirm("Cancelar esta autorização?")) return;
     await apiFetch(`${API}/${id}`, { method: "DELETE" });
     fetchVehicles();
   };
@@ -592,7 +593,7 @@ export default function MoradorVeiculos() {
 }
 
 function VehicleCard({ v, onCancel, onEdit }: { v: VehicleAuth; onCancel: (id: number) => void; onEdit: (v: VehicleAuth) => void }) {
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const isActive = v.status === "ativa" && new Date() <= new Date(v.data_fim + "T23:59:59");
   const entrou = !!v.entrada_confirmada_at;
 

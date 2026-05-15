@@ -57,7 +57,7 @@ function hasConfiguredCoordinates(latitude: unknown, longitude: unknown): boolea
 }
 
 export default function MoradorEstouChegando() {
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   // Config from server

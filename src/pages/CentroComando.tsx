@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/hooks/useAuth";
+
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
 import {
   ArrowLeft,
   RefreshCw,
   Users,
-  Package,
+
   Mail,
   Car,
   ShieldCheck,
@@ -14,13 +14,13 @@ import {
   Clock,
   AlertTriangle,
   CheckCircle2,
-  XCircle,
+
   Loader2,
   ChevronRight,
-  Building2,
+
   UserPlus,
   Truck,
-  Eye,
+
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
@@ -118,7 +118,7 @@ function timeAgo(dateStr: string): string {
 
 export default function CentroComando() {
   const { isDark, p } = useTheme();
-  const { user } = useAuth();
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -528,7 +528,7 @@ function PendingSection({
   onViewAll: () => void;
   children: React.ReactNode;
 }) {
-  const { isDark, p } = useTheme();
+  const { p } = useTheme();
   return (
     <div className="mb-16">
       <div className="flex items-center justify-between mb-7">
@@ -571,7 +571,7 @@ function PendingItem({
   badge?: string;
   onClick?: () => void;
 }) {
-  const { isDark, p } = useTheme();
+  const { isDark } = useTheme();
   const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
     pendente: { bg: "rgba(245,158,11,0.15)", text: "#f59e0b", label: "Pendente" },
     aguardando: { bg: "rgba(245,158,11,0.15)", text: "#f59e0b", label: "Aguardando" },

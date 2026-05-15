@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import { dialogConfirm } from "@/lib/dialog";
 
 const cargos = [
   "Gerente",
@@ -172,7 +173,7 @@ export default function CadastroFuncionarios() {
   };
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`Excluir funcionário "${name}"?`)) return;
+    if (!await dialogConfirm(`Excluir funcionário "${name}"?`)) return;
     try {
       const res = await apiFetch(`/api/funcionarios/${id}`, { method: "DELETE" });
       const data = await res.json();
