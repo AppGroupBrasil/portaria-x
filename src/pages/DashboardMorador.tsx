@@ -143,7 +143,7 @@ export default function DashboardMorador() {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/login");
+    navigate("/");
   };
 
   let content: React.ReactNode;

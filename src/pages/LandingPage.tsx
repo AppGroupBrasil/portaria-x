@@ -200,15 +200,17 @@ const allPlanFeatures = [...baseFeatures];
 
 const plans = [
   {
-    name: "Plano até 299 unidades",
+    name: "Portaria X",
+    subtitle: "Unidades ilimitadas",
     price: "199",
     color: "#6366f1",
     features: baseFeatures,
     popular: false,
   },
   {
-    name: "Plano acima de 300 unidades",
-    price: "299",
+    name: "Condomínio Adicional",
+    subtitle: "Unidades ilimitadas",
+    price: "35",
     color: "#0ea5e9",
     features: allPlanFeatures,
     popular: false,
@@ -241,7 +243,10 @@ function PlanCard({ plan, onNavigate }: Readonly<{ plan: typeof plans[number]; o
         </div>
       )}
 
-      <h3 style={{ fontWeight: 800, fontSize: "20px", color: "#003580", marginBottom: "12px" }}>{plan.name}</h3>
+      <h3 style={{ fontWeight: 800, fontSize: "20px", color: "#003580", marginBottom: "4px" }}>{plan.name}</h3>
+      {plan.subtitle && (
+        <p style={{ fontSize: "15px", color: "#475569", fontWeight: 600, marginBottom: "12px" }}>{plan.subtitle}</p>
+      )}
 
       <div
         style={{
@@ -1224,10 +1229,13 @@ function CustomDevCtaSection() {
     }}>
       <div style={{ maxWidth: "700px", margin: "0 auto" }}>
         <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, color: "#003580", marginBottom: "16px", lineHeight: 1.3 }}>
-          PRECISA DE UMA FUNÇÃO OU PARÂMETRO ESPECÍFICO?
+          CHAME MAIS 3 SÍNDICOS E DIVIDA O VALOR
         </h2>
-        <p style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)", color: "#003580", fontWeight: 700, marginBottom: "32px" }}>
-          🚀 DESENVOLVEMOS PARA VOCÊ SEM NENHUM CUSTO ADICIONAL!
+        <p style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)", color: "#003580", fontWeight: 700, marginBottom: "12px" }}>
+          R$ 199,00 + 3 × R$ 35,00 = R$ 304,00
+        </p>
+        <p style={{ fontSize: "clamp(1rem, 1.8vw, 1.25rem)", color: "#003580", fontWeight: 600, marginBottom: "32px" }}>
+          🧾 Faturamos em 4 notas separadas, uma para cada condomínio. Cada um paga apenas <strong>R$ 76,00</strong>.
         </p>
         <div style={{ display: "flex", justifyContent: "center", marginTop: "8px" }}>
           <div style={{

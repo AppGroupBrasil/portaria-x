@@ -85,7 +85,7 @@ export default function DashboardFuncionario() {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/login");
+    navigate("/");
   };
 
 

@@ -136,7 +136,7 @@ export default function MinhaConta() {
       const data = await res.json();
       if (!res.ok) { showError(data.error || "Erro ao excluir."); return; }
       await logout();
-      navigate("/login");
+      navigate("/");
     } catch {
       showError("Erro de conexão.");
     } finally {
