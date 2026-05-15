@@ -20,7 +20,6 @@ import {
   Clock,
 
   Monitor,
-  type LucideIcon,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import ComoFunciona from "@/components/ComoFunciona";

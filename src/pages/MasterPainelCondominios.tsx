@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { apiFetch } from "@/lib/api";
-import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
+import TutorialButton, { TSection, TBullet } from "@/components/TutorialButton";
 import {
   ArrowLeft,
   Building2,
