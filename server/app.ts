@@ -123,6 +123,7 @@ export async function createApp(): Promise<express.Express> {
   });
   app.use("/api/auth/login", authLimiter);
   app.use("/api/auth/register", authLimiter);
+  app.use("/api/auth/demo", authLimiter);
 
   // UTF-8 charset on all JSON responses
   app.use((_req, res, next) => {
