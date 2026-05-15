@@ -17,11 +17,11 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build frontend (Vite)
-RUN npm run build
+# Build frontend (Vite) — use explicit bin paths to avoid PATH issues
+RUN ./node_modules/.bin/tsc -b && ./node_modules/.bin/vite build
 
 # Build server (TypeScript → JavaScript)
-RUN npm run build:server
+RUN ./node_modules/.bin/tsc -p tsconfig.server.json
 
 # =====================================
 # Production Stage
