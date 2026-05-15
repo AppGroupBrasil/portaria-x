@@ -1,0 +1,49 @@
+FROM node:20-alpine
+
+# Install runtime dependencies for canvas
+RUN apk add --no-cache pixman cairo pango jpeg giflib
+
+# Create non-root user
+RUN addgroup -g 1001 -S portariax && \
+    adduser -S portariax -u 1001
+
+WORKDIR /app
+
+# Copy package files and install production deps only
+COPY package.json package-lock.json ./
+RUN apk add --no-cache --virtual .build-deps python3 make g++ pkgconfig pixman-dev cairo-dev pango-dev jpeg-dev giflib-dev \
+    && npm ci --omit=dev \
+    && apk del .build-deps
+
+# Copy pre-built frontend
+COPY dist ./dist
+
+# Copy pre-built server
+COPY dist-server ./dist-server
+
+# Copy Firebase service account
+COPY server/firebase-service-account.json ./server/firebase-service-account.json
+
+# Copy public assets
+COPY public ./public
+
+# Copy face recognition models
+COPY client/public/models ./public/models
+
+# Create data directory for SQLite
+RUN mkdir -p /app/data && chown -R portariax:portariax /app/data
+
+# Set ownership
+RUN chown -R portariax:portariax /app
+
+USER portariax
+
+ENV NODE_ENV=production
+ENV PORT=3001
+
+EXPOSE 3001
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3001/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))" || exit 1
+
+CMD ["node", "dist-server/index.js"]

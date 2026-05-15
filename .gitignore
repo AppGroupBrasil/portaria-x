@@ -37,6 +37,9 @@ android/keystore.properties
 android/app/*.keystore
 android/app/*.jks
 
+# Local Android tooling (bundletool etc.)
+android/tools/
+
 # Dev certs (self-signed)
 certs/
 
@@ -49,3 +52,8 @@ npm-debug.log*
 
 # Local backup files
 *.bak
+*.bak2
+
+# Claude Code local settings
+.claude/settings.local.json
+
