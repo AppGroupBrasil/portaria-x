@@ -6,6 +6,7 @@ import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import authRouter from "./auth.js";
+import provisioningRouter from "./provisioning.js";
 import funcionariosRouter from "./funcionarios.js";
 import blocosRouter from "./blocos.js";
 import moradoresRouter from "./moradores.js";
@@ -149,6 +150,7 @@ export async function createApp(): Promise<express.Express> {
 
   // Routes
   app.use("/api/auth", authRouter);
+  app.use("/api/provisioning", provisioningRouter);
   app.use("/api/funcionarios", funcionariosRouter);
   app.use("/api/blocos", blocosRouter);
   app.use("/api/moradores", moradoresRouter);

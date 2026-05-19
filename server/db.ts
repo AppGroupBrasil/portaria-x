@@ -249,6 +249,14 @@ db.exec(`
   );
 `);
 
+// Migration: central SSO uuid
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN central_uuid TEXT`);
+} catch {}
+try {
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_central_uuid ON users(central_uuid) WHERE central_uuid IS NOT NULL`);
+} catch {}
+
 // Migration: add ocorrencia columns if missing
 try {
   db.exec(`ALTER TABLE livro_protocolo ADD COLUMN titulo TEXT`);
@@ -900,6 +908,7 @@ export interface DbUser {
   condominio_id: number | null;
   parent_administradora_id: number | null;
   avatar_url: string | null;
+  central_uuid: string | null;
   created_at: string;
   updated_at: string;
 }
