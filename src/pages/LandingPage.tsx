@@ -200,7 +200,7 @@ const allPlanFeatures = [...baseFeatures];
 
 const plans = [
   {
-    name: "Portaria X",
+    name: "1 condomínio",
     subtitle: "Unidades ilimitadas",
     price: "199",
     color: "#6366f1",
@@ -208,9 +208,9 @@ const plans = [
     popular: false,
   },
   {
-    name: "Condomínio Adicional",
-    subtitle: "Unidades ilimitadas",
-    price: "35",
+    name: "Administradoras e terceirizadas",
+    subtitle: "Condomínios ilimitados",
+    price: "350",
     color: "#0ea5e9",
     features: allPlanFeatures,
     popular: false,
@@ -1221,36 +1221,6 @@ function PlansSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light"
   );
 }
 
-function CustomDevCtaSection() {
-  return (
-    <section style={{
-      background: "var(--color-card, #fff)",
-      padding: "80px 24px", textAlign: "center",
-    }}>
-      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-        <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontWeight: 800, color: "#003580", marginBottom: "16px", lineHeight: 1.3 }}>
-          CHAME MAIS 3 SÍNDICOS E DIVIDA O VALOR
-        </h2>
-        <p style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)", color: "#003580", fontWeight: 700, marginBottom: "12px" }}>
-          R$ 199,00 + 3 × R$ 35,00 = R$ 304,00
-        </p>
-        <p style={{ fontSize: "clamp(1rem, 1.8vw, 1.25rem)", color: "#003580", fontWeight: 600, marginBottom: "32px" }}>
-          🧾 Faturamos em 4 notas separadas, uma para cada condomínio. Cada um paga apenas <strong>R$ 76,00</strong>.
-        </p>
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "8px" }}>
-          <div style={{
-            width: "80px", height: "80px", borderRadius: "50%",
-            background: "transparent", border: "3px solid #003580",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <Code2 style={{ width: "40px", height: "40px", color: "#003580" }} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FaqSection({ openFaq, onToggleFaq }: Readonly<{ openFaq: number | null; onToggleFaq: (index: number) => void }>) {
   return (
     <section style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", transition: "background 0.4s" }}>
@@ -1424,7 +1394,6 @@ export default function LandingPage() {
       <PresentationSection mode={mode} onNavigate={navigate} />
       {SHOW_PREMIUM_LANDING && <IntegrationsSection mode={mode} t={t} onNavigate={navigate} />}
       <PlansSection mode={mode} t={t} onNavigate={navigate} />
-      <CustomDevCtaSection />
       <FaqSection openFaq={openFaq} onToggleFaq={(i) => setOpenFaq(openFaq === i ? null : i)} />
       <AppsSection />
       <FooterSection onNavigate={navigate} />
