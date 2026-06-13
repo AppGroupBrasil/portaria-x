@@ -256,6 +256,12 @@ try {
 try {
   db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_central_uuid ON users(central_uuid) WHERE central_uuid IS NOT NULL`);
 } catch {}
+try {
+  db.exec(`ALTER TABLE condominios ADD COLUMN central_uuid TEXT`);
+} catch {}
+try {
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_condominios_central_uuid ON condominios(central_uuid) WHERE central_uuid IS NOT NULL`);
+} catch {}
 
 // Migration: add ocorrencia columns if missing
 try {

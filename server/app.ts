@@ -6,6 +6,7 @@ import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import authRouter from "./auth.js";
+import ssoRouter from "./sso.js";
 import provisioningRouter from "./provisioning.js";
 import funcionariosRouter from "./funcionarios.js";
 import blocosRouter from "./blocos.js";
@@ -63,7 +64,9 @@ export async function createApp(): Promise<express.Express> {
     crossOriginEmbedderPolicy: false,
   }));
 
-  // CORS — restrito a origens conhecidas
+  // CORS — restrito a origens conhecidas.
+  // Origens extras podem ser adicionadas via env CORS_ORIGINS (separadas por vírgula),
+  // sem necessidade de rebuild.
   const ALLOWED_ORIGINS = new Set([
     "http://localhost:5173",
     "https://localhost:5173",
@@ -73,6 +76,10 @@ export async function createApp(): Promise<express.Express> {
     "https://www.portariax.com.br",
     "capacitor://localhost",
     "http://localhost",
+    ...(process.env.CORS_ORIGINS || "")
+      .split(",")
+      .map((o) => o.trim())
+      .filter(Boolean),
   ]);
 
   const isLocalNetworkOrigin = (origin: string): boolean => {
@@ -147,6 +154,9 @@ export async function createApp(): Promise<express.Express> {
       next();
     });
   }
+
+  // SSO da central (login único) — antes do catch-all estático
+  app.use("/sso", ssoRouter);
 
   // Routes
   app.use("/api/auth", authRouter);
