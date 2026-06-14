@@ -43,9 +43,11 @@ const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 let demoCondoIdCache: number | null | undefined;
 
 function getDemoCondoId(): number | null {
-  if (demoCondoIdCache !== undefined) return demoCondoIdCache;
+  if (typeof demoCondoIdCache === "number") return demoCondoIdCache;
   const row = db.prepare("SELECT id FROM condominios WHERE cnpj = ?")
     .get(DEMO_CONDO_CNPJ) as { id: number } | undefined;
+  // Só cacheia quando o condomínio demo já existe; caso contrário re-consulta
+  // na próxima chamada (evita desligar o guard permanentemente no boot).
   demoCondoIdCache = row?.id ?? null;
   return demoCondoIdCache;
 }
@@ -80,6 +82,10 @@ declare global {
   namespace Express {
     interface Request {
       user?: DbUser;
+      /** Set when the authenticated principal comes from the `funcionarios` table
+       *  (token carries funcId). Distinguishes a real porteiro from a demo user
+       *  stored in `users` with role "funcionario". */
+      funcionarioId?: number;
     }
   }
 }
@@ -153,6 +159,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
         created_at: func.created_at,
         updated_at: func.updated_at,
       } as DbUser;
+      req.funcionarioId = func.id;
       if (rejectIfDemoMutation(req, res)) return;
       next();
       return;

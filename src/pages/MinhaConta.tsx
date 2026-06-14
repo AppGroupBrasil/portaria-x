@@ -104,7 +104,7 @@ export default function MinhaConta() {
   // ── Change password ──
   const handleChangePassword = async () => {
     if (!currentPassword) { showError("Digite sua senha atual."); return; }
-    if (newPassword.length < 6) { showError("A nova senha deve ter pelo menos 6 caracteres."); return; }
+    if (!/^\d{6}$/.test(newPassword)) { showError("A nova senha deve ter exatamente 6 dígitos numéricos."); return; }
     if (newPassword !== confirmPassword) { showError("As senhas não conferem."); return; }
     setSavingPw(true);
     try {
@@ -473,8 +473,10 @@ export default function MinhaConta() {
                   <input
                     type={showNewPw ? "text" : "password"}
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Mínimo 6 caracteres"
+                    onChange={(e) => setNewPassword(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    inputMode="numeric"
+                    maxLength={6}
+                    placeholder="6 dígitos numéricos"
                     style={inputStyle}
                   />
                   <button
@@ -496,7 +498,9 @@ export default function MinhaConta() {
                 <input
                   type="password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => setConfirmPassword(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  inputMode="numeric"
+                  maxLength={6}
                   placeholder="Repita a nova senha"
                   style={inputStyle}
                 />

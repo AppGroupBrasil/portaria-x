@@ -43,22 +43,22 @@
 
 /* ═══════════ Dark Theme ═══════════ */
 :root.dark {
-  --background: oklch(0.11 0.025 250);
-  --foreground: oklch(0.95 0.01 250);
-  --card: oklch(0.15 0.02 250);
-  --card-foreground: oklch(0.95 0.01 250);
-  --primary: #003580;
+  --background: oklch(0.17 0.035 255);
+  --foreground: oklch(0.96 0.01 250);
+  --card: oklch(0.22 0.04 255);
+  --card-foreground: oklch(0.96 0.01 250);
+  --primary: #2563eb;
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.19 0.02 250);
-  --secondary-foreground: oklch(0.90 0.01 250);
-  --muted: oklch(0.18 0.02 250);
-  --muted-foreground: oklch(0.55 0.02 250);
-  --accent: oklch(0.22 0.03 250);
-  --accent-foreground: oklch(0.90 0.01 250);
-  --destructive: oklch(0.55 0.20 25);
-  --border: oklch(0.22 0.025 250);
-  --input: oklch(0.22 0.025 250);
-  --ring: #003580;
+  --secondary: oklch(0.26 0.04 255);
+  --secondary-foreground: oklch(0.92 0.01 250);
+  --muted: oklch(0.24 0.035 255);
+  --muted-foreground: oklch(0.66 0.025 250);
+  --accent: oklch(0.30 0.05 255);
+  --accent-foreground: oklch(0.94 0.01 250);
+  --destructive: oklch(0.58 0.20 25);
+  --border: oklch(0.30 0.04 255);
+  --input: oklch(0.30 0.04 255);
+  --ring: #2563eb;
   --radius: 0.75rem;
 }
 
@@ -300,9 +300,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   box-shadow: 0 4px 24px oklch(0 0 0 / 0.4);
 }
 :root.dark .premium-header {
-  background: linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #0f2a55 0%, #163a70 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
 }
 :root:not(.dark):not(.steel):not(.emerald):not(.midnight) .premium-header {
   background: #ffffff;

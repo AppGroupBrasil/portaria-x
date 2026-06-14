@@ -641,6 +641,40 @@ router.put("/account", authenticate, async (req, res) => {
       return;
     }
 
+    // Funcionário (token com funcId) vive na tabela `funcionarios`, não em `users`.
+    // Só pode ajustar o próprio nome (dividido em nome/sobrenome). Demais campos
+    // (email/phone/block/unit) não existem nessa tabela e são ignorados.
+    if (req.funcionarioId) {
+      const full = name.trim().replace(/\s+/g, " ");
+      const sep = full.indexOf(" ");
+      const nome = sep === -1 ? full : full.slice(0, sep);
+      const sobrenome = sep === -1 ? "" : full.slice(sep + 1);
+      db.prepare(
+        "UPDATE funcionarios SET nome = ?, sobrenome = ?, updated_at = datetime('now') WHERE id = ?"
+      ).run(nome, sobrenome, req.funcionarioId);
+      const func = db.prepare("SELECT * FROM funcionarios WHERE id = ?").get(req.funcionarioId) as any;
+      res.json({
+        user: {
+          id: func.id,
+          name: `${func.nome} ${func.sobrenome}`.trim(),
+          email: func.login,
+          phone: null,
+          cpf: null,
+          role: "funcionario",
+          perfil: func.cargo,
+          unit: null,
+          block: null,
+          condominioId: func.condominio_id,
+          condominio_nome: null,
+          parent_administradora_id: null,
+          avatarUrl: null,
+          aprovado: 1,
+        },
+        message: "Dados atualizados com sucesso.",
+      });
+      return;
+    }
+
     // Check email uniqueness if changed (skip for funcionario who may not have email)
     if (email && email !== user.email) {
       const existing = db.prepare("SELECT id FROM users WHERE email = ? AND id != ?").get(email, user.id) as any;
@@ -674,8 +708,8 @@ router.put("/account/password", authenticate, async (req, res) => {
       return;
     }
 
-    if (newPassword.length < 6) {
-      sendError(res, 400, ERROR_CODES.PASSWORD_TOO_SHORT, "A nova senha deve ter pelo menos 6 caracteres.");
+    if (!/^\d{6}$/.test(newPassword)) {
+      sendError(res, 400, ERROR_CODES.PASSWORD_TOO_SHORT, "A nova senha deve ter exatamente 6 dígitos numéricos.");
       return;
     }
 
@@ -686,6 +720,15 @@ router.put("/account/password", authenticate, async (req, res) => {
     }
 
     const hash = await bcrypt.hash(newPassword, 12);
+
+    // Funcionário (token com funcId) tem a senha na tabela `funcionarios`.
+    if (req.funcionarioId) {
+      db.prepare("UPDATE funcionarios SET password = ?, updated_at = datetime('now') WHERE id = ?")
+        .run(hash, req.funcionarioId);
+      res.json({ message: "Senha alterada com sucesso." });
+      return;
+    }
+
     db.prepare("UPDATE users SET password = ? WHERE id = ?").run(hash, user.id);
 
     // 📧 Email: password changed notification

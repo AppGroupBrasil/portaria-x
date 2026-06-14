@@ -384,6 +384,10 @@ router.put("/users/:id", async (req, res) => {
     if (block !== undefined) { updates.push("block = ?"); params.push(block?.trim() || null); }
     if (condominio_id !== undefined) { updates.push("condominio_id = ?"); params.push(condominio_id || null); }
     if (password) {
+      if (!/^\d{6}$/.test(password)) {
+        res.status(400).json({ error: "A senha deve ter exatamente 6 dígitos numéricos." });
+        return;
+      }
       const hash = await bcrypt.hash(password, 12);
       updates.push("password = ?");
       params.push(hash);

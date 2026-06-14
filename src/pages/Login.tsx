@@ -23,6 +23,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isBlocked, setIsBlocked] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const getFriendlyErrorMessage = (rawMessage: string) => rawMessage.replace(/^\[[A-Z0-9_]+\]\s*/, "");
 
@@ -33,6 +34,15 @@ export default function Login() {
       setError(blockedMsg);
       setIsBlocked(true);
       localStorage.removeItem("blocked_message");
+    }
+  }, []);
+
+  // Pré-preencher acessos salvos ("Lembrar meus acessos")
+  useEffect(() => {
+    if (localStorage.getItem("remember_me") === "1") {
+      setRememberMe(true);
+      setEmail(localStorage.getItem("saved_email") || "");
+      setPassword(localStorage.getItem("saved_password") || "");
     }
   }, []);
 
@@ -49,6 +59,15 @@ export default function Login() {
     setIsBlocked(false);
     try {
       await login(email, password);
+      if (rememberMe) {
+        localStorage.setItem("remember_me", "1");
+        localStorage.setItem("saved_email", email);
+        localStorage.setItem("saved_password", password);
+      } else {
+        localStorage.removeItem("remember_me");
+        localStorage.removeItem("saved_email");
+        localStorage.removeItem("saved_password");
+      }
       navigate("/dashboard");
     } catch (err: any) {
       const msg = getFriendlyErrorMessage(err?.message || "Erro ao fazer login.");
@@ -177,6 +196,22 @@ export default function Login() {
                 </button>
               </div>
             </div>
+
+            {/* Lembrar meus acessos */}
+            <label
+              className="flex items-center gap-2.5 cursor-pointer select-none"
+              style={{ marginTop: "14px" }}
+            >
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                style={{ width: "18px", height: "18px", accentColor: "#3b82f6", cursor: "pointer" }}
+              />
+              <span className="text-sm font-medium" style={{ color: "#fff" }}>
+                Lembrar meus acessos
+              </span>
+            </label>
 
             {/* Error */}
             {error && (

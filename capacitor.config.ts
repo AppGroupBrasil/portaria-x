@@ -5,10 +5,12 @@ const config: CapacitorConfig = {
   appName: 'Portaria X',
   webDir: 'dist',
   server: {
-    // Allow mixed content and navigation to the API server
+    // O app carrega o frontend direto do servidor, assim ajustes de UI publicados
+    // em portariax.com.br chegam ao app sem precisar republicar no Google Play.
+    // Requer conexão: sem internet o WebView não abre (não há fallback offline).
+    url: 'https://portariax.com.br',
     androidScheme: 'https',
-    // In production, all API calls go to portariax.com.br via apiFetch
-    // The allowNavigation permits WebView to open these origins
+    // Navegação permitida dentro do WebView (mesmo domínio e subdomínios).
     allowNavigation: ['portariax.com.br', '*.portariax.com.br'],
   },
   android: {
