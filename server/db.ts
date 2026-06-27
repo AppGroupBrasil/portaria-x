@@ -249,30 +249,29 @@ db.exec(`
   );
 `);
 
+// Executa uma migração idempotente (ADD COLUMN / CREATE INDEX). Ignora o erro
+// esperado de "coluna/índice já existe"; qualquer outro erro é logado em vez de
+// engolido silenciosamente.
+function migrate(sql: string): void {
+  try {
+    db.exec(sql);
+  } catch (err: any) {
+    const msg = String(err?.message || err);
+    if (/duplicate column name|already exists/i.test(msg)) return;
+    logger.warn(`Migration falhou (${msg}): ${sql.slice(0, 80)}`);
+  }
+}
+
 // Migration: central SSO uuid
-try {
-  db.exec(`ALTER TABLE users ADD COLUMN central_uuid TEXT`);
-} catch {}
-try {
-  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_central_uuid ON users(central_uuid) WHERE central_uuid IS NOT NULL`);
-} catch {}
-try {
-  db.exec(`ALTER TABLE condominios ADD COLUMN central_uuid TEXT`);
-} catch {}
-try {
-  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_condominios_central_uuid ON condominios(central_uuid) WHERE central_uuid IS NOT NULL`);
-} catch {}
+migrate(`ALTER TABLE users ADD COLUMN central_uuid TEXT`);
+migrate(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_central_uuid ON users(central_uuid) WHERE central_uuid IS NOT NULL`);
+migrate(`ALTER TABLE condominios ADD COLUMN central_uuid TEXT`);
+migrate(`CREATE UNIQUE INDEX IF NOT EXISTS idx_condominios_central_uuid ON condominios(central_uuid) WHERE central_uuid IS NOT NULL`);
 
 // Migration: add ocorrencia columns if missing
-try {
-  db.exec(`ALTER TABLE livro_protocolo ADD COLUMN titulo TEXT`);
-} catch {}
-try {
-  db.exec(`ALTER TABLE livro_protocolo ADD COLUMN descricao TEXT`);
-} catch {}
-try {
-  db.exec(`ALTER TABLE livro_protocolo ADD COLUMN audio TEXT`);
-} catch {}
+migrate(`ALTER TABLE livro_protocolo ADD COLUMN titulo TEXT`);
+migrate(`ALTER TABLE livro_protocolo ADD COLUMN descricao TEXT`);
+migrate(`ALTER TABLE livro_protocolo ADD COLUMN audio TEXT`);
 
 // ─── Condominio Config table (per-condominio settings) ───
 db.exec(`
@@ -323,27 +322,15 @@ db.exec(`
 `);
 
 // Add device_protocol and device_config columns if missing
-try {
-  db.exec(`ALTER TABLE gate_access_points ADD COLUMN device_protocol TEXT NOT NULL DEFAULT 'ewelink'`);
-} catch {}
-try {
-  db.exec(`ALTER TABLE gate_access_points ADD COLUMN device_config TEXT`);
-} catch {}
+migrate(`ALTER TABLE gate_access_points ADD COLUMN device_protocol TEXT NOT NULL DEFAULT 'ewelink'`);
+migrate(`ALTER TABLE gate_access_points ADD COLUMN device_config TEXT`);
 // Add channel column for multi-channel devices (SONOFF 4CH etc.)
-try {
-  db.exec(`ALTER TABLE gate_access_points ADD COLUMN channel INTEGER`);
-} catch {}
+migrate(`ALTER TABLE gate_access_points ADD COLUMN channel INTEGER`);
 // Allow manual open (button/biometric) — controlled by síndico
-try {
-  db.exec(`ALTER TABLE gate_access_points ADD COLUMN allow_manual_open INTEGER NOT NULL DEFAULT 1`);
-} catch {}
+migrate(`ALTER TABLE gate_access_points ADD COLUMN allow_manual_open INTEGER NOT NULL DEFAULT 1`);
 // Botoeira permissions — separate for morador and portaria (staff)
-try {
-  db.exec(`ALTER TABLE gate_access_points ADD COLUMN allow_botoeira_morador INTEGER NOT NULL DEFAULT 1`);
-} catch {}
-try {
-  db.exec(`ALTER TABLE gate_access_points ADD COLUMN allow_botoeira_portaria INTEGER NOT NULL DEFAULT 1`);
-} catch {}
+migrate(`ALTER TABLE gate_access_points ADD COLUMN allow_botoeira_morador INTEGER NOT NULL DEFAULT 1`);
+migrate(`ALTER TABLE gate_access_points ADD COLUMN allow_botoeira_portaria INTEGER NOT NULL DEFAULT 1`);
 
 
 // ─── Cameras table (CCTV monitoring) ───

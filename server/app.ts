@@ -40,6 +40,11 @@ export async function createApp(): Promise<express.Express> {
   const app = express();
   const isProd = process.env.NODE_ENV === "production";
 
+  // Atrás do Traefik/Coolify: confia no primeiro proxy para que req.ip seja o IP
+  // real do cliente (X-Forwarded-For). Sem isto o rate limiting agruparia todos
+  // os clientes no IP do proxy.
+  app.set("trust proxy", 1);
+
   // Security headers (helmet) — em prod bloqueia eval; em dev permite (Vite HMR).
   const scriptSrc = isProd
     ? ["'self'", "'unsafe-inline'"]
@@ -127,7 +132,6 @@ export async function createApp(): Promise<express.Express> {
       const ip = ipKeyGenerator(req.ip || req.socket.remoteAddress || "unknown");
       return `${ip}:${email}`;
     },
-    validate: { xForwardedForHeader: false },
   });
   app.use("/api/auth/login", authLimiter);
   app.use("/api/auth/register", authLimiter);
