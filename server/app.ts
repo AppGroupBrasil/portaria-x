@@ -45,10 +45,13 @@ export async function createApp(): Promise<express.Express> {
   // os clientes no IP do proxy.
   app.set("trust proxy", 1);
 
-  // Security headers (helmet) — em prod bloqueia eval; em dev permite (Vite HMR).
+  // Security headers (helmet). O HTML de produção não tem <script> inline
+  // executável (só blocos JSON-LD, isentos de CSP), então prod dispensa
+  // 'unsafe-inline'/'unsafe-eval'. Dev mantém ambos para o HMR do Vite.
+  // O banner externo do AppGroup precisa ser liberado explicitamente por host.
   const scriptSrc = isProd
-    ? ["'self'", "'unsafe-inline'"]
-    : ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
+    ? ["'self'", "https://appgroupbrasil.com.br"]
+    : ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://appgroupbrasil.com.br"];
 
   app.use(helmet({
     contentSecurityPolicy: {

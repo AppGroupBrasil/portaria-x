@@ -13,6 +13,7 @@ import { authenticate, authorize } from "./middleware.js";
 import { sendPushToPortaria } from "./pushService.js";
 import { notifyPortariaWhatsApp } from "./whatsappService.js";
 import { logger } from "./logger.js";
+import { brazilTimeStr } from "./timeBrazil.js";
 
 const router = Router();
 
@@ -36,8 +37,8 @@ function hasValidCoordinates(latitude: unknown, longitude: unknown): boolean {
 // ─── Check if current time is within the active schedule ──
 function isWithinSchedule(inicio: string | null, fim: string | null): boolean {
   if (!inicio || !fim) return true; // No schedule = always active
-  const now = new Date();
-  const hhmm = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  // Hora no fuso do Brasil (servidor em produção roda em UTC).
+  const hhmm = brazilTimeStr();
 
   // Handle overnight ranges (e.g., 22:00 → 06:00)
   if (inicio <= fim) {
@@ -176,7 +177,12 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
 
     // 4) Calculate distance
     const distance = haversine(latitude, longitude, condo.latitude, condo.longitude);
-    const effectiveRadius = radius_meters || 200;
+    // Raio vem do cliente — limitar a [50, 1000]m para o morador não forjar
+    // "cheguei" de longe enviando um raio gigante.
+    const rawRadius = Number(radius_meters);
+    const effectiveRadius = Number.isFinite(rawRadius) && rawRadius > 0
+      ? Math.min(Math.max(Math.round(rawRadius), 50), 1000)
+      : 200;
 
     const roundedDistance = Math.max(0, Math.round(distance));
     const displayDistance = distance <= ENTRY_COMPLETION_DISTANCE_METERS ? 0 : roundedDistance;
@@ -412,7 +418,7 @@ router.get("/history", authenticate, async (req: Request, res: Response) => {
       return;
     }
 
-    const limit = parseInt(req.query.limit as string) || 50;
+    const limit = Math.min(Math.max(parseInt(req.query.limit as string) || 50, 1), 200);
 
     // Funcionarios+ see all events; moradores see only their own
     let events;

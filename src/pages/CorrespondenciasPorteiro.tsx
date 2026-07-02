@@ -253,9 +253,9 @@ export default function CorrespondenciasPorteiro() {
       if (remetente) msgLines.push(`*Remetente:* ${remetente}`);
       if (descricao) msgLines.push(`*Descricao:* ${descricao}`);
 
-      // If photo exists, include public link
-      if (foto) {
-        const fotoUrl = `${APP_ORIGIN}/api/correspondencias/foto/${data.protocolo}`;
+      // If photo exists, include public link (token aleatório, não enumerável)
+      if (foto && data.foto_token) {
+        const fotoUrl = `${APP_ORIGIN}/api/correspondencias/foto/${data.foto_token}`;
         msgLines.push(``, `*Foto da correspondencia:*`, fotoUrl);
       }
 

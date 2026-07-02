@@ -33,6 +33,7 @@ import { sendPushToPortaria } from "./pushService.js";
 import { pulseDevice } from "./ewelinkService.js";
 import { JWT_SECRET } from "./jwtSecret.js";
 import { logger } from "./logger.js";
+import { brazilTimeStr } from "./timeBrazil.js";
 const COOKIE_NAME = "session_token";
 
 interface ArrivalWsClient {
@@ -97,8 +98,8 @@ function isWithinSchedule(condominioId: number): boolean {
   const inicio = startRow?.value || null;
   const fim = endRow?.value || null;
   if (!inicio || !fim) return true;
-  const now = new Date();
-  const hhmm = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  // Hora no fuso do Brasil (servidor em produção roda em UTC).
+  const hhmm = brazilTimeStr();
   if (inicio <= fim) return hhmm >= inicio && hhmm <= fim;
   return hhmm >= inicio || hhmm <= fim;
 }
@@ -231,7 +232,11 @@ export function initArrivalWebSocket(server?: Server) {
             }
 
             const distance = haversine(latitude, longitude, condo.latitude, condo.longitude);
-            const effectiveRadius = radius_meters || 200;
+            // Raio vem do cliente — limitar a [50, 1000]m (evita forjar "cheguei" de longe).
+            const rawRadius = Number(radius_meters);
+            const effectiveRadius = Number.isFinite(rawRadius) && rawRadius > 0
+              ? Math.min(Math.max(Math.round(rawRadius), 50), 1000)
+              : 200;
             const displayDistance = distance <= ENTRY_COMPLETION_DISTANCE_METERS ? 0 : Math.max(0, Math.round(distance));
 
             const existing = db.prepare(

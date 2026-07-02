@@ -240,7 +240,7 @@ router.get("/face-descriptors", authenticate, authorize("master", "administrador
     if (ready === "true") {
       // Apenas visitantes com descriptor pré-computado (sem foto = payload pequeno)
       const visitors = db.prepare(
-        "SELECT id, nome, documento, bloco, apartamento, face_descriptor, created_at FROM visitors WHERE (condominio_id = ? OR condominio_id IS NULL) AND face_descriptor IS NOT NULL ORDER BY created_at DESC"
+        "SELECT id, nome, documento, bloco, apartamento, face_descriptor, created_at FROM visitors WHERE condominio_id = ? AND face_descriptor IS NOT NULL ORDER BY created_at DESC"
       ).all(condominioId) as any[];
       res.json(visitors.map((v: any) => ({
         ...v,
@@ -253,7 +253,7 @@ router.get("/face-descriptors", authenticate, authorize("master", "administrador
     if (pending === "true") {
       // Apenas visitantes com foto mas SEM descriptor (para pré-extração)
       const visitors = db.prepare(
-        "SELECT id, nome, documento, foto, bloco, apartamento, created_at FROM visitors WHERE (condominio_id = ? OR condominio_id IS NULL) AND face_descriptor IS NULL AND foto IS NOT NULL ORDER BY created_at DESC"
+        "SELECT id, nome, documento, foto, bloco, apartamento, created_at FROM visitors WHERE condominio_id = ? AND face_descriptor IS NULL AND foto IS NOT NULL ORDER BY created_at DESC"
       ).all(condominioId) as any[];
       res.json(visitors.map((v: any) => ({
         ...v,
@@ -264,7 +264,7 @@ router.get("/face-descriptors", authenticate, authorize("master", "administrador
 
     // Fallback: tudo (comportamento antigo)
     const visitors = db.prepare(
-      "SELECT id, nome, documento, foto, bloco, apartamento, face_descriptor, created_at FROM visitors WHERE (condominio_id = ? OR condominio_id IS NULL) AND (face_descriptor IS NOT NULL OR foto IS NOT NULL) ORDER BY created_at DESC"
+      "SELECT id, nome, documento, foto, bloco, apartamento, face_descriptor, created_at FROM visitors WHERE condominio_id = ? AND (face_descriptor IS NOT NULL OR foto IS NOT NULL) ORDER BY created_at DESC"
     ).all(condominioId) as any[];
     res.json(visitors.map((v: any) => ({
       ...v,
@@ -284,10 +284,15 @@ router.patch("/:id/face-descriptor", authenticate, authorize("master", "administ
       res.status(400).json({ error: "face_descriptor inválido" });
       return;
     }
-    db.prepare("UPDATE visitors SET face_descriptor = ? WHERE id = ?").run(
+    const upd = db.prepare("UPDATE visitors SET face_descriptor = ? WHERE id = ? AND condominio_id = ?").run(
       JSON.stringify(face_descriptor),
-      req.params.id
+      req.params.id,
+      req.user!.condominio_id
     );
+    if (upd.changes === 0) {
+      res.status(404).json({ error: "Visitante não encontrado." });
+      return;
+    }
     res.json({ ok: true });
   } catch (err: any) {
     logger.error("Erro ao salvar face_descriptor:", err);

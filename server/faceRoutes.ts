@@ -43,7 +43,7 @@ router.post("/compare-visitors", authenticate, authorize("master", "administrado
 
     // 2. Buscar visitantes com descriptor no DB
     const visitors = db.prepare(
-      "SELECT id, nome, documento, bloco, apartamento, face_descriptor, created_at FROM visitors WHERE (condominio_id = ? OR condominio_id IS NULL) AND face_descriptor IS NOT NULL ORDER BY created_at DESC"
+      "SELECT id, nome, documento, bloco, apartamento, face_descriptor, created_at FROM visitors WHERE condominio_id = ? AND face_descriptor IS NOT NULL ORDER BY created_at DESC"
     ).all(condominioId) as any[];
 
     const knownFaces = visitors
@@ -74,7 +74,7 @@ router.post("/compare-visitors", authenticate, authorize("master", "administrado
 
     // 5. Se não encontrou, tentar processar visitantes com foto mas sem descriptor
     const pending = db.prepare(
-      "SELECT id, nome, documento, foto, bloco, apartamento, created_at FROM visitors WHERE (condominio_id = ? OR condominio_id IS NULL) AND face_descriptor IS NULL AND foto IS NOT NULL ORDER BY created_at DESC LIMIT 50"
+      "SELECT id, nome, documento, foto, bloco, apartamento, created_at FROM visitors WHERE condominio_id = ? AND face_descriptor IS NULL AND foto IS NOT NULL ORDER BY created_at DESC LIMIT 50"
     ).all(condominioId) as any[];
 
     let bestPendingMatch: any = null;
@@ -204,11 +204,13 @@ router.post("/extract", authenticate, authorize("master", "administradora", "sin
       return;
     }
 
-    // Se forneceu visitor_id, salvar no DB
+    // Se forneceu visitor_id, salvar no DB (escopado ao condomínio do usuário —
+    // impede gravar descriptor em visitante de outro condomínio via id adivinhado).
     if (visitor_id) {
-      db.prepare("UPDATE visitors SET face_descriptor = ? WHERE id = ?").run(
+      db.prepare("UPDATE visitors SET face_descriptor = ? WHERE id = ? AND condominio_id = ?").run(
         JSON.stringify(descriptor),
-        visitor_id
+        visitor_id,
+        req.user!.condominio_id
       );
     }
 

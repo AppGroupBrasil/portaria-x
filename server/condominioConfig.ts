@@ -161,6 +161,13 @@ export function applyDefaultConfig(targetCondominioId: number): void {
 router.get("/public", (req: Request, res: Response) => {
   try {
     const condominioId = req.query.condominio_id ? Number(req.query.condominio_id) : null;
+    // Sem condomínio informado não há config pública a devolver. Antes a query
+    // agregava a config de TODOS os condomínios num único objeto (vazamento entre
+    // tenants); o auto-cadastro sempre traz o condominio_id no link.
+    if (!condominioId || Number.isNaN(condominioId)) {
+      res.json({});
+      return;
+    }
     const publicKeys = [
       'require_visit_photo','require_visit_document','require_visit_phone',
       'require_visit_reason','require_visit_doc_photo',
@@ -168,12 +175,8 @@ router.get("/public", (req: Request, res: Response) => {
       'feature_auto_cadastro',
     ];
     const placeholders = publicKeys.map(() => '?').join(',');
-    let query = `SELECT key, value FROM condominio_config WHERE key IN (${placeholders})`;
-    let params: any[] = [...publicKeys];
-    if (condominioId) {
-      query += ` AND condominio_id = ?`;
-      params.push(condominioId);
-    }
+    const query = `SELECT key, value FROM condominio_config WHERE key IN (${placeholders}) AND condominio_id = ?`;
+    const params: any[] = [...publicKeys, condominioId];
     const rows = db.prepare(query).all(...params) as { key: string; value: string }[];
     const config: Record<string, string> = {};
     for (const row of rows) {

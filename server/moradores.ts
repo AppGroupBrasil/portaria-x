@@ -1,5 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import db, { type DbUser } from "./db.js";
 import { authenticate, authorize, condominioScope, moradorSelfScope, resolveAccessibleCondominio } from "./middleware.js";
 import { emailContaCriada } from "./emailService.js";
@@ -144,8 +145,8 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
     const scope = condominioScope(user);
 
     const morador = db.prepare(
-      `SELECT id FROM users WHERE id = ? AND role = 'morador' AND ${scope.clause}`
-    ).get(id, ...scope.params);
+      `SELECT id, condominio_id FROM users WHERE id = ? AND role = 'morador' AND ${scope.clause}`
+    ).get(id, ...scope.params) as { id: number; condominio_id: number | null } | undefined;
     if (!morador) { res.status(404).json({ error: "Morador não encontrado." }); return; }
 
     if (!nome || !bloco || !unidade || !perfil || !email) {
@@ -153,8 +154,9 @@ router.put("/:id", authorize("master", "administradora", "sindico"), async (req,
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { res.status(400).json({ error: "E-mail inválido." }); return; }
 
-    // Verificar se o bloco existe no condomínio
-    const condoId = user.condominio_id || null;
+    // Verificar se o bloco existe no condomínio do morador (master/administradora
+    // têm condominio_id nulo, então o vínculo correto é sempre o do próprio morador).
+    const condoId = morador.condominio_id;
     if (condoId) {
       const blocoExists = db.prepare("SELECT id FROM blocks WHERE condominio_id = ? AND name = ?").get(condoId, bloco);
       if (!blocoExists) {
@@ -214,7 +216,7 @@ router.post("/gerar-link", authorize("master", "administradora", "sindico"), (re
       res.status(403).json({ error: "Sem permissão para este condomínio." });
       return;
     }
-    const token = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+    const token = crypto.randomBytes(16).toString("base64url");
     // Use Referer/Origin header to build frontend URL, or fallback to request host
     const origin = req.get("origin") || req.get("referer")?.replace(/\/[^/]*$/, "") || `${req.protocol}://${req.get("host")}`;
     const condoQuery = condoId ? `&condo=${condoId}` : "";

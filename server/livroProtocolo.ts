@@ -169,11 +169,12 @@ router.delete("/:id", authenticate, (req: Request, res: Response) => {
   }
 });
 
-// ─── PUBLIC: Get photo by protocol ───────────────────────
-router.get("/foto/:protocolo", (req: Request, res: Response) => {
+// ─── Get photo by protocol (autenticado + escopado ao condomínio) ─────────
+router.get("/foto/:protocolo", authenticate, (req: Request, res: Response) => {
   try {
+    const user = req.user!;
     const protocolo = String(req.params.protocolo);
-    const entry = db.prepare("SELECT foto FROM livro_protocolo WHERE protocolo = ?").get(protocolo) as { foto: string | null } | undefined;
+    const entry = db.prepare("SELECT foto FROM livro_protocolo WHERE protocolo = ? AND condominio_id = ?").get(protocolo, user.condominio_id) as { foto: string | null } | undefined;
 
     if (!entry || !entry.foto) {
       res.status(404).json({ error: "Foto nao encontrada." });

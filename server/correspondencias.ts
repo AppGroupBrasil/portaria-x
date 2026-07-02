@@ -1,4 +1,5 @@
 ﻿import { Router, Request, Response } from "express";
+import crypto from "crypto";
 import db from "./db.js";
 import { authenticate } from "./middleware.js";
 import { emailCorrespondenciaChegou } from "./emailService.js";
@@ -79,12 +80,13 @@ router.post("/", authenticate, (req: Request, res: Response) => {
     }
 
     const protocolo = generateProtocolo();
+    const fotoToken = crypto.randomBytes(16).toString("hex");
 
     const result = db.prepare(`
       INSERT INTO correspondencias
         (condominio_id, protocolo, morador_id, morador_name, bloco, apartamento,
-         tipo, remetente, descricao, foto, status, registrado_por)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)
+         tipo, remetente, descricao, foto, foto_token, status, registrado_por)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)
     `).run(
       user.condominio_id,
       protocolo,
@@ -96,6 +98,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
       remetente || null,
       descricao || null,
       foto || null,
+      fotoToken,
       user.id
     );
 
@@ -117,6 +120,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
     res.status(201).json({
       id: result.lastInsertRowid,
       protocolo,
+      foto_token: fotoToken,
       message: "Correspondência registrada com sucesso.",
     });
   } catch (err: any) {
@@ -188,11 +192,17 @@ router.delete("/:id", authenticate, (req: Request, res: Response) => {
   }
 });
 
-// ─── PUBLIC: Get photo by protocol (no auth needed for WhatsApp link) ─────
-router.get("/foto/:protocolo", (req: Request, res: Response) => {
+// ─── PUBLIC: Get photo by random token (no auth — usado no link do WhatsApp) ─
+// Casa por foto_token aleatório (não pelo protocolo sequencial enumerável).
+router.get("/foto/:token", (req: Request, res: Response) => {
   try {
-    const protocolo = String(req.params.protocolo);
-    const corr = db.prepare("SELECT foto FROM correspondencias WHERE protocolo = ?").get(protocolo) as { foto: string | null } | undefined;
+    const token = String(req.params.token);
+    // Rejeita tokens fora do formato esperado (32 hex) para evitar varredura.
+    if (!/^[a-f0-9]{32}$/.test(token)) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+    const corr = db.prepare("SELECT foto FROM correspondencias WHERE foto_token = ?").get(token) as { foto: string | null } | undefined;
 
     if (!corr || !corr.foto) {
       res.status(404).json({ error: "Foto não encontrada." });

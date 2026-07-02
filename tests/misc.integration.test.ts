@@ -72,9 +72,9 @@ describe("visitor QR share", () => {
     const res = await agent.post("/api/visitor-qr/share").send({
       qr_data: "QR-DATA-XYZ",
       visitor_name: "Visitante Teste",
-      data_inicio: "2026-06-01",
+      data_inicio: new Date().toISOString().split("T")[0],
       hora_inicio: "08:00",
-      data_fim: "2026-06-30",
+      data_fim: new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
       hora_fim: "18:00",
     });
     expect(res.status).toBe(200);

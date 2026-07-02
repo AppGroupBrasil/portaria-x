@@ -3,6 +3,7 @@ import db from "./db.js";
 import crypto from "crypto";
 import { logger } from "./logger.js";
 import { authenticate } from "./middleware.js";
+import { brazilDateStr } from "./timeBrazil.js";
 
 const router = Router();
 
@@ -28,8 +29,9 @@ router.post("/share", authenticate, (req: Request, res: Response) => {
       return res.status(400).json({ error: "Dados obrigatórios ausentes." });
     }
 
-    // Generate a short unique token (8 chars)
-    const token = crypto.randomBytes(6).toString("base64url").slice(0, 8);
+    // Token aleatório de 128 bits (não enumerável). Protege dados pessoais do
+    // visitante expostos na rota pública GET /:token.
+    const token = crypto.randomBytes(16).toString("base64url");
 
     db.prepare(`
       INSERT INTO visitor_qr_shares (token, qr_data, visitor_name, visitor_doc, visitor_parentesco, data_inicio, hora_inicio, data_fim, hora_fim, morador_nome, bloco, unidade, condominio_nome)
@@ -67,6 +69,11 @@ router.get("/:token", (req: Request, res: Response) => {
     `).get(token) as any;
 
     if (!row) {
+      return res.status(404).json({ error: "QR Code não encontrado ou expirado." });
+    }
+
+    // Expiração: após a data_fim (fuso do Brasil) o link não revela mais dados.
+    if (row.data_fim && String(row.data_fim) < brazilDateStr()) {
       return res.status(404).json({ error: "QR Code não encontrado ou expirado." });
     }
 

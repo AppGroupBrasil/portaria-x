@@ -1,11 +1,12 @@
 ﻿import { Router, Request, Response } from "express";
 import db from "./db.js";
-import { authenticate } from "./middleware.js";
+import { authenticate, authorize } from "./middleware.js";
 import crypto from "crypto";
 import { captureSnapshotForCondominio } from "./cameraSnapshot.js";
 import { notifyPortariaWhatsApp, notifyUserWhatsApp } from "./whatsappService.js";
 import { sendPushToUser } from "./pushService.js";
 import { logger } from "./logger.js";
+import { brazilDateStr } from "./timeBrazil.js";
 
 const router = Router();
 
@@ -150,7 +151,7 @@ router.post("/", authenticate, (req: Request, res: Response) => {
 });
 
 // ─── PORTEIRO CADASTRO (creates pending, notifies morador) ─
-router.post("/portaria-cadastro", authenticate, (req: Request, res: Response) => {
+router.post("/portaria-cadastro", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
     const user = req.user!;
     const { placa, modelo, cor, motorista_nome, bloco, apartamento, observacao, foto_placa } = req.body;
@@ -224,7 +225,7 @@ router.post("/portaria-cadastro", authenticate, (req: Request, res: Response) =>
     ).get(user.condominio_id, bloco, apartamento) as { id: number; name: string; phone: string | null } | undefined;
 
     const token = crypto.randomUUID();
-    const today = new Date().toISOString().split("T")[0];
+    const today = brazilDateStr();
 
     const result = db.prepare(`
       INSERT INTO vehicle_authorizations
@@ -323,7 +324,7 @@ router.post("/aprovar/:token", (req: Request, res: Response) => {
     }
 
     if (acao === "aprovar") {
-      const today = new Date().toISOString().split("T")[0];
+      const today = brazilDateStr();
       db.prepare(`
         UPDATE vehicle_authorizations
         SET status = 'ativa',
@@ -351,7 +352,7 @@ router.post("/aprovar/:token", (req: Request, res: Response) => {
 });
 
 // ─── CONFIRM ENTRY (porteiro) ────────────────────────────
-router.post("/:id/confirmar-entrada", authenticate, (req: Request, res: Response) => {
+router.post("/:id/confirmar-entrada", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
     const user = req.user!;
     const vehicle = db.prepare(
@@ -401,7 +402,7 @@ router.post("/:id/confirmar-entrada", authenticate, (req: Request, res: Response
 });
 
 // ─── REQUEST EXIT (porteiro) ─────────────────────────────
-router.post("/:id/solicitar-saida", authenticate, (req: Request, res: Response) => {
+router.post("/:id/solicitar-saida", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
     const user = req.user!;
     const vehicle = db.prepare(
@@ -430,7 +431,8 @@ router.post("/:id/solicitar-saida", authenticate, (req: Request, res: Response) 
 // ─── AUTHORIZE EXIT (via link / morador) ─────────────────
 router.post("/:id/autorizar-saida", authenticate, (req: Request, res: Response) => {
   try {
-    const condominioId = req.user!.condominio_id;
+    const user = req.user!;
+    const condominioId = user.condominio_id;
 
     const vehicle = db.prepare(
       "SELECT * FROM vehicle_authorizations WHERE id = ? AND condominio_id = ?"
@@ -438,6 +440,11 @@ router.post("/:id/autorizar-saida", authenticate, (req: Request, res: Response) 
 
     if (!vehicle) {
       res.status(404).json({ error: "Autorização não encontrada." });
+      return;
+    }
+
+    if (user.role === "morador" && vehicle.morador_id !== user.id) {
+      res.status(403).json({ error: "Você só pode autorizar a saída de veículos vinculados a você." });
       return;
     }
 
@@ -457,7 +464,7 @@ router.post("/:id/autorizar-saida", authenticate, (req: Request, res: Response) 
 });
 
 // ─── REGISTER EXIT (porteiro — direct) ───────────────────
-router.post("/:id/registrar-saida", authenticate, (req: Request, res: Response) => {
+router.post("/:id/registrar-saida", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
     const user = req.user!;
     const vehicle = db.prepare(
@@ -561,13 +568,17 @@ router.post("/:id/responder-morador", authenticate, (req: Request, res: Response
       res.status(404).json({ error: "Autorização não encontrada." });
       return;
     }
+    if (user.role === "morador" && vehicle.morador_id !== user.id) {
+      res.status(403).json({ error: "Você só pode responder solicitações vinculadas a você." });
+      return;
+    }
     if (vehicle.status !== "pendente_aprovacao") {
       res.status(400).json({ error: "Esta solicitação já foi respondida." });
       return;
     }
 
     if (acao === "aprovar") {
-      const today = new Date().toISOString().split("T")[0];
+      const today = brazilDateStr();
       db.prepare(`
         UPDATE vehicle_authorizations
         SET status = 'ativa', data_inicio = ?, data_fim = ?, morador_observacao = ?
@@ -590,10 +601,10 @@ router.post("/:id/responder-morador", authenticate, (req: Request, res: Response
 });
 
 // ─── BULK CANCEL active authorizations for today ─────────
-router.post("/cancelar-dia", authenticate, (req: Request, res: Response) => {
+router.post("/cancelar-dia", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
     const user = req.user!;
-    const today = new Date().toISOString().split("T")[0];
+    const today = brazilDateStr();
 
     // Fetch affected authorizations before cancelling (for notifications)
     const affected = db.prepare(`

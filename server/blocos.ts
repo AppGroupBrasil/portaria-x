@@ -1,6 +1,6 @@
 import { Router } from "express";
 import db from "./db.js";
-import { authenticate, authorize, condominioScope } from "./middleware.js";
+import { authenticate, authorize, condominioScope, resolveAccessibleCondominio } from "./middleware.js";
 import { logger } from "./logger.js";
 
 const router = Router();
@@ -67,10 +67,10 @@ router.post("/automatico", authorize("master", "administradora", "sindico"), asy
       return;
     }
 
-    // Resolve condominio: use body condominioId (for administradoras) or user's condominio_id
-    let condoId = req.user!.condominio_id || condominioId || null;
+    // Resolve condominio validando o acesso (administradora só cria nos seus condomínios).
+    const condoId = resolveAccessibleCondominio(req.user!, condominioId);
     if (!condoId) {
-      res.status(400).json({ error: "Selecione um condomínio." });
+      res.status(400).json({ error: "Selecione um condomínio válido." });
       return;
     }
 
@@ -116,10 +116,10 @@ router.post("/personalizado", authorize("master", "administradora", "sindico"), 
       return;
     }
 
-    // Resolve condominio: use body condominioId (for administradoras) or user's condominio_id
-    let condoId = req.user!.condominio_id || condominioId || null;
+    // Resolve condominio validando o acesso (administradora só cria nos seus condomínios).
+    const condoId = resolveAccessibleCondominio(req.user!, condominioId);
     if (!condoId) {
-      res.status(400).json({ error: "Selecione um condomínio." });
+      res.status(400).json({ error: "Selecione um condomínio válido." });
       return;
     }
 

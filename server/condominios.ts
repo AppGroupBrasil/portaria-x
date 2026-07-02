@@ -90,8 +90,14 @@ router.delete("/:id", authorize("master"), (req, res) => {
       db.prepare("DELETE FROM delivery_authorizations WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM pre_authorizations WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM visitors WHERE condominio_id = ?").run(condoId);
+      db.prepare("DELETE FROM gate_logs WHERE condominio_id = ?").run(condoId);
+      db.prepare("DELETE FROM gate_access_points WHERE condominio_id = ?").run(condoId);
+      db.prepare("DELETE FROM estou_chegando_events WHERE condominio_id = ?").run(condoId);
+      db.prepare("DELETE FROM whatsapp_log WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM blocks WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM funcionarios WHERE condominio_id = ?").run(condoId);
+      // Tokens de push ficam órfãos se os usuários forem apagados sem FK cascade.
+      db.prepare("DELETE FROM device_tokens WHERE user_id IN (SELECT id FROM users WHERE condominio_id = ?)").run(condoId);
       db.prepare("DELETE FROM users WHERE condominio_id = ?").run(condoId);
       db.prepare("DELETE FROM condominios WHERE id = ?").run(condoId);
     });

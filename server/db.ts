@@ -3,6 +3,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { logger } from "./logger.js";
+import { brazilDateStr, brazilTimeStr } from "./timeBrazil.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -272,6 +273,12 @@ migrate(`CREATE UNIQUE INDEX IF NOT EXISTS idx_condominios_central_uuid ON condo
 migrate(`ALTER TABLE livro_protocolo ADD COLUMN titulo TEXT`);
 migrate(`ALTER TABLE livro_protocolo ADD COLUMN descricao TEXT`);
 migrate(`ALTER TABLE livro_protocolo ADD COLUMN audio TEXT`);
+
+// Migration: token aleatório para a foto pública da correspondência.
+// A rota pública /foto passa a casar por este token (não pelo protocolo
+// sequencial/enumerável). Rows antigas são preenchidas com token aleatório.
+migrate(`ALTER TABLE correspondencias ADD COLUMN foto_token TEXT`);
+db.prepare(`UPDATE correspondencias SET foto_token = lower(hex(randomblob(16))) WHERE foto_token IS NULL`).run();
 
 // ─── Condominio Config table (per-condominio settings) ───
 db.exec(`
@@ -782,12 +789,13 @@ export function cleanupExpiredAuthorizations(): number {
       WHERE key = 'vehicle_auto_cancel_time' AND value != ''
     `).all() as { condominio_id: number; value: string }[];
 
-    const nowLocal = new Date();
-    const nowHHMM = nowLocal.toTimeString().slice(0, 5); // "HH:MM"
+    // Fuso do Brasil: em produção o servidor roda em UTC, então toTimeString()/
+    // toISOString() adiantariam 3h e cancelariam no dia/hora errados.
+    const nowHHMM = brazilTimeStr(); // "HH:MM"
+    const todayStr = brazilDateStr(); // "YYYY-MM-DD"
 
     for (const cfg of autoCancelConfigs) {
       if (!cfg.value || cfg.value > nowHHMM) continue;
-      const todayStr = nowLocal.toISOString().split("T")[0];
 
       // Fetch affected vehicles before cancelling (for notifications)
       const affectedVehicles = db.prepare(`

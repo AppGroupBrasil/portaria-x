@@ -29,17 +29,66 @@ function logAction(userId: number, action: string, entityType: string, entityId:
   ).run(userId, action, entityType, entityId, details);
 }
 
+const VALID_ROLES = ["master", "administradora", "sindico", "funcionario", "morador"];
+
+// IDs de administradoras do mesmo grupo (a própria + sub-administradoras).
+function adminGroupIds(user: DbUser): number[] {
+  const adminId = user.parent_administradora_id || user.id;
+  const rows = db.prepare(
+    "SELECT id FROM users WHERE (id = ? OR parent_administradora_id = ?) AND role = 'administradora'"
+  ).all(adminId, adminId) as { id: number }[];
+  const ids = rows.map(r => r.id);
+  if (ids.length === 0) ids.push(adminId);
+  return ids;
+}
+
+// Condomínios visíveis no painel. master → null (todos). administradora → só os seus.
+function accessibleCondoIds(user: DbUser): number[] | null {
+  if (user.role === "master") return null;
+  const admins = adminGroupIds(user);
+  const ph = admins.map(() => "?").join(",");
+  const rows = db.prepare(
+    `SELECT id FROM condominios WHERE administradora_id IN (${ph})`
+  ).all(...admins) as { id: number }[];
+  return rows.map(r => r.id);
+}
+
+// Paginação robusta: ignora NaN e limita o teto para evitar consultas gigantes.
+function parsePageLimit(pageRaw: unknown, limitRaw: unknown, def = 20, max = 100) {
+  let page = parseInt(String(pageRaw ?? "1"), 10);
+  let limit = parseInt(String(limitRaw ?? def), 10);
+  if (!Number.isFinite(page) || page < 1) page = 1;
+  if (!Number.isFinite(limit) || limit < 1) limit = def;
+  if (limit > max) limit = max;
+  return { page, limit, offset: (page - 1) * limit };
+}
+
 // ─── ESTATÍSTICAS GERAIS ─────────────────────────────────
 router.get("/stats", (req, res) => {
   try {
-    const totalCondominios = db.prepare("SELECT COUNT(*) as count FROM condominios").get() as { count: number };
-    const totalUsers = db.prepare("SELECT COUNT(*) as count FROM users").get() as { count: number };
-    const totalBlocos = db.prepare("SELECT COUNT(*) as count FROM blocks").get() as { count: number };
-    const totalFuncionarios = db.prepare("SELECT COUNT(*) as count FROM funcionarios").get() as { count: number };
+    // Escopo por tenant: administradora só enxerga os próprios condomínios.
+    const ids = accessibleCondoIds(req.user as DbUser);
+    if (ids !== null && ids.length === 0) {
+      res.json({
+        totals: { condominios: 0, users: 0, blocos: 0, funcionarios: 0, moradores: 0 },
+        usersByRole: [], recentCondominios: [], recentUsers: [],
+      });
+      return;
+    }
+    const ph = ids ? ids.map(() => "?").join(",") : "";
+    const cp: number[] = ids || [];
+    const condoWhere = ids ? ` WHERE condominio_id IN (${ph})` : "";      // tabelas com condominio_id
+    const condoWhereId = ids ? ` WHERE id IN (${ph})` : "";               // tabela condominios
+    const condoAnd = ids ? ` AND condominio_id IN (${ph})` : "";          // acrescido a WHERE existente
+
+    const totalCondominios = db.prepare(`SELECT COUNT(*) as count FROM condominios${condoWhereId}`).get(...cp) as { count: number };
+    const totalUsers = db.prepare(`SELECT COUNT(*) as count FROM users${condoWhere}`).get(...cp) as { count: number };
+    const totalBlocos = db.prepare(`SELECT COUNT(*) as count FROM blocks${condoWhere}`).get(...cp) as { count: number };
+    const totalFuncionarios = db.prepare(`SELECT COUNT(*) as count FROM funcionarios${condoWhere}`).get(...cp) as { count: number };
 
     // Users by role
     const usersByRole = db.prepare(
-      `SELECT role, COUNT(*) as count FROM users GROUP BY role ORDER BY
+      `SELECT role, COUNT(*) as count FROM users${condoWhere} GROUP BY role ORDER BY
        CASE role
          WHEN 'master' THEN 1
          WHEN 'administradora' THEN 2
@@ -47,22 +96,22 @@ router.get("/stats", (req, res) => {
          WHEN 'funcionario' THEN 4
          WHEN 'morador' THEN 5
        END`
-    ).all() as { role: string; count: number }[];
+    ).all(...cp) as { role: string; count: number }[];
 
     // Total moradores (role='morador' in users)
     const totalMoradores = db.prepare(
-      "SELECT COUNT(*) as count FROM users WHERE role = 'morador'"
-    ).get() as { count: number };
+      `SELECT COUNT(*) as count FROM users WHERE role = 'morador'${condoAnd}`
+    ).get(...cp) as { count: number };
 
     // Recent condominios (last 5)
     const recentCondominios = db.prepare(
-      "SELECT id, name, cnpj, created_at FROM condominios ORDER BY created_at DESC LIMIT 5"
-    ).all();
+      `SELECT id, name, cnpj, created_at FROM condominios${condoWhereId} ORDER BY created_at DESC LIMIT 5`
+    ).all(...cp);
 
     // Recent users (last 5)
     const recentUsers = db.prepare(
-      "SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC LIMIT 5"
-    ).all();
+      `SELECT id, name, email, role, created_at FROM users${condoWhere} ORDER BY created_at DESC LIMIT 5`
+    ).all(...cp);
 
     res.json({
       totals: {
@@ -107,6 +156,17 @@ router.get("/condominios-dashboard", (req, res) => {
       where += " AND c.bloqueado = 1";
     } else if (bloqueado === "false") {
       where += " AND c.bloqueado = 0";
+    }
+
+    // Escopo por tenant: administradora só enxerga os próprios condomínios.
+    const acessiveis = accessibleCondoIds(req.user as DbUser);
+    if (acessiveis !== null) {
+      if (acessiveis.length === 0) {
+        res.json({ condominios: [], summary: { total: 0, adimplentes: 0, inadimplentes: 0, bloqueados: 0, ativos30d: 0, semAcesso: 0 } });
+        return;
+      }
+      where += ` AND c.id IN (${acessiveis.map(() => "?").join(",")})`;
+      params.push(...acessiveis);
     }
 
     // Validate sort column
@@ -264,8 +324,8 @@ router.put("/condominios/:id/bloquear", (req, res) => {
 // GET /api/master/users - Listar todos os usuários do sistema
 router.get("/users", (req, res) => {
   try {
-    const { role, search, page = "1", limit = "20" } = req.query;
-    const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const { role, search } = req.query;
+    const { page, limit, offset } = parsePageLimit(req.query.page, req.query.limit, 20, 100);
 
     let where = "1=1";
     const params: any[] = [];
@@ -324,9 +384,9 @@ router.get("/users", (req, res) => {
        WHERE ${where}
        ORDER BY u.created_at DESC
        LIMIT ? OFFSET ?`
-    ).all(...params, parseInt(limit as string), offset);
+    ).all(...params, limit, offset);
 
-    res.json({ users, total: total.count, page: parseInt(page as string), limit: parseInt(limit as string) });
+    res.json({ users, total: total.count, page, limit });
   } catch (err) {
     logger.error("Erro ao listar usuários:", err);
     res.status(500).json({ error: "Erro interno do servidor." });
@@ -365,11 +425,27 @@ router.put("/users/:id", async (req, res) => {
       return;
     }
 
+    // Validação do cargo (evita gravar role arbitrário).
+    if (role && !VALID_ROLES.includes(role)) {
+      res.status(400).json({ error: "Cargo inválido." });
+      return;
+    }
+
     // Administradora must only edit users inside her condominios.
-    // Also: cannot move a user to a condominio she doesn't own.
+    // Also: cannot move a user to a condominio she doesn't own, nem para "sem condomínio".
     if (req.user!.role === "administradora") {
-      if (user.condominio_id && !ensureCondoAccess(req, res, user.condominio_id)) return;
-      if (condominio_id && !ensureCondoAccess(req, res, Number(condominio_id))) return;
+      if (!user.condominio_id) {
+        res.status(403).json({ error: "Sem permissão para este usuário." });
+        return;
+      }
+      if (!ensureCondoAccess(req, res, user.condominio_id)) return;
+      if (condominio_id !== undefined) {
+        if (!condominio_id) {
+          res.status(400).json({ error: "Condomínio inválido." });
+          return;
+        }
+        if (!ensureCondoAccess(req, res, Number(condominio_id))) return;
+      }
     }
 
     const updates: string[] = [];
@@ -446,7 +522,11 @@ router.delete("/users/:id", (req, res) => {
     }
 
     // Administradora must only delete users inside her condominios.
-    if (req.user!.role === "administradora" && user.condominio_id) {
+    if (req.user!.role === "administradora") {
+      if (!user.condominio_id) {
+        res.status(403).json({ error: "Sem permissão para este usuário." });
+        return;
+      }
       if (!ensureCondoAccess(req, res, user.condominio_id)) return;
     }
 
@@ -513,11 +593,18 @@ router.put("/config", (req, res) => {
 // GET /api/master/logs - Listar logs de auditoria
 router.get("/logs", (req, res) => {
   try {
-    const { action, entity_type, page = "1", limit = "50" } = req.query;
-    const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
+    const { action, entity_type } = req.query;
+    const { page, limit, offset } = parsePageLimit(req.query.page, req.query.limit, 50, 200);
 
     let where = "1=1";
     const params: any[] = [];
+
+    // Escopo por tenant: administradora só vê os próprios logs (do seu grupo).
+    if (req.user!.role !== "master") {
+      const admins = adminGroupIds(req.user as DbUser);
+      where += ` AND a.user_id IN (${admins.map(() => "?").join(",")})`;
+      params.push(...admins);
+    }
 
     if (action) {
       where += " AND a.action = ?";
@@ -540,9 +627,9 @@ router.get("/logs", (req, res) => {
        WHERE ${where}
        ORDER BY a.created_at DESC
        LIMIT ? OFFSET ?`
-    ).all(...params, parseInt(limit as string), offset);
+    ).all(...params, limit, offset);
 
-    res.json({ logs, total: total.count, page: parseInt(page as string), limit: parseInt(limit as string) });
+    res.json({ logs, total: total.count, page, limit });
   } catch (err) {
     logger.error("Erro ao buscar logs:", err);
     res.status(500).json({ error: "Erro interno do servidor." });

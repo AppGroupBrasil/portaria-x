@@ -71,6 +71,10 @@ router.post("/", authenticate, (req: Request, res: Response) => {
       res.status(400).json({ error: "Data de início e fim são obrigatórias." });
       return;
     }
+    if (String(data_fim) < String(data_inicio)) {
+      res.status(400).json({ error: "A data de fim não pode ser anterior à data de início." });
+      return;
+    }
 
     const token = crypto.randomUUID();
 
@@ -150,6 +154,14 @@ router.put("/:id", authenticate, (req: Request, res: Response) => {
       hora_fim,
       observacao,
     } = req.body;
+
+    // Valida intervalo considerando os valores efetivos (novo ou mantido).
+    const effInicio = data_inicio || auth.data_inicio;
+    const effFim = data_fim || auth.data_fim;
+    if (effInicio && effFim && String(effFim) < String(effInicio)) {
+      res.status(400).json({ error: "A data de fim não pode ser anterior à data de início." });
+      return;
+    }
 
     db.prepare(`
       UPDATE pre_authorizations

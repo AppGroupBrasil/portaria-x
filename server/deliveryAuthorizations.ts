@@ -175,6 +175,10 @@ router.post("/portaria", authenticate, (req: Request, res: Response) => {
 router.post("/:id/recebido", authenticate, (req: Request, res: Response) => {
   try {
     const user = req.user!;
+    if (user.role === "morador") {
+      res.status(403).json({ error: "Apenas porteiros podem usar este endpoint." });
+      return;
+    }
     const { foto_entrega } = req.body;
 
     const delivery = db.prepare(
