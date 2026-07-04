@@ -5,7 +5,8 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import admin from "firebase-admin";
+import { initializeApp, cert } from "firebase-admin/app";
+import { getMessaging, type MulticastMessage } from "firebase-admin/messaging";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -34,8 +35,8 @@ function initFirebase() {
 
   try {
     const serviceAccount = JSON.parse(fs.readFileSync(credentialPath, "utf-8"));
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+    initializeApp({
+      credential: cert(serviceAccount),
     });
     firebaseInitialized = true;
     logger.info("  🔔 Firebase Admin SDK initialized (push ready)");
@@ -108,7 +109,7 @@ export async function sendPushToMoradores(condominioId: number, payload: PushPay
 async function sendPushToTokens(tokens: string[], payload: PushPayload): Promise<number> {
   if (!firebaseInitialized || tokens.length === 0) return 0;
 
-  const message: admin.messaging.MulticastMessage = {
+  const message: MulticastMessage = {
     tokens,
     notification: {
       title: payload.title,
@@ -126,7 +127,7 @@ async function sendPushToTokens(tokens: string[], payload: PushPayload): Promise
   };
 
   try {
-    const response = await admin.messaging().sendEachForMulticast(message);
+    const response = await getMessaging().sendEachForMulticast(message);
 
     // Deactivate invalid tokens
     if (response.failureCount > 0) {
