@@ -145,9 +145,10 @@ export default function MoradorCorrespondencias() {
               key={f.v}
               onClick={() => setFilter(f.v)}
               style={{
-                padding: '8px 16px', borderRadius: '20px', border: 'none',
-                background: filter === f.v ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.06)',
-                color: filter === f.v ? '#fff' : '#93c5fd',
+                padding: '8px 16px', borderRadius: '20px',
+                border: filter === f.v ? '2px solid #003580' : (isDark ? '1.5px solid rgba(255,255,255,0.15)' : '1.5px solid #cbd5e1'),
+                background: filter === f.v ? '#003580' : (isDark ? 'rgba(255,255,255,0.06)' : '#ffffff'),
+                color: filter === f.v ? '#fff' : (isDark ? '#93c5fd' : '#003580'),
                 fontSize: "14px", fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '6px',
               }}

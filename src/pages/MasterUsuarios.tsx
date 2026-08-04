@@ -217,7 +217,7 @@ export default function MasterUsuarios() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="h-16 flex items-center gap-3" style={{ paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/dashboard")} className="p-2">
             <ArrowLeft className="w-7 h-7" />

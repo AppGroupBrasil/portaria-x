@@ -120,7 +120,7 @@ export default function PortariaConfig() {
       {/* Header */}
       <header
         className="sticky top-0 z-40"
-        style={{ background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}
+        style={{ background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}
       >
         <div className="flex items-center gap-4">
           <button
@@ -343,7 +343,7 @@ export default function PortariaConfig() {
                         style={{
                           width: "80px", padding: "8px 12px", borderRadius: "10px",
                           border: "2px solid #f59e0b", fontSize: "16px", fontWeight: 700,
-                          textAlign: "center", background: "var(--color-card, #fff)", color: "#92400e",
+                          textAlign: "center", background: "var(--color-card, #fff)", color: "var(--color-warning-foreground, #92400e)",
                           outline: "none", boxSizing: "border-box",
                         }}
                       />

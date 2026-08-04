@@ -13,7 +13,7 @@ interface DialogState {
 }
 
 let setStateRef: ((s: DialogState | null) => void) | null = null;
-let pending: DialogState[] = [];
+const pending: DialogState[] = [];
 
 function show(s: DialogState) {
   if (setStateRef) setStateRef(s);

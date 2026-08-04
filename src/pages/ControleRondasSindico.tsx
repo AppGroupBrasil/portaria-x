@@ -119,6 +119,7 @@ export default function ControleRondasSindico() {
       const params = new URLSearchParams();
       if (filtroDataInicio) params.set("data_inicio", filtroDataInicio);
       if (filtroDataFim) params.set("data_fim", filtroDataFim);
+      params.set("limit", "500");
       const res = await apiFetch(`${API}/rondas/registros?${params.toString()}`);
       if (res.ok) setRegistros(await res.json());
     } catch {}
@@ -134,6 +135,7 @@ export default function ControleRondasSindico() {
     try {
       const params = new URLSearchParams({ data_inicio: dateFrom, data_fim: dateTo });
       if (filtroFuncionario) params.set("funcionario_nome", filtroFuncionario);
+      params.set("limit", "2000");
       const [regRes, statsRes] = await Promise.all([
         apiFetch(`${API}/rondas/registros?${params.toString()}`),
         apiFetch(`${API}/rondas/stats?data_inicio=${dateFrom}&data_fim=${dateTo}`),
@@ -334,7 +336,7 @@ export default function ControleRondasSindico() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ArrowLeft className="w-6 h-6" />
@@ -892,7 +894,7 @@ export default function ControleRondasSindico() {
                         fontSize: "13px",
                         fontWeight: 600,
                         cursor: "pointer",
-                        color: "#374151",
+                        color: "var(--color-card-foreground, #374151)",
                       }}
                     >
                       <Edit3 style={{ width: 16, height: 16 }} /> Editar

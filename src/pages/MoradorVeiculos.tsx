@@ -269,8 +269,8 @@ export default function MoradorVeiculos() {
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
               padding: '16px', borderRadius: '16px',
-              background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : '#ffffff',
-              border: isDark ? '2px solid rgba(255,255,255,0.7)' : '2px solid #1e293b', color: isDark ? '#fff' : "#1e293b", fontWeight: 700, fontSize: "16px", cursor: 'pointer', width: '100%',
+              background: '#003580',
+              border: '2px solid #003580', color: '#fff', fontWeight: 700, fontSize: "16px", cursor: 'pointer', width: '100%',
               transition: 'all 0.2s',
             }}
           >

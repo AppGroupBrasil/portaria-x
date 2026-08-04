@@ -478,7 +478,7 @@ export default function MoradorPortariaVirtual() {
   return (
     <div style={{ minHeight: '100dvh', background: isDark ? "linear-gradient(180deg, #001533 0%, #002254 25%, #003580 55%, #004aad 100%)" : "#f0f4f8", display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', height: '4.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button onClick={() => navigate(-1)} style={{ padding: '0.625rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer' }}>
@@ -905,7 +905,7 @@ export default function MoradorPortariaVirtual() {
                               flex: 1, aspectRatio: "1", display: "flex", flexDirection: "column",
                               alignItems: "center", justifyContent: "center", gap: 4,
                               borderRadius: 14, border: "1.5px solid #fff", cursor: "pointer",
-                              background: "var(--color-card, #fff)", color: "#003580",
+                              background: "#fff", color: "#003580",
                               fontSize: 14, fontWeight: 700, transition: "all 0.2s",
                             }}
                           >
@@ -925,8 +925,8 @@ export default function MoradorPortariaVirtual() {
               onClick={() => { setShowLogs(!showLogs); if (!showLogs) fetchLogs(); }}
               style={{
                 width: '100%', padding: '0.75rem', borderRadius: 14, marginTop: '0.5cm',
-                background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
-                color: isDark ? '#fff' : "#1e293b", fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s',
+                background: '#003580', border: '1px solid #003580',
+                color: '#fff', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
               }}
             >

@@ -204,12 +204,12 @@ export default function SindicoWhatsAppConfig() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <MessageCircle className="w-6 h-6" style={{ color: "#25d366" }} />
+          <MessageCircle className="w-6 h-6" style={{ color: "#25D366" }} />
           <span style={{ fontWeight: 700, fontSize: 18, flex: 1 }}>Notificações WhatsApp</span>
         </div>
       </header>
@@ -219,7 +219,7 @@ export default function SindicoWhatsAppConfig() {
         {/* ── Info dropdown ── */}
         <div style={{
           background: isDark ? "rgba(37,211,102,0.12)" : "#e8f9ee",
-          border: isDark ? "2px solid rgba(37,211,102,0.4)" : "2px solid #25d366",
+          border: isDark ? "2px solid rgba(37,211,102,0.4)" : "2px solid #128C7E",
           borderRadius: 16,
           marginBottom: "1.25rem",
           overflow: "hidden",
@@ -235,7 +235,7 @@ export default function SindicoWhatsAppConfig() {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{
                 width: 32, height: 32, borderRadius: 10,
-                background: isDark ? "rgba(37,211,102,0.2)" : "#25d366",
+                background: isDark ? "rgba(37,211,102,0.2)" : "#128C7E",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 <Info size={17} style={{ color: isDark ? "#86efac" : "#fff" }} />
@@ -244,7 +244,7 @@ export default function SindicoWhatsAppConfig() {
                 Como funciona?
               </span>
             </div>
-            {infoOpen ? <ChevronUp size={20} style={{ color: isDark ? "#86efac" : "#25d366" }} /> : <ChevronDown size={20} style={{ color: isDark ? "#86efac" : "#25d366" }} />}
+            {infoOpen ? <ChevronUp size={20} style={{ color: isDark ? "#86efac" : "#128C7E" }} /> : <ChevronDown size={20} style={{ color: isDark ? "#86efac" : "#128C7E" }} />}
           </button>
           {infoOpen && (
             <div style={{ padding: "0 1.25rem 1.25rem", fontSize: 13, lineHeight: 1.7, color: isDark ? "#bbf7d0" : "#15803d" }}>
@@ -355,7 +355,7 @@ export default function SindicoWhatsAppConfig() {
                     height: "100%",
                     borderRadius: 6,
                     width: `${Math.min((stats.month.sent / stats.monthlyLimit) * 100, 100)}%`,
-                    background: (stats.month.sent / stats.monthlyLimit) >= 0.9 ? "#ef4444" : (stats.month.sent / stats.monthlyLimit) >= 0.7 ? "#f59e0b" : "#25d366",
+                    background: (stats.month.sent / stats.monthlyLimit) >= 0.9 ? "#ef4444" : (stats.month.sent / stats.monthlyLimit) >= 0.7 ? "#f59e0b" : "#128C7E",
                     transition: "width 0.3s",
                   }} />
                 </div>
@@ -382,7 +382,7 @@ export default function SindicoWhatsAppConfig() {
           justifyContent: "space-between",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <MessageCircle size={20} style={{ color: enabled ? "#25d366" : (isDark ? "#64748b" : "#94a3b8") }} />
+            <MessageCircle size={20} style={{ color: enabled ? "#128C7E" : (isDark ? "#64748b" : "#94a3b8") }} />
             <div>
               <span style={{ fontWeight: 700, fontSize: 15, color: p.text, display: "block" }}>WhatsApp Ativo</span>
               <span style={{ fontSize: 11, color: p.textMuted }}>
@@ -392,7 +392,7 @@ export default function SindicoWhatsAppConfig() {
           </div>
           <button
             onClick={() => setEnabled(!enabled)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: enabled ? "#25d366" : (isDark ? "#64748b" : "#94a3b8") }}
+            style={{ background: "none", border: "none", cursor: "pointer", color: enabled ? "#128C7E" : (isDark ? "#64748b" : "#94a3b8") }}
           >
             {enabled ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
           </button>
@@ -488,7 +488,7 @@ export default function SindicoWhatsAppConfig() {
                     onClick={() => toggleNotification(nt.key)}
                     style={{
                       background: "none", border: "none", cursor: "pointer", flexShrink: 0,
-                      color: isOn ? "#25d366" : (isDark ? "#64748b" : "#94a3b8"),
+                      color: isOn ? "#128C7E" : (isDark ? "#64748b" : "#94a3b8"),
                       transition: "color 0.2s",
                     }}
                   >
@@ -509,7 +509,7 @@ export default function SindicoWhatsAppConfig() {
             padding: "14px",
             borderRadius: 14,
             border: "none",
-            background: saved ? "#16a34a" : "#25d366",
+            background: saved ? "#16a34a" : "#128C7E",
             color: "#fff",
             fontWeight: 700,
             fontSize: 15,
@@ -602,7 +602,7 @@ export default function SindicoWhatsAppConfig() {
                   padding: "12px 20px",
                   borderRadius: 12,
                   border: "none",
-                  background: "#25d366",
+                  background: "#128C7E",
                   color: "#fff",
                   fontWeight: 700,
                   fontSize: 14,

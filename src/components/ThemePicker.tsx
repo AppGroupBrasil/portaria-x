@@ -79,7 +79,7 @@ export default function ThemePicker() {
             border: p.cardBorder,
             boxShadow: `0 12px 40px ${p.isDarkBase ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.14)"}`,
             backdropFilter: "blur(20px)",
-            zIndex: 9999,
+            zIndex: 50,
             animation: "fade-in 0.15s ease-out forwards",
           }}
         >

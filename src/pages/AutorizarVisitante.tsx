@@ -9,6 +9,8 @@ import {
   AlertTriangle,
   Camera,
   Video,
+  ZoomIn,
+  X,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 
@@ -44,6 +46,7 @@ export default function AutorizarVisitante() {
   const [responseStatus, setResponseStatus] = useState("");
   const [cameraInfo, setCameraInfo] = useState<CameraInfo | null>(null);
   const [showCamera, setShowCamera] = useState(false);
+  const [fotoAmpliada, setFotoAmpliada] = useState(false);
 
   useEffect(() => {
     fetchVisitor();
@@ -171,10 +174,27 @@ export default function AutorizarVisitante() {
       <div style={{ padding: "0 24px", marginTop: "-16px" }}>
         <div className="bg-white rounded-2xl shadow-sm" style={{ padding: "20px" }}>
           <div className="flex items-center gap-4 mb-4">
-            {/* Foto */}
-            <div className="w-16 h-16 rounded-full overflow-hidden shrink-0" style={{ border: "3px solid #e5e7eb", backgroundColor: "#f3f4f6" }}>
+            {/* Foto — clique amplia */}
+            <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 relative" style={{ border: "3px solid #e5e7eb", backgroundColor: "#f3f4f6" }}>
               {visitor?.foto ? (
-                <img src={visitor.foto} alt={visitor.nome} className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setFotoAmpliada(true)}
+                  aria-label="Ampliar foto do visitante"
+                  className="w-full h-full block cursor-pointer"
+                  style={{ padding: 0, border: "none", background: "none" }}
+                >
+                  <img src={visitor.foto} alt={visitor.nome} className="w-full h-full object-cover" />
+                  <span
+                    className="absolute flex items-center justify-center"
+                    style={{
+                      right: 0, bottom: 0, width: "20px", height: "20px", borderRadius: "50%",
+                      background: "#003580", border: "2px solid #fff",
+                    }}
+                  >
+                    <ZoomIn style={{ width: 11, height: 11, color: "#fff" }} />
+                  </span>
+                </button>
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <UserPlus className="w-7 h-7 text-gray-400" />
@@ -183,7 +203,9 @@ export default function AutorizarVisitante() {
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-900">{visitor?.nome}</h3>
-              <p className="text-sm text-gray-500">Visitante</p>
+              <p className="text-sm text-gray-500">
+                {visitor?.foto ? "Toque na foto para ampliar" : "Visitante"}
+              </p>
             </div>
           </div>
 
@@ -345,6 +367,43 @@ export default function AutorizarVisitante() {
           </button>
         </div>
       </div>
+
+      {/* Foto ampliada */}
+      {fotoAmpliada && visitor?.foto && (
+        <div
+          onClick={() => setFotoAmpliada(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.92)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setFotoAmpliada(false)}
+            aria-label="Fechar"
+            style={{
+              position: "absolute", top: "max(16px, env(safe-area-inset-top))", right: "16px",
+              width: "44px", height: "44px", borderRadius: "50%",
+              background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
+              display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+            }}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <img
+            src={visitor.foto}
+            alt={visitor.nome}
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: "100%", maxHeight: "88vh", objectFit: "contain", borderRadius: "12px" }}
+          />
+          <p style={{
+            position: "absolute", bottom: "max(20px, env(safe-area-inset-bottom))", left: 0, right: 0,
+            textAlign: "center", color: "rgba(255,255,255,0.7)", fontSize: "13px",
+          }}>
+            Toque fora da foto para fechar
+          </p>
+        </div>
+      )}
 
       <style>{`
         @keyframes pulse {

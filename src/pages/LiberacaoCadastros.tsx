@@ -244,7 +244,7 @@ export default function LiberacaoCadastros() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "16px", paddingRight: "24px" }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ArrowLeft className="w-6 h-6" />
@@ -355,7 +355,7 @@ export default function LiberacaoCadastros() {
         {/* WhatsApp Notification */}
         <div
           className="rounded-xl border bg-card p-5"
-          style={{ borderColor: whatsappEnabled ? "#25D366" : "var(--border)", marginBottom: "20px" }}
+          style={{ borderColor: whatsappEnabled ? "#128C7E" : "var(--border)", marginBottom: "20px" }}
         >
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -398,7 +398,7 @@ export default function LiberacaoCadastros() {
                     onClick={() => saveWhatsappNotification()}
                     disabled={whatsappSaving || !whatsappPhone.trim()}
                     className="h-10 px-4 rounded-lg text-white text-sm font-medium flex items-center gap-1.5 hover:opacity-90 disabled:opacity-50 transition-colors"
-                    style={{ backgroundColor: "#25D366" }}
+                    style={{ backgroundColor: "#128C7E" }}
                   >
                     {whatsappSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                     Salvar

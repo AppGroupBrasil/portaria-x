@@ -148,7 +148,7 @@ export default function ApresentacaoPage() {
             <button onClick={handleWhatsApp} style={{
               display: "flex", alignItems: "center", gap: "6px",
               padding: "10px 20px", borderRadius: "10px",
-              background: "#25D366", border: "none",
+              background: "#128C7E", border: "none",
               color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
             }}>
               <MessageCircle style={{ width: "16px", height: "16px" }} /> WhatsApp
@@ -193,7 +193,7 @@ export default function ApresentacaoPage() {
             rel="noopener noreferrer"
             style={{
               padding: "16px 32px", borderRadius: "14px",
-              border: "2px solid #003580", background: "var(--color-card, #fff)",
+              border: "2px solid #003580", background: "#fff",
               color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
               display: "flex", alignItems: "center", gap: "12px",
               textDecoration: "none",
@@ -222,7 +222,7 @@ export default function ApresentacaoPage() {
           {[
             { icon: Fingerprint, text: "Biometria Facial", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
             { icon: DoorOpen, text: "Portaria Virtual (IoT)", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
-            { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+            { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#128C7E", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
           ].map((b) => (
             <div key={b.text} style={{
               display: "flex", alignItems: "center", gap: "10px",
@@ -347,7 +347,7 @@ export default function ApresentacaoPage() {
                   position: "absolute",
                   top: 14,
                   right: 14,
-                  background: "#f59e0b",
+                  background: "#b45309",
                   color: "#ffffff",
                   borderRadius: "999px",
                   padding: "4px 10px",
@@ -549,7 +549,7 @@ export default function ApresentacaoPage() {
         <button onClick={handleWhatsApp} style={{
           display: "flex", alignItems: "center", gap: "6px",
           padding: "12px 24px", borderRadius: "10px",
-          background: "#25D366", border: "none",
+          background: "#128C7E", border: "none",
           color: "#ffffff", fontWeight: 700, fontSize: "15px", cursor: "pointer",
         }}>
           <MessageCircle style={{ width: "16px", height: "16px" }} /> Enviar via WhatsApp

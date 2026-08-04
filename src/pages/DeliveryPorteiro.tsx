@@ -22,6 +22,7 @@ import SearchableSelect from "@/components/SearchableSelect";
 import ReportModal from "@/components/ReportModal";
 import { gerarPdfDelivery, gerarRelatorioDelivery, gerarRelatorioDeliveryComGraficos } from "@/lib/pdfUtils";
 import { apiFetch } from "@/lib/api";
+import { APP_ORIGIN } from "@/lib/config";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 import { dialogAlert } from "@/lib/dialog";
@@ -95,6 +96,9 @@ export default function DeliveryPorteiro() {
   const formStreamRef = useRef<MediaStream | null>(null);
   const [formSaving, setFormSaving] = useState(false);
   const [formError, setFormError] = useState("");
+
+  // WhatsApp prompt after registration (anchor click = never blocked by popup blocker)
+  const [waPrompt, setWaPrompt] = useState<{ url: string; name: string; phone: string } | null>(null);
 
   const fetchBlocks = async () => {
     try {
@@ -190,9 +194,10 @@ export default function DeliveryPorteiro() {
         }),
       });
 
+      const created = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        setFormError(data.error || "Erro ao registrar.");
+        setFormError(created.error || "Erro ao registrar.");
         return;
       }
 
@@ -201,7 +206,7 @@ export default function DeliveryPorteiro() {
       const fullPhone = cleanPhone && !cleanPhone.startsWith("55") ? `55${cleanPhone}` : cleanPhone;
       const sv = SERVICOS[formServico] || SERVICOS["outro"];
       const serviceName = formServico === "outro" && formServicoCustom ? formServicoCustom : sv.label;
-      const msg = [
+      const msgLines = [
         `*AVISO DE DELIVERY*`,
         ``,
         `Ola ${morador_name}! Chegou uma entrega para voce na portaria.`,
@@ -209,9 +214,15 @@ export default function DeliveryPorteiro() {
         `*Servico:* ${serviceName}`,
         formNumeroPedido ? `*Pedido:* ${formNumeroPedido}` : "",
         `*Bloco:* ${formBloco} | *Apto:* ${formApartamento}`,
-        ``,
-        `Por favor, venha retirar na portaria.`,
-      ].filter(Boolean).join("\n");
+      ].filter(Boolean);
+
+      // Foto da entrega: link publico com token aleatorio (nao enumeravel)
+      if (formFoto && created.foto_token) {
+        msgLines.push(``, `*Foto da entrega:*`, `${APP_ORIGIN}/api/delivery-authorizations/foto/${created.foto_token}`);
+      }
+
+      msgLines.push(``, `Por favor, venha retirar na portaria.`);
+      const msg = msgLines.join("\n");
 
       const waUrl = fullPhone
         ? `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`
@@ -221,9 +232,7 @@ export default function DeliveryPorteiro() {
       setShowForm(false);
       fetchDeliveries();
 
-      if (waUrl) {
-        setTimeout(() => { globalThis.open(waUrl, "_blank"); }, 300);
-      }
+      setWaPrompt({ url: waUrl, name: morador_name, phone: morador_phone });
     } catch {
       setFormError("Erro de conexao.");
     } finally {
@@ -327,43 +336,42 @@ export default function DeliveryPorteiro() {
     setFotoEntrega(null);
   };
 
-  const buildWhatsAppUrl = (delivery: DeliveryAuth) => {
-    if (!delivery.morador_phone) return null;
+  const buildWhatsAppUrl = (delivery: DeliveryAuth, fotoToken?: string | null) => {
+    if (!delivery.morador_phone) return "";
     const phone = delivery.morador_phone.replaceAll(/\D/g, "");
     const fullPhone = phone.startsWith("55") ? phone : `55${phone}`;
     const sv = getServicoInfo(delivery.servico);
     const serviceName = delivery.servico === "outro" && delivery.servico_custom
       ? delivery.servico_custom
       : sv.label;
-    const msg = `*Delivery Recebido na Portaria*\n\nServico: ${serviceName}${delivery.numero_pedido ? `\nPedido: ${delivery.numero_pedido}` : ""}\n\nSeu pedido foi recebido e esta na portaria. Por favor, venha retirar.`;
+    const fotoLinha = fotoToken
+      ? `\n\n*Foto da entrega:*\n${APP_ORIGIN}/api/delivery-authorizations/foto/${fotoToken}`
+      : "";
+    const msg = `*Delivery Recebido na Portaria*\n\nServico: ${serviceName}${delivery.numero_pedido ? `\nPedido: ${delivery.numero_pedido}` : ""}${fotoLinha}\n\nSeu pedido foi recebido e esta na portaria. Por favor, venha retirar.`;
     return `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
   };
 
   const handleConfirmRecebido = async () => {
     if (!selectedDelivery) return;
     setSubmitting(true);
-
-    // Build WhatsApp URL BEFORE the async call so we have it ready
-    const waUrl = buildWhatsAppUrl(selectedDelivery);
+    const delivery = selectedDelivery;
 
     try {
-      const res = await apiFetch(`${API}/${selectedDelivery.id}/recebido`, {
+      const res = await apiFetch(`${API}/${delivery.id}/recebido`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ foto_entrega: fotoEntrega }),
       });
 
       if (res.ok) {
+        const updated = await res.json().catch(() => ({}));
+        const fotoToken = fotoEntrega ? (updated?.delivery?.foto_token ?? updated?.foto_token ?? null) : null;
+        const waUrl = buildWhatsAppUrl(delivery, fotoToken);
+
         closeModal();
         fetchDeliveries();
 
-        // Navigate to WhatsApp after modal closes
-        // Use location.href which isn't blocked by popup blockers
-        if (waUrl) {
-          setTimeout(() => {
-            globalThis.window.location.href = waUrl;
-          }, 300);
-        }
+        setWaPrompt({ url: waUrl, name: delivery.morador_name, phone: delivery.morador_phone || "" });
       }
     } catch (err) {
       console.error("Erro ao confirmar recebido:", err);
@@ -383,7 +391,7 @@ export default function DeliveryPorteiro() {
           borderBottom: p.headerBorder,
           boxShadow: p.headerShadow,
           color: p.text,
-          paddingTop: "max(0, env(safe-area-inset-top))",
+          paddingTop: "max(0px, env(safe-area-inset-top))",
         }}
       >
         <div className="flex items-center gap-4">
@@ -501,7 +509,7 @@ export default function DeliveryPorteiro() {
               marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "var(--color-card, #fff)",
-              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+              color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
             <FileText className="w-5 h-5" /> Relatório
@@ -797,7 +805,7 @@ export default function DeliveryPorteiro() {
               background: "rgba(255,255,255,0.2)",
               border: "none",
               cursor: "pointer",
-              color: p.text,
+              color: "#fff",
             }}
           >
             <X className="w-7 h-7" />
@@ -959,7 +967,7 @@ export default function DeliveryPorteiro() {
                       background: "rgba(0,0,0,0.6)",
                       border: "none",
                       cursor: "pointer",
-                      color: p.text,
+                      color: "#fff",
                       fontSize: "13px",
                       fontWeight: 600,
                     }}
@@ -1211,6 +1219,70 @@ export default function DeliveryPorteiro() {
             <p style={{ textAlign: "center", fontSize: "12px", color: "#94a3b8" }}>
               O morador sera notificado via WhatsApp automaticamente.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* WhatsApp prompt apos registro */}
+      {waPrompt && (
+        <div
+          style={{
+            position: "fixed", inset: 0, zIndex: 100,
+            background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+          }}
+          onClick={() => setWaPrompt(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%", maxWidth: "380px", borderRadius: "20px", padding: "24px",
+              background: isDark ? "#0f172a" : "#ffffff",
+              border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #cbd5e1",
+              display: "flex", flexDirection: "column", gap: "16px", textAlign: "center",
+            }}
+          >
+            <CheckCircle2 className="w-12 h-12" style={{ color: "#16a34a", margin: "0 auto" }} />
+            <div>
+              <p style={{ fontSize: "17px", fontWeight: 700, color: isDark ? "#fff" : "#0f172a" }}>
+                Delivery registrado
+              </p>
+              <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "4px" }}>
+                {waPrompt.url
+                  ? `Envie o aviso para ${waPrompt.name} (${waPrompt.phone}).`
+                  : `${waPrompt.name} nao tem telefone cadastrado. Cadastre o WhatsApp do morador para enviar o aviso.`}
+              </p>
+            </div>
+
+            {waPrompt.url && (
+              <a
+                href={waPrompt.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setWaPrompt(null)}
+                style={{
+                  width: "100%", padding: "14px", borderRadius: "14px",
+                  background: "#128C7E", color: "#fff", fontWeight: 700, fontSize: "16px",
+                  textDecoration: "none",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
+                }}
+              >
+                <Phone className="w-5 h-5" />
+                Enviar no WhatsApp
+              </a>
+            )}
+
+            <button
+              onClick={() => setWaPrompt(null)}
+              style={{
+                width: "100%", padding: "12px", borderRadius: "14px",
+                background: "transparent",
+                border: isDark ? "1.5px solid rgba(255,255,255,0.15)" : "1.5px solid #cbd5e1",
+                color: isDark ? "#94a3b8" : "#475569", fontWeight: 600, fontSize: "15px", cursor: "pointer",
+              }}
+            >
+              Fechar
+            </button>
           </div>
         </div>
       )}

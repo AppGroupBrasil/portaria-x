@@ -314,7 +314,7 @@ function ThemeToggle({ mode, onToggle }: Readonly<{ mode: "dark" | "light"; onTo
       onClick={onToggle}
       aria-label="Alternar tema claro/escuro"
       style={{
-        position: "fixed", top: "24px", right: "24px", zIndex: 9999,
+        position: "fixed", top: "24px", right: "24px", zIndex: 40,
         width: "44px", height: "44px", borderRadius: "50%",
         background: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,53,128,0.08)",
         border: mode === "dark" ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(0,53,128,0.2)",
@@ -341,9 +341,9 @@ function WhatsAppFloat() {
       rel="noopener noreferrer"
       aria-label="Fale conosco no WhatsApp"
       style={{
-        position: "fixed", bottom: "24px", right: "24px", zIndex: 9999,
+        position: "fixed", bottom: "24px", right: "24px", zIndex: 41,
         width: "60px", height: "60px", borderRadius: "50%",
-        background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center",
+        background: "#128C7E", display: "flex", alignItems: "center", justifyContent: "center",
         boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
         cursor: "pointer", transition: "transform 0.2s, box-shadow 0.2s",
         animation: "whatsappPulse 2s infinite",
@@ -427,7 +427,7 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
           onClick={() => onNavigate("/register/condominio")}
           style={{
             padding: "16px 32px", borderRadius: "14px",
-            border: "2px solid #003580", background: "var(--color-card, #fff)",
+            border: "2px solid #003580", background: "#fff",
             color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
             display: "flex", alignItems: "center", gap: "12px",
             transition: "transform 0.2s",
@@ -459,12 +459,10 @@ function HeroSection({ mode, t, onNavigate }: Readonly<{ mode: "dark" | "light";
           ? [
               { icon: Fingerprint, text: "Biometria Facial", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
               { icon: Bell, text: "Alertas em Tempo Real", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
-              { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+              { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#128C7E", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
             ]
           : [
-              { icon: QrCode, text: "QR Code para Visitantes", bg: "#ffffff", border: "#003580", textColor: "#003580", iconColor: "#003580" },
-              { icon: Navigation, text: "Estou Chegando", bg: "#003580", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
-              { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#25D366", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
+              { icon: MessageCircle, text: "Integrado ao WhatsApp", bg: "#128C7E", border: "#ffffff", textColor: "#ffffff", iconColor: "#ffffff" },
             ]).map((b) => (
           <div key={b.text} style={{
             display: "flex", alignItems: "center", gap: "10px",
@@ -997,7 +995,7 @@ function PresentationSection({ mode, onNavigate }: Readonly<{ mode: "dark" | "li
               onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.borderColor = mode === "dark" ? "rgba(255,255,255,0.6)" : "rgba(0,53,128,0.6)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = mode === "dark" ? "rgba(255,255,255,0.3)" : "rgba(0,53,128,0.3)"; }}
             >
-              <div style={{ width: "56px", height: "56px", borderRadius: "14px", background: "linear-gradient(135deg, #25D366, #128C7E)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(37,211,102,0.3)" }}>
+              <div style={{ width: "56px", height: "56px", borderRadius: "14px", background: "linear-gradient(135deg, #128C7E, #128C7E)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(37,211,102,0.3)" }}>
                 <MessageCircle style={{ width: "26px", height: "26px", color: "#fff" }} />
               </div>
               <h3 style={{ fontWeight: 800, fontSize: "17px", color: mode === "dark" ? "#ffffff" : "#003580" }}>Enviar via WhatsApp</h3>
@@ -1254,7 +1252,7 @@ function FaqSection({ openFaq, onToggleFaq }: Readonly<{ openFaq: number | null;
                 }} />
               </button>
               {openFaq === i && (
-                <div style={{ padding: "16px 20px 18px", fontSize: "15px", color: "#003580", lineHeight: 1.6, background: "var(--color-card, #fff)" }}>
+                <div style={{ padding: "16px 20px 18px", fontSize: "15px", color: "var(--color-card-foreground, #003580)", lineHeight: 1.6, background: "var(--color-card, #fff)" }}>
                   {faq.a}
                 </div>
               )}

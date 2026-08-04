@@ -1,20 +1,31 @@
 import { useState } from "react";
-import { FileText, X, Calendar, Download, BarChart3 } from "lucide-react";
+import { FileText, X, Calendar, Download, BarChart3, Filter } from "lucide-react";
+
+export interface ReportFilter {
+  key: string;
+  label: string;
+  options: { value: string; label: string }[];
+}
 
 interface ReportModalProps {
   show: boolean;
   onClose: () => void;
-  onGenerate: (dateFrom: string, dateTo: string, withCharts: boolean) => void;
+  onGenerate: (dateFrom: string, dateTo: string, withCharts: boolean, filters: Record<string, string>) => void;
   title: string;
+  /** Seletores extras opcionais; a primeira opcao de cada um e o padrao. */
+  filters?: ReportFilter[];
 }
 
-export default function ReportModal({ show, onClose, onGenerate, title }: ReportModalProps) {
+export default function ReportModal({ show, onClose, onGenerate, title, filters }: ReportModalProps) {
   const today = new Date().toISOString().slice(0, 10);
   const [dateFrom, setDateFrom] = useState(today);
   const [dateTo, setDateTo] = useState(today);
   const [withCharts, setWithCharts] = useState(false);
+  const [selected, setSelected] = useState<Record<string, string>>({});
 
   if (!show) return null;
+
+  const valueOf = (f: ReportFilter) => selected[f.key] ?? f.options[0]?.value ?? "";
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 14px", borderRadius: "12px",
@@ -41,6 +52,7 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
         style={{
           background: "var(--color-card, #fff)", borderRadius: "20px", padding: "24px",
           width: "100%", maxWidth: "400px",
+          maxHeight: "90vh", overflowY: "auto",
           display: "flex", flexDirection: "column", gap: "16px",
         }}
       >
@@ -88,6 +100,25 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
             style={inputStyle}
           />
         </div>
+
+        {/* Filtros opcionais (ex.: origem do cadastro, situacao) */}
+        {filters?.map((f) => (
+          <div key={f.key}>
+            <span style={labelStyle}>
+              <Filter className="w-5 h-5 inline mr-1" style={{ verticalAlign: "text-bottom" }} />
+              {f.label}
+            </span>
+            <select
+              value={valueOf(f)}
+              onChange={(e) => setSelected((s) => ({ ...s, [f.key]: e.target.value }))}
+              style={inputStyle}
+            >
+              {f.options.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+        ))}
 
         {/* Charts toggle */}
         <button
@@ -140,7 +171,9 @@ export default function ReportModal({ show, onClose, onGenerate, title }: Report
         {/* Generate button */}
         <button
           onClick={() => {
-            onGenerate(dateFrom, dateTo, withCharts);
+            const chosen: Record<string, string> = {};
+            filters?.forEach((f) => { chosen[f.key] = valueOf(f); });
+            onGenerate(dateFrom, dateTo, withCharts, chosen);
             onClose();
           }}
           style={{

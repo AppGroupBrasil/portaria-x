@@ -312,7 +312,7 @@ export default function Login() {
               className="w-full rounded-xl font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"
               style={{
                 height: "46px",
-                background: "var(--color-card, #fff)",
+                background: "#fff",
                 border: "1px solid rgba(255,255,255,0.25)",
                 color: "#2563eb",
               }}

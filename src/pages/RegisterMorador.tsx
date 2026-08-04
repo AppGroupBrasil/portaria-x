@@ -210,7 +210,7 @@ export default function RegisterMorador() {
               <button
                 onClick={handleWhatsappSolicitacao}
                 className="w-full h-12 rounded-xl text-white text-base font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-[0.98]"
-                style={{ backgroundColor: "#25D366" }}
+                style={{ backgroundColor: "#128C7E" }}
               >
                 <MessageCircle className="w-6 h-6" />
                 Solicitar via WhatsApp

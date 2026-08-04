@@ -137,7 +137,7 @@ export default function SearchableSelect({
 
           {/* Results count */}
           <div style={{
-            padding: "4px 14px", fontSize: "12px", color: "#94a3b8", fontWeight: 500,
+            padding: "4px 14px", fontSize: "12px", color: "#64748b", fontWeight: 500,
             background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
           }}>
             {filtered.length} {filtered.length === 1 ? "resultado" : "resultados"}

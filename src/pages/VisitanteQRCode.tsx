@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { APP_ORIGIN } from "@/lib/config";
 import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ═══════════════════════════════════════════════════════
    Modelos de Layout para impressão do QR Code
@@ -47,12 +48,13 @@ const steps = [
 
 export default function VisitanteQRCode() {
   const { isDark, p } = useTheme();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
   const [condominioNome, setCondominioNome] = useState("Condomínio Residencial");
   const [layout, setLayout] = useState<LayoutId>("classico");
 
-  const selfRegisterUrl = `${APP_ORIGIN}/visitante/auto-cadastro`;
+  const selfRegisterUrl = `${APP_ORIGIN}/visitante/auto-cadastro${user?.condominioId ? `?condominio_id=${user.condominioId}` : ""}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selfRegisterUrl)}`;
 
   const handlePrint = () => globalThis.print();
@@ -630,7 +632,7 @@ export default function VisitanteQRCode() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 print:hidden" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40 print:hidden" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <ArrowLeft className="w-6 h-6" />
@@ -694,17 +696,25 @@ export default function VisitanteQRCode() {
       </div>
 
       {/* Printable area — renders selected layout */}
-      <div style={{ display: "flex", justifyContent: "center", padding: "24px 0" }}>
+      <div id="qr-print-area" style={{ display: "flex", justifyContent: "center", padding: "24px 0" }}>
         {renderLayout()}
       </div>
 
       {/* Print styles */}
       <style>{`
         @media print {
-          body * { visibility: hidden; }
-          .print\\:hidden { display: none !important; }
-          [ref] { visibility: visible; }
+          /* Esconde a tela toda e revela só a folha (o id existe no DOM;
+             seletor por "ref" nao existe e deixava a impressao em branco). */
+          body * { visibility: hidden !important; }
+          #qr-print-area, #qr-print-area * { visibility: visible !important; }
+          #qr-print-area {
+            position: absolute; left: 0; top: 0;
+            width: 210mm; padding: 0 !important; margin: 0 !important;
+            box-shadow: none !important;
+          }
           header, .print\\:hidden { display: none !important; }
+          /* Mantem fundos e gradientes dos modelos coloridos/escuros */
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
           @page { margin: 0; size: A4; }
         }
       `}</style>

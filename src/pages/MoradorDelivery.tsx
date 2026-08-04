@@ -155,7 +155,7 @@ export default function MoradorDelivery() {
           boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)",
           padding: '1rem 1.5rem',
           color: isDark ? '#fff' : "#1e293b",
-          paddingTop: "max(0, env(safe-area-inset-top))",
+          paddingTop: "max(0px, env(safe-area-inset-top))",
         }}
       >
         <div className="flex items-center gap-4">
@@ -251,10 +251,10 @@ export default function MoradorDelivery() {
               gap: '10px',
               padding: '14px',
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))',
-              border: '2px solid rgba(59,130,246,0.8)',
-              boxShadow: '0 0 0 1px rgba(59,130,246,0.3), 0 2px 8px rgba(59,130,246,0.2)',
-              color: isDark ? '#fff' : "#1e293b",
+              background: '#003580',
+              border: '2px solid #003580',
+              boxShadow: '0 2px 8px rgba(0,53,128,0.35)',
+              color: '#fff',
               fontWeight: 700,
               fontSize: "16px",
               cursor: 'pointer',
@@ -439,7 +439,7 @@ export default function MoradorDelivery() {
                       background: "rgba(0,0,0,0.6)",
                       border: "none",
                       cursor: "pointer",
-                      color: p.text,
+                      color: "#fff",
                     }}
                   >
                     <X className="w-5 h-5" />
@@ -503,11 +503,9 @@ export default function MoradorDelivery() {
                 width: '100%',
                 padding: '14px',
                 borderRadius: '14px',
-                background: servico
-                  ? 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))'
-                  : 'rgba(255,255,255,0.04)',
-                border: servico ? '1.5px solid rgba(59,130,246,0.4)' : (isDark ? '1.5px solid rgba(255,255,255,0.08)' : '2px solid #003580'),
-                color: servico ? '#fff' : (isDark ? '#64748b' : '#003580'),
+                background: servico ? '#003580' : (isDark ? 'rgba(255,255,255,0.04)' : '#e2e8f0'),
+                border: servico ? '2px solid #003580' : (isDark ? '1.5px solid rgba(255,255,255,0.08)' : '2px solid #cbd5e1'),
+                color: servico ? '#fff' : (isDark ? '#64748b' : '#94a3b8'),
                 fontWeight: 700,
                 fontSize: "16px",
                 cursor: servico ? 'pointer' : 'not-allowed',

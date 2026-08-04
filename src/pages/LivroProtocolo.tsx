@@ -425,7 +425,7 @@ export default function LivroProtocolo() {
               display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "var(--color-card, #fff)",
-              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+              color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
             <FileText className="w-5 h-5" /> Relatório
@@ -628,7 +628,7 @@ export default function LivroProtocolo() {
                     position: "absolute", top: "8px", right: "8px",
                     background: "rgba(0,0,0,0.6)", border: "none", borderRadius: "50%",
                     width: "32px", height: "32px", display: "flex", alignItems: "center", justifyContent: "center",
-                    cursor: "pointer", color: p.text,
+                    cursor: "pointer", color: "#fff",
                   }}>
                     <X className="w-5 h-5" />
                   </button>

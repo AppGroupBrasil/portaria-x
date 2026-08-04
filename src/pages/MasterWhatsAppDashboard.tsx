@@ -213,12 +213,12 @@ export default function MasterWhatsAppDashboard() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3" style={{ padding: "1rem 1.5rem", height: "4.5rem" }}>
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <MessageCircle className="w-5 h-5" style={{ color: "#25d366" }} />
+          <MessageCircle className="w-5 h-5" style={{ color: "#25D366" }} />
           <span style={{ fontWeight: 700, fontSize: 15, flex: 1 }}>WhatsApp</span>
         </div>
       </header>
@@ -243,7 +243,7 @@ export default function MasterWhatsAppDashboard() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Key size={18} style={{ color: globalConfigured ? "#25d366" : "#f59e0b" }} />
+              <Key size={18} style={{ color: globalConfigured ? "#128C7E" : "#f59e0b" }} />
               <span style={{ fontWeight: 700, fontSize: 15, color: p.text }}>
                 Credenciais Gupshup (Global)
               </span>
@@ -329,7 +329,7 @@ export default function MasterWhatsAppDashboard() {
                   padding: "14px 16px",
                   borderRadius: 12,
                   border: "none",
-                  background: savedGlobal ? "#16a34a" : "#25d366",
+                  background: savedGlobal ? "#16a34a" : "#128C7E",
                   color: "#fff",
                   fontWeight: 700,
                   fontSize: 14,
@@ -372,7 +372,7 @@ export default function MasterWhatsAppDashboard() {
                       padding: "10px 16px",
                       borderRadius: 10,
                       border: "none",
-                      background: "#25d366",
+                      background: "#128C7E",
                       color: "#fff",
                       fontWeight: 700,
                       fontSize: 13,
@@ -410,7 +410,7 @@ export default function MasterWhatsAppDashboard() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: "1.25rem" }}>
           {[
             { label: "Condominios", value: totals.condominios, icon: Building2, color: "#3b82f6" },
-            { label: "WhatsApp Ativo", value: totals.enabled, icon: MessageCircle, color: "#25d366" },
+            { label: "WhatsApp Ativo", value: totals.enabled, icon: MessageCircle, color: "#25D366" },
             { label: "Msgs / Mês", value: totals.sentMonth, icon: TrendingUp, color: "#8b5cf6" },
             { label: "Custo / Mês", value: `R$ ${totals.costMonth.toFixed(2)}`, icon: DollarSign, color: "#f59e0b" },
           ].map(card => (
@@ -468,7 +468,7 @@ export default function MasterWhatsAppDashboard() {
                   {/* Toggle */}
                   <button
                     onClick={() => toggleEnabled(condo)}
-                    style={{ background: "none", border: "none", cursor: "pointer", color: condo.enabled ? "#25d366" : (isDark ? "#64748b" : "#94a3b8"), flexShrink: 0 }}
+                    style={{ background: "none", border: "none", cursor: "pointer", color: condo.enabled ? "#128C7E" : (isDark ? "#64748b" : "#94a3b8"), flexShrink: 0 }}
                   >
                     {condo.enabled ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
                   </button>
@@ -490,7 +490,7 @@ export default function MasterWhatsAppDashboard() {
                           height: "100%",
                           borderRadius: 4,
                           width: `${pctUsed}%`,
-                          background: pctUsed >= 90 ? "#ef4444" : pctUsed >= 70 ? "#f59e0b" : "#25d366",
+                          background: pctUsed >= 90 ? "#ef4444" : pctUsed >= 70 ? "#f59e0b" : "#128C7E",
                           transition: "width 0.3s",
                         }} />
                       </div>
@@ -590,7 +590,7 @@ export default function MasterWhatsAppDashboard() {
                         padding: "10px",
                         borderRadius: 12,
                         border: "none",
-                        background: savedId === condo.id ? "#16a34a" : "#25d366",
+                        background: savedId === condo.id ? "#16a34a" : "#128C7E",
                         color: "#fff",
                         fontWeight: 700,
                         fontSize: 13,

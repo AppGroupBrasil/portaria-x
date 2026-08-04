@@ -187,7 +187,7 @@ export default function CadastroFuncionarios() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ height: "4.5rem", display: "flex", alignItems: "center", gap: 12, paddingLeft: "1rem", paddingRight: "1rem" }}>
           <button onClick={() => navigate("/cadastros")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ChevronLeft className="w-7 h-7" />
@@ -345,7 +345,7 @@ export default function CadastroFuncionarios() {
 
               {/* Error Modal */}
               {error && (
-                <div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setError(""); }} style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
+                <div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setError(""); }} style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setError("")}>
                   <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
                   <div role="dialog" className="animate-fade-in" style={{ position: "relative", width: "100%", maxWidth: 380, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,53,128,0.3)", padding: "2.5rem 2rem 2rem", textAlign: "center" }}>
                     <button onClick={() => setError("")} style={{ position: "absolute", top: 14, right: 14, color: "rgba(255,255,255,0.5)", cursor: "pointer", background: "none", border: "none" }}><X className="w-6 h-6" /></button>
@@ -354,7 +354,7 @@ export default function CadastroFuncionarios() {
                     </div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Atenção</h2>
                     <p style={{ fontSize: 15, color: "rgba(255,255,255,0.8)", marginBottom: 28, lineHeight: 1.5 }}>{error}</p>
-                    <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "var(--color-card, #fff)", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
+                    <button onClick={() => setError("")} style={{ width: "100%", height: 46, borderRadius: 12, border: "none", background: "#fff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Entendi</button>
                   </div>
                 </div>
               )}
@@ -428,7 +428,7 @@ export default function CadastroFuncionarios() {
           role="button"
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setModalData(null); }}
-          style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
+          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
           onClick={() => setModalData(null)}
         >
           <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} />
@@ -467,7 +467,7 @@ export default function CadastroFuncionarios() {
               <button onClick={() => setModalData(null)} style={{ flex: 1, height: 46, borderRadius: 12, border: "2px solid rgba(255,255,255,0.2)", background: "transparent", color: "#ffffff", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
                 Cadastrar outro
               </button>
-              <button onClick={() => { setModalData(null); navigate("/cadastros"); }} style={{ flex: 1, height: 46, borderRadius: 12, border: "none", background: "var(--color-card, #fff)", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
+              <button onClick={() => { setModalData(null); navigate("/cadastros"); }} style={{ flex: 1, height: 46, borderRadius: 12, border: "none", background: "#fff", color: "#003580", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
                 Ver lista
               </button>
             </div>

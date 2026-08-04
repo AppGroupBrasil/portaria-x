@@ -13,7 +13,7 @@ export default function DemoBanner() {
       background: "linear-gradient(90deg, #003580, #0062d1)",
       padding: "10px 20px",
       display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
-      flexWrap: "wrap", position: "sticky", top: 0, zIndex: 9999,
+      flexWrap: "wrap", position: "sticky", top: 0, zIndex: 30,
     }}>
       <Eye style={{ width: "16px", height: "16px", color: "#ffffff" }} />
       <span style={{ fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>
@@ -22,7 +22,7 @@ export default function DemoBanner() {
       <button
         onClick={() => { navigate("/register/condominio"); }}
         style={{
-          background: "var(--color-card, #fff)", color: "#003580", border: "none",
+          background: "#fff", color: "#003580", border: "none",
           padding: "5px 14px", borderRadius: "8px", fontWeight: 700,
           fontSize: "13px", cursor: "pointer",
           display: "flex", alignItems: "center", gap: "4px",

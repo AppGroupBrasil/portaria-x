@@ -139,7 +139,7 @@ export default function DashboardAdmin() {
   return (
     <div className="min-h-dvh bg-background flex flex-col">
       {/* ═══════════ Header ═══════════ */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="flex items-start justify-between" style={{ padding: "18px 20px", minHeight: "4rem", gap: 16 }}>
           <div className="flex items-center gap-4" style={{ minWidth: 0 }}>
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder, flexShrink: 0 }}>

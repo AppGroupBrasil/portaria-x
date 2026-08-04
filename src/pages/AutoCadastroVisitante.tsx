@@ -53,19 +53,21 @@ export default function AutoCadastroVisitante() {
   });
 
   useEffect(() => {
-    apiFetch(`${API}/blocos/public`)
+    // O condomínio vem sempre no link/QR gerado pela portaria; sem ele não há
+    // como saber em qual tenant cadastrar.
+    const paramId = Number(new URLSearchParams(globalThis.location.search).get("condominio_id"));
+    const condoQS = Number.isInteger(paramId) && paramId > 0 ? `?condominio_id=${paramId}` : "";
+    if (condoQS) setCondominioId(paramId);
+
+    apiFetch(`${API}/blocos/public${condoQS}`)
       .then((r) => r.json())
       .then((data) => {
-        setBlocos(data || []);
-        // Extrair condominio_id do primeiro bloco
-        if (data && data.length > 0 && data[0].condominio_id) {
-          setCondominioId(data[0].condominio_id);
-        }
+        setBlocos(Array.isArray(data) ? data : []);
       })
       .catch(() => {})
       .finally(() => setLoadingBlocos(false));
 
-    apiFetch(`${API}/condominio-config/public`)
+    apiFetch(`${API}/condominio-config/public${condoQS}`)
       .then((r) => r.json())
       .then((data) => {
         setRequiredFields({
@@ -154,6 +156,10 @@ export default function AutoCadastroVisitante() {
 
   // Submit
   const handleSubmit = async () => {
+    if (!condominioId) {
+      setError("Link inválido. Use o QR Code ou o link enviado pela portaria.");
+      return;
+    }
     if (!form.nome.trim()) {
       setError("Por favor, informe seu nome.");
       return;

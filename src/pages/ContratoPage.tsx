@@ -137,7 +137,7 @@ export default function ContratoPage() {
           </button>
           <button onClick={handleShareWhatsApp} style={{
             display: "flex", alignItems: "center", gap: "6px",
-            background: "#25D366", border: "none",
+            background: "#128C7E", border: "none",
             borderRadius: "10px", padding: "8px 16px", color: "#fff",
             fontWeight: 600, fontSize: "15px", cursor: "pointer",
           }}>
@@ -540,14 +540,14 @@ export default function ContratoPage() {
         </button>
         <button onClick={handleCopyLink} style={{
           display: "flex", alignItems: "center", gap: "12px",
-          background: "var(--color-card, #fff)", border: "2px solid #003580", borderRadius: "12px",
+          background: "#fff", border: "2px solid #003580", borderRadius: "12px",
           padding: "14px 28px", color: "#003580", fontWeight: 700, fontSize: "16px", cursor: "pointer",
         }}>
           <Share2 style={{ width: "18px", height: "18px" }} /> {copied ? "Link Copiado!" : "Compartilhar Link"}
         </button>
         <button onClick={handleShareWhatsApp} style={{
           display: "flex", alignItems: "center", gap: "12px",
-          background: "#25D366", border: "none", borderRadius: "12px",
+          background: "#128C7E", border: "none", borderRadius: "12px",
           padding: "14px 28px", color: "#fff", fontWeight: 700, fontSize: "16px", cursor: "pointer",
         }}>
           <MessageCircle style={{ width: "18px", height: "18px" }} /> Enviar via WhatsApp

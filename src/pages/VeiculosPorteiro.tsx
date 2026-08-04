@@ -40,6 +40,10 @@ import ComoFunciona from "@/components/ComoFunciona";
 import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 const API = "/api/vehicle-authorizations";
+
+// Leitura de placa por camera IP fica oculta ate a integracao com cameras
+// locais ser simplificada. Trocar para true reativa o botao.
+const LEITURA_PLACA_CAMERA_IP = false;
 const API_BASE = "/api";
 
 function appendVehicleDetail(lines: string[], label: string, value: string | null | undefined) {
@@ -618,7 +622,7 @@ export default function VeiculosPorteiro() {
       {/* Header */}
       <header
         className="sticky top-0 z-40"
-        style={{ background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}
+        style={{ background: p.headerBg, padding: "1rem 1.5rem", borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}
       >
         <div className="flex items-center gap-4">
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
@@ -709,7 +713,7 @@ export default function VeiculosPorteiro() {
               marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "var(--color-card, #fff)",
-              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+              color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
             <FileText className="w-5 h-5" /> Relatório
@@ -1136,9 +1140,11 @@ export default function VeiculosPorteiro() {
               <div style={{ marginTop: "8px" }}>
                 <PlateReader onPlateDetected={handlePlateFromReader} />
               </div>
-              <div style={{ marginTop: "8px" }}>
-                <CameraPlateReader onPlateDetected={handlePlateFromReader} />
-              </div>
+              {LEITURA_PLACA_CAMERA_IP && (
+                <div style={{ marginTop: "8px" }}>
+                  <CameraPlateReader onPlateDetected={handlePlateFromReader} />
+                </div>
+              )}
               {fotoPlaca && (
                 <div style={{ marginTop: "8px", position: "relative" }}>
                   <img src={fotoPlaca} alt="Foto da placa" style={{
@@ -1389,7 +1395,7 @@ export default function VeiculosPorteiro() {
                       style={{
                         display: "flex", alignItems: "center", gap: "6px",
                         padding: "8px 14px", borderRadius: "10px",
-                        background: "#25d366", border: "none",
+                        background: "#128C7E", border: "none",
                         color: "#ffffff", fontWeight: 600, fontSize: "13px", cursor: "pointer",
                       }}
                     >
@@ -1631,7 +1637,7 @@ export default function VeiculosPorteiro() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <div style={{
-                  width: "40px", height: "40px", borderRadius: "50%", background: "#25d366",
+                  width: "40px", height: "40px", borderRadius: "50%", background: "#128C7E",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
@@ -1714,7 +1720,7 @@ export default function VeiculosPorteiro() {
                 onClick={() => { globalThis.open(whatsappModal.waUrl, "_blank"); }}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
-                  padding: "14px", borderRadius: "14px", background: "#25d366",
+                  padding: "14px", borderRadius: "14px", background: "#128C7E",
                   border: "none", color: "#fff", fontWeight: 700, fontSize: "16px",
                   cursor: "pointer", width: "100%",
                 }}

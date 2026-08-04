@@ -209,7 +209,7 @@ export default function DashboardMorador() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* ═══════════ Header ═══════════ */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, marginBottom: 0, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="flex items-center justify-between" style={{ padding: "20px 28px", height: "4rem" }}>
           <div className="flex items-center" style={{ gap: 14 }}>
             <div className="flex items-center justify-center" style={{ width: 40, height: 40, borderRadius: 16, background: p.iconBoxBg, border: p.iconBoxBorder }}>

@@ -36,17 +36,17 @@ import { compressCanvas } from "@/lib/imageUtils";
    - POST /api/gate/lpr-open   → lê placa → abre portão veicular
    ═══════════════════════════════════════════════════════════ */
 
-const PLATE_REGEX = /[A-Z]{3}[\s\-]?\d[A-Z0-9]\d{2}/gi;
+const PLATE_REGEX = /[A-Z]{3}[\s-]?\d[A-Z0-9]\d{2}/gi;
 
 function extractPlate(text: string): string | null {
   const cleaned = text
     .toUpperCase()
     .replaceAll(/[ÀÁÂ]/g, "A").replaceAll(/[ÉÊ]/g, "E").replaceAll(/[ÍÎ]/g, "I")
     .replaceAll(/[ÓÔÕ]/g, "O").replaceAll(/[ÚÛ]/g, "U")
-    .replaceAll(/[\n\r]/g, " ").replaceAll(/[^A-Z0-9\s\-]/g, "");
+    .replaceAll(/[\n\r]/g, " ").replaceAll(/[^A-Z0-9\s-]/g, "");
   const matches = cleaned.match(PLATE_REGEX);
   if (!matches || matches.length === 0) return null;
-  return matches[0].replaceAll(/[\s\-]/g, "").slice(0, 7);
+  return matches[0].replaceAll(/[\s-]/g, "").slice(0, 7);
 }
 
 interface CameraData {

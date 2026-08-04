@@ -36,6 +36,7 @@ import {
   User,
 
   MessageSquare,
+  AlertTriangle,
 } from "lucide-react";
 import { APP_ORIGIN } from "@/lib/config";
 import { apiFetch } from "@/lib/api";
@@ -57,6 +58,8 @@ interface Visitor {
   token: string;
   created_at: string;
   face_descriptor: number[] | null;
+  /** NULL = auto cadastro pelo link; preenchido = cadastro manual na portaria */
+  created_by: number | null;
 }
 
 interface FaceMatch {
@@ -387,7 +390,15 @@ export default function CadastrarVisitante() {
           ].filter(Boolean);
           const message = encodeURIComponent(msgLines.join("\n"));
           const phone = auth.morador_phone.replaceAll(/\D/g, "");
-          globalThis.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
+          const num = phone.startsWith("55") ? phone : `55${phone}`;
+          // Modal em vez de window.open: aqui já estamos depois do await
+          setWaMorador({
+            url: `https://wa.me/${num}?text=${message}`,
+            visitante: auth.visitante_nome,
+            phone: auth.morador_phone,
+            destino: `${auth.bloco || "-"} · Apt ${auth.apartamento || "-"}`,
+            titulo: "Avisar entrada ao morador",
+          });
         }
         fetchPreAuths();
       }
@@ -432,19 +443,44 @@ export default function CadastrarVisitante() {
   }, [search]);
 
   // Camera functions
+  // O <video> só existe enquanto cameraActive; por isso o modal abre ANTES do
+  // getUserMedia — senão videoRef.current e null na hora de plugar o stream.
+  const attachStream = (stream: MediaStream, tries = 0) => {
+    const v = videoRef.current;
+    if (!v) {
+      if (tries < 20) requestAnimationFrame(() => attachStream(stream, tries + 1));
+      else stream.getTracks().forEach((t) => t.stop());
+      return;
+    }
+    v.srcObject = stream;
+    v.play().catch(() => { /* autoPlay assume */ });
+  };
+
   const startCamera = async (mode: "foto" | "documento") => {
     setCameraMode(mode);
+    setCameraActive(true);
+    setError("");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: mode === "foto" ? "user" : "environment" },
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: mode === "foto" ? "user" : "environment" },
+        });
+      } catch {
+        // Sem camera frontal/traseira correspondente: cai para qualquer camera
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
       }
-      setCameraActive(true);
-    } catch (err) {
-      setError("Não foi possível acessar a câmera.");
+      attachStream(stream);
+    } catch (err: any) {
+      setCameraActive(false);
+      setCameraMode(null);
+      setError(
+        err?.name === "NotAllowedError"
+          ? "Permissão de câmera negada. Libere o acesso nas configurações."
+          : err?.name === "NotFoundError"
+            ? "Nenhuma câmera encontrada neste dispositivo."
+            : "Não foi possível acessar a câmera."
+      );
     }
   };
 
@@ -630,6 +666,12 @@ export default function CadastrarVisitante() {
     };
   }, []);
 
+  // ── Envio do link de autorização ao morador (modal com <a> real) ──
+  // Todo WhatsApp da portaria passa por aqui: depois de um await o navegador
+  // bloqueia window.open, então o link precisa de um clique do usuário.
+  const [waMorador, setWaMorador] = useState<{ url: string; visitante: string; phone: string; destino: string; titulo?: string } | null>(null);
+  const [avisandoId, setAvisandoId] = useState<number | null>(null);
+
   // Submit form
   const handleSubmit = async () => {
     if (!form.nome.trim()) {
@@ -675,7 +717,9 @@ export default function CadastrarVisitante() {
       const message = encodeURIComponent(msgLines.join("\n"));
 
       const whatsappNumber = form.morador_whatsapp.replaceAll(/\D/g, "");
-      const whatsappUrl = `https://wa.me/55${whatsappNumber}?text=${message}`;
+      const whatsappUrl = `https://wa.me/${whatsappNumber.startsWith("55") ? whatsappNumber : `55${whatsappNumber}`}?text=${message}`;
+      const destinoVisitante = `${form.bloco || "-"} · Apt ${form.apartamento || "-"}`;
+      const telefoneDigitado = form.morador_whatsapp;
 
       // Reset form
       setForm({
@@ -686,10 +730,13 @@ export default function CadastrarVisitante() {
       setShowForm(false);
       fetchVisitors();
 
-      // Abrir WhatsApp
-      if (whatsappNumber) {
-        globalThis.open(whatsappUrl, "_blank");
-      }
+      // Abrir WhatsApp pelo modal (window.open aqui já é fora do gesto)
+      setWaMorador({
+        url: whatsappNumber ? whatsappUrl : "",
+        visitante: visitor.nome,
+        phone: telefoneDigitado,
+        destino: destinoVisitante,
+      });
     } catch (err) {
       setError("Erro de conexão.");
     } finally {
@@ -697,9 +744,56 @@ export default function CadastrarVisitante() {
     }
   };
 
+  const buildAuthWaUrl = (v: Visitor, phone: string) => {
+    const authLink = `${APP_ORIGIN}/visitante/autorizar/${v.token}`;
+    const msg = [
+      `*Portaria - Autorizacao de Visitante*`,
+      ``,
+      `Um visitante se cadastrou e aguarda sua autorizacao:`,
+      ``,
+      `*Nome:* ${v.nome}`,
+      `*Documento:* ${v.documento || "Nao informado"}`,
+      `*Destino:* ${v.bloco || ""} - Apt ${v.apartamento || ""}`,
+      ``,
+      `Clique no link abaixo para autorizar ou recusar a entrada:`,
+      authLink,
+    ].join("\n");
+    const num = phone.replaceAll(/\D/g, "");
+    return `https://wa.me/${num.startsWith("55") ? num : `55${num}`}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const handleAvisarMorador = async (v: Visitor) => {
+    let phone = v.morador_whatsapp || "";
+
+    if (!phone && v.bloco) {
+      setAvisandoId(v.id);
+      try {
+        const res = await apiFetch(`${API}/visitors/moradores-bloco?bloco=${encodeURIComponent(v.bloco)}`);
+        if (res.ok) {
+          const lista: { name: string; unit: string; phone: string }[] = await res.json();
+          phone = lista.find((m) => m.unit === v.apartamento && m.phone)?.phone || "";
+        }
+      } catch {
+        /* sem cadastro: cai no prompt abaixo */
+      }
+      setAvisandoId(null);
+    }
+
+    const destino = `${v.bloco || "-"} · Apt ${v.apartamento || "-"}`;
+
+    // Sem telefone o modal explica o motivo; não cabe ao porteiro adivinhar
+    // ou digitar o número do morador.
+    setWaMorador({
+      url: phone ? buildAuthWaUrl(v, phone) : "",
+      visitante: v.nome,
+      phone,
+      destino,
+    });
+  };
+
   // Generate self-register WhatsApp link
   const handleSelfRegisterLink = () => {
-    const selfRegisterUrl = `${APP_ORIGIN}/visitante/auto-cadastro`;
+    const selfRegisterUrl = `${APP_ORIGIN}/visitante/auto-cadastro${user?.condominioId ? `?condominio_id=${user.condominioId}` : ""}`;
     const msgLines = [
       `*Portaria - Auto Cadastro de Visitante*`,
       ``,
@@ -799,7 +893,7 @@ export default function CadastrarVisitante() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <ArrowLeft className="w-6 h-6" />
@@ -915,7 +1009,7 @@ export default function CadastrarVisitante() {
         <button
           onClick={handleSelfRegisterLink}
           className="flex flex-col items-center justify-center gap-2 rounded-xl text-white font-semibold transition-colors"
-          style={{ aspectRatio: "1", backgroundColor: "#25d366", padding: "10px" }}
+          style={{ aspectRatio: "1", backgroundColor: "#128C7E", padding: "10px" }}
         >
           <Link2 style={{ width: 28, height: 28 }} />
           <span style={{ fontSize: "12px", fontWeight: 700, textAlign: "center", lineHeight: 1.3 }}>AUTO CADASTRO WHATSAPP</span>
@@ -998,7 +1092,7 @@ export default function CadastrarVisitante() {
             display: "flex", alignItems: "center", gap: "12px",
             padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
             background: "var(--color-card, #fff)",
-            color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+            color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             height: "42px", flexShrink: 0,
           }}
         >
@@ -1037,19 +1131,79 @@ export default function CadastrarVisitante() {
       <ReportModal
         show={showReport}
         onClose={() => setShowReport(false)}
-        onGenerate={(dateFrom, dateTo, withCharts) => {
+        onGenerate={(dateFrom, dateTo, withCharts, f) => {
           const from = new Date(dateFrom + "T00:00:00");
           const to = new Date(dateTo + "T23:59:59");
-          const filteredByDate = visitors.filter((v) => {
-            const d = new Date(v.created_at);
+          const noPeriodo = (iso: string) => {
+            const d = new Date(iso);
             return d >= from && d <= to;
-          });
+          };
+          const situacaoLabel: Record<string, string> = {
+            liberado: "Liberado", recusado: "Recusado", aguardando: "Aguardando",
+          };
+
+          const linhasVisitantes = visitors
+            .filter((v) => noPeriodo(v.created_at))
+            .map((v) => {
+              const situacao = v.status === "liberado" ? "liberado" : v.status === "recusado" ? "recusado" : "aguardando";
+              return {
+                nome: v.nome, documento: v.documento, telefone: v.telefone,
+                bloco: v.bloco, apartamento: v.apartamento,
+                quem_autorizou: v.quem_autorizou, created_at: v.created_at,
+                status: situacaoLabel[situacao], _situacao: situacao,
+                // created_by so existe no cadastro feito pela portaria
+                _origem: v.created_by ? "manual" : "auto_cadastro",
+                _foto_url: v.foto ? `${APP_ORIGIN}/api/visitors/foto/${v.token}` : "",
+              };
+            });
+
+          const linhasPreAuths = preAuths
+            .filter((a) => noPeriodo(a.created_at))
+            .map((a) => {
+              const situacao = a.status === "utilizada" ? "liberado" : a.status === "cancelada" ? "recusado" : "aguardando";
+              return {
+                nome: a.visitante_nome, documento: a.visitante_documento, telefone: a.visitante_telefone,
+                bloco: a.bloco, apartamento: a.apartamento,
+                quem_autorizou: a.morador_name, created_at: a.created_at,
+                status: situacaoLabel[situacao], _situacao: situacao,
+                _origem: "pre_autorizacao",
+                _foto_url: a.visitante_foto ? `${APP_ORIGIN}/api/pre-authorizations/foto/${a.token}` : "",
+              };
+            });
+
+          const dados = [...linhasVisitantes, ...linhasPreAuths]
+            .filter((r) => f.origem === "todas" || r._origem === f.origem)
+            .filter((r) => f.situacao === "todas" || r._situacao === f.situacao)
+            .sort((a, b) => b.created_at.localeCompare(a.created_at));
+
           if (withCharts) {
-            gerarRelatorioVisitantesComGraficos(filteredByDate, dateFrom, dateTo, user?.condominio_nome);
+            gerarRelatorioVisitantesComGraficos(dados, dateFrom, dateTo, user?.condominio_nome);
           } else {
-            gerarRelatorioVisitantes(filteredByDate, dateFrom, dateTo, user?.condominio_nome);
+            gerarRelatorioVisitantes(dados, dateFrom, dateTo, user?.condominio_nome);
           }
         }}
+        filters={[
+          {
+            key: "origem",
+            label: "Tipo de liberacao",
+            options: [
+              { value: "todas", label: "Todas as origens" },
+              { value: "manual", label: "Cadastro na portaria" },
+              { value: "auto_cadastro", label: "Auto cadastro por link" },
+              { value: "pre_autorizacao", label: "Pre-autorizacao do morador" },
+            ],
+          },
+          {
+            key: "situacao",
+            label: "Situacao da autorizacao",
+            options: [
+              { value: "todas", label: "Todas as situacoes" },
+              { value: "liberado", label: "Liberado" },
+              { value: "recusado", label: "Recusado" },
+              { value: "aguardando", label: "Aguardando" },
+            ],
+          },
+        ]}
         title="Gerar relatorio de Visitantes por periodo"
       />
 
@@ -1383,7 +1537,7 @@ export default function CadastrarVisitante() {
                   onClick={handleSubmit}
                   disabled={saving}
                   className="w-full h-16 rounded-xl text-white font-bold text-base transition-colors disabled:opacity-50 flex items-center justify-center gap-3"
-                  style={{ backgroundColor: "#25d366" }}
+                  style={{ backgroundColor: "#128C7E" }}
                 >
                   {saving ? (
                     <Loader2 className="w-6 h-6 animate-spin" />
@@ -1505,7 +1659,7 @@ export default function CadastrarVisitante() {
                       onClick={() => handlePreAuthConfirmEntry(auth)}
                       disabled={preAuthConfirming === auth.id}
                       className="w-full flex items-center justify-center gap-2 rounded-xl text-white font-bold text-sm transition-all"
-                      style={{ height: "42px", backgroundColor: "#25d366", opacity: preAuthConfirming === auth.id ? 0.6 : 1 }}
+                      style={{ height: "42px", backgroundColor: "#128C7E", opacity: preAuthConfirming === auth.id ? 0.6 : 1 }}
                     >
                       {preAuthConfirming === auth.id ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -1570,6 +1724,24 @@ export default function CadastrarVisitante() {
                         </span>
                       </div>
                     </div>
+                    {v.status === "pendente" && (
+                      <button
+                        onClick={() => handleAvisarMorador(v)}
+                        disabled={avisandoId === v.id}
+                        style={{
+                          display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                          width: "100%", height: "42px", marginTop: "10px", borderRadius: "10px", border: "none",
+                          backgroundColor: "#128C7E", color: "#fff", fontSize: "14px", fontWeight: 700,
+                          cursor: "pointer", opacity: avisandoId === v.id ? 0.6 : 1,
+                        }}
+                      >
+                        {avisandoId === v.id ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <><MessageSquare className="w-5 h-5" /> Enviar Autorização ao Morador</>
+                        )}
+                      </button>
+                    )}
                     <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
                       {gateEnabled && v.status === "liberado" && (
                         <button
@@ -1626,6 +1798,70 @@ export default function CadastrarVisitante() {
           })
         )}
       </main>
+
+      {/* ═══════════════════════════════════════════════════ */}
+      {/* MODAL — ENVIAR AUTORIZAÇÃO AO MORADOR (wa.me)      */}
+      {/* <a> real: o navegador bloqueia window.open fora do  */}
+      {/* gesto do usuário (o fetch do telefone quebra o gesto) */}
+      {/* ═══════════════════════════════════════════════════ */}
+      {waMorador && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ backgroundColor: "rgba(0,0,0,0.6)", padding: "24px" }}
+          onClick={() => setWaMorador(null)}
+        >
+          <div
+            className="rounded-2xl w-full"
+            style={{ maxWidth: "360px", backgroundColor: "#fff", padding: "24px" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col items-center text-center gap-3">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: waMorador.url ? "#dcfce7" : "#fef3c7" }}
+              >
+                {waMorador.url ? (
+                  <MessageSquare className="w-8 h-8" style={{ color: "#128C7E" }} />
+                ) : (
+                  <AlertTriangle className="w-8 h-8" style={{ color: "#d97706" }} />
+                )}
+              </div>
+              <h3 className="font-bold text-gray-900" style={{ fontSize: "17px" }}>
+                {waMorador.url ? (waMorador.titulo || "Enviar autorização") : "Morador sem telefone cadastrado"}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {waMorador.url ? (
+                  <>Link de autorização de <strong>{waMorador.visitante}</strong> para {waMorador.phone}.</>
+                ) : (
+                  <>
+                    Não há morador com WhatsApp cadastrado em <strong>{waMorador.destino}</strong>.
+                    Cadastre o telefone do morador para que a autorização possa ser enviada.
+                  </>
+                )}
+              </p>
+            </div>
+            {waMorador.url && (
+              <a
+                href={waMorador.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setWaMorador(null)}
+                className="flex items-center justify-center gap-2 rounded-xl font-bold text-white"
+                style={{ backgroundColor: "#128C7E", height: "46px", marginTop: "20px", fontSize: "15px", textDecoration: "none" }}
+              >
+                <MessageSquare className="w-5 h-5" /> Abrir WhatsApp
+              </a>
+            )}
+            <button
+              onClick={() => setWaMorador(null)}
+              className="w-full font-semibold text-gray-500"
+              style={{ height: "40px", marginTop: "8px", background: "none", border: "none", fontSize: "14px" }}
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ═══════════════════════════════════════════════════ */}
       {/* MODAL RECONHECIMENTO FACIAL */}

@@ -8,7 +8,7 @@ import { compressCanvas } from "@/lib/imageUtils";
  *  - Old:     ABC-1234  (3 letters + 4 digits)
  *  - Mercosul: ABC1D23  (3 letters + 1 digit + 1 letter + 2 digits)
  */
-const PLATE_REGEX = /[A-Z]{3}[\s\-]?\d[A-Z0-9]\d{2}/gi;
+const PLATE_REGEX = /[A-Z]{3}[\s-]?\d[A-Z0-9]\d{2}/gi;
 
 function extractPlate(text: string): string | null {
   // Normalize common OCR misreads
@@ -20,13 +20,13 @@ function extractPlate(text: string): string | null {
     .replace(/[ÓÔÕ]/g, "O")
     .replace(/[ÚÛ]/g, "U")
     .replace(/[\n\r]/g, " ")
-    .replace(/[^A-Z0-9\s\-]/g, "");
+    .replace(/[^A-Z0-9\s-]/g, "");
 
   const matches = cleaned.match(PLATE_REGEX);
   if (!matches || matches.length === 0) return null;
 
   // Return the first match, stripped of spaces/dashes
-  return matches[0].replace(/[\s\-]/g, "").slice(0, 7);
+  return matches[0].replace(/[\s-]/g, "").slice(0, 7);
 }
 
 interface PlateReaderProps {

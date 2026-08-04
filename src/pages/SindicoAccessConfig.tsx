@@ -336,7 +336,7 @@ export default function SindicoAccessConfig() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="flex items-center justify-between" style={{ padding: "1rem 2rem", height: "4.5rem" }}>
           <div className="flex items-center gap-4">
             <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
@@ -591,7 +591,7 @@ export default function SindicoAccessConfig() {
             <button
               onClick={() => setShowNew(true)}
               className="w-full rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-6"
-              style={{ background: "var(--color-card, #fff)", color: "#003580", minHeight: "60px" }}
+              style={{ background: "#fff", color: "#003580", minHeight: "60px" }}
             >
               <Plus className="w-6 h-6" style={{ color: "#003580" }} /> Adicionar Acesso Personalizado
             </button>
@@ -600,7 +600,7 @@ export default function SindicoAccessConfig() {
             <button
               onClick={() => { setShowLogs(!showLogs); if (!showLogs) fetchLogs(); }}
               className="w-full rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
-              style={{ background: "var(--color-card, #fff)", color: "#003580", minHeight: "60px" }}
+              style={{ background: "#fff", color: "#003580", minHeight: "60px" }}
             >
               <History className="w-6 h-6" style={{ color: "#003580" }} />
               Histórico de Acionamentos

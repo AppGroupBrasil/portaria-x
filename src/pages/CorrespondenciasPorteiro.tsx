@@ -266,8 +266,16 @@ export default function CorrespondenciasPorteiro() {
         ? `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`
         : `https://wa.me/?text=${encodeURIComponent(msg)}`;
 
-      // Auto-open WhatsApp
-      globalThis.open(waUrl, "_blank");
+      // Modal com <a> real: window.open depois do await é bloqueado pelo
+      // navegador, então o aviso nunca chegava ao morador.
+      setWhatsappModal({
+        show: true,
+        waUrl,
+        moradorName: morador_name,
+        moradorPhone: fullPhone,
+        protocolo: data.protocolo,
+        tipoCorr: tipoLabelMap[tipo] || tipo,
+      });
 
       resetForm();
       setShowForm(false);
@@ -519,7 +527,7 @@ export default function CorrespondenciasPorteiro() {
                       position: "absolute", top: "8px", right: "8px",
                       background: "rgba(0,0,0,0.6)", border: "none", borderRadius: "50%",
                       width: "32px", height: "32px", display: "flex", alignItems: "center", justifyContent: "center",
-                      cursor: "pointer", color: p.text,
+                      cursor: "pointer", color: "#fff",
                     }}
                   >
                     <X className="w-5 h-5" />
@@ -601,7 +609,7 @@ export default function CorrespondenciasPorteiro() {
               marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
               padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
               background: "var(--color-card, #fff)",
-              color: "#d97706", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+              color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             }}
           >
             <FileText className="w-5 h-5" /> Relatório
@@ -795,7 +803,7 @@ export default function CorrespondenciasPorteiro() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <div style={{
-                  width: "40px", height: "40px", borderRadius: "50%", background: "#25d366",
+                  width: "40px", height: "40px", borderRadius: "50%", background: "#128C7E",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
@@ -829,13 +837,16 @@ export default function CorrespondenciasPorteiro() {
 
             {/* Buttons */}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <button
-                onClick={() => { globalThis.open(whatsappModal.waUrl, "_blank"); }}
+              <a
+                href={whatsappModal.waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setWhatsappModal(null)}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
-                  padding: "14px", borderRadius: "14px", background: "#25d366",
-                  border: "none", color: p.text, fontWeight: 700, fontSize: "16px",
-                  cursor: "pointer", width: "100%",
+                  padding: "14px", borderRadius: "14px", background: "#128C7E",
+                  border: "none", color: "#fff", fontWeight: 700, fontSize: "16px",
+                  cursor: "pointer", width: "100%", textDecoration: "none", boxSizing: "border-box",
                 }}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -843,7 +854,7 @@ export default function CorrespondenciasPorteiro() {
                   <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.316 0-4.469-.756-6.209-2.034l-.356-.28-3.278 1.099 1.099-3.278-.28-.356A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
                 </svg>
                 Enviar Aviso via WhatsApp
-              </button>
+              </a>
               <button
                 onClick={() => setWhatsappModal(null)}
                 style={{
