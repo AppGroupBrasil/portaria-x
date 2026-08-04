@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import jsQR from "jsqr";
 import { useAuth } from "@/hooks/useAuth";
 import ReportModal from "@/components/ReportModal";
 import { gerarRelatorioRondas } from "@/lib/pdfUtils";
@@ -8,6 +9,7 @@ import {
   ArrowLeft,
   Shield,
   QrCode,
+  Info,
   MapPin,
   Clock,
   CheckCircle2,
@@ -89,6 +91,9 @@ export default function RegistroRonda() {
   const [scanResult, setScanResult] = useState<"success" | "error" | null>(null);
   const [scanMessage, setScanMessage] = useState("");
   const [scanCheckpoint, setScanCheckpoint] = useState<string>("");
+  // Digitação manual do código do ponto — alternativa quando a câmera falha
+  const [showManualInput, setShowManualInput] = useState(false);
+  const [manualQR, setManualQR] = useState("");
   const [observacao, setObservacao] = useState("");
   const [observacoes, setObservacoes] = useState<ObservacaoItem[]>([]);
   const [obsNextId, setObsNextId] = useState(1);
@@ -120,7 +125,7 @@ export default function RegistroRonda() {
       const [cpRes, schedRes, regRes] = await Promise.all([
         apiFetch(`${API}/rondas/checkpoints`),
         apiFetch(`${API}/rondas/schedules`),
-        apiFetch(`${API}/rondas/registros?funcionario_id=${user?.id}`),
+        apiFetch(`${API}/rondas/registros?funcionario_id=${user?.id}&limit=100`),
       ]);
       if (cpRes.ok) setCheckpoints(await cpRes.json());
       if (schedRes.ok) setSchedules(await schedRes.json());
@@ -217,7 +222,6 @@ export default function RegistroRonda() {
     setScanResult(null);
     setScanMessage("");
     setScanCheckpoint("");
-    setObservacao("");
     setScanning(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -232,7 +236,8 @@ export default function RegistroRonda() {
       scanIntervalRef.current = setInterval(scanFrame, 500);
     } catch {
       setScanResult("error");
-      setScanMessage("Não foi possível acessar a câmera.");
+      setScanMessage("Não foi possível acessar a câmera. Digite o código do ponto abaixo.");
+      setShowManualInput(true);
       setScanning(false);
     }
   };
@@ -261,28 +266,35 @@ export default function RegistroRonda() {
     if (!ctx) return;
     ctx.drawImage(video, 0, 0);
 
-    // Try to detect QR using BarcodeDetector (Chrome) or manual approach
+    // BarcodeDetector quando existe (Chrome Android); jsQR cobre o resto
+    // (Firefox, Safari/iOS e Chrome no desktop, que não implementam a API).
     if ("BarcodeDetector" in window) {
       const detector = new (window as any).BarcodeDetector({ formats: ["qr_code"] });
       detector.detect(canvas).then((barcodes: any[]) => {
-        if (barcodes.length > 0) {
-          const data = barcodes[0].rawValue;
-          if (data.startsWith("RONDA-CP-")) {
-            stopScanner();
-            handleQRDetected(data);
-          }
-        }
+        if (barcodes.length > 0) onCodeDetected(barcodes[0].rawValue);
       }).catch(() => {});
+      return;
     }
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+    if (code?.data) onCodeDetected(code.data);
+  };
+
+  const onCodeDetected = (data: string) => {
+    if (!data.startsWith("RONDA-CP-")) return;
+    stopScanner();
+    handleQRDetected(data);
   };
 
   const handleQRDetected = async (qrData: string) => {
     // Immediately register
     try {
+      const obsPayload = buildObservacaoPayload();
       const res = await apiFetch(`${API}/rondas/registros`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qr_code_data: qrData }),
+        body: JSON.stringify({ qr_code_data: qrData, observacao: obsPayload }),
       });
 
       if (res.ok) {
@@ -290,6 +302,7 @@ export default function RegistroRonda() {
         setScanResult("success");
         setScanCheckpoint(reg.checkpoint_nome);
         setScanMessage(`✅ Ponto registrado: ${reg.checkpoint_nome}`);
+        resetObservacoes();
         playSuccessSound();
         fetchAll();
       } else {
@@ -304,9 +317,6 @@ export default function RegistroRonda() {
   };
 
   // Manual QR input (for testing or when camera doesn't work)
-  const [showManualInput, setShowManualInput] = useState(false);
-  const [manualQR, setManualQR] = useState("");
-
   const handleManualScan = async () => {
     if (!manualQR.trim()) return;
     setSubmitting(true);
@@ -489,7 +499,7 @@ export default function RegistroRonda() {
     // Rondas always includes charts
     try {
       const [regRes, statsRes] = await Promise.all([
-        apiFetch(`${API}/rondas/registros?data_inicio=${dateFrom}&data_fim=${dateTo}`),
+        apiFetch(`${API}/rondas/registros?data_inicio=${dateFrom}&data_fim=${dateTo}&limit=2000`),
         apiFetch(`${API}/rondas/stats?data_inicio=${dateFrom}&data_fim=${dateTo}`),
       ]);
       const regs = regRes.ok ? await regRes.json() : [];
@@ -508,7 +518,7 @@ export default function RegistroRonda() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: p.headerBg, borderBottom: p.headerBorder, boxShadow: p.headerShadow, color: p.text, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ padding: "0 24px", height: "4.5rem", display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate("/dashboard")} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <ArrowLeft className="w-6 h-6" />
@@ -755,6 +765,27 @@ export default function RegistroRonda() {
               </div>
             </button>
 
+            {/* De onde saem os QR Codes dos pontos */}
+            {!scanning && (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  padding: "12px 14px",
+                  borderRadius: "14px",
+                  background: p.btnBg,
+                  border: `1px solid ${p.btnBorder}`,
+                }}
+              >
+                <Info style={{ width: 16, height: 16, color: p.textMuted, flexShrink: 0, marginTop: "2px" }} />
+                <p style={{ fontSize: "12px", lineHeight: 1.5, color: p.textMuted, margin: 0 }}>
+                  Os QR Codes dos pontos são gerados no <strong>perfil do síndico</strong>, em Controle de
+                  Rondas → Novo Ponto de Ronda, com nome, localização e observações do local. É lá também que
+                  o síndico imprime ou baixa o QR de cada ponto para colar no lugar.
+                </p>
+              </div>
+            )}
+
             {/* Scanner video */}
             {scanning && (
               <div style={{ borderRadius: "16px", overflow: "hidden", background: "#000", position: "relative" }}>
@@ -791,6 +822,119 @@ export default function RegistroRonda() {
                     Aponte para o QR Code do ponto de ronda
                   </span>
                 </div>
+              </div>
+            )}
+
+            {/* Digitação manual — alternativa quando a câmera falha */}
+            {!scanning && (
+              <div>
+                <button
+                  onClick={() => setShowManualInput((v) => !v)}
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "12px",
+                    background: "transparent",
+                    border: `1px dashed ${p.btnBorder}`,
+                    color: p.textMuted,
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                  }}
+                >
+                  {showManualInput ? (
+                    <>
+                      <X style={{ width: 16, height: 16 }} /> Fechar digitação manual
+                    </>
+                  ) : (
+                    <>
+                      <QrCode style={{ width: 16, height: 16 }} /> Câmera não funcionou? Digitar código do ponto
+                    </>
+                  )}
+                </button>
+
+                {showManualInput && (
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      padding: "14px",
+                      borderRadius: "16px",
+                      background: p.btnBg,
+                      border: `1px solid ${p.btnBorder}`,
+                    }}
+                  >
+                    <p style={{ fontSize: "12px", color: p.textMuted, margin: "0 0 10px" }}>
+                      Escolha o ponto pelo nome ou cole o código do QR Code.
+                    </p>
+                    <select
+                      value={manualQR}
+                      onChange={(e) => setManualQR(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "12px",
+                        borderRadius: "12px",
+                        border: `1px solid ${p.btnBorder}`,
+                        background: p.pageBg,
+                        color: p.text,
+                        fontSize: "15px",
+                        fontWeight: 600,
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <option value="">Selecione o ponto de ronda...</option>
+                      {activeCheckpoints.map((cp) => (
+                        <option key={cp.id} value={cp.qr_code_data}>
+                          {cp.nome}
+                          {cp.localizacao ? ` — ${cp.localizacao}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      value={manualQR}
+                      onChange={(e) => setManualQR(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !submitting) handleManualScan();
+                      }}
+                      placeholder="ou cole aqui o código RONDA-CP-..."
+                      style={{
+                        width: "100%",
+                        marginTop: "8px",
+                        padding: "12px",
+                        borderRadius: "12px",
+                        border: `1px solid ${p.btnBorder}`,
+                        background: p.pageBg,
+                        color: p.text,
+                        fontSize: "13px",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                    <button
+                      onClick={handleManualScan}
+                      disabled={submitting || !manualQR.trim()}
+                      style={{
+                        width: "100%",
+                        marginTop: "10px",
+                        padding: "14px",
+                        borderRadius: "12px",
+                        border: "none",
+                        background:
+                          submitting || !manualQR.trim()
+                            ? "rgba(148,163,184,0.4)"
+                            : "linear-gradient(135deg, #22c55e, #16a34a)",
+                        color: "#fff",
+                        fontSize: "15px",
+                        fontWeight: 800,
+                        cursor: submitting || !manualQR.trim() ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      {submitting ? "Registrando..." : "REGISTRAR PONTO"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -964,7 +1108,7 @@ export default function RegistroRonda() {
                             style={{
                               display: "flex", alignItems: "center", gap: "4px",
                               padding: "4px 10px", borderRadius: "8px", border: "1px solid #e5e7eb",
-                              background: "var(--color-card, #fff)", color: "#6b7280", fontSize: "12px", cursor: "pointer",
+                              background: "var(--color-card, #fff)", color: "var(--color-card-foreground, #6b7280)", fontSize: "12px", cursor: "pointer",
                             }}
                           >
                             <Mic style={{ width: 10, height: 10 }} /> Regravar
