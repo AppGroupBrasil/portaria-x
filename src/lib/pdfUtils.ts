@@ -53,6 +53,20 @@ function addField(doc: jsPDF, label: string, value: string | null | undefined, x
   return y + 5 + lines.length * 4;
 }
 
+function addRow(
+  doc: jsPDF,
+  y: number,
+  leftLabel: string,
+  leftValue: string | null | undefined,
+  rightLabel: string,
+  rightValue: string | null | undefined,
+): number {
+  const mid = doc.internal.pageSize.getWidth() / 2;
+  const yLeft = addField(doc, leftLabel, leftValue, 14, y, 80);
+  const yRight = addField(doc, rightLabel, rightValue, mid, y, 80);
+  return Math.max(yLeft, yRight);
+}
+
 function addImage(doc: jsPDF, base64: string, x: number, y: number, maxW: number, maxH: number): number {
   try {
     if (base64.startsWith("data:image")) {
@@ -79,7 +93,6 @@ export function gerarPdfLivroProtocolo(entry: any, condominioName?: string) {
   let y = addHeader(doc, "Livro de Protocolo - Registro", condominioName);
 
   const w = doc.internal.pageSize.getWidth();
-  const mid = w / 2;
 
   // Tipo badge
   const tipoLabels: Record<string, string> = {
@@ -95,23 +108,19 @@ export function gerarPdfLivroProtocolo(entry: any, condominioName?: string) {
   doc.text(sanitize(tipoLabels[entry.tipo] || entry.tipo), 20, y + 7);
   y += 16;
 
-  y = addField(doc, "Protocolo", entry.protocolo, 14, y);
-  y = addField(doc, "Data/Hora", formatDate(entry.created_at), mid, y - 9, 80);
+  y = addRow(doc, y, "Protocolo", entry.protocolo, "Data/Hora", formatDate(entry.created_at));
   y += 4;
 
   if (entry.tipo === "encomenda") {
-    y = addField(doc, "Deixada por", entry.deixada_por, 14, y);
-    y = addField(doc, "Para", entry.para, mid, y - 9, 80);
+    y = addRow(doc, y, "Deixada por", entry.deixada_por, "Para", entry.para);
     y += 4;
   } else if (entry.tipo === "entrega") {
     y = addField(doc, "O que e", entry.o_que_e, 14, y, w - 28);
     y += 4;
-    y = addField(doc, "Entregue para", entry.entregue_para, 14, y);
-    y = addField(doc, "Porteiro", entry.porteiro_entregou, mid, y - 9, 80);
+    y = addRow(doc, y, "Entregue para", entry.entregue_para, "Porteiro", entry.porteiro_entregou);
     y += 4;
   } else {
-    y = addField(doc, "Retirada por", entry.retirada_por, 14, y);
-    y = addField(doc, "Porteiro", entry.porteiro, mid, y - 9, 80);
+    y = addRow(doc, y, "Retirada por", entry.retirada_por, "Porteiro", entry.porteiro);
     y += 4;
   }
 
@@ -143,7 +152,6 @@ export function gerarPdfCorrespondencia(c: any, condominioName?: string) {
   const doc = new jsPDF();
   let y = addHeader(doc, "Correspondencia - Registro", condominioName);
   const w = doc.internal.pageSize.getWidth();
-  const mid = w / 2;
 
   const tipoLabels: Record<string, string> = {
     encomenda: "Encomenda",
@@ -166,12 +174,10 @@ export function gerarPdfCorrespondencia(c: any, condominioName?: string) {
   doc.text(sanitize(statusLabel), w - 20, y + 7, { align: "right" });
   y += 16;
 
-  y = addField(doc, "Protocolo", c.protocolo, 14, y);
-  y = addField(doc, "Data/Hora", formatDate(c.created_at), mid, y - 9, 80);
+  y = addRow(doc, y, "Protocolo", c.protocolo, "Data/Hora", formatDate(c.created_at));
   y += 4;
-  y = addField(doc, "Morador", c.morador_name, 14, y);
   const enderecoText = [c.bloco, c.apartamento].filter(Boolean).join(" - Apto ");
-  y = addField(doc, "Endereco", enderecoText ? `Bloco ${enderecoText}` : null, mid, y - 9, 80);
+  y = addRow(doc, y, "Morador", c.morador_name, "Endereco", enderecoText ? `Bloco ${enderecoText}` : null);
   y += 4;
   if (c.remetente) {
     y = addField(doc, "Remetente", c.remetente, 14, y, w - 28);
@@ -203,7 +209,6 @@ export function gerarPdfVisitante(v: any, condominioName?: string) {
   const doc = new jsPDF();
   let y = addHeader(doc, "Registro de Visitante", condominioName);
   const w = doc.internal.pageSize.getWidth();
-  const mid = w / 2;
 
   const statusLabels: Record<string, string> = {
     autorizado: "Autorizado",
@@ -223,15 +228,13 @@ export function gerarPdfVisitante(v: any, condominioName?: string) {
 
   y = addField(doc, "Nome", v.nome, 14, y, w - 28);
   y += 4;
-  y = addField(doc, "Documento", v.documento, 14, y);
-  y = addField(doc, "Telefone", v.telefone, mid, y - 9, 80);
+  y = addRow(doc, y, "Documento", v.documento, "Telefone", v.telefone);
   y += 4;
 
   const enderecoText = [v.bloco ? `Bloco ${v.bloco}` : null, v.apartamento ? `Apto ${v.apartamento}` : null].filter(Boolean).join(" - ");
   y = addField(doc, "Destino (Bloco/Apto)", enderecoText || "N/A", 14, y, w - 28);
   y += 4;
-  y = addField(doc, "Autorizado por", v.quem_autorizou || "N/A", 14, y);
-  y = addField(doc, "Data/Hora", formatDate(v.created_at), mid, y - 9, 80);
+  y = addRow(doc, y, "Autorizado por", v.quem_autorizou || "N/A", "Data/Hora", formatDate(v.created_at));
   y += 4;
 
   if (v.foto) {
@@ -249,7 +252,6 @@ export function gerarPdfDelivery(d: any, condominioName?: string) {
   const doc = new jsPDF();
   let y = addHeader(doc, "Registro de Delivery", condominioName);
   const w = doc.internal.pageSize.getWidth();
-  const mid = w / 2;
 
   const SERVICOS: Record<string, string> = {
     ifood: "iFood", rappi: "Rappi", uber_eats: "Uber Eats",
@@ -269,21 +271,18 @@ export function gerarPdfDelivery(d: any, condominioName?: string) {
   doc.text(sanitize(statusText), w - 20, y + 7, { align: "right" });
   y += 16;
 
-  y = addField(doc, "Morador", d.morador_name, 14, y);
-  y = addField(doc, "Telefone", d.morador_phone, mid, y - 9, 80);
+  y = addRow(doc, y, "Morador", d.morador_name, "Telefone", d.morador_phone);
   y += 4;
   const enderecoText = [d.bloco ? `Bloco ${d.bloco}` : null, d.apartamento ? `Apto ${d.apartamento}` : null].filter(Boolean).join(" - ");
   y = addField(doc, "Endereco", enderecoText || null, 14, y, w - 28);
   y += 4;
-  y = addField(doc, "Servico", SERVICOS[d.servico] || d.servico_custom || d.servico, 14, y);
-  y = addField(doc, "Numero Pedido", d.numero_pedido, mid, y - 9, 80);
+  y = addRow(doc, y, "Servico", SERVICOS[d.servico] || d.servico_custom || d.servico, "Numero Pedido", d.numero_pedido);
   y += 4;
   if (d.observacao) {
     y = addField(doc, "Observacao", d.observacao, 14, y, w - 28);
     y += 4;
   }
-  y = addField(doc, "Registrado em", formatDate(d.created_at), 14, y);
-  if (d.recebido_at) y = addField(doc, "Recebido em", formatDate(d.recebido_at), mid, y - 9, 80);
+  y = addRow(doc, y, "Registrado em", formatDate(d.created_at), "Recebido em", d.recebido_at ? formatDate(d.recebido_at) : null);
   y += 4;
 
   if (d.foto_entrega) {
@@ -307,7 +306,6 @@ export function gerarPdfVeiculo(v: any, condominioName?: string) {
   const doc = new jsPDF();
   let y = addHeader(doc, "Autorizacao de Veiculo", condominioName);
   const w = doc.internal.pageSize.getWidth();
-  const mid = w / 2;
 
   doc.setFillColor(238, 242, 255);
   doc.roundedRect(14, y, w - 28, 10, 3, 3, "F");
@@ -324,17 +322,14 @@ export function gerarPdfVeiculo(v: any, condominioName?: string) {
   doc.text(sanitize(statusMap[v.status] || v.status), w - 20, y + 7, { align: "right" });
   y += 16;
 
-  y = addField(doc, "Morador", v.morador_name, 14, y);
-  y = addField(doc, "Telefone", v.morador_phone, mid, y - 9, 80);
+  y = addRow(doc, y, "Morador", v.morador_name, "Telefone", v.morador_phone);
   y += 4;
   const enderecoText = [v.bloco ? `Bloco ${v.bloco}` : null, v.apartamento ? `Apto ${v.apartamento}` : null].filter(Boolean).join(" - ");
   y = addField(doc, "Endereco", enderecoText || null, 14, y, w - 28);
   y += 4;
-  y = addField(doc, "Placa", v.placa, 14, y);
-  y = addField(doc, "Modelo", v.modelo, mid, y - 9, 80);
+  y = addRow(doc, y, "Placa", v.placa, "Modelo", v.modelo);
   y += 4;
-  y = addField(doc, "Cor", v.cor, 14, y);
-  y = addField(doc, "Motorista", v.motorista_nome, mid, y - 9, 80);
+  y = addRow(doc, y, "Cor", v.cor, "Motorista", v.motorista_nome);
   y += 4;
   y = addField(doc, "Periodo", `${v.data_inicio || ""} a ${v.data_fim || ""}`, 14, y, w - 28);
   y += 4;
@@ -356,7 +351,6 @@ export function gerarPdfPreAuth(a: any, condominioName?: string) {
   const doc = new jsPDF();
   let y = addHeader(doc, "Autorizacao Previa", condominioName);
   const w = doc.internal.pageSize.getWidth();
-  const mid = w / 2;
 
   const statusMap: Record<string, string> = {
     ativa: "Ativa", utilizada: "Utilizada", expirada: "Expirada", cancelada: "Cancelada",
@@ -378,11 +372,9 @@ export function gerarPdfPreAuth(a: any, condominioName?: string) {
 
   y = addField(doc, "Visitante", a.visitante_nome, 14, y, w - 28);
   y += 4;
-  y = addField(doc, "Documento", a.visitante_documento, 14, y);
-  y = addField(doc, "Telefone", a.visitante_telefone, mid, y - 9, 80);
+  y = addRow(doc, y, "Documento", a.visitante_documento, "Telefone", a.visitante_telefone);
   y += 4;
-  y = addField(doc, "Morador", a.morador_name, 14, y);
-  y = addField(doc, "Telefone", a.morador_phone, mid, y - 9, 80);
+  y = addRow(doc, y, "Morador", a.morador_name, "Telefone", a.morador_phone);
   y += 4;
   const enderecoText = [a.bloco ? `Bloco ${a.bloco}` : null, a.apartamento ? `Apto ${a.apartamento}` : null].filter(Boolean).join(" - ");
   y = addField(doc, "Endereco", enderecoText || null, 14, y, w - 28);
@@ -436,7 +428,7 @@ function addReportHeader(doc: jsPDF, title: string, dateFrom: string, dateTo: st
   return 40;
 }
 
-function addTableRow(doc: jsPDF, cols: { text: string; x: number; w: number }[], y: number, isHeader: boolean = false) {
+function addTableRow(doc: jsPDF, cols: { text: string; x: number; w: number; link?: string }[], y: number, isHeader: boolean = false) {
   if (isHeader) {
     doc.setFillColor(241, 245, 249);
     doc.rect(10, y - 5, doc.internal.pageSize.getWidth() - 20, 8, "F");
@@ -450,7 +442,14 @@ function addTableRow(doc: jsPDF, cols: { text: string; x: number; w: number }[],
   }
   cols.forEach((c) => {
     const lines = doc.splitTextToSize(sanitize(c.text), c.w);
-    doc.text(lines[0] || "", c.x, y);
+    if (c.link) {
+      // Célula clicável (ex.: foto do visitante servida por token)
+      doc.setTextColor(37, 99, 235);
+      doc.textWithLink(lines[0] || "", c.x, y, { url: c.link });
+      doc.setTextColor(30, 41, 59);
+    } else {
+      doc.text(lines[0] || "", c.x, y);
+    }
   });
   return y + 7;
 }
@@ -538,6 +537,40 @@ export function gerarRelatorioCorrespondencias(items: any[], dateFrom: string, d
   doc.save(`relatorio-correspondencias-${dateFrom}-a-${dateTo}.pdf`);
 }
 
+// ─── Relatorio de visitantes: colunas compartilhadas (com e sem graficos) ───
+const VISITOR_COLS = [
+  { text: "NOME", x: 14, w: 36 },
+  { text: "DOCUMENTO", x: 52, w: 24 },
+  { text: "TELEFONE", x: 78, w: 24 },
+  { text: "BLOCO/APTO", x: 104, w: 20 },
+  { text: "AUTORIZOU", x: 126, w: 28 },
+  { text: "ORIGEM", x: 156, w: 24 },
+  { text: "STATUS", x: 182, w: 18 },
+  { text: "DATA", x: 202, w: 32 },
+  { text: "FOTO", x: 236, w: 22 },
+];
+
+const ORIGEM_LABEL: Record<string, string> = {
+  manual: "Portaria",
+  auto_cadastro: "Auto cadastro",
+  pre_autorizacao: "Pre-autorizacao",
+};
+
+function visitorRow(v: any) {
+  return [
+    { text: v.nome || "", x: 14, w: 36 },
+    { text: v.documento || "", x: 52, w: 24 },
+    { text: v.telefone || "", x: 78, w: 24 },
+    { text: `${v.bloco || ""} / ${v.apartamento || ""}`, x: 104, w: 20 },
+    { text: v.quem_autorizou || "", x: 126, w: 28 },
+    { text: ORIGEM_LABEL[v._origem] || "-", x: 156, w: 24 },
+    { text: v.status || "", x: 182, w: 18 },
+    { text: formatDate(v.created_at), x: 202, w: 32 },
+    // Link abre a foto do cadastro servida por token (sem login)
+    { text: v._foto_url ? "Ver foto" : "-", x: 236, w: 22, link: v._foto_url || undefined },
+  ];
+}
+
 export function gerarRelatorioVisitantes(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
   const doc = new jsPDF({ orientation: "landscape" });
   const w = doc.internal.pageSize.getWidth();
@@ -546,29 +579,11 @@ export function gerarRelatorioVisitantes(items: any[], dateFrom: string, dateTo:
   doc.setFontSize(10); doc.setFont("helvetica", "bold");
   doc.text(`Total: ${items.length}`, 14, y); y += 8;
 
-  const cols = [
-    { text: "NOME", x: 14, w: 45 },
-    { text: "DOCUMENTO", x: 62, w: 30 },
-    { text: "TELEFONE", x: 95, w: 30 },
-    { text: "BLOCO/APTO", x: 128, w: 25 },
-    { text: "AUTORIZOU", x: 156, w: 30 },
-    { text: "STATUS", x: 189, w: 20 },
-    { text: "DATA", x: 212, w: 50 },
-  ];
-  y = addTableRow(doc, cols, y, true);
+  y = addTableRow(doc, VISITOR_COLS, y, true);
 
   items.forEach((v) => {
     y = checkPage(doc, y, 10);
-    const row = [
-      { text: v.nome || "", x: 14, w: 45 },
-      { text: v.documento || "", x: 62, w: 30 },
-      { text: v.telefone || "", x: 95, w: 30 },
-      { text: `${v.bloco || ""} / ${v.apartamento || ""}`, x: 128, w: 25 },
-      { text: v.quem_autorizou || "", x: 156, w: 30 },
-      { text: v.status || "", x: 189, w: 20 },
-      { text: formatDate(v.created_at), x: 212, w: 50 },
-    ];
-    y = addTableRow(doc, row, y);
+    y = addTableRow(doc, visitorRow(v), y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
@@ -808,7 +823,7 @@ export function gerarRelatorioVisitantesComGraficos(items: any[], dateFrom: stri
   const byBloco = groupAndCount(items, (v) => v.bloco ? `Bloco ${v.bloco}` : "(sem bloco)");
   const byDay = groupByDay(items);
   const byHour = groupByHour(items);
-  const autorizados = items.filter((v) => v.status === "autorizado" || v.status === "dentro").length;
+  const autorizados = items.filter((v) => v._situacao === "liberado" || v.status === "autorizado" || v.status === "dentro").length;
 
   y = drawSummaryBoxes(doc, [
     { label: "Total Visitantes", value: String(items.length), color: [99, 102, 241] },
@@ -834,28 +849,10 @@ export function gerarRelatorioVisitantesComGraficos(items: any[], dateFrom: stri
   doc.setFontSize(10); doc.setFont("helvetica", "bold");
   doc.text(`Total: ${items.length}`, 14, y); y += 8;
 
-  const cols = [
-    { text: "NOME", x: 14, w: 45 },
-    { text: "DOCUMENTO", x: 62, w: 30 },
-    { text: "TELEFONE", x: 95, w: 30 },
-    { text: "BLOCO/APTO", x: 128, w: 25 },
-    { text: "AUTORIZOU", x: 156, w: 30 },
-    { text: "STATUS", x: 189, w: 20 },
-    { text: "DATA", x: 212, w: 50 },
-  ];
-  y = addTableRow(doc, cols, y, true);
+  y = addTableRow(doc, VISITOR_COLS, y, true);
   items.forEach((v) => {
     y = checkPage(doc, y, 10);
-    const row = [
-      { text: v.nome || "", x: 14, w: 45 },
-      { text: v.documento || "", x: 62, w: 30 },
-      { text: v.telefone || "", x: 95, w: 30 },
-      { text: `${v.bloco || ""} / ${v.apartamento || ""}`, x: 128, w: 25 },
-      { text: v.quem_autorizou || "", x: 156, w: 30 },
-      { text: v.status || "", x: 189, w: 20 },
-      { text: formatDate(v.created_at), x: 212, w: 50 },
-    ];
-    y = addTableRow(doc, row, y);
+    y = addTableRow(doc, visitorRow(v), y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
@@ -1142,7 +1139,7 @@ export function gerarRelatorioLivroProtocoloComGraficos(entries: any[], dateFrom
   const halfW = (w - 28) / 2;
   const chartY = y;
   y = drawBarChart(doc, "Por Tipo", byTipo.slice(0, 8), 14, chartY, halfW, 6, 3, [99, 102, 241]);
-  let y2 = drawBarChart(doc, "Por Dia da Semana", byDay, 14 + halfW + 14, chartY, halfW, 6, 3, [22, 163, 74]);
+  const y2 = drawBarChart(doc, "Por Dia da Semana", byDay, 14 + halfW + 14, chartY, halfW, 6, 3, [22, 163, 74]);
   y = Math.max(y, y2) + 2;
   y = checkPage(doc, y, 40);
   y = drawBarChart(doc, "Por Hora do Dia", byHour.slice(0, 12), 14, y, halfW, 5, 2, [217, 119, 6]);
@@ -1249,7 +1246,7 @@ export function gerarRelatorioRondas(
   y = drawBarChart(doc, "Registros por Checkpoint", stats.byCheckpoint.map((c) => ({ label: c.checkpoint_nome, value: c.total })), 14, chartY, halfW, 6, 3, [22, 163, 74]);
 
   // Chart: by funcionario (right side)
-  let y2 = drawBarChart(doc, "Registros por Funcionario", stats.byFuncionario.map((f) => ({ label: f.funcionario_nome, value: f.total })), 14 + halfW + 14, chartY, halfW, 6, 3, [37, 99, 235]);
+  const y2 = drawBarChart(doc, "Registros por Funcionario", stats.byFuncionario.map((f) => ({ label: f.funcionario_nome, value: f.total })), 14 + halfW + 14, chartY, halfW, 6, 3, [37, 99, 235]);
 
   y = Math.max(y, y2) + 4;
   y = checkPage(doc, y, 50);
