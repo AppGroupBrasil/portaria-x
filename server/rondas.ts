@@ -199,11 +199,61 @@ router.delete("/schedules/:id", authenticate, authorize("master", "administrador
 // REGISTROS — Created by porteiro/security via QR scan
 // ═══════════════════════════════════════════════════════════
 
+const MAX_FOTOS = 8;
+const MAX_FOTO_CHARS = 1_200_000; // data URL já comprimido no cliente (~900 KB)
+const MAX_FOTOS_CHARS_TOTAL = 7_000_000; // folga sobre o limit de 10mb do express.json
+
+interface FotoItem { obs: number; img: string }
+
+// null/""/undefined viram null — Number(null) é 0 e gravaria o ponto no mar.
+function coordOuNull(v: unknown): number | null {
+  if (v === null || v === undefined || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) && Math.abs(n) > 0.0001 ? n : null;
+}
+
+// Aceita ["data:image/..."] ou [{ obs, img }]. `obs` é o índice da observação a
+// que a foto pertence, para o histórico agrupar foto com o texto certo.
+function parseFotos(input: unknown): { fotos: FotoItem[] } | { erro: string } {
+  if (input === null || input === undefined) return { fotos: [] };
+  if (!Array.isArray(input)) return { erro: "Formato de fotos inválido." };
+  if (input.length > MAX_FOTOS) return { erro: `Máximo de ${MAX_FOTOS} fotos por ponto.` };
+
+  const fotos: FotoItem[] = [];
+  let total = 0;
+  for (const raw of input) {
+    const item = raw as any;
+    const img = typeof item === "string" ? item : item?.img;
+    if (typeof img !== "string" || !img.startsWith("data:image/")) {
+      return { erro: "Foto inválida." };
+    }
+    if (img.length > MAX_FOTO_CHARS) {
+      return { erro: "Foto muito grande. Tente novamente." };
+    }
+    // Sem o teto do conjunto o corpo passaria do limite do express.json e o
+    // cliente receberia um 413 em HTML — erro de conexão em vez de mensagem.
+    total += img.length;
+    if (total > MAX_FOTOS_CHARS_TOTAL) {
+      return { erro: "Fotos muito grandes no total. Envie menos fotos." };
+    }
+    const obs = Number(item?.obs);
+    fotos.push({ obs: Number.isInteger(obs) && obs >= 0 ? obs : 0, img });
+  }
+  return { fotos };
+}
+
+// A listagem nunca devolve base64: as fotos saem só no detalhe (/registros/:id).
+// `foto` é a coluna antiga (uma foto por registro) e continua contando no selo.
+const REGISTRO_LIST_COLUMNS = `
+  id, condominio_id, checkpoint_id, funcionario_id, funcionario_nome, checkpoint_nome,
+  localizacao, observacao, observacao_at, latitude, longitude, ronda_schedule_id, created_at,
+  COALESCE(fotos_count, 0) + (CASE WHEN foto IS NOT NULL AND foto <> '' THEN 1 ELSE 0 END) AS fotos_count`;
+
 // GET all records (with Optional filters)
 router.get("/registros", authenticate, (req: Request, res: Response) => {
   try {
     const { funcionario_id, checkpoint_id, data_inicio, data_fim } = req.query;
-    let sql = "SELECT * FROM ronda_registros WHERE condominio_id = ?";
+    let sql = `SELECT ${REGISTRO_LIST_COLUMNS} FROM ronda_registros WHERE condominio_id = ?`;
     const params: any[] = [req.user!.condominio_id];
 
     if (funcionario_id) {
@@ -244,8 +294,13 @@ router.get("/registros", authenticate, (req: Request, res: Response) => {
 // RECORD a checkpoint scan (porteiro scans QR)
 router.post("/registros", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
   try {
-    const { qr_code_data, observacao, foto, latitude, longitude, schedule_id } = req.body;
+    const { qr_code_data, observacao, foto, fotos, latitude, longitude, schedule_id } = req.body;
     if (!qr_code_data) { res.status(400).json({ error: "Dados do QR Code são obrigatórios." }); return; }
+
+    const parsed = parseFotos(fotos);
+    if ("erro" in parsed) { res.status(400).json({ error: parsed.erro }); return; }
+    const lat = coordOuNull(latitude);
+    const lng = coordOuNull(longitude);
 
     // Find checkpoint by QR code data
     const checkpoint = db.prepare(
@@ -264,8 +319,8 @@ router.post("/registros", authenticate, authorize("master", "administradora", "s
 
     const result = db.prepare(
       `INSERT INTO ronda_registros
-       (condominio_id, checkpoint_id, funcionario_id, funcionario_nome, checkpoint_nome, localizacao, observacao, foto, latitude, longitude, ronda_schedule_id)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       (condominio_id, checkpoint_id, funcionario_id, funcionario_nome, checkpoint_nome, localizacao, observacao, observacao_at, foto, fotos, fotos_count, latitude, longitude, ronda_schedule_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).run(
       req.user!.condominio_id,
       checkpoint.id,
@@ -274,24 +329,127 @@ router.post("/registros", authenticate, authorize("master", "administradora", "s
       checkpoint.nome,
       checkpoint.localizacao || null,
       observacao || null,
+      (observacao || parsed.fotos.length) ? new Date().toISOString().slice(0, 19).replace("T", " ") : null,
       foto || null,
-      latitude || null,
-      longitude || null,
+      parsed.fotos.length ? JSON.stringify(parsed.fotos) : null,
+      parsed.fotos.length,
+      lat,
+      lng,
       schedule_id || null
     );
 
-    const registro = db.prepare("SELECT * FROM ronda_registros WHERE id = ?").get(result.lastInsertRowid);
+    const registro = db.prepare(
+      `SELECT ${REGISTRO_LIST_COLUMNS} FROM ronda_registros WHERE id = ?`
+    ).get(result.lastInsertRowid);
 
     // WhatsApp: notify about ronda checkpoint scanned
+    const anexos: string[] = [];
+    if (observacao) anexos.push("observação");
+    if (parsed.fotos.length) anexos.push(`${parsed.fotos.length} foto(s)`);
     notifyPortariaWhatsApp(
       req.user!.condominio_id!,
       "whatsapp_notify_ronda",
-      `🔒 Ronda: ${req.user!.name} registrou ponto "${checkpoint.nome}"${checkpoint.localizacao ? " — " + checkpoint.localizacao : ""}`
+      `${anexos.length ? "⚠️" : "🔒"} Ronda: ${req.user!.name} registrou ponto "${checkpoint.nome}"${checkpoint.localizacao ? " — " + checkpoint.localizacao : ""}${anexos.length ? ` (com ${anexos.join(" e ")})` : ""}`
     );
 
     res.status(201).json(registro);
   } catch (err: any) {
     logger.error("Erro em rondas :", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+// GET one record with the attached photos (base64 só aqui)
+router.get("/registros/:id", authenticate, (req: Request, res: Response) => {
+  try {
+    const row = db.prepare(
+      "SELECT * FROM ronda_registros WHERE id = ? AND condominio_id = ?"
+    ).get(req.params.id, req.user!.condominio_id) as any;
+    if (!row) { res.status(404).json({ error: "Registro não encontrado." }); return; }
+
+    const fotos: FotoItem[] = [];
+    if (row.foto) fotos.push({ obs: 0, img: row.foto });
+    if (row.fotos) {
+      try {
+        const parsed = JSON.parse(row.fotos);
+        if (Array.isArray(parsed)) {
+          for (const f of parsed) {
+            if (typeof f === "string") fotos.push({ obs: 0, img: f });
+            else if (f && typeof f.img === "string") fotos.push({ obs: Number(f.obs) || 0, img: f.img });
+          }
+        }
+      } catch {}
+    }
+
+    delete row.foto;
+    res.json({ ...row, fotos, fotos_count: fotos.length });
+  } catch (err: any) {
+    logger.error("Erro em rondas :", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+// PATCH — anexa/edita observação e fotos de um ponto já registrado
+router.patch("/registros/:id", authenticate, authorize("master", "administradora", "sindico", "funcionario"), (req: Request, res: Response) => {
+  try {
+    const row = db.prepare(
+      "SELECT id, funcionario_id, checkpoint_nome, localizacao FROM ronda_registros WHERE id = ? AND condominio_id = ?"
+    ).get(req.params.id, req.user!.condominio_id) as any;
+    if (!row) { res.status(404).json({ error: "Registro não encontrado." }); return; }
+
+    // Quem registrou o ponto edita a própria observação; gestor edita qualquer uma.
+    const isGestor = ["master", "administradora", "sindico"].includes(req.user!.role);
+    if (!isGestor && row.funcionario_id !== req.user!.id) {
+      res.status(403).json({ error: "Você só pode editar os próprios registros de ronda." });
+      return;
+    }
+
+    const { observacao, fotos, latitude, longitude } = req.body;
+    const parsed = parseFotos(fotos);
+    if ("erro" in parsed) { res.status(400).json({ error: parsed.erro }); return; }
+
+    const sets: string[] = [];
+    const params: any[] = [];
+    if (observacao !== undefined) {
+      sets.push("observacao = ?");
+      params.push(observacao || null);
+    }
+    if (fotos !== undefined) {
+      // A coluna antiga `foto` é migrada para dentro de `fotos` ao abrir o
+      // detalhe; zerar aqui evita a mesma imagem contar duas vezes no selo.
+      sets.push("fotos = ?", "fotos_count = ?", "foto = ?");
+      params.push(parsed.fotos.length ? JSON.stringify(parsed.fotos) : null, parsed.fotos.length, null);
+    }
+    const lat = coordOuNull(latitude);
+    const lng = coordOuNull(longitude);
+    if (lat !== null && lng !== null) {
+      sets.push("latitude = ?", "longitude = ?");
+      params.push(lat, lng);
+    }
+    if (sets.length === 0) { res.status(400).json({ error: "Nada para atualizar." }); return; }
+
+    sets.push("observacao_at = ?");
+    params.push(new Date().toISOString().slice(0, 19).replace("T", " "));
+
+    params.push(req.params.id, req.user!.condominio_id);
+    db.prepare(
+      `UPDATE ronda_registros SET ${sets.join(", ")} WHERE id = ? AND condominio_id = ?`
+    ).run(...params);
+
+    if (observacao || parsed.fotos.length) {
+      notifyPortariaWhatsApp(
+        req.user!.condominio_id!,
+        "whatsapp_notify_ronda",
+        `⚠️ Ronda: ${req.user!.name} anexou observação no ponto "${row.checkpoint_nome}"${parsed.fotos.length ? ` (${parsed.fotos.length} foto(s))` : ""}`
+      );
+    }
+
+    const registro = db.prepare(
+      `SELECT ${REGISTRO_LIST_COLUMNS} FROM ronda_registros WHERE id = ? AND condominio_id = ?`
+    ).get(req.params.id, req.user!.condominio_id);
+    res.json(registro);
+  } catch (err: any) {
+    logger.error("Erro ao atualizar registro de ronda:", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });

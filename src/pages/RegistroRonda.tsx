@@ -21,7 +21,6 @@ import {
 
   FileText,
 
-  MessageSquare,
   Mic,
 
   Plus,
@@ -29,8 +28,14 @@ import {
   Play,
   Square,
   Pause,
+  AlertTriangle,
+  Camera,
+  ImageIcon,
+  User,
+  Navigation,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { compressImage } from "@/lib/imageUtils";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 import { dialogAlert } from "@/lib/dialog";
@@ -57,14 +62,26 @@ interface Schedule {
 
 interface Registro {
   id: number;
+  checkpoint_id: number;
   checkpoint_nome: string;
+  funcionario_id: number;
   funcionario_nome: string;
   localizacao: string | null;
   observacao: string | null;
+  fotos_count: number;
+  latitude: number | null;
+  longitude: number | null;
   created_at: string;
 }
 
+interface FotoRegistro {
+  obs: number;
+  img: string;
+}
+
 const DIAS_SEMANA = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+const MAX_FOTOS = 8;
 
 interface ObservacaoItem {
   id: number;
@@ -73,6 +90,32 @@ interface ObservacaoItem {
   audioUrl: string | null;
   audioBase64: string | null;
   audioDuration: number;
+  fotos: string[];
+}
+
+// created_at vem do SQLite como "YYYY-MM-DD HH:MM:SS" em UTC, sem fuso. Sem o
+// "Z" o navegador lê como hora local e a ronda aparece 3h adiantada.
+function parseDataUTC(valor: string): Date {
+  return new Date(/[zZ]|[+-]\d{2}:\d{2}$/.test(valor) ? valor : valor.replace(" ", "T") + "Z");
+}
+
+function mapsUrl(lat: number, lng: number): string {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+}
+
+// A observação pode ser texto puro (registros antigos) ou o JSON com vários
+// itens de texto/áudio/fotos.
+function parseObservacaoLista(raw: string | null): { texto: string; audio: string | null; fotos: number }[] {
+  if (!raw || !raw.trim()) return [];
+  if (raw.trim().startsWith("[")) {
+    try {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        return arr.map((o: any) => ({ texto: o?.texto || "", audio: o?.audio || null, fotos: Number(o?.fotos) || 0 }));
+      }
+    } catch {}
+  }
+  return [{ texto: raw, audio: null, fotos: 0 }];
 }
 
 export default function RegistroRonda() {
@@ -97,6 +140,20 @@ export default function RegistroRonda() {
   const [observacao, setObservacao] = useState("");
   const [observacoes, setObservacoes] = useState<ObservacaoItem[]>([]);
   const [obsNextId, setObsNextId] = useState(1);
+  // Modal de observação (⚠️): texto + áudio + fotos. Quando `obsRegistroId` está
+  // preenchido, salvar edita o ponto já registrado em vez de guardar p/ o próximo.
+  const [showObsModal, setShowObsModal] = useState(false);
+  const [obsRegistroId, setObsRegistroId] = useState<number | null>(null);
+  const [savingObs, setSavingObs] = useState(false);
+  // Último ponto registrado — permite anexar observação depois de já ter passado.
+  const [ultimoRegistro, setUltimoRegistro] = useState<Registro | null>(null);
+  const fotoInputRef = useRef<HTMLInputElement>(null);
+  const fotoAlvoRef = useRef<number | null>(null);
+  // Detalhe do histórico (carrega as fotos sob demanda)
+  const [detalhe, setDetalhe] = useState<any | null>(null);
+  const [loadingDetalhe, setLoadingDetalhe] = useState(false);
+  const [fotoAmpliada, setFotoAmpliada] = useState<string | null>(null);
+  const coordsRef = useRef<{ latitude: number; longitude: number } | null>(null);
   const [recordingId, setRecordingId] = useState<number | null>(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -133,8 +190,8 @@ export default function RegistroRonda() {
         const regs = await regRes.json();
         setRegistros(regs);
         // Count today
-        const today = new Date().toISOString().slice(0, 10);
-        const todayRegs = regs.filter((r: Registro) => r.created_at.startsWith(today));
+        const today = new Date().toDateString();
+        const todayRegs = regs.filter((r: Registro) => parseDataUTC(r.created_at).toDateString() === today);
         setTodayCount(todayRegs.length);
         const cpIds = new Set<number>();
         todayRegs.forEach((r: any) => cpIds.add(r.checkpoint_id));
@@ -145,6 +202,40 @@ export default function RegistroRonda() {
   };
 
   useEffect(() => { fetchAll(); }, []);
+
+  // ─── GPS ─────────────
+  // Aquece a posição ao abrir a tela para o registro não esperar o GPS.
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { coordsRef.current = { latitude: pos.coords.latitude, longitude: pos.coords.longitude }; },
+      () => {},
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }, []);
+
+  // Nunca trava a ronda: se o GPS não responder em 4s, usa a última posição
+  // conhecida (ou nenhuma) e registra o ponto mesmo assim.
+  const capturarCoords = (): Promise<{ latitude: number; longitude: number } | null> =>
+    new Promise((resolve) => {
+      if (!navigator.geolocation) { resolve(coordsRef.current); return; }
+      let respondido = false;
+      const responder = (v: { latitude: number; longitude: number } | null) => {
+        if (respondido) return;
+        respondido = true;
+        resolve(v);
+      };
+      const timer = setTimeout(() => responder(coordsRef.current), 4000);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          clearTimeout(timer);
+          coordsRef.current = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+          responder(coordsRef.current);
+        },
+        () => { clearTimeout(timer); responder(coordsRef.current); },
+        { enableHighAccuracy: true, timeout: 4000, maximumAge: 15000 }
+      );
+    });
 
   // ─── Alert Timer ─────────────
   useEffect(() => {
@@ -287,14 +378,21 @@ export default function RegistroRonda() {
     handleQRDetected(data);
   };
 
-  const handleQRDetected = async (qrData: string) => {
-    // Immediately register
+  // Envia o ponto com o que estiver no modal de observação (texto/áudio/fotos)
+  // e a posição do GPS no momento da passagem.
+  const enviarRegistro = async (qrData: string): Promise<boolean> => {
     try {
-      const obsPayload = buildObservacaoPayload();
+      const coords = await capturarCoords();
       const res = await apiFetch(`${API}/rondas/registros`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qr_code_data: qrData, observacao: obsPayload }),
+        body: JSON.stringify({
+          qr_code_data: qrData,
+          observacao: buildObservacaoPayload(),
+          fotos: buildFotosPayload(),
+          latitude: coords?.latitude ?? null,
+          longitude: coords?.longitude ?? null,
+        }),
       });
 
       if (res.ok) {
@@ -302,49 +400,31 @@ export default function RegistroRonda() {
         setScanResult("success");
         setScanCheckpoint(reg.checkpoint_nome);
         setScanMessage(`✅ Ponto registrado: ${reg.checkpoint_nome}`);
+        setUltimoRegistro(reg);
         resetObservacoes();
         playSuccessSound();
         fetchAll();
-      } else {
-        const data = await res.json();
-        setScanResult("error");
-        setScanMessage(data.error || "QR Code inválido.");
+        return true;
       }
+      const data = await res.json();
+      setScanResult("error");
+      setScanMessage(data.error || "QR Code inválido.");
     } catch {
       setScanResult("error");
       setScanMessage("Erro de conexão.");
     }
+    return false;
   };
+
+  const handleQRDetected = (qrData: string) => { void enviarRegistro(qrData); };
 
   // Manual QR input (for testing or when camera doesn't work)
   const handleManualScan = async () => {
     if (!manualQR.trim()) return;
     setSubmitting(true);
-    try {
-      const obsPayload = buildObservacaoPayload();
-      const res = await apiFetch(`${API}/rondas/registros`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qr_code_data: manualQR.trim(), observacao: obsPayload }),
-      });
-      if (res.ok) {
-        const reg = await res.json();
-        setScanResult("success");
-        setScanCheckpoint(reg.checkpoint_nome);
-        setScanMessage(`✅ Registrado: ${reg.checkpoint_nome}`);
-        setShowManualInput(false);
-        setManualQR("");
-        resetObservacoes();
-        playSuccessSound();
-        fetchAll();
-      } else {
-        const data = await res.json();
-        setScanResult("error");
-        setScanMessage(data.error || "QR Code inválido.");
-      }
-    } catch {
-      setScanResult("error");
-      setScanMessage("Erro de conexão.");
+    if (await enviarRegistro(manualQR.trim())) {
+      setShowManualInput(false);
+      setManualQR("");
     }
     setSubmitting(false);
   };
@@ -352,36 +432,13 @@ export default function RegistroRonda() {
   // Checklist mode — tap checkpoint from list
   const handleCheckpointTap = async (cp: Checkpoint) => {
     setSubmitting(true);
-    try {
-      const obsPayload = buildObservacaoPayload();
-      const res = await apiFetch(`${API}/rondas/registros`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qr_code_data: cp.qr_code_data, observacao: obsPayload }),
-      });
-      if (res.ok) {
-        const reg = await res.json();
-        setScanResult("success");
-        setScanCheckpoint(reg.checkpoint_nome);
-        setScanMessage(`✅ Registrado: ${reg.checkpoint_nome}`);
-        resetObservacoes();
-        playSuccessSound();
-        fetchAll();
-      } else {
-        const data = await res.json();
-        setScanResult("error");
-        setScanMessage(data.error || "Erro ao registrar.");
-      }
-    } catch {
-      setScanResult("error");
-      setScanMessage("Erro de conexão.");
-    }
+    await enviarRegistro(cp.qr_code_data);
     setSubmitting(false);
   };
 
   // ─── Multi-observation helpers ─────────────
   const addObservacao = () => {
-    setObservacoes((prev) => [...prev, { id: obsNextId, texto: "", audioBlob: null, audioUrl: null, audioBase64: null, audioDuration: 0 }]);
+    setObservacoes((prev) => [...prev, { id: obsNextId, texto: "", audioBlob: null, audioUrl: null, audioBase64: null, audioDuration: 0, fotos: [] }]);
     setObsNextId((n) => n + 1);
   };
 
@@ -397,6 +454,45 @@ export default function RegistroRonda() {
 
   const updateObservacaoTexto = (id: number, texto: string) => {
     setObservacoes((prev) => prev.map((o) => (o.id === id ? { ...o, texto } : o)));
+  };
+
+  // ─── Fotos da observação ─────────────
+  const abrirSeletorFoto = (id: number) => {
+    fotoAlvoRef.current = id;
+    if (fotoInputRef.current) { fotoInputRef.current.value = ""; fotoInputRef.current.click(); }
+  };
+
+  const handleFotoSelecionada = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const alvo = fotoAlvoRef.current;
+    const files = Array.from(e.target.files || []);
+    if (alvo === null || files.length === 0) return;
+
+    const totalAtual = observacoes.reduce((n, o) => n + o.fotos.length, 0);
+    const espaco = MAX_FOTOS - totalAtual;
+    if (espaco <= 0) {
+      void dialogAlert(`Máximo de ${MAX_FOTOS} fotos por ponto.`);
+      return;
+    }
+
+    const novas: string[] = [];
+    for (const file of files.slice(0, espaco)) {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      }).catch(() => "");
+      if (!dataUrl) continue;
+      novas.push(await compressImage(dataUrl, "general"));
+    }
+    if (novas.length === 0) return;
+
+    setObservacoes((prev) => prev.map((o) => (o.id === alvo ? { ...o, fotos: [...o.fotos, ...novas] } : o)));
+    if (files.length > espaco) void dialogAlert(`Só cabem mais ${espaco} foto(s) neste ponto.`);
+  };
+
+  const removeFoto = (id: number, idx: number) => {
+    setObservacoes((prev) => prev.map((o) => (o.id === id ? { ...o, fotos: o.fotos.filter((_, i) => i !== idx) } : o)));
   };
 
   const startRecording = async (id: number) => {
@@ -462,23 +558,141 @@ export default function RegistroRonda() {
     setPlayingAudioId(null);
   };
 
+  // Mesmo filtro nos dois payloads: o índice da observação aqui é o `obs` que o
+  // servidor guarda em cada foto, para o histórico juntar foto e texto certos.
+  const observacoesPreenchidas = () => observacoes.filter((o) => o.texto.trim() || o.audioBase64 || o.fotos.length);
+
   const buildObservacaoPayload = (): string => {
-    const items = observacoes.filter((o) => o.texto.trim() || o.audioBase64);
-    if (items.length === 0 && !observacao.trim()) return observacao;
+    const items = observacoesPreenchidas();
     if (items.length === 0) return observacao;
     const payload = items.map((o) => ({
       texto: o.texto,
       audio: o.audioBase64 || null,
       audioDuration: o.audioDuration,
+      fotos: o.fotos.length,
     }));
     return JSON.stringify(payload);
   };
+
+  const buildFotosPayload = (): FotoRegistro[] => {
+    const out: FotoRegistro[] = [];
+    observacoesPreenchidas().forEach((o, i) => o.fotos.forEach((img) => out.push({ obs: i, img })));
+    return out;
+  };
+
+  const totalFotos = observacoes.reduce((n, o) => n + o.fotos.length, 0);
+  const temObservacao = observacoesPreenchidas().length > 0 || !!observacao.trim();
 
   const resetObservacoes = () => {
     observacoes.forEach((o) => { if (o.audioUrl) URL.revokeObjectURL(o.audioUrl); });
     setObservacoes([]);
     setObsNextId(1);
     setObservacao("");
+  };
+
+  // ─── Modal de observação ─────────────
+  // Recarrega no editor o que já está gravado: o PATCH substitui a observação
+  // inteira, então o porteiro precisa ver o conteúdo atual antes de acrescentar.
+  const hidratarObservacoes = (obsRaw: string | null, fotos: FotoRegistro[]) => {
+    let blocos: { texto: string; audio: string | null; audioDuration: number }[] = [];
+    if (obsRaw && obsRaw.trim().startsWith("[")) {
+      try {
+        const arr = JSON.parse(obsRaw);
+        if (Array.isArray(arr)) {
+          blocos = arr.map((o: any) => ({ texto: o?.texto || "", audio: o?.audio || null, audioDuration: Number(o?.audioDuration) || 0 }));
+        }
+      } catch {}
+    }
+    if (blocos.length === 0 && obsRaw && obsRaw.trim()) blocos = [{ texto: obsRaw, audio: null, audioDuration: 0 }];
+    const maxObs = fotos.reduce((m, f) => Math.max(m, f.obs), -1);
+    while (blocos.length <= maxObs) blocos.push({ texto: "", audio: null, audioDuration: 0 });
+    if (blocos.length === 0) blocos = [{ texto: "", audio: null, audioDuration: 0 }];
+    setObservacoes(blocos.map((b, i) => ({
+      id: i + 1,
+      texto: b.texto,
+      audioBlob: null,
+      audioUrl: b.audio,
+      audioBase64: b.audio,
+      audioDuration: b.audioDuration,
+      fotos: fotos.filter((f) => f.obs === i).map((f) => f.img),
+    })));
+    setObsNextId(blocos.length + 1);
+    setObservacao("");
+  };
+
+  // Antes de registrar: o conteúdo vai junto no POST do próximo ponto.
+  const abrirObsModal = () => {
+    setObsRegistroId(null);
+    if (observacoes.length === 0) {
+      setObservacoes([{ id: 1, texto: "", audioBlob: null, audioUrl: null, audioBase64: null, audioDuration: 0, fotos: [] }]);
+      setObsNextId(2);
+    }
+    setShowObsModal(true);
+  };
+
+  // Depois de registrar: salva por PATCH no ponto já gravado.
+  const abrirObsRegistro = async (id: number) => {
+    stopAudio();
+    setObsRegistroId(id);
+    setObservacoes([]);
+    setShowObsModal(true);
+    setLoadingDetalhe(true);
+    try {
+      const res = await apiFetch(`${API}/rondas/registros/${id}`);
+      if (res.ok) {
+        const det = await res.json();
+        hidratarObservacoes(det.observacao, det.fotos || []);
+      } else {
+        hidratarObservacoes(null, []);
+      }
+    } catch {
+      hidratarObservacoes(null, []);
+    }
+    setLoadingDetalhe(false);
+  };
+
+  const fecharObsModal = () => {
+    stopAudio();
+    if (recordingId !== null) stopRecording();
+    setShowObsModal(false);
+    if (obsRegistroId !== null) { setObsRegistroId(null); resetObservacoes(); }
+  };
+
+  const salvarObsRegistro = async () => {
+    if (obsRegistroId === null) { setShowObsModal(false); return; }
+    setSavingObs(true);
+    try {
+      const res = await apiFetch(`${API}/rondas/registros/${obsRegistroId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ observacao: buildObservacaoPayload(), fotos: buildFotosPayload() }),
+      });
+      if (res.ok) {
+        const reg = await res.json();
+        setUltimoRegistro((prev) => (prev && prev.id === reg.id ? reg : prev));
+        setShowObsModal(false);
+        setObsRegistroId(null);
+        resetObservacoes();
+        fetchAll();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        void dialogAlert(data.error || "Não foi possível salvar a observação.");
+      }
+    } catch {
+      void dialogAlert("Erro de conexão.");
+    }
+    setSavingObs(false);
+  };
+
+  // Detalhe do histórico: a listagem não traz base64, as fotos vêm aqui.
+  const abrirDetalhe = async (r: Registro) => {
+    setDetalhe({ ...r, fotos: [] });
+    setLoadingDetalhe(true);
+    try {
+      const res = await apiFetch(`${API}/rondas/registros/${r.id}`);
+      if (res.ok) setDetalhe(await res.json());
+    } catch {}
+    setLoadingDetalhe(false);
   };
 
   const playSuccessSound = () => {
@@ -663,6 +877,32 @@ export default function RegistroRonda() {
             <X style={{ width: 18, height: 18, color: "#6b7280" }} />
           </button>
         </div>
+      )}
+
+      {/* Anexar observação ao ponto que acabou de ser registrado */}
+      {scanResult === "success" && ultimoRegistro && (
+        <button
+          onClick={() => abrirObsRegistro(ultimoRegistro.id)}
+          style={{
+            margin: "0 20px 8px",
+            width: "calc(100% - 40px)",
+            padding: "12px 16px",
+            borderRadius: "12px",
+            border: "1px solid #fca5a5",
+            background: "linear-gradient(135deg, #fef2f2, #fee2e2)",
+            color: "#b91c1c",
+            fontSize: "14px",
+            fontWeight: 700,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+          }}
+        >
+          <AlertTriangle style={{ width: 18, height: 18 }} />
+          Adicionar observação / fotos em {ultimoRegistro.checkpoint_nome}
+        </button>
       )}
 
       {/* Tab switcher */}
@@ -1011,139 +1251,36 @@ export default function RegistroRonda() {
               </div>
             </div>
 
-            {/* Observações input - multiple fields with audio */}
+            {/* Observação (⚠️): abre o modal com texto, áudio e fotos */}
             <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "12px" }}>
-              <span style={{ fontSize: "13px", fontWeight: 600, color: p.text, marginBottom: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
-                <MessageSquare style={{ width: 16, height: 16, color: p.text }} /> Observações (opcional)
-              </span>
-
-              {observacoes.length === 0 && (
-                <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "8px" }}>
-                  Adicione observações com texto ou áudio (30s máx.)
-                </p>
-              )}
-
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {observacoes.map((obs, idx) => (
-                  <div
-                    key={obs.id}
-                    style={{
-                      padding: "14px 16px",
-                      borderRadius: "14px",
-                      border: "1.5px solid #e5e7eb",
-                      background: "#fafbfc",
-                    }}
-                  >
-                    {/* Header with number and delete */}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: 700, color: "#16a34a" }}>
-                        Observação {idx + 1}
-                      </span>
-                      <button
-                        onClick={() => removeObservacao(obs.id)}
-                        style={{ background: "none", border: "none", cursor: "pointer", padding: "2px" }}
-                      >
-                        <Trash2 style={{ width: 18, height: 18, color: "#ef4444" }} />
-                      </button>
-                    </div>
-
-                    {/* Text input */}
-                    <textarea
-                      value={obs.texto}
-                      onChange={(e) => updateObservacaoTexto(obs.id, e.target.value)}
-                      placeholder="Descreva o que observou..."
-                      rows={2}
-                      className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300"
-                      style={{ resize: "none", color: p.text, background: "var(--color-card, #fff)", marginBottom: "8px" }}
-                    />
-
-                    {/* Audio controls */}
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      {recordingId === obs.id ? (
-                        /* Recording in progress */
-                        <>
-                          <button
-                            onClick={stopRecording}
-                            style={{
-                              display: "flex", alignItems: "center", gap: "6px",
-                              padding: "6px 14px", borderRadius: "10px", border: "none",
-                              background: "linear-gradient(135deg, #dc2626, #b91c1c)",
-                              color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
-                            }}
-                          >
-                            <Square style={{ width: 16, height: 16 }} /> Parar
-                          </button>
-                          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#dc2626", animation: "pulse 1s infinite" }} />
-                            <span style={{ fontSize: "13px", fontWeight: 700, color: "#dc2626" }}>
-                              {recordingSeconds}s / 30s
-                            </span>
-                          </div>
-                        </>
-                      ) : obs.audioUrl ? (
-                        /* Has recorded audio */
-                        <>
-                          <button
-                            onClick={() => playingAudioId === obs.id ? stopAudio() : playAudio(obs.id, obs.audioUrl!)}
-                            style={{
-                              display: "flex", alignItems: "center", gap: "6px",
-                              padding: "6px 14px", borderRadius: "10px", border: "none",
-                              background: playingAudioId === obs.id
-                                ? "linear-gradient(135deg, #f59e0b, #d97706)"
-                                : "linear-gradient(135deg, #2563eb, #1d4ed8)",
-                              color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
-                            }}
-                          >
-                            {playingAudioId === obs.id ? (
-                              <><Pause style={{ width: 16, height: 16 }} /> Pausar</>
-                            ) : (
-                              <><Play style={{ width: 16, height: 16 }} /> Ouvir</>
-                            )}
-                          </button>
-                          <span style={{ fontSize: "12px", color: "#6b7280" }}>
-                            🎤 {obs.audioDuration}s
-                          </span>
-                          <button
-                            onClick={() => startRecording(obs.id)}
-                            style={{
-                              display: "flex", alignItems: "center", gap: "4px",
-                              padding: "4px 10px", borderRadius: "8px", border: "1px solid #e5e7eb",
-                              background: "var(--color-card, #fff)", color: "var(--color-card-foreground, #6b7280)", fontSize: "12px", cursor: "pointer",
-                            }}
-                          >
-                            <Mic style={{ width: 10, height: 10 }} /> Regravar
-                          </button>
-                        </>
-                      ) : (
-                        /* No audio yet */
-                        <button
-                          onClick={() => startRecording(obs.id)}
-                          style={{
-                            display: "flex", alignItems: "center", gap: "6px",
-                            padding: "6px 14px", borderRadius: "10px", border: "none",
-                            background: "linear-gradient(135deg, #22c55e, #16a34a)",
-                            color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
-                          }}
-                        >
-                          <Mic style={{ width: 16, height: 16 }} /> Gravar Áudio (30s)
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Add observation button */}
               <button
-                onClick={addObservacao}
+                onClick={abrirObsModal}
                 style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
-                  width: "100%", padding: "10px", marginTop: "8px", borderRadius: "12px",
-                  border: "2px dashed #c7d2fe", background: "#eef2ff",
-                  color: "#4f46e5", fontSize: "13px", fontWeight: 700, cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: "10px", width: "100%",
+                  padding: "12px 14px", borderRadius: "14px",
+                  border: temObservacao ? "1.5px solid #f87171" : "1.5px dashed #fca5a5",
+                  background: temObservacao ? "linear-gradient(135deg, #fef2f2, #fee2e2)" : "var(--color-card, #fff)",
+                  cursor: "pointer", textAlign: "left",
                 }}
               >
-                <Plus style={{ width: 18, height: 18 }} /> Adicionar Observação
+                <span style={{
+                  width: 34, height: 34, borderRadius: "10px", flexShrink: 0,
+                  background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <AlertTriangle style={{ width: 20, height: 20, color: "#fff" }} />
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#b91c1c" }}>
+                    {temObservacao ? "Observação anexada" : "Observação (opcional)"}
+                  </span>
+                  <span style={{ display: "block", fontSize: "11px", color: "#6b7280" }}>
+                    {temObservacao
+                      ? `${observacoesPreenchidas().length} item(ns)${totalFotos ? ` • ${totalFotos} foto(s)` : ""} — vai junto com o próximo ponto`
+                      : "Texto, áudio (30s) ou fotos do que encontrou"}
+                  </span>
+                </span>
+                <Plus style={{ width: 18, height: 18, color: "#b91c1c", flexShrink: 0 }} />
               </button>
             </div>
           </div>
@@ -1160,7 +1297,13 @@ export default function RegistroRonda() {
               </div>
             ) : (
               registros.slice(0, 50).map((r) => {
-                const isToday = r.created_at.startsWith(new Date().toISOString().slice(0, 10));
+                const data = parseDataUTC(r.created_at);
+                const isToday = data.toDateString() === new Date().toDateString();
+                const obsItems = parseObservacaoLista(r.observacao);
+                const temCoords = r.latitude != null && r.longitude != null;
+                // O servidor recusa editar registro de outro porteiro (403):
+                // esconder o botão evita o erro depois de preencher o modal.
+                const podeEditar = !!user && (r.funcionario_id === user.id || ["master", "administradora", "sindico"].includes(user.role));
                 return (
                   <div
                     key={r.id}
@@ -1171,48 +1314,101 @@ export default function RegistroRonda() {
                       background: isToday ? "#f0fdf4" : "#fff",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <CheckCircle2 style={{ width: 22, height: 22, color: "#16a34a", flexShrink: 0 }} />
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                      <CheckCircle2 style={{ width: 22, height: 22, color: "#16a34a", flexShrink: 0, marginTop: 2 }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontWeight: 600, fontSize: "14px", color: "var(--card-foreground)" }}>{r.checkpoint_nome}</p>
+                        <p style={{ fontSize: "12px", color: "#6b7280", display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                          <User style={{ width: 13, height: 13, flexShrink: 0 }} />
+                          {r.funcionario_nome || "—"}
+                        </p>
                         {r.localizacao && (
                           <p style={{ fontSize: "12px", color: "#94a3b8" }}>📍 {r.localizacao}</p>
                         )}
-                        {r.observacao && (() => {
-                          // Try to parse as JSON array of observations
-                          try {
-                            const items = JSON.parse(r.observacao);
-                            if (Array.isArray(items)) {
-                              return (
-                                <div style={{ marginTop: "4px" }}>
-                                  {items.map((item: any, i: number) => (
-                                    <div key={i} style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>
-                                      {item.texto && <p style={{ fontStyle: "italic" }}>💬 {item.texto}</p>}
-                                      {item.audio && (
-                                        <div style={{ marginTop: "2px" }}>
-                                          <audio controls src={item.audio} style={{ height: "28px", maxWidth: "200px" }} />
-                                        </div>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              );
-                            }
-                          } catch {}
-                          // Fallback: plain text
-                          return (
-                            <p style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px", fontStyle: "italic" }}>
-                              💬 {r.observacao}
-                            </p>
-                          );
-                        })()}
+
+                        {/* Selos: observação e fotos */}
+                        {(obsItems.length > 0 || r.fotos_count > 0) && (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "6px" }}>
+                            {obsItems.length > 0 && (
+                              <span style={{
+                                display: "inline-flex", alignItems: "center", gap: "4px",
+                                padding: "3px 8px", borderRadius: "8px", background: "#fee2e2",
+                                color: "#b91c1c", fontSize: "11px", fontWeight: 700,
+                              }}>
+                                <AlertTriangle style={{ width: 12, height: 12 }} />
+                                {obsItems.length} observação(ões)
+                              </span>
+                            )}
+                            {r.fotos_count > 0 && (
+                              <span style={{
+                                display: "inline-flex", alignItems: "center", gap: "4px",
+                                padding: "3px 8px", borderRadius: "8px", background: "#dbeafe",
+                                color: "#1d4ed8", fontSize: "11px", fontWeight: 700,
+                              }}>
+                                <ImageIcon style={{ width: 12, height: 12 }} />
+                                {r.fotos_count} foto(s)
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {obsItems.map((item, i) => (
+                          <div key={i} style={{ fontSize: "12px", color: "#6b7280", marginTop: "4px" }}>
+                            {item.texto && <p style={{ fontStyle: "italic" }}>💬 {item.texto}</p>}
+                            {item.audio && (
+                              <audio controls src={item.audio} style={{ height: "28px", maxWidth: "200px", marginTop: "2px" }} />
+                            )}
+                          </div>
+                        ))}
+
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "8px" }}>
+                          {temCoords && (
+                            // <a> real: o navegador/Capacitor bloqueia window.open fora do gesto
+                            <a
+                              href={mapsUrl(r.latitude as number, r.longitude as number)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                display: "inline-flex", alignItems: "center", gap: "4px",
+                                fontSize: "12px", fontWeight: 700, color: "#2563eb", textDecoration: "none",
+                              }}
+                            >
+                              <Navigation style={{ width: 13, height: 13 }} /> Ver no mapa
+                            </a>
+                          )}
+                          {r.fotos_count > 0 && (
+                            <button
+                              onClick={() => abrirDetalhe(r)}
+                              style={{
+                                display: "inline-flex", alignItems: "center", gap: "4px",
+                                background: "none", border: "none", padding: 0, cursor: "pointer",
+                                fontSize: "12px", fontWeight: 700, color: "#1d4ed8",
+                              }}
+                            >
+                              <Camera style={{ width: 13, height: 13 }} /> Ver fotos
+                            </button>
+                          )}
+                          {podeEditar && (
+                            <button
+                              onClick={() => abrirObsRegistro(r.id)}
+                              style={{
+                                display: "inline-flex", alignItems: "center", gap: "4px",
+                                background: "none", border: "none", padding: 0, cursor: "pointer",
+                                fontSize: "12px", fontWeight: 700, color: "#b91c1c",
+                              }}
+                            >
+                              <AlertTriangle style={{ width: 13, height: 13 }} />
+                              {obsItems.length || r.fotos_count ? "Editar observação" : "Observação"}
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <div style={{ textAlign: "right", flexShrink: 0 }}>
                         <p style={{ fontSize: "13px", fontWeight: 700, color: "#374151" }}>
-                          {new Date(r.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                          {data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                         </p>
                         <p style={{ fontSize: "12px", color: "#94a3b8" }}>
-                          {new Date(r.created_at).toLocaleDateString("pt-BR")}
+                          {data.toLocaleDateString("pt-BR")}
                         </p>
                       </div>
                     </div>
@@ -1223,6 +1419,297 @@ export default function RegistroRonda() {
           </div>
         )}
       </main>
+
+      {/* Input de foto único, compartilhado por todas as observações */}
+      <input
+        ref={fotoInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        style={{ display: "none" }}
+        onChange={handleFotoSelecionada}
+      />
+
+      {/* ═══ MODAL DE OBSERVAÇÃO (texto + áudio + fotos) ═══ */}
+      {showObsModal && (
+        <div
+          onClick={fecharObsModal}
+          style={{
+            position: "fixed", inset: 0, zIndex: 60, background: "rgba(15,23,42,0.6)",
+            display: "flex", alignItems: "flex-end", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%", maxWidth: 560, maxHeight: "92vh", overflowY: "auto",
+              background: "var(--color-card, #fff)", borderRadius: "20px 20px 0 0",
+              padding: "18px 18px calc(18px + env(safe-area-inset-bottom))",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+              <span style={{
+                width: 36, height: 36, borderRadius: "10px",
+                background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <AlertTriangle style={{ width: 20, height: 20, color: "#fff" }} />
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: "15px", fontWeight: 800, color: p.text }}>Observação</p>
+                <p style={{ fontSize: "12px", color: "#6b7280" }}>
+                  {obsRegistroId !== null ? "Anexando ao ponto já registrado" : "Vai junto com o próximo ponto registrado"}
+                </p>
+              </div>
+              <button onClick={fecharObsModal} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                <X style={{ width: 22, height: 22, color: "#6b7280" }} />
+              </button>
+            </div>
+
+            {loadingDetalhe && obsRegistroId !== null ? (
+              <p style={{ fontSize: "13px", color: "#6b7280", padding: "24px 0", textAlign: "center" }}>Carregando…</p>
+            ) : (
+              <>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {observacoes.map((obs, idx) => (
+                    <div
+                      key={obs.id}
+                      style={{ padding: "14px 16px", borderRadius: "14px", border: "1.5px solid #e5e7eb", background: "#fafbfc" }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#16a34a" }}>Observação {idx + 1}</span>
+                        <button
+                          onClick={() => removeObservacao(obs.id)}
+                          style={{ background: "none", border: "none", cursor: "pointer", padding: "2px" }}
+                        >
+                          <Trash2 style={{ width: 18, height: 18, color: "#ef4444" }} />
+                        </button>
+                      </div>
+
+                      <textarea
+                        value={obs.texto}
+                        onChange={(e) => updateObservacaoTexto(obs.id, e.target.value)}
+                        placeholder="Descreva o que observou..."
+                        rows={2}
+                        className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300"
+                        style={{ resize: "none", color: p.text, background: "var(--color-card, #fff)", marginBottom: "8px" }}
+                      />
+
+                      {/* Áudio + fotos */}
+                      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
+                        {recordingId === obs.id ? (
+                          <>
+                            <button
+                              onClick={stopRecording}
+                              style={{
+                                display: "flex", alignItems: "center", gap: "6px",
+                                padding: "6px 14px", borderRadius: "10px", border: "none",
+                                background: "linear-gradient(135deg, #dc2626, #b91c1c)",
+                                color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                              }}
+                            >
+                              <Square style={{ width: 16, height: 16 }} /> Parar
+                            </button>
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#dc2626", animation: "pulse 1s infinite" }} />
+                              <span style={{ fontSize: "13px", fontWeight: 700, color: "#dc2626" }}>{recordingSeconds}s / 30s</span>
+                            </div>
+                          </>
+                        ) : obs.audioUrl ? (
+                          <>
+                            <button
+                              onClick={() => (playingAudioId === obs.id ? stopAudio() : playAudio(obs.id, obs.audioUrl!))}
+                              style={{
+                                display: "flex", alignItems: "center", gap: "6px",
+                                padding: "6px 14px", borderRadius: "10px", border: "none",
+                                background: playingAudioId === obs.id
+                                  ? "linear-gradient(135deg, #f59e0b, #d97706)"
+                                  : "linear-gradient(135deg, #2563eb, #1d4ed8)",
+                                color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                              }}
+                            >
+                              {playingAudioId === obs.id ? (
+                                <><Pause style={{ width: 16, height: 16 }} /> Pausar</>
+                              ) : (
+                                <><Play style={{ width: 16, height: 16 }} /> Ouvir</>
+                              )}
+                            </button>
+                            <span style={{ fontSize: "12px", color: "#6b7280" }}>🎤 {obs.audioDuration}s</span>
+                            <button
+                              onClick={() => startRecording(obs.id)}
+                              style={{
+                                display: "flex", alignItems: "center", gap: "4px",
+                                padding: "4px 10px", borderRadius: "8px", border: "1px solid #e5e7eb",
+                                background: "var(--color-card, #fff)", color: "var(--color-card-foreground, #6b7280)", fontSize: "12px", cursor: "pointer",
+                              }}
+                            >
+                              <Mic style={{ width: 10, height: 10 }} /> Regravar
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => startRecording(obs.id)}
+                            style={{
+                              display: "flex", alignItems: "center", gap: "6px",
+                              padding: "6px 14px", borderRadius: "10px", border: "none",
+                              background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                              color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                            }}
+                          >
+                            <Mic style={{ width: 16, height: 16 }} /> Gravar Áudio (30s)
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => abrirSeletorFoto(obs.id)}
+                          disabled={totalFotos >= MAX_FOTOS}
+                          style={{
+                            display: "flex", alignItems: "center", gap: "6px",
+                            padding: "6px 14px", borderRadius: "10px", border: "none",
+                            background: totalFotos >= MAX_FOTOS ? "#cbd5e1" : "linear-gradient(135deg, #3b82f6, #2563eb)",
+                            color: "#fff", fontSize: "12px", fontWeight: 700,
+                            cursor: totalFotos >= MAX_FOTOS ? "not-allowed" : "pointer",
+                          }}
+                        >
+                          <Camera style={{ width: 16, height: 16 }} /> Foto
+                        </button>
+                      </div>
+
+                      {obs.fotos.length > 0 && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "10px" }}>
+                          {obs.fotos.map((img, i) => (
+                            <div key={i} style={{ position: "relative" }}>
+                              <img
+                                src={img}
+                                onClick={() => setFotoAmpliada(img)}
+                                style={{ width: 64, height: 64, objectFit: "cover", borderRadius: "10px", border: "1px solid #e5e7eb", cursor: "pointer" }}
+                              />
+                              <button
+                                onClick={() => removeFoto(obs.id, i)}
+                                style={{
+                                  position: "absolute", top: -6, right: -6, width: 22, height: 22,
+                                  borderRadius: "50%", border: "none", background: "#ef4444", color: "#fff",
+                                  display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                                }}
+                              >
+                                <X style={{ width: 13, height: 13 }} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={addObservacao}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
+                    width: "100%", padding: "10px", marginTop: "10px", borderRadius: "12px",
+                    border: "2px dashed #c7d2fe", background: "#eef2ff",
+                    color: "#4f46e5", fontSize: "13px", fontWeight: 700, cursor: "pointer",
+                  }}
+                >
+                  <Plus style={{ width: 18, height: 18 }} /> Adicionar Observação
+                </button>
+
+                <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "8px", textAlign: "center" }}>
+                  {totalFotos}/{MAX_FOTOS} fotos
+                </p>
+
+                <button
+                  onClick={obsRegistroId !== null ? salvarObsRegistro : () => setShowObsModal(false)}
+                  disabled={savingObs}
+                  style={{
+                    width: "100%", padding: "14px", marginTop: "10px", borderRadius: "14px", border: "none",
+                    background: savingObs ? "#94a3b8" : "linear-gradient(135deg, #22c55e, #16a34a)",
+                    color: "#fff", fontSize: "15px", fontWeight: 800, cursor: savingObs ? "wait" : "pointer",
+                  }}
+                >
+                  {savingObs ? "Salvando…" : obsRegistroId !== null ? "Salvar observação" : "Concluir"}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ DETALHE DO REGISTRO (fotos) ═══ */}
+      {detalhe && (
+        <div
+          onClick={() => setDetalhe(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 60, background: "rgba(15,23,42,0.6)",
+            display: "flex", alignItems: "flex-end", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%", maxWidth: 560, maxHeight: "88vh", overflowY: "auto",
+              background: "var(--color-card, #fff)", borderRadius: "20px 20px 0 0",
+              padding: "18px 18px calc(18px + env(safe-area-inset-bottom))",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: "15px", fontWeight: 800, color: p.text }}>{detalhe.checkpoint_nome}</p>
+                <p style={{ fontSize: "12px", color: "#6b7280" }}>
+                  {detalhe.funcionario_nome} • {parseDataUTC(detalhe.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </p>
+              </div>
+              <button onClick={() => setDetalhe(null)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                <X style={{ width: 22, height: 22, color: "#6b7280" }} />
+              </button>
+            </div>
+
+            {detalhe.latitude != null && detalhe.longitude != null && (
+              <a
+                href={mapsUrl(detalhe.latitude, detalhe.longitude)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "6px", marginBottom: "12px",
+                  fontSize: "13px", fontWeight: 700, color: "#2563eb", textDecoration: "none",
+                }}
+              >
+                <Navigation style={{ width: 15, height: 15 }} /> Ver local no mapa
+              </a>
+            )}
+
+            {loadingDetalhe ? (
+              <p style={{ fontSize: "13px", color: "#6b7280", padding: "24px 0", textAlign: "center" }}>Carregando fotos…</p>
+            ) : (detalhe.fotos || []).length === 0 ? (
+              <p style={{ fontSize: "13px", color: "#94a3b8", padding: "16px 0", textAlign: "center" }}>Sem fotos neste ponto.</p>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))", gap: "8px" }}>
+                {(detalhe.fotos as FotoRegistro[]).map((f, i) => (
+                  <img
+                    key={i}
+                    src={f.img}
+                    onClick={() => setFotoAmpliada(f.img)}
+                    style={{ width: "100%", aspectRatio: "1", objectFit: "cover", borderRadius: "10px", border: "1px solid #e5e7eb", cursor: "pointer" }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Foto em tela cheia */}
+      {fotoAmpliada && (
+        <div
+          onClick={() => setFotoAmpliada(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 70, background: "rgba(0,0,0,0.9)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
+          }}
+        >
+          <img src={fotoAmpliada} style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "12px" }} />
+        </div>
+      )}
 
       {/* Report Modal */}
       <ReportModal

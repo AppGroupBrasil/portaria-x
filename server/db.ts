@@ -419,6 +419,13 @@ db.exec(`
   );
 `);
 
+// Fotos anexadas às observações da ronda: JSON [{ obs, img }]. O contador fica
+// numa coluna própria porque a listagem do histórico não devolve as imagens —
+// só precisa saber quantas existem para mostrar o selo.
+migrate(`ALTER TABLE ronda_registros ADD COLUMN fotos TEXT`);
+migrate(`ALTER TABLE ronda_registros ADD COLUMN fotos_count INTEGER NOT NULL DEFAULT 0`);
+migrate(`ALTER TABLE ronda_registros ADD COLUMN observacao_at TEXT`);
+
 // ─── Estou Chegando (Arrival Notification) tables ───
 db.exec(`
   CREATE TABLE IF NOT EXISTS estou_chegando_events (

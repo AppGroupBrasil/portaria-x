@@ -15,7 +15,12 @@ function sanitize(s: string | null | undefined): string {
 }
 
 function formatDate(d: string) {
-  const dt = new Date(d);
+  // O banco guarda "YYYY-MM-DD HH:MM:SS" em UTC, sem fuso: sem o "Z" o relatorio
+  // sairia 3h adiantado. Datas que ja trazem fuso passam intactas.
+  const bruto = typeof d === "string" && /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(d) && !/[zZ]|[+-]\d{2}:?\d{2}$/.test(d)
+    ? d.replace(" ", "T") + "Z"
+    : d;
+  const dt = new Date(bruto);
   return dt.toLocaleDateString("pt-BR") + " " + dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 }
 
@@ -1287,13 +1292,33 @@ export function gerarRelatorioRondas(
   ];
   y = addTableRow(doc, cols, y, true);
 
+  // A observacao pode vir como JSON de varios itens (texto/audio/fotos):
+  // no PDF sai so o texto, com o resumo dos anexos.
+  const resumoObservacao = (r: any): string => {
+    const raw: string = r.observacao || "";
+    let texto = raw;
+    if (raw.trim().startsWith("[")) {
+      try {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          texto = arr
+            .map((o: any) => o?.texto || (o?.audio ? "[audio]" : ""))
+            .filter(Boolean)
+            .join(" | ");
+        }
+      } catch {}
+    }
+    const fotos = Number(r.fotos_count) || 0;
+    return fotos ? `${texto}${texto ? " " : ""}[${fotos} foto(s)]` : texto;
+  };
+
   registros.forEach((r) => {
     y = checkPage(doc, y, 10);
     const row = [
       { text: r.checkpoint_nome || "", x: 14, w: 50 },
       { text: r.funcionario_nome || "", x: 67, w: 40 },
       { text: r.localizacao || "", x: 110, w: 40 },
-      { text: r.observacao || "", x: 153, w: 50 },
+      { text: resumoObservacao(r), x: 153, w: 50 },
       { text: formatDate(r.created_at), x: 206, w: 55 },
     ];
     y = addTableRow(doc, row, y);

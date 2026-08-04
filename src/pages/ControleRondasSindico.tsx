@@ -26,6 +26,10 @@ import {
   User,
   Calendar,
   Search,
+  AlertTriangle,
+  Camera,
+  Image as ImageIcon,
+  Navigation,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
@@ -58,6 +62,23 @@ interface Schedule {
 
 const DIAS_SEMANA = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
+function mapsUrl(lat: number, lng: number): string {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+}
+
+// A observação pode ser texto puro (registros antigos) ou o JSON com vários
+// itens de texto/áudio/fotos.
+function parseObservacaoLista(raw: string | null): { texto: string; audio: string | null }[] {
+  if (!raw || !raw.trim()) return [];
+  if (raw.trim().startsWith("[")) {
+    try {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) return arr.map((o: any) => ({ texto: o?.texto || "", audio: o?.audio || null }));
+    } catch {}
+  }
+  return [{ texto: raw, audio: null }];
+}
+
 export default function ControleRondasSindico() {
   const { p } = useTheme();
   const navigate = useNavigate();
@@ -75,10 +96,27 @@ export default function ControleRondasSindico() {
     localizacao: string | null;
     observacao: string | null;
     foto: string | null;
+    fotos_count?: number;
+    latitude?: number | null;
+    longitude?: number | null;
     created_at: string;
   }
   const [registros, setRegistros] = useState<Registro[]>([]);
   const [loadingRegistros, setLoadingRegistros] = useState(false);
+  // Detalhe do registro: a listagem não traz as fotos (base64), só o contador.
+  const [detalhe, setDetalhe] = useState<any | null>(null);
+  const [loadingDetalhe, setLoadingDetalhe] = useState(false);
+  const [fotoAmpliada, setFotoAmpliada] = useState<string | null>(null);
+
+  const abrirDetalhe = async (r: Registro) => {
+    setDetalhe({ ...r, fotos: [] });
+    setLoadingDetalhe(true);
+    try {
+      const res = await apiFetch(`${API}/rondas/registros/${r.id}`);
+      if (res.ok) setDetalhe(await res.json());
+    } catch {}
+    setLoadingDetalhe(false);
+  };
   const [filtroFuncionario, setFiltroFuncionario] = useState("");
   const [filtroCheckpoint, setFiltroCheckpoint] = useState("");
   const today = new Date().toISOString().slice(0, 10);
@@ -597,6 +635,9 @@ export default function ControleRondasSindico() {
                         const dt = new Date(r.created_at + "Z");
                         const hora = dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
                         const dataCompleta = dt.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+                        const obsItems = parseObservacaoLista(r.observacao);
+                        const fotosCount = r.fotos_count ?? (r.foto ? 1 : 0);
+                        const temCoords = r.latitude != null && r.longitude != null;
                         return (
                           <div key={r.id} style={{ background: "var(--color-card, #fff)", borderRadius: "14px", padding: "14px", border: "1px solid #e5e7eb" }}>
                             {/* Checkpoint name + badge */}
@@ -605,6 +646,16 @@ export default function ControleRondasSindico() {
                                 <CheckCircle2 style={{ width: 22, height: 22, color: "#fff" }} />
                               </div>
                               <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--card-foreground)", flex: 1 }}>{r.checkpoint_nome}</p>
+                              {obsItems.length > 0 && (
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 8px", borderRadius: "8px", background: "#fee2e2", color: "#b91c1c", fontSize: "11px", fontWeight: 700 }}>
+                                  <AlertTriangle style={{ width: 12, height: 12 }} /> {obsItems.length}
+                                </span>
+                              )}
+                              {fotosCount > 0 && (
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "3px 8px", borderRadius: "8px", background: "#dbeafe", color: "#1d4ed8", fontSize: "11px", fontWeight: 700 }}>
+                                  <ImageIcon style={{ width: 12, height: 12 }} /> {fotosCount}
+                                </span>
+                              )}
                             </div>
 
                             {/* Info grid: funcionário, localização, data/hora */}
@@ -629,10 +680,43 @@ export default function ControleRondasSindico() {
                               </div>
                             </div>
 
-                            {r.observacao && (
-                              <p style={{ fontSize: "13px", color: "var(--muted-foreground)", marginTop: "8px", background: "#f0f9ff", padding: "8px 10px", borderRadius: "8px", borderLeft: "3px solid #003580" }}>
-                                💬 {r.observacao}
-                              </p>
+                            {obsItems.length > 0 && (
+                              <div style={{ marginTop: "8px", background: "#f0f9ff", padding: "8px 10px", borderRadius: "8px", borderLeft: "3px solid #003580" }}>
+                                {obsItems.map((item, i) => (
+                                  <div key={i} style={{ marginTop: i ? "6px" : 0 }}>
+                                    {item.texto && (
+                                      <p style={{ fontSize: "13px", color: "var(--muted-foreground)" }}>💬 {item.texto}</p>
+                                    )}
+                                    {item.audio && (
+                                      <audio controls src={item.audio} style={{ height: "28px", maxWidth: "220px", marginTop: "4px" }} />
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {(temCoords || fotosCount > 0) && (
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "14px", marginTop: "10px" }}>
+                                {temCoords && (
+                                  // <a> real: o navegador/Capacitor bloqueia window.open fora do gesto
+                                  <a
+                                    href={mapsUrl(r.latitude as number, r.longitude as number)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "13px", fontWeight: 700, color: "#2563eb", textDecoration: "none" }}
+                                  >
+                                    <Navigation style={{ width: 14, height: 14 }} /> Ver no mapa
+                                  </a>
+                                )}
+                                {fotosCount > 0 && (
+                                  <button
+                                    onClick={() => abrirDetalhe(r)}
+                                    style={{ display: "inline-flex", alignItems: "center", gap: "5px", background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "13px", fontWeight: 700, color: "#1d4ed8" }}
+                                  >
+                                    <Camera style={{ width: 14, height: 14 }} /> Ver fotos
+                                  </button>
+                                )}
+                              </div>
                             )}
                           </div>
                         );
@@ -1059,6 +1143,73 @@ export default function ControleRondasSindico() {
               {editingCheckpoint ? "Salvar Alterações" : "Cadastrar Ponto"}
             </button>
           </div>
+        </div>
+      )}
+
+      {/* ═══ Detalhe do registro (fotos) ═══ */}
+      {detalhe && (
+        <div
+          onClick={() => setDetalhe(null)}
+          style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(15,23,42,0.6)", display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%", maxWidth: 560, maxHeight: "88vh", overflowY: "auto",
+              background: "var(--color-card, #fff)", borderRadius: "20px 20px 0 0",
+              padding: "18px 18px calc(18px + env(safe-area-inset-bottom))",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: "15px", fontWeight: 800, color: p.text }}>{detalhe.checkpoint_nome}</p>
+                <p style={{ fontSize: "12px", color: "#6b7280" }}>
+                  {detalhe.funcionario_nome} • {new Date(detalhe.created_at + "Z").toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </p>
+              </div>
+              <button onClick={() => setDetalhe(null)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                <X style={{ width: 22, height: 22, color: "#6b7280" }} />
+              </button>
+            </div>
+
+            {detalhe.latitude != null && detalhe.longitude != null && (
+              <a
+                href={mapsUrl(detalhe.latitude, detalhe.longitude)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", gap: "6px", marginBottom: "12px", fontSize: "13px", fontWeight: 700, color: "#2563eb", textDecoration: "none" }}
+              >
+                <Navigation style={{ width: 15, height: 15 }} /> Ver local no mapa
+              </a>
+            )}
+
+            {loadingDetalhe ? (
+              <p style={{ fontSize: "13px", color: "#6b7280", padding: "24px 0", textAlign: "center" }}>Carregando fotos…</p>
+            ) : (detalhe.fotos || []).length === 0 ? (
+              <p style={{ fontSize: "13px", color: "#94a3b8", padding: "16px 0", textAlign: "center" }}>Sem fotos neste ponto.</p>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))", gap: "8px" }}>
+                {(detalhe.fotos as { obs: number; img: string }[]).map((f, i) => (
+                  <img
+                    key={i}
+                    src={f.img}
+                    onClick={() => setFotoAmpliada(f.img)}
+                    style={{ width: "100%", aspectRatio: "1", objectFit: "cover", borderRadius: "10px", border: "1px solid #e5e7eb", cursor: "pointer" }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Foto em tela cheia */}
+      {fotoAmpliada && (
+        <div
+          onClick={() => setFotoAmpliada(null)}
+          style={{ position: "fixed", inset: 0, zIndex: 70, background: "rgba(0,0,0,0.9)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
+        >
+          <img src={fotoAmpliada} style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "12px" }} />
         </div>
       )}
 
