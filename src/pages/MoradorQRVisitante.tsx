@@ -80,7 +80,7 @@ function saveVisitors(list: VisitorQR[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
-function generateQRData(visitor: VisitorQR, morador: { nome?: string; block?: string; unit?: string; condominio_nome?: string }) {
+function generateQRData(visitor: VisitorQR, morador: { name?: string; block?: string; unit?: string; condominio_nome?: string; phone?: string }) {
   // NOTE: foto is excluded from QR payload because base64 images are too large
   // for QR codes (max ~4KB). The photo is still stored and shown in the app.
   const payload = {
@@ -100,11 +100,11 @@ function generateQRData(visitor: VisitorQR, morador: { nome?: string; block?: st
       horaFim: visitor.horaFim,
     },
     morador: {
-      nome: morador.nome || "",
+      nome: morador.name || "",
       bloco: morador.block || "",
       unidade: morador.unit || "",
       condominio: morador.condominio_nome || "",
-      telefone: (morador as any).phone || "",
+      telefone: morador.phone || "",
     },
     createdAt: visitor.createdAt,
   };
@@ -252,12 +252,18 @@ export default function MoradorQRVisitante() {
     ];
     const text = lines.join("\n");
 
+    // location.href em vez de window.open: o fetch do token quebrou o gesto do
+    // usuário e o navegador bloqueia popup fora do gesto (abria nada).
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+
     if (navigator.share) {
-      navigator.share({ title: "Autorização de Entrada", text }).catch(() => {
-        globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+      navigator.share({ title: "Autorização de Entrada", text }).catch((err) => {
+        // Cancelamento do próprio usuário não deve reabrir nada
+        if (err?.name === "AbortError") return;
+        globalThis.location.href = waUrl;
       });
     } else {
-      globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+      globalThis.location.href = waUrl;
     }
   };
 
@@ -272,7 +278,7 @@ export default function MoradorQRVisitante() {
   return (
     <div style={{ minHeight: '100dvh', background: isDark ? "linear-gradient(180deg, #001533 0%, #002254 25%, #003580 55%, #004aad 100%)" : "#f0f4f8", display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div style={{ display: 'flex', alignItems: 'center', padding: '18px 24px', height: '4rem', gap: '0.75rem' }}>
           <button onClick={() => navigate(-1)} style={{ padding: '0.5rem', borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", cursor: 'pointer', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ArrowLeft className="w-7 h-7" />
@@ -337,9 +343,9 @@ export default function MoradorQRVisitante() {
               width: '100%',
               padding: '16px',
               borderRadius: '14px',
-              border: isDark ? '1.5px solid rgba(255,255,255,0.15)' : '1.5px solid #cbd5e1',
-              background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)',
-              color: isDark ? '#fff' : "#1e293b",
+              border: '1.5px solid #003580',
+              background: '#003580',
+              color: '#fff',
               fontWeight: 700,
               fontSize: "16px",
               cursor: 'pointer',
@@ -373,9 +379,9 @@ export default function MoradorQRVisitante() {
                 marginTop: '24px',
                 padding: '14px 28px',
                 borderRadius: '12px',
-                border: isDark ? '1.5px solid rgba(255,255,255,0.15)' : '1.5px solid #cbd5e1',
-                background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)',
-                color: isDark ? '#fff' : "#1e293b",
+                border: '1.5px solid #003580',
+                background: '#003580',
+                color: '#fff',
                 fontWeight: 700,
                 fontSize: "16px",
                 cursor: 'pointer',
@@ -442,7 +448,7 @@ export default function MoradorQRVisitante() {
                           onClick={() => setViewQR(v)}
                           style={{
                             flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
-                            background: isDark ? 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))' : 'linear-gradient(135deg, #e2e8f0, #f1f5f9)', color: isDark ? '#fff' : "#1e293b",
+                            background: '#003580', color: '#fff',
                             fontWeight: 700, fontSize: "14px", cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                           }}
@@ -453,8 +459,8 @@ export default function MoradorQRVisitante() {
                           onClick={() => handleShare(v)}
                           style={{
                             padding: '10px 14px', borderRadius: '10px',
-                            border: '1.5px solid rgba(99,102,241,0.4)', background: 'rgba(99,102,241,0.15)',
-                            color: '#a5b4fc', fontWeight: 700, fontSize: "14px", cursor: 'pointer',
+                            border: '1.5px solid #4338ca', background: '#4338ca',
+                            color: '#fff', fontWeight: 700, fontSize: "14px", cursor: 'pointer',
                           }}
                         >
                           <Share2 className="w-5 h-5" />
@@ -463,8 +469,8 @@ export default function MoradorQRVisitante() {
                           onClick={() => handleDelete(v.id)}
                           style={{
                             padding: '10px 14px', borderRadius: '10px',
-                            border: '1.5px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.1)',
-                            color: '#fca5a5', cursor: 'pointer',
+                            border: '1.5px solid #b91c1c', background: '#b91c1c',
+                            color: '#fff', cursor: 'pointer',
                           }}
                         >
                           <Trash2 className="w-5 h-5" />
@@ -535,7 +541,7 @@ export default function MoradorQRVisitante() {
                 onClick={() => handleShare(viewQR)}
                 style={{
                   flex: 1, padding: "14px", borderRadius: "12px", border: "none",
-                  background: "#25d366", color: p.text, fontWeight: 700, fontSize: "15px",
+                  background: "#128C7E", color: "#fff", fontWeight: 700, fontSize: "15px",
                   cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                 }}
               >

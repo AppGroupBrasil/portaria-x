@@ -82,7 +82,6 @@ export default function PorteiroQRScanner() {
   const [scanStatus, setScanStatus] = useState<"autorizado" | "expirado" | "invalido">("autorizado");
   const [scanLog, setScanLog] = useState<ScanLog[]>(loadScanLog());
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
-  const [whatsappNumber, setWhatsappNumber] = useState("");
   const [manualInput, setManualInput] = useState("");
   const [showManualInput, setShowManualInput] = useState(false);
   const [notifiedInApp, setNotifiedInApp] = useState(false);
@@ -158,13 +157,6 @@ export default function PorteiroQRScanner() {
     }
   };
 
-  const formatPhone = (value: string) => {
-    const digits = value.replaceAll(/\D/g, "").slice(0, 11);
-    if (digits.length <= 2) return digits.length ? `(${digits}` : "";
-    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-  };
-
   const processQRData = (data: string) => {
     try {
       const parsed: VisitorPayload = JSON.parse(data);
@@ -203,14 +195,6 @@ export default function PorteiroQRScanner() {
       saveScanLog(updated);
 
       stopCamera();
-
-      // Auto-open WhatsApp if morador phone is in QR payload
-      if (isValid && parsed.morador.telefone) {
-        const url = buildWhatsAppUrl(parsed, parsed.morador.telefone);
-        if (url) {
-          setTimeout(() => { globalThis.open(url, "_blank"); }, 500);
-        }
-      }
     } catch {
       setScanStatus("invalido");
       setVisitor(null);
@@ -232,13 +216,17 @@ export default function PorteiroQRScanner() {
     return `https://wa.me/${fullNum}?text=${encodeURIComponent(msg)}`;
   };
 
-  const handleNotifyWhatsApp = () => {
+  // O QR do morador já traz o telefone dele: dispara o WhatsApp direto.
+  // Sem telefone no cadastro, o modal apenas informa — o porteiro não tem
+  // como saber o número e digitá-lo só atrapalharia.
+  const handleAvisarMorador = () => {
     if (!visitor) return;
-    const phone = whatsappNumber.trim() || visitor.morador.telefone || "";
-    const url = buildWhatsAppUrl(visitor, phone);
-    if (url) globalThis.open(url, "_blank");
-    setShowWhatsAppModal(false);
-    setWhatsappNumber("");
+    const url = buildWhatsAppUrl(visitor, visitor.morador.telefone || "");
+    if (url) {
+      globalThis.open(url, "_blank");
+      return;
+    }
+    setShowWhatsAppModal(true);
   };
 
   const handleNotifyInApp = () => {
@@ -255,7 +243,7 @@ export default function PorteiroQRScanner() {
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: p.pageBg }}>
       {/* Header */}
-      <header className="safe-area-top" style={{ background: p.headerBg, padding: "18px 24px", borderBottom: p.headerBorder, boxShadow: p.headerShadow, paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="safe-area-top" style={{ background: p.headerBg, padding: "18px 24px", borderBottom: p.headerBorder, boxShadow: p.headerShadow, paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 12, background: p.btnBg, border: p.btnBorder, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: p.text }}>
             <ArrowLeft className="w-7 h-7" />
@@ -473,10 +461,10 @@ export default function PorteiroQRScanner() {
                 {/* Action buttons */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "20px" }}>
                   <button
-                    onClick={() => setShowWhatsAppModal(true)}
+                    onClick={handleAvisarMorador}
                     style={{
                       width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-                      background: "#25d366", color: p.text, fontWeight: 700, fontSize: "16px",
+                      background: "#128C7E", color: "#fff", fontWeight: 700, fontSize: "16px",
                       cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
@@ -508,7 +496,7 @@ export default function PorteiroQRScanner() {
                     style={{
                       width: "100%", padding: "14px", borderRadius: "12px",
                       border: "2px solid #d1d5db", background: "var(--color-card, #fff)",
-                      color: "#6b7280", fontWeight: 700, fontSize: "16px", cursor: "pointer",
+                      color: "var(--color-card-foreground, #6b7280)", fontWeight: 700, fontSize: "16px", cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
                     }}
                   >
@@ -595,56 +583,15 @@ export default function PorteiroQRScanner() {
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
               <h2 style={{ fontWeight: 800, fontSize: "18px", color: "#374151", display: "flex", alignItems: "center", gap: "12px" }}>
-                <MessageCircle className="w-6 h-6" style={{ color: "#25d366" }} /> Avisar Morador
+                <MessageCircle className="w-6 h-6" style={{ color: "#25D366" }} /> Avisar Morador
               </h2>
               <button onClick={() => setShowWhatsAppModal(false)} style={{ background: "none", border: "none", fontSize: "24px", color: "#9ca3af", cursor: "pointer" }}>×</button>
             </div>
 
-            <p style={{ fontSize: "15px", color: "#6b7280", marginBottom: "16px" }}>
-              Digite o número de WhatsApp do morador para enviar o aviso de chegada do visitante.
-            </p>
-
-            <div>
-              <span style={{ display: "block", fontWeight: 700, fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
-                <Phone className="w-3.5 h-3.5 inline-block mr-1" style={{ verticalAlign: "-2px" }} />
-                Número do Morador
-              </span>
-              <input
-                type="tel"
-                value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(formatPhone(e.target.value))}
-                placeholder="(11) 99999-9999"
-                style={{
-                  width: "100%", padding: "14px", borderRadius: "10px",
-                  border: "2px solid #d1d5db", fontSize: "16px", fontWeight: 600, color: "#374151",
-                }}
-              />
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "#fef2f2", borderRadius: "10px", padding: "16px", border: "1px solid #fecaca" }}>
+              <Phone className="w-5 h-5" style={{ color: "#dc2626", flexShrink: 0 }} />
+              <p style={{ fontSize: "16px", fontWeight: 700, color: "#991b1b" }}>Morador não cadastrado.</p>
             </div>
-
-            <button
-              onClick={handleNotifyWhatsApp}
-              disabled={!whatsappNumber.trim()}
-              style={{
-                width: "100%", padding: "16px", borderRadius: "12px", border: "none",
-                background: whatsappNumber.trim() ? "#25d366" : "#d1d5db",
-                color: p.text, fontWeight: 700, fontSize: "16px",
-                cursor: whatsappNumber.trim() ? "pointer" : "not-allowed", marginTop: "16px",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
-              }}
-            >
-              <MessageCircle className="w-6 h-6" /> Enviar Aviso pelo WhatsApp
-            </button>
-
-            {visitor && (
-              <div style={{ marginTop: "16px", background: "#f8fafc", borderRadius: "10px", padding: "14px 16px", border: "1px solid #e5e7eb" }}>
-                <p style={{ fontSize: "13px", color: "#6b7280", fontWeight: 700, marginBottom: "4px" }}>Prévia da mensagem:</p>
-                <p style={{ fontSize: "13px", color: "#374151", lineHeight: 1.5 }}>
-                  🔔 AVISO DE CHEGADA<br />
-                  Visitante: {visitor.visitante.nome}<br />
-                  Morador: {visitor.morador.nome} — Bloco {visitor.morador.bloco} Apt {visitor.morador.unidade}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       )}
