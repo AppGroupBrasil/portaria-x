@@ -51,6 +51,10 @@ const portariaPool = new Map<number, ArrivalWsClient[]>();    // condominioId �
 const wsLastDistances = new Map<number, number>();
 const ENTRY_COMPLETION_DISTANCE_METERS = 10;
 const AUTO_GATE_COOLDOWN_MINUTES = 5;
+// Depois que o morador chega, o GPS dele continua enviando posições de dentro do
+// condomínio. Sem esta trava cada posição abriria um evento novo e a portaria
+// receberia alerta atrás de alerta, com o card sumindo e reaparecendo na tela.
+const ARRIVAL_REENTRY_COOLDOWN_MINUTES = 10;
 
 function parseCookie(cookieHeader: string | undefined, name: string): string | null {
   if (!cookieHeader) return null;
@@ -241,7 +245,7 @@ export function initArrivalWebSocket(server?: Server) {
 
             const existing = db.prepare(
               `SELECT id, status FROM estou_chegando_events
-               WHERE morador_id = ? AND status = 'approaching'
+               WHERE morador_id = ? AND status IN ('approaching', 'tracking')
                  AND created_at > datetime('now', '-30 minutes')
                ORDER BY created_at DESC LIMIT 1`
             ).get(client.userId) as { id: number; status: string } | undefined;
@@ -295,6 +299,18 @@ export function initArrivalWebSocket(server?: Server) {
                 distance: displayDistance,
                 status: nextStatus,
               });
+              return;
+            }
+
+            const recemChegou = db.prepare(
+              `SELECT id FROM estou_chegando_events
+               WHERE morador_id = ? AND status = 'arrived'
+                 AND arrived_at > datetime('now', ?)
+               ORDER BY id DESC LIMIT 1`
+            ).get(client.userId, `-${ARRIVAL_REENTRY_COOLDOWN_MINUTES} minutes`) as { id: number } | undefined;
+
+            if (recemChegou) {
+              wsSend(client, { type: "status", status: "arrived", distance: displayDistance });
               return;
             }
 

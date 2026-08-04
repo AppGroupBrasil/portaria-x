@@ -53,6 +53,7 @@ function isWithinSchedule(inicio: string | null, fim: string | null): boolean {
 // In-memory map of last known distance per morador (for direction detection)
 const lastDistances = new Map<number, { distance: number; timestamp: number }>();
 const ENTRY_COMPLETION_DISTANCE_METERS = 10;
+const ARRIVAL_REENTRY_COOLDOWN_MINUTES = 10;
 
 // ────────────────────────────────────────────────────────────
 // GET /api/estou-chegando/config — Get condominio schedule + location config
@@ -261,6 +262,26 @@ router.post("/notify", authenticate, async (req: Request, res: Response) => {
         direction: "approaching",
         tracking: nextStatus === "tracking",
         vehicles,
+      });
+      return;
+    }
+
+    // Morador acabou de chegar: o GPS segue mandando posições de dentro do
+    // condomínio. Sem esta trava cada posição abriria um evento novo e a
+    // portaria receberia um alerta atrás do outro.
+    const recemChegou = db.prepare(
+      `SELECT id FROM estou_chegando_events
+       WHERE morador_id = ? AND status = 'arrived'
+         AND arrived_at > datetime('now', ?)
+       ORDER BY id DESC LIMIT 1`
+    ).get(user.id, `-${ARRIVAL_REENTRY_COOLDOWN_MINUTES} minutes`) as { id: number } | undefined;
+
+    if (recemChegou) {
+      res.json({
+        status: "arrived",
+        event_id: recemChegou.id,
+        distance: displayDistance,
+        message: "Morador já está no condomínio.",
       });
       return;
     }

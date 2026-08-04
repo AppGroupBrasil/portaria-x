@@ -903,9 +903,9 @@ export default function MoradorEstouChegando() {
                   onClick={() => saveVehicleType("proprio")}
                   style={{
                     padding: '1rem', borderRadius: 16, textAlign: 'center', transition: 'all 0.2s', cursor: 'pointer',
-                    background: vehicleType === "proprio" ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.06)',
-                    border: vehicleType === "proprio" ? '2px solid rgba(59,130,246,0.5)' : '2px solid rgba(255,255,255,0.1)',
-                    color: isDark ? '#fff' : "#1e293b",
+                    background: vehicleType === "proprio" ? '#003580' : (isDark ? 'rgba(255,255,255,0.06)' : '#ffffff'),
+                    border: vehicleType === "proprio" ? '2px solid #003580' : (isDark ? '2px solid rgba(255,255,255,0.1)' : '2px solid #cbd5e1'),
+                    color: vehicleType === "proprio" ? '#fff' : (isDark ? '#fff' : "#1e293b"),
                     position: 'relative',
                   }}
                 >
@@ -914,16 +914,16 @@ export default function MoradorEstouChegando() {
                       <CheckCircle2 style={{ width: 22, height: 22, color: '#4ade80' }} />
                     </div>
                   )}
-                  <Car style={{ width: 28, height: 28, margin: '0 auto 0.25rem', color: vehicleType === "proprio" ? '#60a5fa' : '#93c5fd' }} />
-                  <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b" }}>Veículo Próprio</p>
+                  <Car style={{ width: 28, height: 28, margin: '0 auto 0.25rem', color: vehicleType === "proprio" ? '#fff' : (isDark ? '#93c5fd' : '#003580') }} />
+                  <p style={{ fontSize: '0.875rem', fontWeight: 600, color: vehicleType === "proprio" ? '#fff' : (isDark ? '#fff' : "#1e293b") }}>Veículo Próprio</p>
                 </button>
                 <button
                   onClick={() => saveVehicleType("uber_taxi")}
                   style={{
                     padding: '1rem', borderRadius: 16, textAlign: 'center', transition: 'all 0.2s', cursor: 'pointer',
-                    background: vehicleType === "uber_taxi" ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.06)',
-                    border: vehicleType === "uber_taxi" ? '2px solid rgba(59,130,246,0.5)' : '2px solid rgba(255,255,255,0.1)',
-                    color: isDark ? '#fff' : "#1e293b",
+                    background: vehicleType === "uber_taxi" ? '#003580' : (isDark ? 'rgba(255,255,255,0.06)' : '#ffffff'),
+                    border: vehicleType === "uber_taxi" ? '2px solid #003580' : (isDark ? '2px solid rgba(255,255,255,0.1)' : '2px solid #cbd5e1'),
+                    color: vehicleType === "uber_taxi" ? '#fff' : (isDark ? '#fff' : "#1e293b"),
                     position: 'relative',
                   }}
                 >
@@ -932,8 +932,8 @@ export default function MoradorEstouChegando() {
                       <CheckCircle2 style={{ width: 22, height: 22, color: '#4ade80' }} />
                     </div>
                   )}
-                  <Navigation style={{ width: 28, height: 28, margin: '0 auto 0.25rem', color: vehicleType === "uber_taxi" ? '#60a5fa' : '#93c5fd' }} />
-                  <p style={{ fontSize: '0.875rem', fontWeight: 600, color: isDark ? '#fff' : "#1e293b" }}>Uber / Táxi</p>
+                  <Navigation style={{ width: 28, height: 28, margin: '0 auto 0.25rem', color: vehicleType === "uber_taxi" ? '#fff' : (isDark ? '#93c5fd' : '#003580') }} />
+                  <p style={{ fontSize: '0.875rem', fontWeight: 600, color: vehicleType === "uber_taxi" ? '#fff' : (isDark ? '#fff' : "#1e293b") }}>Uber / Táxi</p>
                 </button>
               </div>
             </div>
@@ -949,20 +949,21 @@ export default function MoradorEstouChegando() {
                       onClick={() => saveVehicleConfig(v)}
                       style={{
                         width: '100%', padding: '0.75rem', borderRadius: 16, textAlign: 'left' as const, transition: 'all 0.2s',
-                        display: 'flex', alignItems: 'center', cursor: 'pointer', color: isDark ? '#fff' : "#1e293b",
-                        background: selectedVehicle?.placa === v.placa ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.06)',
-                        border: selectedVehicle?.placa === v.placa ? '2px solid rgba(59,130,246,0.5)' : '2px solid rgba(255,255,255,0.1)'
+                        display: 'flex', alignItems: 'center', cursor: 'pointer',
+                        color: selectedVehicle?.placa === v.placa ? '#fff' : (isDark ? '#fff' : "#1e293b"),
+                        background: selectedVehicle?.placa === v.placa ? '#003580' : (isDark ? 'rgba(255,255,255,0.06)' : '#ffffff'),
+                        border: selectedVehicle?.placa === v.placa ? '2px solid #003580' : (isDark ? '2px solid rgba(255,255,255,0.1)' : '2px solid #cbd5e1')
                       }}
                     >
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontWeight: 700, color: isDark ? '#fff' : "#1e293b" }}>{v.placa}</p>
-                        <p style={{ fontSize: '0.75rem', color: isDark ? '#93c5fd' : "#1e293b" }}>{v.modelo} {v.cor && `· ${v.cor}`}</p>
+                        <p style={{ fontWeight: 700, color: selectedVehicle?.placa === v.placa ? '#fff' : (isDark ? '#fff' : "#1e293b") }}>{v.placa}</p>
+                        <p style={{ fontSize: '0.75rem', color: selectedVehicle?.placa === v.placa ? 'rgba(255,255,255,0.85)' : (isDark ? '#93c5fd' : "#475569") }}>{v.modelo} {v.cor && `· ${v.cor}`}</p>
                       </div>
                       <div style={{
                         width: 28, height: 28, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0, marginLeft: '0.75rem',
                         ...(selectedVehicle?.placa === v.placa
-                          ? { background: '#3b82f6', color: isDark ? '#fff' : "#1e293b" }
+                          ? { background: '#ffffff', color: '#003580' }
                           : { border: isDark ? '2px solid rgba(255,255,255,0.2)' : '2px solid #cbd5e1' })
                       }}>
                         {selectedVehicle?.placa === v.placa && <CheckCircle2 className="w-7 h-7" />}
