@@ -25,6 +25,7 @@ import { APP_ORIGIN } from "@/lib/config";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
+import TimePickerModal from "@/components/TimePickerModal";
 import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
 interface PreAuth {
@@ -78,6 +79,9 @@ export default function MoradorAutorizacoes() {
   // ── Pending visitors from portaria ──
   const [pendingVisitors, setPendingVisitors] = useState<PendingVisitor[]>([]);
   const [respondingVisitorId, setRespondingVisitorId] = useState<number | null>(null);
+
+  // Seletor de horário próprio: o diálogo nativo do navegador corta o botão de confirmar
+  const [timePicker, setTimePicker] = useState<"inicio" | "fim" | null>(null);
 
   const [form, setForm] = useState({
     visitante_nome: "",
@@ -243,17 +247,21 @@ export default function MoradorAutorizacoes() {
 
         const text = msgLines.join("\n");
 
+        // location.href em vez de window.open: o POST acima quebra o gesto do
+        // usuário e o navegador bloqueia popup fora do gesto (não abria nada).
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+
         // Tentar Web Share API (nativo do celular)
         if (navigator.share) {
           try {
             await navigator.share({ title: "Autorização de Entrada", text });
-          } catch {
-            // Usuário cancelou o share, fallback pro WhatsApp
-            globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+          } catch (err: any) {
+            // Cancelamento do próprio usuário não deve abrir o WhatsApp
+            if (err?.name !== "AbortError") globalThis.location.href = waUrl;
           }
         } else {
           // Desktop fallback: abre WhatsApp Web sem número (usuário escolhe o contato)
-          globalThis.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+          globalThis.location.href = waUrl;
         }
       }
 
@@ -310,7 +318,7 @@ export default function MoradorAutorizacoes() {
   return (
     <div style={{ minHeight: '100dvh', background: isDark ? "linear-gradient(180deg, #001533 0%, #002254 25%, #003580 55%, #004aad 100%)" : "#f0f4f8", display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", color: isDark ? '#fff' : "#1e293b", paddingTop: "max(0, env(safe-area-inset-top))" }}>
+      <header className="sticky top-0 z-40" style={{ background: isDark ? "linear-gradient(135deg, #001533 0%, #002a66 50%, #004aad 100%)" : "#ffffff", borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : "1px solid #e2e8f0", boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : "0 2px 8px rgba(0,0,0,0.06)", color: isDark ? '#fff' : "#1e293b", paddingTop: "max(0px, env(safe-area-inset-top))" }}>
         <div className="px-4 h-16 flex items-center gap-3">
           <button onClick={() => navigate(-1)} style={{ width: 40, height: 40, borderRadius: 14, background: isDark ? 'rgba(255,255,255,0.08)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ArrowLeft className="w-5 h-5" />
@@ -375,7 +383,7 @@ export default function MoradorAutorizacoes() {
           <button
             onClick={() => { setShowForm(true); setFormType("simples"); setError(""); }}
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
-            style={{ minHeight: "52px", background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))', border: '1.5px solid rgba(59,130,246,0.4)', color: isDark ? '#fff' : "#1e293b" }}
+            style={{ minHeight: "52px", background: '#003580', border: '1.5px solid #003580', color: '#fff' }}
           >
             <ShieldCheck className="w-5 h-5" />
             Autorização Simples
@@ -383,7 +391,7 @@ export default function MoradorAutorizacoes() {
           <button
             onClick={() => { setShowForm(true); setFormType("auto_cadastro"); setError(""); }}
             className="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold"
-            style={{ minHeight: "52px", background: 'linear-gradient(135deg, #25d366, #128C7E)', border: '1.5px solid #25d366', color: isDark ? '#fff' : "#1e293b" }}
+            style={{ minHeight: "52px", background: '#128C7E', border: '1.5px solid #128C7E', color: '#fff' }}
           >
             <Link2 className="w-5 h-5" />
             Enviar Link WhatsApp
@@ -512,7 +520,7 @@ export default function MoradorAutorizacoes() {
             <button
               onClick={() => { setShowForm(true); setFormType("simples"); }}
               className="mx-auto flex items-center justify-center gap-2 rounded-xl text-sm font-semibold"
-              style={{ height: "44px", width: "240px", background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))', border: '1.5px solid rgba(59,130,246,0.4)', color: isDark ? '#fff' : "#1e293b" }}
+              style={{ height: "44px", width: "240px", background: '#003580', border: '1.5px solid #003580', color: '#fff' }}
             >
               <Plus className="w-5 h-5" />
               Criar Autorização
@@ -569,8 +577,8 @@ export default function MoradorAutorizacoes() {
                     <span
                       className="px-1.5 py-0.5 rounded text-[9px] font-semibold"
                       style={{
-                        backgroundColor: a.tipo === "auto_cadastro" ? "#25d36620" : "#6366f120",
-                        color: a.tipo === "auto_cadastro" ? "#25d366" : "#6366f1",
+                        backgroundColor: a.tipo === "auto_cadastro" ? "#128C7E20" : "#6366f120",
+                        color: a.tipo === "auto_cadastro" ? "#128C7E" : "#6366f1",
                       }}
                     >
                       {tipoLabel(a.tipo)}
@@ -607,7 +615,7 @@ export default function MoradorAutorizacoes() {
                 {editingId ? (
                   <Pencil className="w-6 h-6" style={{ color: "#f59e0b" }} />
                 ) : formType === "auto_cadastro" ? (
-                  <Link2 className="w-6 h-6" style={{ color: "#25d366" }} />
+                  <Link2 className="w-6 h-6" style={{ color: "#25D366" }} />
                 ) : (
                   <ShieldCheck className="w-6 h-6" style={{ color: "#6366f1" }} />
                 )}
@@ -625,8 +633,8 @@ export default function MoradorAutorizacoes() {
               className="rounded-xl text-xs"
               style={{
                 padding: "12px 14px",
-                backgroundColor: formType === "auto_cadastro" ? "#25d36610" : "#6366f110",
-                color: isDark ? "#ffffff" : "#1e293b", border: `1px solid ${formType === "auto_cadastro" ? "#25d36630" : "#6366f130"}`,
+                backgroundColor: formType === "auto_cadastro" ? "#128C7E10" : "#6366f110",
+                color: isDark ? "#ffffff" : "#1e293b", border: `1px solid ${formType === "auto_cadastro" ? "#128C7E30" : "#6366f130"}`,
               }}
             >
               {formType === "auto_cadastro" ? (
@@ -688,25 +696,25 @@ export default function MoradorAutorizacoes() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Hora início</span>
-                  <input
-                    type="time"
-                    value={form.hora_inicio}
-                    onChange={(e) => setForm({ ...form, hora_inicio: e.target.value })}
-                    onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
-                    className="w-full h-10 px-3 rounded-lg text-sm focus:outline-none cursor-pointer"
-                    style={{ background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", colorScheme: 'dark' }}
-                  />
+                  <button
+                    type="button"
+                    onClick={() => setTimePicker("inicio")}
+                    className="w-full h-10 px-3 rounded-lg text-sm text-left focus:outline-none cursor-pointer"
+                    style={{ background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b" }}
+                  >
+                    {form.hora_inicio || "--:--"}
+                  </button>
                 </div>
                 <div>
                   <span className="text-sm font-medium mb-1 block" style={{ color: isDark ? '#fff' : "#475569" }}>Hora fim</span>
-                  <input
-                    type="time"
-                    value={form.hora_fim}
-                    onChange={(e) => setForm({ ...form, hora_fim: e.target.value })}
-                    onClick={(e) => (e.currentTarget as HTMLInputElement).showPicker?.()}
-                    className="w-full h-10 px-3 rounded-lg text-sm focus:outline-none cursor-pointer"
-                    style={{ background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b", colorScheme: 'dark' }}
-                  />
+                  <button
+                    type="button"
+                    onClick={() => setTimePicker("fim")}
+                    className="w-full h-10 px-3 rounded-lg text-sm text-left focus:outline-none cursor-pointer"
+                    style={{ background: isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc', border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #cbd5e1', color: isDark ? '#fff' : "#1e293b" }}
+                  >
+                    {form.hora_fim || "--:--"}
+                  </button>
                 </div>
               </div>
 
@@ -732,17 +740,17 @@ export default function MoradorAutorizacoes() {
               style={{
                 height: "56px",
                 background: editingId
-                  ? "linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.15))"
+                  ? "#b45309"
                   : formType === "auto_cadastro"
-                    ? "linear-gradient(135deg, #25d366, #128C7E)"
-                    : "linear-gradient(135deg, rgba(59,130,246,0.3), rgba(59,130,246,0.15))",
+                    ? "#128C7E"
+                    : "#003580",
                 border: editingId
-                  ? "1.5px solid rgba(245,158,11,0.4)"
+                  ? "1.5px solid #b45309"
                   : formType === "auto_cadastro"
-                    ? "1.5px solid #25d366"
-                    : "1.5px solid rgba(59,130,246,0.4)",
+                    ? "1.5px solid #128C7E"
+                    : "1.5px solid #003580",
                 opacity: saving ? 0.6 : 1,
-                color: isDark ? '#fff' : "#1e293b",
+                color: '#fff',
               }}
             >
               {saving ? (
@@ -767,6 +775,17 @@ export default function MoradorAutorizacoes() {
           </div>
         </div>
       )}
+
+      <TimePickerModal
+        open={timePicker !== null}
+        label={timePicker === "fim" ? "Hora fim" : "Hora início"}
+        value={timePicker === "fim" ? form.hora_fim : form.hora_inicio}
+        isDark={isDark}
+        onClose={() => setTimePicker(null)}
+        onConfirm={(v) =>
+          setForm((f) => (timePicker === "fim" ? { ...f, hora_fim: v } : { ...f, hora_inicio: v }))
+        }
+      />
     </div>
   );
 }
