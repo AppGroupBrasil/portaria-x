@@ -280,6 +280,10 @@ migrate(`ALTER TABLE livro_protocolo ADD COLUMN audio TEXT`);
 migrate(`ALTER TABLE correspondencias ADD COLUMN foto_token TEXT`);
 db.prepare(`UPDATE correspondencias SET foto_token = lower(hex(randomblob(16))) WHERE foto_token IS NULL`).run();
 
+// Migration: mesmo esquema de token para a foto da entrega enviada no link wa.me.
+migrate(`ALTER TABLE delivery_authorizations ADD COLUMN foto_token TEXT`);
+db.prepare(`UPDATE delivery_authorizations SET foto_token = lower(hex(randomblob(16))) WHERE foto_token IS NULL`).run();
+
 // ─── Condominio Config table (per-condominio settings) ───
 db.exec(`
   CREATE TABLE IF NOT EXISTS condominio_config (
@@ -731,23 +735,26 @@ export function cleanupDemoAccounts(): number {
 export function cleanupExpiredAuthorizations(): number {
   try {
     let total = 0;
+    // date('now') do SQLite é UTC: das 21h à meia-noite (BRT) já é o dia
+    // seguinte e as autorizações que vencem hoje seriam expiradas cedo demais.
+    const hoje = brazilDateStr();
 
     // Pre-authorizations: expire if data_fim passed and still ativa
     const preResult = db.prepare(`
-      UPDATE pre_authorizations 
-      SET status = 'expirada' 
-      WHERE status = 'ativa' 
-        AND data_fim < date('now')
-    `).run();
+      UPDATE pre_authorizations
+      SET status = 'expirada'
+      WHERE status = 'ativa'
+        AND data_fim < ?
+    `).run(hoje);
     total += preResult.changes;
 
     // Vehicle authorizations: expire if data_fim passed and still ativa
     const vehicleResult = db.prepare(`
-      UPDATE vehicle_authorizations 
-      SET status = 'expirada' 
-      WHERE status = 'ativa' 
-        AND data_fim < date('now')
-    `).run();
+      UPDATE vehicle_authorizations
+      SET status = 'expirada'
+      WHERE status = 'ativa'
+        AND data_fim < ?
+    `).run(hoje);
     total += vehicleResult.changes;
 
     // Also check condominio-specific max_auth_days limit

@@ -79,6 +79,8 @@ const ROLE_LEVEL: Record<Role, number> = {
 
 // ─── EXTEND EXPRESS REQUEST ──────────────────────────────
 declare global {
+  // Augmentação de tipos do Express exige namespace.
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: DbUser;

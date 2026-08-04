@@ -45,6 +45,7 @@ import {
 } from "./ewelinkService.js";
 import { extractDescriptor, compareFaces, isReady as faceModelsReady } from "./faceService.js";
 import { logger } from "./logger.js";
+import { brazilDateStr } from "./timeBrazil.js";
 
 const router = Router();
 
@@ -1347,7 +1348,7 @@ router.post(
       }
 
       // 2. Check date validity
-      const today = new Date().toISOString().split("T")[0];
+      const today = brazilDateStr();
       if (vehicle.data_fim && vehicle.data_fim < today) {
         res.json({
           found: true, authorized: false, opened: false,

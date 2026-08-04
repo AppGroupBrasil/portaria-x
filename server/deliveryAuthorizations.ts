@@ -1,4 +1,5 @@
 ﻿import { Router, Request, Response } from "express";
+import crypto from "node:crypto";
 import db from "./db.js";
 import { authenticate } from "./middleware.js";
 import { captureSnapshotForCondominio } from "./cameraSnapshot.js";
@@ -108,11 +109,13 @@ router.post("/portaria", authenticate, (req: Request, res: Response) => {
       return;
     }
 
+    const fotoToken = crypto.randomBytes(16).toString("hex");
+
     const result = db.prepare(`
       INSERT INTO delivery_authorizations
         (condominio_id, morador_id, morador_name, morador_phone, bloco, apartamento,
-         servico, servico_custom, numero_pedido, print_pedido, observacao, status, foto_entrega, recebido_por, recebido_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, 'pendente', ?, ?, datetime('now'))
+         servico, servico_custom, numero_pedido, print_pedido, observacao, status, foto_entrega, foto_token, recebido_por, recebido_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, 'pendente', ?, ?, ?, datetime('now'))
     `).run(
       user.condominio_id,
       morador_id || null,
@@ -125,6 +128,7 @@ router.post("/portaria", authenticate, (req: Request, res: Response) => {
       numero_pedido || null,
       observacao || null,
       foto_entrega || null,
+      fotoToken,
       user.id
     );
 
@@ -163,6 +167,7 @@ router.post("/portaria", authenticate, (req: Request, res: Response) => {
     res.status(201).json({
       id: newId,
       morador_phone: morador_phone || null,
+      foto_token: foto_entrega ? fotoToken : null,
       message: "Delivery registrado pela portaria.",
     });
   } catch (err: any) {
@@ -199,10 +204,11 @@ router.post("/:id/recebido", authenticate, (req: Request, res: Response) => {
       UPDATE delivery_authorizations
       SET status = 'recebido',
           foto_entrega = ?,
+          foto_token = COALESCE(foto_token, ?),
           recebido_por = ?,
           recebido_at = datetime('now')
       WHERE id = ?
-    `).run(foto_entrega || null, user.id, req.params.id);
+    `).run(foto_entrega || null, crypto.randomBytes(16).toString("hex"), user.id, req.params.id);
 
     // Auto-capture snapshot from entrance camera
     if (user.condominio_id) {
@@ -269,6 +275,41 @@ router.delete("/:id", authenticate, (req: Request, res: Response) => {
 
     db.prepare("DELETE FROM delivery_authorizations WHERE id = ?").run(req.params.id);
     res.json({ message: "Autorização de delivery cancelada." });
+  } catch (err: any) {
+    logger.error("Erro em deliveryAuthorizations :", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+// ─── PUBLIC: foto da entrega por token aleatório (sem auth — link do WhatsApp) ─
+// Casa por foto_token (não pelo id sequencial enumerável).
+router.get("/foto/:token", (req: Request, res: Response) => {
+  try {
+    const token = String(req.params.token);
+    if (!/^[a-f0-9]{32}$/.test(token)) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+
+    const row = db.prepare(
+      "SELECT foto_entrega FROM delivery_authorizations WHERE foto_token = ?"
+    ).get(token) as { foto_entrega: string | null } | undefined;
+
+    if (!row?.foto_entrega) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+
+    const matches = row.foto_entrega.match(/^data:(.+);base64,(.+)$/);
+    if (!matches) {
+      res.status(400).json({ error: "Formato de foto inválido." });
+      return;
+    }
+
+    const buffer = Buffer.from(matches[2], "base64");
+    res.setHeader("Content-Type", matches[1]);
+    res.setHeader("Content-Length", buffer.length);
+    res.send(buffer);
   } catch (err: any) {
     logger.error("Erro em deliveryAuthorizations :", err);
     res.status(500).json({ error: "Erro interno do servidor" });

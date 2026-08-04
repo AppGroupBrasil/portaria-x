@@ -351,4 +351,35 @@ router.get("/face-descriptors", authenticate, authorize("master", "administrador
   }
 });
 
+// ─── PUBLIC: foto do visitante pré-autorizado por token (link do relatório) ──
+router.get("/foto/:token", (req: Request, res: Response) => {
+  try {
+    const token = String(req.params.token);
+    if (!/^[a-f0-9-]{36}$/i.test(token)) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+
+    const row = db.prepare("SELECT visitante_foto FROM pre_authorizations WHERE token = ?").get(token) as { visitante_foto: string | null } | undefined;
+    if (!row?.visitante_foto) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+
+    const matches = row.visitante_foto.match(/^data:(.+);base64,(.+)$/);
+    if (!matches) {
+      res.status(400).json({ error: "Formato de foto inválido." });
+      return;
+    }
+
+    const buffer = Buffer.from(matches[2], "base64");
+    res.setHeader("Content-Type", matches[1]);
+    res.setHeader("Content-Length", buffer.length);
+    res.send(buffer);
+  } catch (err: any) {
+    logger.error("Erro em preAuthorizations /foto:", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
 export default router;

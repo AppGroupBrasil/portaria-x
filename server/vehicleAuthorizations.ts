@@ -84,8 +84,8 @@ router.post("/", authenticate, (req: Request, res: Response) => {
     // Check: unique access per plate
     if (getConfig("vehicle_unique_access") === "true") {
       const existing = db.prepare(
-        "SELECT id FROM vehicle_authorizations WHERE condominio_id = ? AND placa = ? AND status = 'ativa' AND data_fim >= date('now')"
-      ).get(user.condominio_id, placa.toUpperCase()) as any;
+        "SELECT id FROM vehicle_authorizations WHERE condominio_id = ? AND placa = ? AND status = 'ativa' AND data_fim >= ?"
+      ).get(user.condominio_id, placa.toUpperCase(), brazilDateStr()) as any;
       if (existing) {
         res.status(400).json({
           error: "Já existe uma autorização ativa para este veículo. Cancele a anterior ou aguarde o vencimento.",
@@ -98,8 +98,8 @@ router.post("/", authenticate, (req: Request, res: Response) => {
     if (getConfig("vehicle_limit_per_apt") === "true") {
       const limit = parseInt(getConfig("vehicle_limit_per_apt_count") || "3", 10);
       const count = db.prepare(
-        "SELECT COUNT(*) as c FROM vehicle_authorizations WHERE condominio_id = ? AND bloco = ? AND apartamento = ? AND status = 'ativa' AND data_fim >= date('now')"
-      ).get(user.condominio_id, user.block, user.unit) as { c: number };
+        "SELECT COUNT(*) as c FROM vehicle_authorizations WHERE condominio_id = ? AND bloco = ? AND apartamento = ? AND status = 'ativa' AND data_fim >= ?"
+      ).get(user.condominio_id, user.block, user.unit, brazilDateStr()) as { c: number };
       if (count.c >= limit) {
         res.status(400).json({
           error: `Limite de ${limit} veículo(s) ativo(s) por apartamento atingido. Cancele uma autorização existente.`,
@@ -189,8 +189,8 @@ router.post("/portaria-cadastro", authenticate, authorize("master", "administrad
       .get(user.condominio_id, "vehicle_unique_access") as { value: string } | undefined;
     if (cfgRow?.value === "true") {
       const existing = db.prepare(
-        "SELECT id FROM vehicle_authorizations WHERE condominio_id = ? AND placa = ? AND status IN ('ativa','pendente_aprovacao') AND data_fim >= date('now')"
-      ).get(user.condominio_id, placa.toUpperCase()) as any;
+        "SELECT id FROM vehicle_authorizations WHERE condominio_id = ? AND placa = ? AND status IN ('ativa','pendente_aprovacao') AND data_fim >= ?"
+      ).get(user.condominio_id, placa.toUpperCase(), brazilDateStr()) as any;
       if (existing) {
         res.status(400).json({
           error: "Já existe uma autorização ativa para este veículo. O morador precisa dar baixa na atual antes de cadastrar novamente.",
@@ -209,8 +209,8 @@ router.post("/portaria-cadastro", authenticate, authorize("master", "administrad
         .get(user.condominio_id, "vehicle_limit_per_apt_count") as { value: string } | undefined;
       const limit = parseInt(limitCountRow?.value || "3", 10);
       const count = db.prepare(
-        "SELECT COUNT(*) as c FROM vehicle_authorizations WHERE condominio_id = ? AND bloco = ? AND apartamento = ? AND status IN ('ativa','pendente_aprovacao') AND data_fim >= date('now')"
-      ).get(user.condominio_id, bloco, apartamento) as { c: number };
+        "SELECT COUNT(*) as c FROM vehicle_authorizations WHERE condominio_id = ? AND bloco = ? AND apartamento = ? AND status IN ('ativa','pendente_aprovacao') AND data_fim >= ?"
+      ).get(user.condominio_id, bloco, apartamento, brazilDateStr()) as { c: number };
       if (count.c >= limit) {
         res.status(400).json({
           error: `Limite de ${limit} veículo(s) ativo(s) por unidade atingido. É necessário dar baixa em uma autorização existente.`,

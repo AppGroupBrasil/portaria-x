@@ -173,13 +173,12 @@ router.post("/self-register", selfRegisterLimiter, (req: Request, res: Response)
       return;
     }
 
-    // Validate condominio_id exists (prevents pollution with bogus IDs)
-    if (condominio_id !== undefined && condominio_id !== null) {
-      const condo = db.prepare("SELECT id FROM condominios WHERE id = ?").get(condominio_id) as { id: number } | undefined;
-      if (!condo) {
-        res.status(400).json({ error: "Condomínio inválido." });
-        return;
-      }
+    // Condomínio é obrigatório: sem ele o visitante ficava com condominio_id
+    // NULL e não aparecia na lista de nenhuma portaria (registro órfão).
+    const condo = db.prepare("SELECT id FROM condominios WHERE id = ?").get(condominio_id) as { id: number } | undefined;
+    if (!condo) {
+      res.status(400).json({ error: "Condomínio inválido." });
+      return;
     }
 
     const token = crypto.randomUUID();
@@ -187,11 +186,13 @@ router.post("/self-register", selfRegisterLimiter, (req: Request, res: Response)
     const result = db.prepare(`
       INSERT INTO visitors (nome, documento, telefone, foto, documento_foto, bloco, apartamento, token, condominio_id, status, face_descriptor, observacoes)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?, ?)
-    `).run(nome, documento || null, telefone || null, foto || null, documento_foto || null, bloco || null, apartamento || null, token, condominio_id || null, face_descriptor ? JSON.stringify(face_descriptor) : null, observacoes || null);
+    `).run(nome, documento || null, telefone || null, foto || null, documento_foto || null, bloco || null, apartamento || null, token, condominio_id, face_descriptor ? JSON.stringify(face_descriptor) : null, observacoes || null);
 
     const visitor = db.prepare("SELECT * FROM visitors WHERE id = ?").get(result.lastInsertRowid);
 
-    // 📱 WhatsApp: notificar moradores sobre visitante auto-registrado
+    // O aviso ao morador sai da portaria, por link wa.me (o porteiro clica em
+    // "Enviar Autorização ao Morador" na lista). Nada é enviado daqui: o
+    // morador não precisa ter o app nem aceitar notificações.
     if (bloco && apartamento && condominio_id) {
       const moradores = db.prepare(
         "SELECT phone FROM users WHERE condominio_id = ? AND block = ? AND unit = ? AND role = 'morador' AND phone IS NOT NULL AND phone != ''"
@@ -411,6 +412,38 @@ router.get("/auth/:token/camera", (req: Request, res: Response) => {
     });
   } catch (err: any) {
     logger.error("Erro em visitors :", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+// ─── PUBLIC: foto do visitante por token (sem auth — link do relatório) ──
+// O token já é o mesmo usado em /visitante/autorizar/:token, não enumerável.
+router.get("/foto/:token", (req: Request, res: Response) => {
+  try {
+    const token = String(req.params.token);
+    if (!/^[a-f0-9-]{36}$/i.test(token)) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+
+    const row = db.prepare("SELECT foto FROM visitors WHERE token = ?").get(token) as { foto: string | null } | undefined;
+    if (!row?.foto) {
+      res.status(404).json({ error: "Foto não encontrada." });
+      return;
+    }
+
+    const matches = row.foto.match(/^data:(.+);base64,(.+)$/);
+    if (!matches) {
+      res.status(400).json({ error: "Formato de foto inválido." });
+      return;
+    }
+
+    const buffer = Buffer.from(matches[2], "base64");
+    res.setHeader("Content-Type", matches[1]);
+    res.setHeader("Content-Length", buffer.length);
+    res.send(buffer);
+  } catch (err: any) {
+    logger.error("Erro em visitors /foto:", err);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });

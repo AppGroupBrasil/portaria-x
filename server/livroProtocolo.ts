@@ -3,13 +3,14 @@ import db from "./db.js";
 import { authenticate } from "./middleware.js";
 import { notifyPortariaWhatsApp } from "./whatsappService.js";
 import { logger } from "./logger.js";
+import { brazilDateStr } from "./timeBrazil.js";
 
 const router = Router();
 
 // ─── Helper: generate protocol number ────────────────────
 function generateProtocolo(): string {
-  const now = new Date();
-  const date = now.toISOString().slice(0, 10).replace(/-/g, "");
+  // Data do Brasil: com toISOString o protocolo virava do dia às 21h (BRT).
+  const date = brazilDateStr().replace(/-/g, "");
   // Use MAX to find the last sequence number to avoid race condition
   const last = db
     .prepare("SELECT MAX(CAST(SUBSTR(protocolo, -4) AS INTEGER)) as maxSeq FROM livro_protocolo WHERE protocolo LIKE ?")

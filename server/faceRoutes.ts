@@ -6,7 +6,7 @@
  * POST /api/face/extract            — Extrai descriptor de uma foto (e opcionalmente salva)
  */
 
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import db from "./db.js";
 import { authenticate, authorize } from "./middleware.js";
 import { extractDescriptor, compareFaces, isReady } from "./faceService.js";
@@ -15,7 +15,7 @@ import { logger } from "./logger.js";
 const router = Router();
 
 // ─── Middleware: verificar se modelos estão carregados ───
-const ensureModelsReady = (_req: Request, res: Response, next: Function) => {
+const ensureModelsReady = (_req: Request, res: Response, next: NextFunction) => {
   if (!isReady()) {
     res.status(503).json({ error: "Modelos de reconhecimento facial ainda carregando. Tente novamente em alguns segundos." });
     return;

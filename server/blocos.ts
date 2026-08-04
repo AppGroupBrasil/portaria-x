@@ -8,23 +8,24 @@ const router = Router();
 // ─── PUBLIC ENDPOINT (no auth) ─── list blocks + units for auto-cadastro
 router.get("/public", (req, res) => {
   try {
-    // Get all blocks (optionally filtered by condominio_id)
-    const condoFilter = req.query.condominio_id
-      ? "WHERE condominio_id = ?"
-      : "";
-    const condoParams = req.query.condominio_id
-      ? [req.query.condominio_id]
-      : [];
+    // Sem condomínio informado não há nada público a devolver. Antes a rota
+    // listava blocos e unidades de TODOS os condomínios (vazamento entre
+    // tenants); o link/QR de auto-cadastro sempre traz o condominio_id.
+    const condominioId = Number(req.query.condominio_id);
+    if (!Number.isInteger(condominioId) || condominioId <= 0) {
+      res.json([]);
+      return;
+    }
+    const condoParams = [condominioId];
 
     const blocks = db.prepare(
-      `SELECT id, name, condominio_id FROM blocks ${condoFilter} ORDER BY CAST(name AS INTEGER), name ASC`
+      `SELECT id, name, condominio_id FROM blocks WHERE condominio_id = ? ORDER BY CAST(name AS INTEGER), name ASC`
     ).all(...condoParams) as any[];
 
     // Get distinct units from users (moradores) grouped by block
     const users = db.prepare(
-      `SELECT DISTINCT block, unit FROM users WHERE role = 'morador' AND block IS NOT NULL AND unit IS NOT NULL ${
-        req.query.condominio_id ? "AND condominio_id = ?" : ""
-      } ORDER BY block, CAST(unit AS INTEGER), unit`
+      `SELECT DISTINCT block, unit FROM users WHERE role = 'morador' AND block IS NOT NULL AND unit IS NOT NULL
+         AND condominio_id = ? ORDER BY block, CAST(unit AS INTEGER), unit`
     ).all(...condoParams) as any[];
 
     const unitsByBlock = new Map<string, string[]>();

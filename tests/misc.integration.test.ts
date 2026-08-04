@@ -12,7 +12,7 @@ process.env.LOG_LEVEL = "silent";
 
 let app: Awaited<ReturnType<typeof import("../server/app.js").createApp>>;
 let db: any;
-let sindicoEmail = "misc.sindico@test.local";
+const sindicoEmail = "misc.sindico@test.local";
 let condoId: number;
 
 beforeAll(async () => {
@@ -93,7 +93,7 @@ describe("visitor QR share", () => {
 
 describe("condominio config PUT permissions", () => {
   it("funcionário NÃO pode editar config → 403", async () => {
-    const bcrypt = require("bcryptjs");
+    const bcrypt = (await import("bcryptjs")).default;
     const pass = bcrypt.hashSync("123456", 4);
     db.prepare(
       "INSERT INTO users (name, email, phone, password, role, condominio_id) VALUES (?, ?, ?, ?, 'funcionario', ?)"

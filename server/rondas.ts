@@ -214,16 +214,24 @@ router.get("/registros", authenticate, (req: Request, res: Response) => {
       sql += " AND checkpoint_id = ?";
       params.push(checkpoint_id);
     }
+    // created_at é UTC no formato "YYYY-MM-DD HH:MM:SS"; o "T" quebrava a
+    // comparação de string e o -3h alinha o corte com o dia em Brasília.
     if (data_inicio) {
-      sql += " AND created_at >= ?";
-      params.push(data_inicio + "T00:00:00");
+      sql += " AND datetime(created_at, '-3 hours') >= ?";
+      params.push(data_inicio + " 00:00:00");
     }
     if (data_fim) {
-      sql += " AND created_at <= ?";
-      params.push(data_fim + "T23:59:59");
+      sql += " AND datetime(created_at, '-3 hours') <= ?";
+      params.push(data_fim + " 23:59:59");
     }
 
-    sql += " ORDER BY created_at DESC";
+    // Sem teto, a tela carregava TODOS os registros do histórico — cada um
+    // podendo trazer áudio e foto em base64 dentro de observacao/foto.
+    const rawLimit = Number.parseInt(String(req.query.limit ?? ""), 10);
+    const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, 2000) : 200;
+
+    sql += " ORDER BY created_at DESC LIMIT ?";
+    params.push(limit);
 
     const registros = db.prepare(sql).all(...params);
     res.json(registros);
@@ -300,8 +308,11 @@ router.get("/stats", authenticate, (req: Request, res: Response) => {
     const params: any[] = [condId];
 
     if (data_inicio && data_fim) {
-      dateFilter = " AND r.created_at >= ? AND r.created_at <= ?";
-      params.push(data_inicio + "T00:00:00", data_fim + "T23:59:59");
+      // created_at vem de datetime('now'): UTC e com espaço como separador.
+      // Comparar com "T" descartava o primeiro dia inteiro (" " < "T"), e sem
+      // o -3h os registros da noite caíam no dia seguinte.
+      dateFilter = " AND datetime(r.created_at, '-3 hours') >= ? AND datetime(r.created_at, '-3 hours') <= ?";
+      params.push(data_inicio + " 00:00:00", data_fim + " 23:59:59");
     }
 
     let funcFilter = "";
@@ -331,14 +342,14 @@ router.get("/stats", authenticate, (req: Request, res: Response) => {
 
     // Records by hour
     const byHour = db.prepare(
-      `SELECT CAST(strftime('%H', r.created_at) AS INTEGER) as hora, COUNT(*) as count
+      `SELECT CAST(strftime('%H', r.created_at, '-3 hours') AS INTEGER) as hora, COUNT(*) as count
        FROM ronda_registros r WHERE r.condominio_id = ?${dateFilter}${funcFilter}
        GROUP BY hora ORDER BY hora`
     ).all(...params);
 
     // Records by day of week
     const byDay = db.prepare(
-      `SELECT CAST(strftime('%w', r.created_at) AS INTEGER) as dia, COUNT(*) as count
+      `SELECT CAST(strftime('%w', r.created_at, '-3 hours') AS INTEGER) as dia, COUNT(*) as count
        FROM ronda_registros r WHERE r.condominio_id = ?${dateFilter}${funcFilter}
        GROUP BY dia ORDER BY dia`
     ).all(...params);

@@ -132,11 +132,22 @@ describe("visitor self-register validation", () => {
     expect(res.body.error).toMatch(/Condomínio inválido/);
   });
 
-  it("accepts valid name without condominio_id (orphan visitor)", async () => {
+  it("rejects missing condominio_id (evita visitante órfão)", async () => {
     const res = await request(app)
       .post("/api/visitors/self-register")
       .send({ nome: "Maria Test" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/Condomínio inválido/);
+  });
+
+  it("accepts valid name with existing condominio_id", async () => {
+    const db = (await import("../server/db.js")).default;
+    const condo = db.prepare("SELECT id FROM condominios ORDER BY id LIMIT 1").get() as { id: number };
+    const res = await request(app)
+      .post("/api/visitors/self-register")
+      .send({ nome: "Maria Test", condominio_id: condo.id });
     expect(res.status).toBe(201);
     expect(res.body.nome).toBe("Maria Test");
+    expect(res.body.condominio_id).toBe(condo.id);
   });
 });
