@@ -210,6 +210,13 @@ export async function createApp(): Promise<express.Express> {
     else res.status(500).json({ error: "Falha ao criar backup." });
   });
 
+  // Rota de API inexistente devolve 404 JSON. Sem isto o catch-all estático
+  // responderia o index.html com status 200 e o cliente tentaria fazer
+  // JSON.parse de HTML.
+  app.use("/api", (_req, res) => {
+    res.status(404).json({ error: "Rota não encontrada." });
+  });
+
   // Static frontend in production
   if (isProd) {
     const distPath = path.resolve(__dirname, "../dist");
