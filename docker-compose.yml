@@ -30,7 +30,7 @@ services:
     labels:
       # Traefik labels for Coolify
       - "traefik.enable=true"
-      - "traefik.http.routers.portariax.rule=Host(`portariax.com.br`) || Host(`www.portariax.com.br`)"
+      - "traefik.http.routers.portariax.rule=Host(`portariax.com.br`)"
       - "traefik.http.routers.portariax.entrypoints=https"
       - "traefik.http.routers.portariax.tls=true"
       - "traefik.http.routers.portariax.tls.certresolver=letsencrypt"
@@ -44,6 +44,7 @@ services:
       - "traefik.http.routers.portariax-www.rule=Host(`www.portariax.com.br`)"
       - "traefik.http.routers.portariax-www.entrypoints=https"
       - "traefik.http.routers.portariax-www.tls=true"
+      - "traefik.http.routers.portariax-www.tls.certresolver=letsencrypt"
       - "traefik.http.routers.portariax-www.middlewares=redirect-www-to-root"
       - "traefik.http.middlewares.redirect-www-to-root.redirectregex.regex=^https://www\\.portariax\\.com\\.br/(.*)"
       - "traefik.http.middlewares.redirect-www-to-root.redirectregex.replacement=https://portariax.com.br/$${1}"

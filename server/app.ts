@@ -40,10 +40,11 @@ export async function createApp(): Promise<express.Express> {
   const app = express();
   const isProd = process.env.NODE_ENV === "production";
 
-  // Atrás do Traefik/Coolify: confia no primeiro proxy para que req.ip seja o IP
-  // real do cliente (X-Forwarded-For). Sem isto o rate limiting agruparia todos
-  // os clientes no IP do proxy.
-  app.set("trust proxy", 1);
+  // Atrás de Cloudflare + Traefik/Coolify: são dois proxies, logo confia em dois
+  // saltos para que req.ip seja o IP real do cliente (X-Forwarded-For). Com só um
+  // salto o req.ip vira o IP da borda do Cloudflare e o rate limiting agruparia
+  // todos os clientes do mesmo POP na mesma cota.
+  app.set("trust proxy", 2);
 
   // Security headers (helmet). O HTML de produção não tem <script> inline
   // executável (só blocos JSON-LD, isentos de CSP), então prod dispensa
