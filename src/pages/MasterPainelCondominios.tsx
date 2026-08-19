@@ -30,6 +30,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 const API = "/api/master";
 
@@ -640,11 +641,13 @@ export default function MasterPainelCondominios() {
           <div
             onClick={e => e.stopPropagation()}
             style={{
+              position: "relative",
               background: "var(--color-card, #fff)", borderRadius: "20px",
               padding: "24px", width: "100%", maxWidth: "400px",
               display: "flex", flexDirection: "column", gap: "16px",
             }}
           >
+            <ModalCloseButton onClick={() => setShowBlockModal(null)} />
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <div style={{
                 width: "44px", height: "44px", borderRadius: "12px",

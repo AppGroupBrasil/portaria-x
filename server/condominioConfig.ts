@@ -136,6 +136,20 @@ const ALLOWED_KEYS = new Set([
   "whatsapp_notify_livro_protocolo",
 ]);
 
+// Chaves que o funcionário (porteiro) pode alterar — parâmetros operacionais de
+// veículos, editáveis pela engrenagem da tela de Veículos. Feature flags e
+// segredos ficam restritos a síndico/administradora/master.
+const FUNCIONARIO_EDITABLE_KEYS = new Set([
+  "vehicle_unique_access",
+  "vehicle_auto_cancel_time",
+  "vehicle_limit_per_apt",
+  "vehicle_limit_per_apt_count",
+  "vehicle_require_modelo",
+  "vehicle_require_cor",
+  "vehicle_require_motorista",
+  "vehicle_require_observacao",
+]);
+
 export function applyDefaultConfig(targetCondominioId: number): void {
   try {
     const upsert = db.prepare(`
@@ -235,14 +249,21 @@ router.get("/", authenticate, (req: Request, res: Response) => {
 router.put(
   "/",
   authenticate,
-  authorize("master", "administradora", "sindico"),
+  authorize("master", "administradora", "sindico", "funcionario"),
   (req: Request, res: Response) => {
     try {
+      const isFuncionario = req.user?.role === "funcionario";
       const condominioIds = getUserCondominioIds(req.user);
       if (condominioIds.length === 0) {
         return res.status(400).json({ error: "Nenhum condomínio associado" });
       }
       const updates: Record<string, string> = req.body;
+
+      // Funcionário só passa se houver ao menos uma chave da whitelist; caso
+      // contrário o PUT seria um 200 que não altera nada.
+      if (isFuncionario && !Object.keys(updates || {}).some((k) => FUNCIONARIO_EDITABLE_KEYS.has(k))) {
+        return res.status(403).json({ error: "Sem permissão para alterar estas configurações" });
+      }
 
       // Allow targeting a specific condominio via query param
       let targetIds = condominioIds;
@@ -264,6 +285,7 @@ router.put(
         for (const cid of targetIds) {
           for (const [key, value] of Object.entries(updates)) {
             if (!ALLOWED_KEYS.has(key)) continue;
+            if (isFuncionario && !FUNCIONARIO_EDITABLE_KEYS.has(key)) continue;
             upsert.run(cid, key, String(value));
           }
         }

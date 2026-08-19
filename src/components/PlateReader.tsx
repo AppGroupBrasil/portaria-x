@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Camera, X, RotateCcw, Loader2, ScanLine, CheckCircle2, Pencil } from "lucide-react";
 import Tesseract from "tesseract.js";
 import { compressCanvas } from "@/lib/imageUtils";
@@ -66,15 +66,21 @@ export default function PlateReader({ onPlateDetected }: PlateReaderProps) {
         video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      }
+      // O <video> so e montado quando cameraActive fica true; por isso o stream
+      // e anexado no useEffect abaixo, e nao aqui (videoRef ainda e null neste ponto).
       setCameraActive(true);
     } catch {
       setError("Não foi possível acessar a câmera. Use o botão de galeria para selecionar uma foto.");
     }
   }, []);
+
+  // Anexa o stream assim que o elemento <video> aparece no DOM.
+  useEffect(() => {
+    if (cameraActive && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [cameraActive]);
 
   const handleOpen = useCallback(() => {
     setIsOpen(true);

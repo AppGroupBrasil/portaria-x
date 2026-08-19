@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 interface ParsedRow {
   nome: string;
@@ -418,7 +419,8 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
       {/* Premium error modal */}
       {error && (
         <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}>
-          <div style={{ width: "92%", maxWidth: 370, borderRadius: 20, background: p.headerBg, border: p.cardBorder, padding: "32px 24px", textAlign: "center" }}>
+          <div style={{ position: "relative", width: "92%", maxWidth: 370, borderRadius: 20, background: p.headerBg, border: p.cardBorder, padding: "32px 24px", textAlign: "center" }}>
+            <ModalCloseButton onClick={() => setError("")} color={p.textSecondary} />
             <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444, #dc2626)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
               <AlertCircle style={{ width: 36, height: 36, color: "#ffffff" }} />
             </div>
@@ -437,7 +439,8 @@ Aqui está a minha planilha atual:\n[COLE AQUI OS DADOS DA SUA PLANILHA]`;
       {/* Premium success modal */}
       {success && (
         <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}>
-          <div style={{ width: "92%", maxWidth: 370, borderRadius: 20, background: p.headerBg, border: p.cardBorder, padding: "32px 24px", textAlign: "center" }}>
+          <div style={{ position: "relative", width: "92%", maxWidth: 370, borderRadius: 20, background: p.headerBg, border: p.cardBorder, padding: "32px 24px", textAlign: "center" }}>
+            <ModalCloseButton onClick={() => setSuccess("")} color={p.textSecondary} />
             <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #10b981, #059669)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
               <CheckCircle2 style={{ width: 36, height: 36, color: "#ffffff" }} />
             </div>

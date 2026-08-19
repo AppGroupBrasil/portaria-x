@@ -132,8 +132,10 @@ export default function CadastrarVisitante() {
   const [moradores, setMoradores] = useState<Morador[]>([]);
   const [selectedMoradorId, setSelectedMoradorId] = useState<string>("");
   const [manualAutorizou, setManualAutorizou] = useState(false);
+  const [manualApto, setManualApto] = useState(false);
   const [error, setError] = useState("");
   const [showConfig, setShowConfig] = useState(false);
+  const [configFromForm, setConfigFromForm] = useState(false);
   const [showReport, setShowReport] = useState(false);
 
   // Pre-authorizations
@@ -267,9 +269,13 @@ export default function CadastrarVisitante() {
       if (res.ok) {
         const data = await res.json();
         setMoradores(data);
+        // Bloco sem morador cadastrado: libera o preenchimento manual para nao
+        // travar o cadastro (o campo de apartamento so existia via lista).
+        setManualApto(data.length === 0);
       }
     } catch (err) {
       console.error("Erro ao buscar moradores do bloco:", err);
+      setManualApto(true);
     }
   };
 
@@ -727,6 +733,10 @@ export default function CadastrarVisitante() {
         bloco: "", apartamento: "",
         quem_autorizou: "", morador_whatsapp: "",
       });
+      setSelectedMoradorId("");
+      setMoradores([]);
+      setManualAutorizou(false);
+      setManualApto(false);
       setShowForm(false);
       fetchVisitors();
 
@@ -944,7 +954,7 @@ export default function CadastrarVisitante() {
             <Settings className="w-6 h-6" />
           </button>
           <button
-            onClick={() => { setShowForm(true); setError(""); setSelectedMoradorId(""); setMoradores([]); setManualAutorizou(false); }}
+            onClick={() => { setShowForm(true); setError(""); setSelectedMoradorId(""); setMoradores([]); setManualAutorizou(false); setManualApto(false); }}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
             style={{ width: 40, height: 40 }}
           >
@@ -966,7 +976,7 @@ export default function CadastrarVisitante() {
       <style>{`@media (min-width: 768px) { .action-grid-pedestres { grid-template-columns: repeat(5, 1fr) !important; } }`}</style>
       <div className="action-grid-pedestres" style={{ padding: "12px 24px", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
         <button
-          onClick={() => { setShowForm(true); setError(""); setSelectedMoradorId(""); setMoradores([]); setManualAutorizou(false); }}
+          onClick={() => { setShowForm(true); setError(""); setSelectedMoradorId(""); setMoradores([]); setManualAutorizou(false); setManualApto(false); }}
           className="flex flex-col items-center justify-center gap-2 rounded-xl text-white font-semibold transition-colors"
           style={{ aspectRatio: "1", background: "linear-gradient(135deg, #f97316 0%, #ea580c 50%, #9a3412 100%)", padding: "10px" }}
         >
@@ -1076,7 +1086,7 @@ export default function CadastrarVisitante() {
 
       {/* Search */}
       <div style={{ padding: "0 24px 8px", display: "flex", gap: "12px", alignItems: "center" }}>
-        <div className="flex items-center gap-2 h-10 rounded-lg border border-border bg-card" style={{ paddingLeft: "16px", paddingRight: "12px", flex: 1 }}>
+        <div className="flex items-center gap-2 h-10 rounded-lg border border-border bg-card" style={{ paddingLeft: "16px", paddingRight: "12px", flex: 1, minWidth: 0 }}>
           <Search className="w-5 h-5 text-muted-foreground shrink-0" />
           <input
             type="text"
@@ -1084,13 +1094,14 @@ export default function CadastrarVisitante() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            style={{ minWidth: 0 }}
           />
         </div>
         <button
           onClick={() => setShowReport(true)}
           style={{
-            display: "flex", alignItems: "center", gap: "12px",
-            padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
+            display: "flex", alignItems: "center", gap: "6px",
+            padding: "10px 14px", borderRadius: "8px", border: "2px solid #d97706",
             background: "var(--color-card, #fff)",
             color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
             height: "42px", flexShrink: 0,
@@ -1101,7 +1112,7 @@ export default function CadastrarVisitante() {
       </div>
 
       {/* Filter tabs */}
-      <div style={{ padding: "0 24px 12px", display: "flex", gap: "12px", overflowX: "auto" }}>
+      <div style={{ padding: "0 24px 12px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {filterTabs.map((tab) => (
           <button
             key={tab.key}
@@ -1216,7 +1227,7 @@ export default function CadastrarVisitante() {
                 <Settings className="w-6 h-6" style={{ color: "#0ea5e9" }} />
                 <h2 className="font-bold text-lg text-foreground">Configuração</h2>
               </div>
-              <button onClick={() => setShowConfig(false)}>
+              <button onClick={() => { setShowConfig(false); if (configFromForm) { setConfigFromForm(false); setShowForm(true); } }}>
                 <X className="w-6 h-6 text-muted-foreground" />
               </button>
             </div>
@@ -1266,7 +1277,7 @@ export default function CadastrarVisitante() {
             </div>
 
             <button
-              onClick={() => setShowConfig(false)}
+              onClick={() => { setShowConfig(false); if (configFromForm) { setConfigFromForm(false); setShowForm(true); } }}
               className="w-full h-16 rounded-xl text-white font-bold text-sm mt-5"
               style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}
             >
@@ -1310,7 +1321,7 @@ export default function CadastrarVisitante() {
               <h2 className="font-bold text-lg text-foreground">Novo Visitante</h2>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => { setShowForm(false); setShowConfig(true); }}
+                  onClick={() => { setShowForm(false); setConfigFromForm(true); setShowConfig(true); }}
                   className="w-8 h-8 rounded-full flex items-center justify-center"
                   style={{ border: "2px solid rgba(14,165,233,0.5)" }}
                   title="Configuração"
@@ -1362,7 +1373,7 @@ export default function CadastrarVisitante() {
                   value={form.nome}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
                   placeholder="Nome completo do visitante"
-                  className="w-full h-10 rounded-lg border border-border bg-white text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                  className="w-full h-10 rounded-lg border border-border bg-card text-sm text-card-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
                   style={{ paddingLeft: "0.5cm", paddingRight: 12 }}
                 />
               </div>
@@ -1375,7 +1386,7 @@ export default function CadastrarVisitante() {
                   value={form.documento}
                   onChange={(e) => setForm({ ...form, documento: e.target.value })}
                   placeholder="RG ou CPF"
-                  className="w-full h-10 rounded-lg border border-border bg-white text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                  className="w-full h-10 rounded-lg border border-border bg-card text-sm text-card-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
                   style={{ paddingLeft: "0.5cm", paddingRight: 12 }}
                 />
               </div>
@@ -1390,7 +1401,7 @@ export default function CadastrarVisitante() {
                   value={form.telefone}
                   onChange={(e) => setForm({ ...form, telefone: formatPhone(e.target.value) })}
                   placeholder="(11) 99999-9999"
-                  className="w-full h-10 rounded-lg border border-border bg-white text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                  className="w-full h-10 rounded-lg border border-border bg-card text-sm text-card-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
                   style={{ paddingLeft: "0.5cm", paddingRight: 12 }}
                 />
               </div>
@@ -1410,7 +1421,7 @@ export default function CadastrarVisitante() {
                       setSelectedMoradorId("");
                       fetchMoradoresBloco(bloco);
                     }}
-                    className="w-full h-10 rounded-lg border border-border bg-white text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40 appearance-none"
+                    className="w-full h-10 rounded-lg border border-border bg-card text-sm text-card-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40 appearance-none"
                     style={{ paddingLeft: "0.5cm", paddingRight: 12 }}
                   >
                     <option value="">Selecione o bloco</option>
@@ -1427,17 +1438,56 @@ export default function CadastrarVisitante() {
               {isFieldVisible("apartamento") && form.bloco && (
                 <div>
                   <span className="text-sm font-medium text-foreground mb-1 block">Apartamento / Morador</span>
-                  <SearchableSelect
-                    value={selectedMoradorId}
-                    onChange={(val) => handleSelectMorador(val)}
-                    placeholder="Selecione o morador"
-                    searchPlaceholder="Buscar por nome ou apartamento..."
-                    options={moradores.map((m) => ({
-                      value: String(m.id),
-                      label: `Apt ${m.unit} — ${m.name}`,
-                      searchText: `${m.name} ${m.unit}`.toLowerCase(),
-                    }))}
-                  />
+                  {manualApto ? (
+                    <input
+                      value={form.apartamento}
+                      onChange={(e) => setForm({ ...form, apartamento: e.target.value })}
+                      placeholder="Numero do apartamento"
+                      className="w-full h-10 rounded-lg border border-border bg-card text-sm text-card-foreground focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                      style={{ paddingLeft: "0.5cm", paddingRight: 12 }}
+                    />
+                  ) : (
+                    <SearchableSelect
+                      value={selectedMoradorId}
+                      onChange={(val) => handleSelectMorador(val)}
+                      placeholder="Selecione o morador"
+                      searchPlaceholder="Buscar por nome ou apartamento..."
+                      options={moradores.map((m) => ({
+                        value: String(m.id),
+                        label: `Apt ${m.unit} — ${m.name}`,
+                        searchText: `${m.name} ${m.unit}`.toLowerCase(),
+                      }))}
+                    />
+                  )}
+                  {moradores.length === 0 && (
+                    <span className="text-xs text-muted-foreground mt-1 block">
+                      Nenhum morador cadastrado neste bloco — digite o apartamento e o WhatsApp.
+                    </span>
+                  )}
+                  <span
+                    className="flex items-center gap-2 mt-2 cursor-pointer"
+                    onClick={() => {
+                      const next = !manualApto;
+                      setManualApto(next);
+                      setSelectedMoradorId("");
+                      setForm((prev) => ({ ...prev, apartamento: "", morador_whatsapp: "" }));
+                    }}
+                  >
+                    <div
+                      className="w-6 h-6 rounded border-2 flex items-center justify-center transition-colors"
+                      style={{
+                        borderColor: manualApto ? "#0ea5e9" : "#d1d5db",
+                        backgroundColor: manualApto ? "#0ea5e9" : "transparent",
+                      }}
+                    >
+                      {manualApto && (
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                          <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-sm text-muted-foreground">Apartamento nao listado — digitar manualmente</span>
+                  </span>
                 </div>
               )}
 
@@ -1448,10 +1498,17 @@ export default function CadastrarVisitante() {
                 <input
                   type="tel"
                   value={form.morador_whatsapp}
-                  readOnly
-                  placeholder={form.bloco && form.apartamento ? "Nenhum morador cadastrado" : "Selecione bloco e apartamento"}
-                  className="w-full h-10 rounded-lg border border-border text-sm text-foreground focus:outline-none"
-                  style={{ paddingLeft: "0.5cm", paddingRight: 12, backgroundColor: "#f3f4f6", cursor: "default" }}
+                  readOnly={!manualApto}
+                  onChange={(e) => setForm({ ...form, morador_whatsapp: formatPhone(e.target.value) })}
+                  placeholder={manualApto ? "(11) 99999-9999" : form.bloco && form.apartamento ? "Nenhum morador cadastrado" : "Selecione bloco e apartamento"}
+                  className="w-full h-10 rounded-lg border border-border text-sm focus:outline-none"
+                  style={{
+                    paddingLeft: "0.5cm",
+                    paddingRight: 12,
+                    backgroundColor: manualApto ? "var(--card)" : "#f3f4f6",
+                    color: manualApto ? "var(--card-foreground)" : "#334155",
+                    cursor: manualApto ? "text" : "default",
+                  }}
                 />
               </div>
               )}
@@ -1867,20 +1924,27 @@ export default function CadastrarVisitante() {
       {/* MODAL RECONHECIMENTO FACIAL */}
       {/* ═══════════════════════════════════════════════════ */}
       {showFaceRecog && (
-        <div className="fixed inset-0 z-50 bg-black/90 flex flex-col">
+        <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: "#0b1020" }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3" style={{ backgroundColor: "rgba(99,102,241,0.95)" }}>
+          <div className="flex items-center justify-between px-4 py-3 shrink-0" style={{ backgroundColor: "rgba(99,102,241,0.95)", paddingTop: "max(12px, env(safe-area-inset-top))" }}>
             <div className="flex items-center gap-2 text-white">
               <ScanFace className="w-6 h-6" />
               <span className="font-bold text-sm">RECONHECIMENTO FACIAL</span>
             </div>
-            <button onClick={stopFaceRecognition} className="text-white/80 hover:text-white">
+            <button
+              type="button"
+              onClick={stopFaceRecognition}
+              aria-label="Fechar reconhecimento facial"
+              className="flex items-center justify-center shrink-0"
+              style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.22)", border: "1px solid rgba(255,255,255,0.4)", color: "#fff" }}
+            >
               <X className="w-7 h-7" />
             </button>
           </div>
 
           {/* Content */}
-          <div className="flex-1 flex flex-col items-center justify-center px-4">
+          <div className="flex-1 min-h-0 overflow-y-auto px-4" style={{ paddingTop: 16, paddingBottom: 16 }}>
+          <div className="min-h-full flex flex-col items-center justify-center">
 
             {/* Camera view */}
             {(faceStatus === "idle" || faceStatus === "scanning" || faceStatus === "comparing") && (
@@ -1946,6 +2010,15 @@ export default function CadastrarVisitante() {
                     </>
                   )}
                 </div>
+
+                <button
+                  type="button"
+                  onClick={stopFaceRecognition}
+                  className="w-full h-12 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2"
+                  style={{ marginTop: 16, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}
+                >
+                  <X className="w-5 h-5" /> Cancelar
+                </button>
               </div>
             )}
 
@@ -2021,6 +2094,14 @@ export default function CadastrarVisitante() {
                     >
                       EFETUAR UM NOVO CADASTRO
                     </button>
+                    <button
+                      type="button"
+                      onClick={stopFaceRecognition}
+                      className="w-full h-10 rounded-xl text-white/70 font-semibold text-xs flex items-center justify-center gap-2"
+                      style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}
+                    >
+                      <X className="w-4 h-4" /> FECHAR
+                    </button>
                   </div>
                 </div>
               </div>
@@ -2070,14 +2151,23 @@ export default function CadastrarVisitante() {
                     >
                       Tentar Novamente
                     </button>
+                    <button
+                      type="button"
+                      onClick={stopFaceRecognition}
+                      className="w-full h-10 rounded-xl text-white/70 font-semibold text-xs flex items-center justify-center gap-2"
+                      style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}
+                    >
+                      <X className="w-4 h-4" /> FECHAR
+                    </button>
                   </div>
                 </div>
               </div>
             )}
           </div>
+          </div>
 
           {/* Footer explanation */}
-          <div className="px-6 py-4" style={{ backgroundColor: "rgba(255,255,255,0.05)" }}>
+          <div className="px-6 py-4 shrink-0" style={{ backgroundColor: "rgba(255,255,255,0.05)", paddingBottom: "max(16px, env(safe-area-inset-bottom))" }}>
             <div className="flex items-start gap-3">
               <ScanFace className="w-6 h-6 text-indigo-400 shrink-0 mt-0.5" />
               <div>

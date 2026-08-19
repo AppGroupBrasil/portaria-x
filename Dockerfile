@@ -17,6 +17,13 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Chave do Google Maps embutida no bundle. O .dockerignore exclui os .env,
+# entao ela precisa vir como build arg (docker-compose passa do .env do host).
+ARG VITE_GOOGLE_MAPS_API_KEY=""
+ARG VITE_GOOGLE_MAPS_MAP_ID=""
+ENV VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY
+ENV VITE_GOOGLE_MAPS_MAP_ID=$VITE_GOOGLE_MAPS_MAP_ID
+
 # Build frontend (Vite) — use explicit bin paths to avoid PATH issues
 RUN ./node_modules/.bin/tsc -b && ./node_modules/.bin/vite build
 

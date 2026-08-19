@@ -16,6 +16,7 @@ import {
   Phone,
   Scan,
 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 
@@ -120,7 +121,7 @@ export default function PorteiroQRScanner() {
 
     if (code && code.data) {
       scanningRef.current = false;
-      processQRData(code.data);
+      void processQRData(code.data);
       return;
     }
     requestAnimationFrame(scanFrame);
@@ -157,7 +158,29 @@ export default function PorteiroQRScanner() {
     }
   };
 
-  const processQRData = (data: string) => {
+  // O QR do morador traz o link publico (/visitante/qr/<token>) para que qualquer
+  // camera abra a autorizacao. Aqui o link e trocado pelo payload JSON original.
+  const resolverConteudoQR = async (data: string): Promise<string> => {
+    const token = /\/visitante\/qr\/([\w-]+)/.exec(data)?.[1];
+    if (!token) return data;
+    const resp = await apiFetch(`/api/visitor-qr/${token}`);
+    if (!resp.ok) throw new Error("QR Code nao encontrado ou expirado.");
+    const json = await resp.json();
+    return json.qr_data as string;
+  };
+
+  const processQRData = async (dataBruta: string) => {
+    let data = dataBruta;
+    try {
+      data = await resolverConteudoQR(dataBruta);
+    } catch {
+      setScanStatus("invalido");
+      setVisitor(null);
+      setMode("result");
+      stopCamera();
+      return;
+    }
+
     try {
       const parsed: VisitorPayload = JSON.parse(data);
       if (parsed.type !== "PORTARIAX_VISITOR" || !parsed.visitante?.nome) {
@@ -204,7 +227,7 @@ export default function PorteiroQRScanner() {
 
   const handleManualSubmit = () => {
     if (!manualInput.trim()) return;
-    processQRData(manualInput.trim());
+    void processQRData(manualInput.trim());
     setManualInput("");
   };
 

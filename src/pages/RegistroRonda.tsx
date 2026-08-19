@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
 import { useAuth } from "@/hooks/useAuth";
 import ReportModal from "@/components/ReportModal";
+import ModalCloseButton from "@/components/ModalCloseButton";
 import { gerarRelatorioRondas } from "@/lib/pdfUtils";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
@@ -1184,6 +1185,25 @@ export default function RegistroRonda() {
                 <MapPin style={{ width: 18, height: 18, color: p.text }} />
                 Pontos de Ronda — Checklist
               </h3>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  padding: "12px 14px",
+                  borderRadius: "14px",
+                  background: p.btnBg,
+                  border: p.btnBorder,
+                  marginBottom: "12px",
+                }}
+              >
+                <Info style={{ width: 16, height: 16, color: p.textMuted, flexShrink: 0, marginTop: "2px" }} />
+                <p style={{ fontSize: "12px", lineHeight: 1.5, color: p.textMuted, margin: 0 }}>
+                  <strong>Observação:</strong> os pontos de ronda são criados pelo síndico, no perfil do
+                  síndico, em Controle de Rondas → Novo Ponto de Ronda. A portaria apenas registra a
+                  passagem nos pontos já cadastrados — se algum ponto estiver faltando, peça ao síndico
+                  para cadastrá-lo.
+                </p>
+              </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {activeCheckpoints.length === 0 ? (
                   <p style={{ fontSize: "13px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569", textAlign: "center", padding: "24px" }}>
@@ -1707,6 +1727,7 @@ export default function RegistroRonda() {
             display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
           }}
         >
+          <ModalCloseButton onClick={() => setFotoAmpliada(null)} light top={16} right={16} />
           <img src={fotoAmpliada} style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "12px" }} />
         </div>
       )}

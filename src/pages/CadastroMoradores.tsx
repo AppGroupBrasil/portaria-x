@@ -20,6 +20,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import { dialogConfirm } from "@/lib/dialog";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 interface MetodoItem {
   id: string;
@@ -455,7 +456,8 @@ export default function CadastroMoradores() {
       {/* Premium error modal */}
       {error && (
         <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}>
-          <div style={{ width: "92%", maxWidth: 370, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", padding: "32px 24px", textAlign: "center" }}>
+          <div style={{ position: "relative", width: "92%", maxWidth: 370, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", padding: "32px 24px", textAlign: "center" }}>
+            <ModalCloseButton onClick={() => setError("")} light />
             <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #ef4444, #dc2626)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
               <AlertCircle style={{ width: 36, height: 36, color: "#ffffff" }} />
             </div>
@@ -474,7 +476,8 @@ export default function CadastroMoradores() {
       {/* Premium success modal */}
       {success && (
         <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}>
-          <div style={{ width: "92%", maxWidth: 370, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", padding: "32px 24px", textAlign: "center" }}>
+          <div style={{ position: "relative", width: "92%", maxWidth: 370, borderRadius: 20, background: "linear-gradient(180deg, #001d4a 0%, #00275e 50%, #003580 100%)", border: "1px solid rgba(255,255,255,0.15)", padding: "32px 24px", textAlign: "center" }}>
+            <ModalCloseButton onClick={() => setSuccess("")} light />
             <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #10b981, #059669)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
               <CheckCircle2 style={{ width: 36, height: 36, color: "#ffffff" }} />
             </div>

@@ -67,7 +67,7 @@ router.get("/config", authenticate, async (req: Request, res: Response) => {
       return;
     }
 
-    const condo = db.prepare("SELECT latitude, longitude FROM condominios WHERE id = ?").get(user.condominio_id) as any;
+    const condo = db.prepare("SELECT latitude, longitude, address, city, state FROM condominios WHERE id = ?").get(user.condominio_id) as any;
     const configs = db.prepare(
       "SELECT key, value FROM condominio_config WHERE condominio_id = ? AND key LIKE 'estou_chegando_%'"
     ).all(user.condominio_id) as { key: string; value: string }[];
@@ -75,9 +75,12 @@ router.get("/config", authenticate, async (req: Request, res: Response) => {
     const configMap: Record<string, string> = {};
     for (const c of configs) configMap[c.key] = c.value;
 
+    const enderecoCondominio = [condo?.address, condo?.city, condo?.state].filter(Boolean).join(", ");
+
     res.json({
       latitude: condo?.latitude ?? null,
       longitude: condo?.longitude ?? null,
+      endereco: configMap["estou_chegando_endereco"] || enderecoCondominio || null,
       enabled: configMap["estou_chegando_enabled"] !== "false",
       horario_inicio: configMap["estou_chegando_horario_inicio"] || "22:00",
       horario_fim: configMap["estou_chegando_horario_fim"] || "06:00",
@@ -101,7 +104,7 @@ router.put("/config", authenticate, authorize("sindico", "administradora", "mast
       return;
     }
 
-    const { latitude, longitude, enabled, horario_inicio, horario_fim, radius_default } = req.body;
+    const { latitude, longitude, endereco, enabled, horario_inicio, horario_fim, radius_default } = req.body;
 
     // Update coordinates on condominios table
     if (latitude !== undefined && longitude !== undefined) {
@@ -120,6 +123,7 @@ router.put("/config", authenticate, authorize("sindico", "administradora", "mast
     if (horario_inicio) upsert.run(user.condominio_id, "estou_chegando_horario_inicio", horario_inicio);
     if (horario_fim) upsert.run(user.condominio_id, "estou_chegando_horario_fim", horario_fim);
     if (radius_default) upsert.run(user.condominio_id, "estou_chegando_radius", String(radius_default));
+    if (endereco !== undefined) upsert.run(user.condominio_id, "estou_chegando_endereco", String(endereco ?? "").trim().slice(0, 300));
 
     res.json({ success: true });
   } catch (err) {

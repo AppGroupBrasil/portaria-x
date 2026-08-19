@@ -110,7 +110,7 @@ export default function DashboardFuncionario() {
                   letterSpacing: "-0.01em",
                   color: p.textHeading,
                   lineHeight: 1.15,
-                  maxWidth: "min(46vw, 280px)",
+                  maxWidth: "min(42vw, 240px)",
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
@@ -148,44 +148,49 @@ export default function DashboardFuncionario() {
               </span>
             </div>
           </div>
-          <div className="flex items-center" style={{ gap: 10, flexShrink: 0 }}>
-            <button
-              className="flex items-center justify-center"
-              onClick={() => navigate("/portaria/configuracoes")}
-              style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
-            >
-              <Settings style={{ width: 24, height: 24, color: p.text }} />
-            </button>
-            <button
-              className="flex items-center justify-center"
-              onClick={() => navigate("/minha-conta")}
-              style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
-            >
-              <UserCircle style={{ width: 24, height: 24, color: p.text }} />
-            </button>
-            <ThemePicker />
-            <button
-              className="flex items-center justify-center relative"
-              style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
-            >
-              <Bell style={{ width: 24, height: 24, color: p.text }} />
-              <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
-            </button>
+          <div className="flex flex-col" style={{ alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
+            {/* Linha 1 — Sair em destaque */}
             <button
               className="flex items-center justify-center"
               onClick={handleLogout}
-              style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
+              style={{ height: 40, padding: "0 16px", borderRadius: 14, gap: 8, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.45)", color: "#ef4444", fontWeight: 700, fontSize: 14, cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.28)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.15)"; }}
             >
-              <LogOut style={{ width: 24, height: 24, color: p.text }} />
+              <LogOut style={{ width: 22, height: 22 }} />
+              Sair
             </button>
+            {/* Linha 2 — demais ações */}
+            <div className="flex items-center" style={{ gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <button
+                className="flex items-center justify-center"
+                onClick={() => navigate("/portaria/configuracoes")}
+                style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
+              >
+                <Settings style={{ width: 24, height: 24, color: p.text }} />
+              </button>
+              <button
+                className="flex items-center justify-center"
+                onClick={() => navigate("/minha-conta")}
+                style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
+              >
+                <UserCircle style={{ width: 24, height: 24, color: p.text }} />
+              </button>
+              <ThemePicker />
+              <button
+                className="flex items-center justify-center relative"
+                style={{ width: 40, height: 40, borderRadius: 14, background: p.btnBg, border: p.btnBorder, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = secondaryHoverBg; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = secondaryIdleBg; }}
+              >
+                <Bell style={{ width: 24, height: 24, color: p.text }} />
+                <span className="absolute" style={{ top: 8, right: 8, width: 8, height: 8, background: "#34d399", borderRadius: "50%", boxShadow: "0 0 6px rgba(52,211,153,0.6)" }} />
+              </button>
+            </div>
           </div>
         </div>
       </header>

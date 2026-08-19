@@ -24,6 +24,7 @@ import { gerarPdfDelivery, gerarRelatorioDelivery, gerarRelatorioDeliveryComGraf
 import { apiFetch } from "@/lib/api";
 import { APP_ORIGIN } from "@/lib/config";
 import { useTheme } from "@/hooks/useTheme";
+import ModalCloseButton from "@/components/ModalCloseButton";
 import ComoFunciona from "@/components/ComoFunciona";
 import { dialogAlert } from "@/lib/dialog";
 
@@ -476,7 +477,7 @@ export default function DeliveryPorteiro() {
         </div>
 
         {/* Filter tabs */}
-        <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>
+        <div style={{ display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
           {([
             { key: "pendente", label: "Pendentes" },
             { key: "recebido", label: "Recebidos" },
@@ -506,13 +507,13 @@ export default function DeliveryPorteiro() {
           <button
             onClick={() => setShowReport(true)}
             style={{
-              marginLeft: "auto", display: "flex", alignItems: "center", gap: "12px",
-              padding: "10px 20px", borderRadius: "8px", border: "2px solid #d97706",
+              marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px",
+              padding: "8px 14px", borderRadius: "8px", border: "2px solid #d97706",
               background: "var(--color-card, #fff)",
-              color: "var(--color-warning-foreground, #d97706)", fontSize: "15px", fontWeight: 700, cursor: "pointer",
+              color: "var(--color-warning-foreground, #d97706)", fontSize: "13px", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap",
             }}
           >
-            <FileText className="w-5 h-5" /> Relatório
+            <FileText className="w-4 h-4" /> Relatório
           </button>
         </div>
       </header>
@@ -1236,12 +1237,14 @@ export default function DeliveryPorteiro() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
+              position: "relative",
               width: "100%", maxWidth: "380px", borderRadius: "20px", padding: "24px",
               background: isDark ? "#0f172a" : "#ffffff",
               border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #cbd5e1",
               display: "flex", flexDirection: "column", gap: "16px", textAlign: "center",
             }}
           >
+            <ModalCloseButton onClick={() => setWaPrompt(null)} light={isDark} />
             <CheckCircle2 className="w-12 h-12" style={{ color: "#16a34a", margin: "0 auto" }} />
             <div>
               <p style={{ fontSize: "17px", fontWeight: 700, color: isDark ? "#fff" : "#0f172a" }}>

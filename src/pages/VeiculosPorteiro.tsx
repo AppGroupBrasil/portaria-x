@@ -1110,7 +1110,7 @@ export default function VeiculosPorteiro() {
                   maxLength={7}
                   onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleBuscarPlaca(); } }}
                   style={{
-                    flex: 1, padding: "14px", borderRadius: "12px", border: "2px solid #0ea5e9",
+                    flex: 1, minWidth: 0, padding: "14px", borderRadius: "12px", border: "2px solid #0ea5e9",
                     fontSize: "22px", background: "#f0f9ff", color: "var(--card-foreground)", outline: "none",
                     boxSizing: "border-box", fontWeight: 800, letterSpacing: "4px", textAlign: "center",
                     fontFamily: "monospace", textTransform: "uppercase",

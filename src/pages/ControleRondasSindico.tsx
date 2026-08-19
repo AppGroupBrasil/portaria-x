@@ -35,6 +35,7 @@ import { apiFetch } from "@/lib/api";
 import { useTheme } from "@/hooks/useTheme";
 import ComoFunciona from "@/components/ComoFunciona";
 import ReportModal from "@/components/ReportModal";
+import ModalCloseButton from "@/components/ModalCloseButton";
 import { gerarRelatorioRondas } from "@/lib/pdfUtils";
 import { dialogConfirm, dialogAlert } from "@/lib/dialog";
 
@@ -428,23 +429,6 @@ export default function ControleRondasSindico() {
               <Printer className="w-5 h-5" />
             </button>
           )}
-          <button
-            onClick={() => {
-              if (tab === "checkpoints") {
-                setEditingCheckpoint(null);
-                setCpForm({ nome: "", descricao: "", localizacao: "" });
-                setShowForm(true);
-              } else {
-                setEditingSchedule(null);
-                setSchedForm({ nome: "", horario: "", dias_semana: "0,1,2,3,4,5,6", som_alerta: true });
-                setShowScheduleForm(true);
-              }
-              setError("");
-            }}
-            className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
         </div>
       </header>
 
@@ -520,6 +504,45 @@ export default function ControleRondasSindico() {
           <FileText style={{ width: 18, height: 18 }} /> Histórico
         </button>
       </div>
+
+      {tab !== "historico" && (
+        <div style={{ padding: "16px 16px 0" }}>
+          <button
+            onClick={() => {
+              if (tab === "checkpoints") {
+                setEditingCheckpoint(null);
+                setCpForm({ nome: "", descricao: "", localizacao: "" });
+                setShowForm(true);
+              } else {
+                setEditingSchedule(null);
+                setSchedForm({ nome: "", horario: "", dias_semana: "0,1,2,3,4,5,6", som_alerta: true });
+                setShowScheduleForm(true);
+              }
+              setError("");
+            }}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              padding: "16px",
+              minHeight: "56px",
+              borderRadius: "14px",
+              border: "none",
+              background: "linear-gradient(135deg, #0062d1 0%, #003580 100%)",
+              color: "#ffffff",
+              fontSize: "16px",
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 6px 16px rgba(0, 53, 128, 0.28)",
+            }}
+          >
+            <Plus style={{ width: 22, height: 22, color: "#ffffff" }} />
+            {tab === "checkpoints" ? "Criar Ronda para a Portaria" : "Criar Horário de Ronda"}
+          </button>
+        </div>
+      )}
 
       {/* Content */}
       <main style={{ flex: 1, padding: "1.5rem", paddingBottom: "120px", overflowY: "auto" }}>
@@ -1209,6 +1232,7 @@ export default function ControleRondasSindico() {
           onClick={() => setFotoAmpliada(null)}
           style={{ position: "fixed", inset: 0, zIndex: 70, background: "rgba(0,0,0,0.9)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
         >
+          <ModalCloseButton onClick={() => setFotoAmpliada(null)} light top={16} right={16} />
           <img src={fotoAmpliada} style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "12px" }} />
         </div>
       )}

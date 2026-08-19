@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 import { apiFetch, getToken } from "@/lib/api";
 import { buildWsUrl } from "@/lib/config";
-import { DEFAULT_MAP_CENTER, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID } from "@/lib/googleMaps";
+import { DEFAULT_MAP_CENTER, useGoogleMapsConfig } from "@/lib/googleMaps";
 import TutorialButton, { FlowPortaria, FlowMorador, TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   ArrowLeft,
@@ -156,6 +156,7 @@ function buildMarkerIcon(fillColor: string): google.maps.Symbol | undefined {
 
 export default function PortariaEstouChegando() {
   const { p } = useTheme();
+  const { apiKey: mapsApiKey, mapId: mapsMapId } = useGoogleMapsConfig();
 
   const navigate = useNavigate();
 
@@ -480,6 +481,25 @@ export default function PortariaEstouChegando() {
         </div>
       )}
 
+      {/* Endereço do condomínio — cadastrado pelo síndico */}
+      <div className="flex items-start gap-2 bg-card border-b border-border" style={{ padding: "0.6rem 1.5rem" }}>
+        <MapPin className="w-5 h-5 text-muted-foreground flex-shrink-0" style={{ marginTop: "1px" }} />
+        {config?.endereco ? (
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-foreground">{config.endereco}</p>
+            <p className="text-[11px] text-muted-foreground mt-[2px]">
+              Observação: este é o endereço do condomínio cadastrado pelo síndico. Para alterá-lo, o síndico
+              acessa o perfil dele em Estou Chegando &rarr; Endereço do condomínio.
+            </p>
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            Observação: a localização ainda não foi cadastrada. O endereço do condomínio precisa ser
+            cadastrado pelo síndico, no perfil do síndico, em Estou Chegando &rarr; Endereço do condomínio.
+          </p>
+        )}
+      </div>
+
       <main className="flex-1 flex flex-col overflow-hidden">
         {showHistory ? (
           /* ═══ History view ═══ */
@@ -577,8 +597,8 @@ export default function PortariaEstouChegando() {
             {/* ═══ Map ═══ */}
             <div style={{ height: "45vh", minHeight: "250px" }}>
               {hasConfiguredCondoLocation ? (
-                GOOGLE_MAPS_API_KEY ? (
-                  <LoadScriptNext googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+                mapsApiKey ? (
+                  <LoadScriptNext googleMapsApiKey={mapsApiKey}>
                     <GoogleMap
                       center={condoPosition}
                       zoom={15}
@@ -587,7 +607,7 @@ export default function PortariaEstouChegando() {
                         disableDefaultUI: true,
                         zoomControl: true,
                         clickableIcons: false,
-                        mapId: GOOGLE_MAPS_MAP_ID || undefined,
+                        mapId: mapsMapId || undefined,
                       }}
                       onLoad={(map) => {
                         mapRef.current = map;
@@ -668,14 +688,14 @@ export default function PortariaEstouChegando() {
                   </LoadScriptNext>
                 ) : (
                   <div className="h-full flex items-center justify-center bg-muted text-center px-4 text-sm text-muted-foreground">
-                    Configure a variável VITE_GOOGLE_MAPS_API_KEY para exibir o mapa.
+                    Mapa indisponível: a chave do Google Maps ainda não foi configurada no servidor.
                   </div>
                 )
               ) : (
                 <div className="h-full flex items-center justify-center bg-muted">
                   <div className="text-center">
                     <MapPin className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Localização do condomínio não configurada</p>
+                    <p className="text-sm text-muted-foreground" style={{ maxWidth: "260px" }}>Localização do condomínio não cadastrada. O síndico precisa cadastrar o endereço no perfil dele, em Estou Chegando.</p>
                   </div>
                 </div>
               )}

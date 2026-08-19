@@ -29,6 +29,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import SelfieCaptureModal from "@/components/SelfieCaptureModal";
 import PlateReader from "@/components/PlateReader";
+import ModalCloseButton from "@/components/ModalCloseButton";
 import { dialogAlert } from "@/lib/dialog";
 
 // ─── Icon mapping ─────────────────────────────────────────
@@ -988,6 +989,7 @@ export default function MoradorPortariaVirtual() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
+              position: "relative",
               background: isDark ? "#0f172a" : "#ffffff",
               borderRadius: 24, padding: "2rem", maxWidth: 360, width: "100%",
               textAlign: "center",
@@ -995,6 +997,7 @@ export default function MoradorPortariaVirtual() {
               boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
             }}
           >
+            <ModalCloseButton onClick={() => { setSelfieResult(null); setSelfieAp(null); }} light={isDark} />
             <div style={{
               width: 64, height: 64, borderRadius: 20, margin: "0 auto 1rem",
               display: "flex", alignItems: "center", justifyContent: "center",
@@ -1056,12 +1059,14 @@ export default function MoradorPortariaVirtual() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
+              position: "relative",
               background: isDark ? "#0f172a" : "#ffffff",
               border: isDark ? "1px solid rgba(255,255,255,0.15)" : "1px solid #e2e8f0",
               borderRadius: 20, padding: "2rem", maxWidth: 360, width: "100%",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
             }}
           >
+            <ModalCloseButton onClick={() => setBotoeiraAp(null)} light={isDark} />
             <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
               <div style={{
                 width: 56, height: 56, borderRadius: 16,
@@ -1129,12 +1134,14 @@ export default function MoradorPortariaVirtual() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
+              position: "relative",
               background: isDark ? "#0f172a" : "#ffffff",
               border: isDark ? "1px solid rgba(255,255,255,0.15)" : "1px solid #e2e8f0",
               borderRadius: 20, padding: "2rem", maxWidth: 360, width: "100%",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
             }}
           >
+            <ModalCloseButton onClick={() => setConfirmAp(null)} light={isDark} />
             <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
               <div style={{
                 width: 56, height: 56, borderRadius: 16,

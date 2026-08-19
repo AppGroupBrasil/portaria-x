@@ -203,6 +203,17 @@ export async function createApp(): Promise<express.Express> {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
+  // Chave do Google Maps em runtime. O build da imagem ignora os arquivos
+  // .env (.dockerignore), entao o bundle sai sem VITE_GOOGLE_MAPS_API_KEY;
+  // o front busca aqui como fallback. A chave ja e publica no bundle, o que
+  // protege o faturamento e a restricao por referrer no console do Google.
+  app.get("/api/maps-config", (_req, res) => {
+    res.json({
+      apiKey: process.env.GOOGLE_MAPS_API_KEY || process.env.VITE_GOOGLE_MAPS_API_KEY || "",
+      mapId: process.env.GOOGLE_MAPS_MAP_ID || process.env.VITE_GOOGLE_MAPS_MAP_ID || "",
+    });
+  });
+
   // Manual backup (master only)
   app.post("/api/backup", authenticate, authorize("master"), (_req, res) => {
     const backupPath = performBackup();

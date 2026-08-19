@@ -305,7 +305,7 @@ export default function SindicoQRConfig() {
             background: saved
               ? "linear-gradient(135deg, #16a34a, #15803d)"
               : p.btnGrad,
-            color: p.text,
+            color: "#ffffff",
             fontWeight: 700,
             fontSize: "16px",
             cursor: "pointer",

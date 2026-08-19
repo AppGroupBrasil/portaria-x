@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import TutorialButton, { FlowMorador, TSection, TStep, TBullet } from "@/components/TutorialButton";
 import { compressImage } from "@/lib/imageUtils";
 import { APP_ORIGIN } from "@/lib/config";
 import { apiFetch } from "@/lib/api";
+import QRCodeLib from "qrcode";
 import {
   ArrowLeft,
   QrCode,
@@ -80,6 +81,23 @@ function saveVisitors(list: VisitorQR[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
+const TOKEN_KEY = "morador_qr_share_tokens";
+
+// O token do link publico e reaproveitado: o payload de um visitante nunca muda
+// (a tela so cria e apaga), entao guardar evita um registro novo no servidor a
+// cada vez que o morador abre o QR.
+function loadTokens(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(TOKEN_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return {};
+}
+
+function saveTokens(map: Record<string, string>) {
+  try { localStorage.setItem(TOKEN_KEY, JSON.stringify(map)); } catch { /* ignore */ }
+}
+
 function generateQRData(visitor: VisitorQR, morador: { name?: string; block?: string; unit?: string; condominio_nome?: string; phone?: string }) {
   // NOTE: foto is excluded from QR payload because base64 images are too large
   // for QR codes (max ~4KB). The photo is still stored and shown in the app.
@@ -121,6 +139,9 @@ export default function MoradorQRVisitante() {
   const [showForm, setShowForm] = useState(false);
   const [viewQR, setViewQR] = useState<VisitorQR | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [qrImg, setQrImg] = useState("");
+  const [qrLink, setQrLink] = useState("");
+  const tokenCacheRef = useRef<Record<string, string>>(loadTokens());
 
   // Form state
   const [nome, setNome] = useState("");
@@ -191,6 +212,8 @@ export default function MoradorQRVisitante() {
   };
 
   const handleDelete = (id: string) => {
+    delete tokenCacheRef.current[id];
+    saveTokens(tokenCacheRef.current);
     const updated = visitors.filter((v) => v.id !== id);
     setVisitors(updated);
     saveVisitors(updated);
@@ -208,34 +231,56 @@ export default function MoradorQRVisitante() {
     setObservacoes("");
   };
 
-  const handleShare = async (visitor: VisitorQR) => {
-    const qrData = generateQRData(visitor, user || {});
+  // Link publico do QR: cria (uma vez por visitante) o token curto no servidor
+  const obterLinkCompartilhavel = useCallback(async (visitor: VisitorQR): Promise<string> => {
+    const cache = tokenCacheRef.current[visitor.id];
+    if (cache) return `${APP_ORIGIN}/visitante/qr/${cache}`;
 
-    // Cria token curto no servidor
-    let qrLink = "";
+    const resp = await apiFetch("/api/visitor-qr/share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        qr_data: generateQRData(visitor, user || {}),
+        visitor_name: visitor.nome,
+        visitor_doc: visitor.documento || "",
+        visitor_parentesco: visitor.parentesco || "",
+        data_inicio: visitor.dataInicio,
+        hora_inicio: visitor.horaInicio,
+        data_fim: visitor.dataFim,
+        hora_fim: visitor.horaFim,
+        morador_nome: user?.name || "",
+        bloco: user?.block || "",
+        unidade: user?.unit || "",
+        condominio_nome: user?.condominio_nome || "",
+      }),
+    });
+    const data = await resp.json();
+    if (!data?.token) throw new Error("Servidor nao retornou token do QR.");
+    tokenCacheRef.current[visitor.id] = data.token;
+    saveTokens(tokenCacheRef.current);
+    return `${APP_ORIGIN}/visitante/qr/${data.token}`;
+  }, [user]);
+
+  // O QR exibido aponta para o link publico (abre no celular de quem escanear).
+  // Sem internet/token, cai no payload JSON lido pelo scanner da portaria.
+  useEffect(() => {
+    if (!viewQR) { setQrImg(""); setQrLink(""); return; }
+    let vivo = true;
+    setQrImg("");
+    setQrLink("");
+    obterLinkCompartilhavel(viewQR)
+      .then((link) => { if (vivo) setQrLink(link); return link; })
+      .catch(() => generateQRData(viewQR, user || {}))
+      .then((conteudo) => QRCodeLib.toDataURL(conteudo, { width: 560, margin: 1, errorCorrectionLevel: "M" }))
+      .then((url) => { if (vivo) setQrImg(url); })
+      .catch((err) => console.warn("Erro ao gerar QR Code:", err));
+    return () => { vivo = false; };
+  }, [viewQR, obterLinkCompartilhavel, user]);
+
+  const handleShare = async (visitor: VisitorQR) => {
+    let qrLinkShare = "";
     try {
-      const resp = await apiFetch("/api/visitor-qr/share", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          qr_data: qrData,
-          visitor_name: visitor.nome,
-          visitor_doc: visitor.documento || "",
-          visitor_parentesco: visitor.parentesco || "",
-          data_inicio: visitor.dataInicio,
-          hora_inicio: visitor.horaInicio,
-          data_fim: visitor.dataFim,
-          hora_fim: visitor.horaFim,
-          morador_nome: user?.name || "",
-          bloco: user?.block || "",
-          unidade: user?.unit || "",
-          condominio_nome: user?.condominio_nome || "",
-        }),
-      });
-      const data = await resp.json();
-      if (data.token) {
-        qrLink = `${APP_ORIGIN}/visitante/qr/${data.token}`;
-      }
+      qrLinkShare = await obterLinkCompartilhavel(visitor);
     } catch (err) {
       console.warn("Erro ao criar share token:", err);
     }
@@ -247,7 +292,7 @@ export default function MoradorQRVisitante() {
       `Validade: ${visitor.dataInicio} ${visitor.horaInicio} até ${visitor.dataFim} ${visitor.horaFim}`,
       `Morador: ${user?.name || ""} - Bloco ${user?.block || ""} Apt ${user?.unit || ""}`,
       ``,
-      ...(qrLink ? [`\u{1F4F2} Acesse seu QR Code:`, qrLink, ``] : []),
+      ...(qrLinkShare ? [`\u{1F4F2} Acesse seu QR Code:`, qrLinkShare, ``] : []),
       `Apresente o QR Code na portaria.`,
     ];
     const text = lines.join("\n");
@@ -501,7 +546,7 @@ export default function MoradorQRVisitante() {
               <div style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", borderRadius: "14px", padding: "16px", marginBottom: "20px" }}>
                 <QrCode className="w-8 h-8 mx-auto" style={{ color: "#fff" }} />
                 <p style={{ color: "#fff", fontWeight: 800, fontSize: "16px", marginTop: "6px" }}>AUTORIZAÇÃO DE ENTRADA</p>
-                <p style={{ color: isDark ? "rgba(255,255,255,0.7)" : "#475569", fontSize: "13px" }}>{user?.condominio_nome || "Condomínio"}</p>
+                <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "13px", fontWeight: 600 }}>{user?.condominio_nome || "Condomínio"}</p>
               </div>
 
               {viewQR.foto && (
@@ -524,11 +569,22 @@ export default function MoradorQRVisitante() {
               </div>
 
               <div style={{ margin: "16px 0" }}>
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(generateQRData(viewQR, user || {}))}`}
-                  alt="QR Code"
-                  style={{ width: "220px", height: "220px", margin: "0 auto", borderRadius: "12px" }}
-                />
+                {qrImg ? (
+                  <img
+                    src={qrImg}
+                    alt="QR Code"
+                    style={{ width: "220px", height: "220px", margin: "0 auto", borderRadius: "12px", background: "#fff" }}
+                  />
+                ) : (
+                  <div style={{ width: "220px", height: "220px", margin: "0 auto", borderRadius: "12px", background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <p style={{ fontSize: "13px", color: "#64748b" }}>Gerando QR Code...</p>
+                  </div>
+                )}
+                {qrLink && (
+                  <p style={{ fontSize: "11px", color: "#6b7280", marginTop: "10px", wordBreak: "break-all" }}>
+                    Ao escanear abre: {qrLink}
+                  </p>
+                )}
               </div>
 
               <p style={{ fontSize: "12px", color: "#9ca3af" }}>

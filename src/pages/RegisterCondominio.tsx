@@ -17,6 +17,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 export default function RegisterCondominio() {
   const navigate = useNavigate();
@@ -194,11 +195,13 @@ export default function RegisterCondominio() {
         >
           <div
             style={{
+              position: "relative",
               background: "#1e293b", borderRadius: "20px", maxWidth: "420px", width: "100%",
               boxShadow: "0 25px 50px rgba(0,0,0,0.5)", overflow: "hidden",
               animation: "slideUp 0.3s ease-out", maxHeight: "90vh", overflowY: "auto",
             }}
           >
+            <ModalCloseButton onClick={() => setShowSampleModal(false)} light />
             {/* Header */}
             <div style={{
               background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",

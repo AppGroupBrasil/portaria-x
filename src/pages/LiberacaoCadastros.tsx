@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { apiFetch } from "@/lib/api";
@@ -11,8 +11,6 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
-  ToggleLeft,
-  ToggleRight,
   ShieldCheck,
   Building2,
   Phone,
@@ -37,8 +35,97 @@ interface PendingMorador {
   created_at: string;
 }
 
+type Paleta = ReturnType<typeof useTheme>["p"];
+
+const cardStyle = (p: Paleta, destaque: string): CSSProperties => ({
+  borderRadius: "20px",
+  padding: "20px",
+  background: p.cardBg,
+  border: destaque ? `1px solid ${destaque}55` : `1px solid ${p.cardBorder}`,
+  boxShadow: destaque ? `0 10px 24px ${destaque}1f` : "0 6px 18px rgba(15,23,42,0.06)",
+  transition: "border-color 0.25s, box-shadow 0.25s",
+});
+
+const iconBoxStyle = (cor: string, tamanho = 44): CSSProperties => ({
+  width: tamanho, height: tamanho, borderRadius: tamanho / 3.2,
+  background: `${cor}1f`, border: `1px solid ${cor}33`,
+  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+});
+
+const titleStyle = (p: Paleta): CSSProperties => ({
+  fontSize: "15.5px", fontWeight: 700, lineHeight: 1.3, color: p.textHeading, margin: 0,
+});
+
+const subtitleStyle = (p: Paleta): CSSProperties => ({
+  fontSize: "12.5px", lineHeight: 1.55, color: p.textMuted, margin: "5px 0 0",
+});
+
+const pillStyle = (cor: string): CSSProperties => ({
+  display: "inline-flex", alignItems: "center", gap: "7px", marginTop: "16px",
+  padding: "8px 14px", borderRadius: "999px",
+  background: `${cor}18`, color: cor, fontSize: "12.5px", fontWeight: 600,
+});
+
+const fieldBlockStyle = (p: Paleta): CSSProperties => ({
+  marginTop: "18px", paddingTop: "18px", borderTop: `1px solid ${p.divider}`,
+});
+
+const fieldLabelStyle = (p: Paleta): CSSProperties => ({
+  display: "block", marginBottom: "10px", fontSize: "11.5px", fontWeight: 700,
+  letterSpacing: "0.04em", textTransform: "uppercase", color: p.textMuted,
+});
+
+const inputStyle = (p: Paleta, isDark: boolean): CSSProperties => ({
+  width: "100%", height: "50px", padding: "0 16px", borderRadius: "14px",
+  border: `1px solid ${p.cardBorder}`,
+  background: isDark ? "rgba(255,255,255,0.05)" : "#f8fafc",
+  fontSize: "14px", color: p.text, outline: "none",
+});
+
+const saveBtnStyle = (fundo: string, desabilitado: boolean): CSSProperties => ({
+  width: "100%", height: "48px", marginTop: "12px", borderRadius: "14px", border: "none",
+  background: fundo, color: "#ffffff", fontSize: "14.5px", fontWeight: 700,
+  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+  cursor: desabilitado ? "not-allowed" : "pointer", opacity: desabilitado ? 0.55 : 1,
+  boxShadow: desabilitado ? "none" : "0 8px 18px rgba(15,23,42,0.18)",
+  transition: "opacity 0.2s, box-shadow 0.2s",
+});
+
+function Switch({ on, color, loading, onClick, label }: {
+  on: boolean; color: string; loading: boolean; onClick: () => void; label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={loading}
+      aria-label={label}
+      aria-pressed={on}
+      style={{
+        width: "58px", height: "34px", flexShrink: 0, padding: "3px",
+        borderRadius: "999px", border: "none",
+        background: on ? color : "rgba(148,163,184,0.45)",
+        boxShadow: on ? `0 0 0 4px ${color}22` : "none",
+        display: "flex", alignItems: "center", justifyContent: on ? "flex-end" : "flex-start",
+        cursor: loading ? "wait" : "pointer", opacity: loading ? 0.7 : 1,
+        transition: "background 0.25s, box-shadow 0.25s",
+      }}
+    >
+      <span
+        style={{
+          width: "28px", height: "28px", borderRadius: "50%", background: "#ffffff",
+          boxShadow: "0 1px 4px rgba(15,23,42,0.3)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}
+      >
+        {loading && <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#64748b" }} />}
+      </span>
+    </button>
+  );
+}
+
 export default function LiberacaoCadastros() {
-  const { p } = useTheme();
+  const { p, isDark } = useTheme();
 
   const navigate = useNavigate();
   const [pendentes, setPendentes] = useState<PendingMorador[]>([]);
@@ -260,288 +347,276 @@ export default function LiberacaoCadastros() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto" style={{ padding: "24px 28px", paddingBottom: "3rem" }}>
-        {/* Toggle auto-cadastro com aprovação */}
-        <div
-          className="rounded-xl border bg-card p-5"
-          style={{ borderColor: autoCadastroEnabled ? "#0ea5e9" : "var(--border)", marginBottom: "20px" }}
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <p className="text-base font-semibold" style={{ color: "#003580" }}>Aprovação de Auto-Cadastro</p>
-              <p className="text-sm mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+      <main
+        className="flex-1 overflow-y-auto"
+        style={{ padding: "20px 18px 3rem", display: "flex", flexDirection: "column", gap: "16px" }}
+      >
+        {/* Aprovação de auto-cadastro */}
+        <section style={cardStyle(p, autoCadastroEnabled ? "#0ea5e9" : "")}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+            <div style={iconBoxStyle("#0ea5e9")}>
+              <UserCheck className="w-[22px] h-[22px]" style={{ color: "#0ea5e9" }} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={titleStyle(p)}>Aprovação de cadastro</p>
+              <p style={subtitleStyle(p)}>
                 {autoCadastroEnabled
-                  ? "Moradores precisam de aprovação após se cadastrarem"
-                  : "Moradores têm acesso imediato após auto-cadastro"}
+                  ? "O morador aguarda sua liberação depois de se cadastrar."
+                  : "O morador entra direto, sem passar por você."}
               </p>
             </div>
-            <button
-              onClick={() => { console.log("Toggle clicked, current:", autoCadastroEnabled); toggleAutoCadastro(); }}
-              disabled={configLoading}
-              className="p-2 rounded-lg transition-colors shrink-0 hover:bg-foreground/10 active:bg-foreground/20"
-              style={{ minWidth: "56px", minHeight: "44px", cursor: configLoading ? "wait" : "pointer" }}
-            >
-              {configLoading ? (
-                <Loader2 className="w-10 h-10 animate-spin" style={{ color: "var(--muted-foreground)" }} />
-              ) : autoCadastroEnabled ? (
-                <ToggleRight className="w-12 h-12 text-sky-500" />
-              ) : (
-                <ToggleLeft className="w-12 h-12" style={{ color: "var(--muted-foreground)" }} />
-              )}
-            </button>
+            <Switch
+              on={autoCadastroEnabled}
+              color="#0ea5e9"
+              loading={configLoading}
+              onClick={toggleAutoCadastro}
+              label="Ativar aprovação de cadastro"
+            />
           </div>
-          <div className="mt-2 pt-2 border-t border-border">
-            <p className="text-sm font-medium" style={{ color: autoCadastroEnabled ? "#0ea5e9" : "#ef4444" }}>
-              {autoCadastroEnabled ? "✔ Aprovação ativada — novos cadastros precisam de liberação" : "✖ Aprovação desativada — cadastros são aprovados automaticamente"}
-            </p>
+          <div style={pillStyle(autoCadastroEnabled ? "#0284c7" : "#dc2626")}>
+            {autoCadastroEnabled ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+            {autoCadastroEnabled ? "Liberação manual ativada" : "Liberação automática"}
           </div>
-        </div>
+        </section>
 
-        {/* Email Notification */}
-        <div
-          className="rounded-xl border bg-card p-5"
-          style={{ borderColor: emailEnabled ? "#0ea5e9" : "var(--border)", marginBottom: "20px" }}
-        >
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-sky-500" />
-                  <p className="text-base font-semibold" style={{ color: "#003580" }}>Notificação por E-mail</p>
-                </div>
-                <p className="text-sm mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                  Receba um e-mail quando houver um cadastro aguardando liberação
-                </p>
-              </div>
+        {/* Notificação por e-mail */}
+        <section style={cardStyle(p, emailEnabled ? "#0ea5e9" : "")}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+            <div style={iconBoxStyle("#0ea5e9")}>
+              <Mail className="w-[22px] h-[22px]" style={{ color: "#0ea5e9" }} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={titleStyle(p)}>Aviso por e-mail</p>
+              <p style={subtitleStyle(p)}>Receba um e-mail a cada cadastro pendente.</p>
+            </div>
+            <Switch
+              on={emailEnabled}
+              color="#0ea5e9"
+              loading={emailSaving}
+              onClick={() => saveEmailNotification(!emailEnabled)}
+              label="Ativar aviso por e-mail"
+            />
+          </div>
+
+          {emailEnabled && (
+            <div style={fieldBlockStyle(p)}>
+              <span style={fieldLabelStyle(p)}>E-mail para receber os avisos</span>
+              <input
+                type="email"
+                inputMode="email"
+                placeholder="sindico@exemplo.com"
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
+                style={inputStyle(p, isDark)}
+              />
               <button
-                onClick={() => saveEmailNotification(!emailEnabled)}
-                disabled={emailSaving}
-                className="p-2 rounded-lg transition-colors shrink-0 hover:bg-foreground/10 active:bg-foreground/20"
-                style={{ minWidth: "56px", minHeight: "44px", cursor: emailSaving ? "wait" : "pointer" }}
+                onClick={() => saveEmailNotification()}
+                disabled={emailSaving || !emailAddress.trim()}
+                style={saveBtnStyle("linear-gradient(135deg, #0062d1 0%, #003580 100%)", emailSaving || !emailAddress.trim())}
               >
-                {emailSaving ? (
-                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: "var(--muted-foreground)" }} />
-                ) : emailEnabled ? (
-                  <ToggleRight className="w-12 h-12 text-sky-500" />
-                ) : (
-                  <ToggleLeft className="w-12 h-12" style={{ color: "var(--muted-foreground)" }} />
-                )}
+                {emailSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Salvar e-mail
               </button>
             </div>
-            {emailEnabled && (
-              <div className="mt-3 pt-3 border-t border-border">
-                <span className="text-sm font-medium mb-1.5 block" style={{ color: "#003580" }}>E-mail para notificação</span>
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="sindico@exemplo.com"
-                    value={emailAddress}
-                    onChange={(e) => setEmailAddress(e.target.value)}
-                    className="flex-1 h-10 rounded-lg border border-input bg-white dark:bg-secondary/50 px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary"
-                    style={{ color: "#003580" }}
-                  />
-                  <button
-                    onClick={() => saveEmailNotification()}
-                    disabled={emailSaving || !emailAddress.trim()}
-                    className="h-10 px-4 rounded-lg bg-[#003580] text-white text-sm font-medium flex items-center gap-1.5 hover:bg-[#002a66] disabled:opacity-50 transition-colors"
-                  >
-                    {emailSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                    Salvar
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          )}
+        </section>
 
-        {/* WhatsApp Notification */}
-        <div
-          className="rounded-xl border bg-card p-5"
-          style={{ borderColor: whatsappEnabled ? "#128C7E" : "var(--border)", marginBottom: "20px" }}
-        >
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5 text-green-500" />
-                  <p className="text-base font-semibold" style={{ color: "#003580" }}>Notificação por WhatsApp</p>
-                </div>
-                <p className="text-sm mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                  Ao finalizar o cadastro, o morador poderá solicitar liberação via WhatsApp
-                </p>
-              </div>
-              <button
-                onClick={() => saveWhatsappNotification(!whatsappEnabled)}
-                disabled={whatsappSaving}
-                className="p-2 rounded-lg transition-colors shrink-0 hover:bg-foreground/10 active:bg-foreground/20"
-                style={{ minWidth: "56px", minHeight: "44px", cursor: whatsappSaving ? "wait" : "pointer" }}
-              >
-                {whatsappSaving ? (
-                  <Loader2 className="w-10 h-10 animate-spin" style={{ color: "var(--muted-foreground)" }} />
-                ) : whatsappEnabled ? (
-                  <ToggleRight className="w-12 h-12 text-green-500" />
-                ) : (
-                  <ToggleLeft className="w-12 h-12" style={{ color: "var(--muted-foreground)" }} />
-                )}
-              </button>
+        {/* Notificação por WhatsApp */}
+        <section style={cardStyle(p, whatsappEnabled ? "#128C7E" : "")}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+            <div style={iconBoxStyle("#16a34a")}>
+              <MessageCircle className="w-[22px] h-[22px]" style={{ color: "#16a34a" }} />
             </div>
-            {whatsappEnabled && (
-              <div className="mt-3 pt-3 border-t border-border">
-                <span className="text-sm font-medium mb-1.5 block" style={{ color: "#003580" }}>Telefone WhatsApp do síndico/administradora</span>
-                <div className="flex gap-2">
-                  <input
-                    type="tel"
-                    placeholder="(11) 99999-9999"
-                    value={whatsappPhone}
-                    onChange={(e) => setWhatsappPhone(formatPhone(e.target.value))}
-                    className="flex-1 h-10 rounded-lg border border-input bg-white dark:bg-secondary/50 px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary"
-                    style={{ color: "#003580" }}
-                  />
-                  <button
-                    onClick={() => saveWhatsappNotification()}
-                    disabled={whatsappSaving || !whatsappPhone.trim()}
-                    className="h-10 px-4 rounded-lg text-white text-sm font-medium flex items-center gap-1.5 hover:opacity-90 disabled:opacity-50 transition-colors"
-                    style={{ backgroundColor: "#128C7E" }}
-                  >
-                    {whatsappSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                    Salvar
-                  </button>
-                </div>
-                <p className="text-xs mt-2" style={{ color: "var(--muted-foreground)" }}>
-                  O morador verá a opção de enviar solicitação pelo WhatsApp após concluir o cadastro
-                </p>
-              </div>
-            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={titleStyle(p)}>Pedido por WhatsApp</p>
+              <p style={subtitleStyle(p)}>O morador pode pedir a liberação assim que terminar o cadastro.</p>
+            </div>
+            <Switch
+              on={whatsappEnabled}
+              color="#16a34a"
+              loading={whatsappSaving}
+              onClick={() => saveWhatsappNotification(!whatsappEnabled)}
+              label="Ativar pedido por WhatsApp"
+            />
           </div>
 
-        {/* Success message */}
+          {whatsappEnabled && (
+            <div style={fieldBlockStyle(p)}>
+              <span style={fieldLabelStyle(p)}>WhatsApp do síndico ou da administradora</span>
+              <input
+                type="tel"
+                inputMode="tel"
+                placeholder="(11) 99999-9999"
+                value={whatsappPhone}
+                onChange={(e) => setWhatsappPhone(formatPhone(e.target.value))}
+                style={inputStyle(p, isDark)}
+              />
+              <button
+                onClick={() => saveWhatsappNotification()}
+                disabled={whatsappSaving || !whatsappPhone.trim()}
+                style={saveBtnStyle("linear-gradient(135deg, #16a34a 0%, #128C7E 100%)", whatsappSaving || !whatsappPhone.trim())}
+              >
+                {whatsappSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Salvar telefone
+              </button>
+              <p style={{ fontSize: "11.5px", lineHeight: 1.55, color: p.textMuted, margin: "10px 0 0" }}>
+                Esse número recebe o pedido de liberação enviado pelo morador.
+              </p>
+            </div>
+          )}
+        </section>
+
         {successMsg && (
-          <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 flex items-center gap-2" style={{ marginBottom: "20px" }}>
-            <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
-            <span className="text-sm text-emerald-600 dark:text-emerald-400">{successMsg}</span>
+          <div
+            style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              padding: "12px 14px", borderRadius: "14px",
+              background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.35)",
+            }}
+          >
+            <CheckCircle2 className="w-5 h-5 shrink-0" style={{ color: "#10b981" }} />
+            <span style={{ fontSize: "13px", fontWeight: 600, color: isDark ? "#6ee7b7" : "#047857" }}>{successMsg}</span>
           </div>
         )}
 
-        {/* Search */}
-        <div className="flex items-center gap-2 h-11 rounded-lg border border-border bg-card" style={{ paddingLeft: "16px", paddingRight: "12px", marginBottom: "20px" }}>
-          <Search className="w-5 h-5 shrink-0" style={{ color: "var(--muted-foreground)" }} />
+        {/* Busca */}
+        <div
+          style={{
+            display: "flex", alignItems: "center", gap: "10px",
+            height: "52px", padding: "0 16px", marginTop: "6px",
+            borderRadius: "16px", background: p.cardBg, border: `1px solid ${p.cardBorder}`,
+          }}
+        >
+          <Search className="w-5 h-5 shrink-0" style={{ color: p.textMuted }} />
           <input
             type="text"
-            placeholder="Buscar por nome, e-mail, bloco, unidade..."
+            placeholder="Buscar por nome, bloco ou unidade"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none"
-            style={{ color: "#003580" }}
+            style={{
+              flex: 1, minWidth: 0, background: "transparent", border: "none",
+              outline: "none", fontSize: "14px", color: p.text,
+            }}
           />
         </div>
 
-        {/* Pending count label */}
-        <div className="flex items-center gap-2" style={{ marginBottom: "18px" }}>
-          <Clock className="w-5 h-5 text-amber-500" />
-          <span className="text-base font-medium" style={{ color: "#003580" }}>
-            {pendentes.length} cadastro{pendentes.length !== 1 ? "s" : ""} aguardando liberação
+        {/* Contador de pendentes */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "2px 4px" }}>
+          <div style={iconBoxStyle("#f59e0b", 36)}>
+            <Clock className="w-[18px] h-[18px]" style={{ color: "#f59e0b" }} />
+          </div>
+          <span style={{ fontSize: "14px", fontWeight: 700, color: p.textHeading }}>
+            {pendentes.length} cadastro{pendentes.length === 1 ? "" : "s"} aguardando liberação
           </span>
         </div>
-
         {/* List */}
         {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="w-7 h-7 text-sky-500 animate-spin" />
+          <div style={{ display: "flex", justifyContent: "center", padding: "56px 0" }}>
+            <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#0062d1" }} />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-12">
-            <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3 opacity-50" />
-            <p className="text-base" style={{ color: "var(--muted-foreground)" }}>
-              {pendentes.length === 0 ? "Nenhum cadastro pendente de aprovação." : "Nenhum resultado encontrado."}
+          <div style={{ ...cardStyle(p, ""), textAlign: "center", padding: "40px 24px" }}>
+            <div style={{ ...iconBoxStyle("#10b981", 56), margin: "0 auto 14px" }}>
+              <CheckCircle2 style={{ width: 28, height: 28, color: "#10b981" }} />
+            </div>
+            <p style={{ ...titleStyle(p), fontSize: "15px" }}>
+              {pendentes.length === 0 ? "Nenhum cadastro pendente" : "Nenhum resultado"}
+            </p>
+            <p style={{ ...subtitleStyle(p), marginTop: "6px" }}>
+              {pendentes.length === 0
+                ? "Todos os moradores já foram liberados."
+                : "Tente outro nome, bloco ou unidade."}
             </p>
           </div>
         ) : (
-          <div className="space-y-5">
-            {filtered.map((p) => (
-              <div
-                key={p.id}
-                className="rounded-xl border border-amber-500/30 bg-card overflow-hidden"
-              >
-                <div className="p-5">
-                  {/* Name & creation date */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)" }}>
-                        <Clock className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-base font-semibold" style={{ color: "#003580" }}>{p.name}</p>
-                        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                          Solicitado em {new Date(p.created_at).toLocaleDateString("pt-BR")} às{" "}
-                          {new Date(p.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-                        </p>
-                      </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            {filtered.map((cad) => {
+              const detalhes: Array<{ icone: typeof Mail; texto: string }> = [
+                { icone: Mail, texto: cad.email },
+                ...(cad.phone ? [{ icone: Phone, texto: cad.phone }] : []),
+                ...(cad.block ? [{ icone: Building2, texto: `Bloco ${cad.block}` }] : []),
+                ...(cad.unit ? [{ icone: Home, texto: `Unidade ${cad.unit}` }] : []),
+                ...(cad.perfil ? [{ icone: UserCheck, texto: perfilLabel(cad.perfil) }] : []),
+              ];
+              const ocupado = actionLoading === cad.id;
+
+              return (
+                <section key={cad.id} style={cardStyle(p, "#f59e0b")}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+                    <div style={iconBoxStyle("#f59e0b", 46)}>
+                      <Clock style={{ width: 23, height: 23, color: "#f59e0b" }} />
                     </div>
-                    <span className="text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h2 style={{ ...titleStyle(p), fontSize: "16px" }}>{cad.name}</h2>
+                      <p style={subtitleStyle(p)}>
+                        {new Date(cad.created_at).toLocaleDateString("pt-BR")} às{" "}
+                        {new Date(cad.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                    </div>
+                    <span
+                      style={{
+                        padding: "6px 12px", borderRadius: "999px", background: "#f59e0b18",
+                        color: "#b45309", fontSize: "11.5px", fontWeight: 700, whiteSpace: "nowrap",
+                      }}
+                    >
                       Pendente
                     </span>
                   </div>
 
-                  {/* Details grid */}
-                  <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-                    <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
-                      <Mail className="w-4 h-4 shrink-0" />
-                      <span className="truncate">{p.email}</span>
-                    </div>
-                    {p.phone && (
-                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
-                        <Phone className="w-4 h-4 shrink-0" />
-                        <span>{p.phone}</span>
+                  <div
+                    style={{
+                      marginTop: "18px", paddingTop: "18px", borderTop: `1px solid ${p.divider}`,
+                      display: "flex", flexDirection: "column", gap: "12px",
+                    }}
+                  >
+                    {detalhes.map(({ icone: Icone, texto }) => (
+                      <div key={texto} style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
+                        <div style={iconBoxStyle(p.accentBright, 34)}>
+                          <Icone style={{ width: 16, height: 16, color: p.accentBright }} />
+                        </div>
+                        <span
+                          style={{
+                            fontSize: "14px", color: p.textSecondary, overflow: "hidden",
+                            textOverflow: "ellipsis", whiteSpace: "nowrap",
+                          }}
+                        >
+                          {texto}
+                        </span>
                       </div>
-                    )}
-                    {p.block && (
-                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
-                        <Building2 className="w-4 h-4 shrink-0" />
-                        <span>Bloco {p.block}</span>
-                      </div>
-                    )}
-                    {p.unit && (
-                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
-                        <Home className="w-4 h-4 shrink-0" />
-                        <span>Unidade {p.unit}</span>
-                      </div>
-                    )}
-                    {p.perfil && (
-                      <div className="flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
-                        <UserCheck className="w-4 h-4 shrink-0" />
-                        <span>{perfilLabel(p.perfil)}</span>
-                      </div>
-                    )}
+                    ))}
                   </div>
 
-                  {/* Action buttons */}
-                  <div className="flex gap-3">
+                  <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
                     <button
-                      onClick={() => handleAprovar(p.id)}
-                      disabled={actionLoading === p.id}
-                      className="flex-1 h-10 rounded-lg bg-emerald-500 text-white text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-emerald-600 disabled:opacity-50 transition-colors"
+                      onClick={() => handleAprovar(cad.id)}
+                      disabled={ocupado}
+                      style={saveBtnStyle("linear-gradient(135deg, #10b981 0%, #047857 100%)", ocupado)}
                     >
-                      {actionLoading === p.id ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      {ocupado ? (
+                        <Loader2 className="animate-spin" style={{ width: 18, height: 18 }} />
                       ) : (
-                        <UserCheck className="w-3.5 h-3.5" />
+                        <UserCheck style={{ width: 18, height: 18 }} />
                       )}
-                      Aprovar
+                      Aprovar cadastro
                     </button>
                     <button
-                      onClick={() => handleRejeitar(p.id, p.name)}
-                      disabled={actionLoading === p.id}
-                      className="flex-1 h-10 rounded-lg text-sm font-medium flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
-                      style={{ border: "2px solid #ef4444", color: "#ef4444" }}
+                      onClick={() => handleRejeitar(cad.id, cad.name)}
+                      disabled={ocupado}
+                      style={{
+                        width: "100%", height: "48px", borderRadius: "14px",
+                        border: "1.5px solid #ef444455", background: "transparent",
+                        color: "#ef4444", fontSize: "14.5px", fontWeight: 600,
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: "9px",
+                        cursor: ocupado ? "default" : "pointer", opacity: ocupado ? 0.6 : 1,
+                      }}
                     >
-                      {actionLoading === p.id ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <XCircle className="w-3.5 h-3.5" />
-                      )}
+                      <XCircle style={{ width: 18, height: 18 }} />
                       Rejeitar
                     </button>
                   </div>
-                </div>
-              </div>
-            ))}
+                </section>
+              );
+            })}
           </div>
         )}
       </main>

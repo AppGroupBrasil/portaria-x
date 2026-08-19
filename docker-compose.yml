@@ -7,6 +7,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-}
+        VITE_GOOGLE_MAPS_MAP_ID: ${VITE_GOOGLE_MAPS_MAP_ID:-}
     container_name: portariax
     restart: unless-stopped
     ports:
@@ -22,6 +25,9 @@ services:
       - SES_FROM_EMAIL=${SES_FROM_EMAIL:-naoresponda@portariax.com.br}
       - SES_FROM_NAME=${SES_FROM_NAME:-Portaria X}
       - APP_URL=${APP_URL:-https://portariax.com.br}
+      # Google Maps (mapa do Estou Chegando) — servido em /api/maps-config
+      - GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY:-}
+      - GOOGLE_MAPS_MAP_ID=${VITE_GOOGLE_MAPS_MAP_ID:-}
     volumes:
       # Persist SQLite database
       - portariax_data:/app/data

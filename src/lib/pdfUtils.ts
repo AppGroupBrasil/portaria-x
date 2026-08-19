@@ -1,4 +1,5 @@
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
+import { salvarPdf } from "./pdfSave";
 
 // ─── Helpers ─────────────────────────────────────────────
 function sanitize(s: string | null | undefined): string {
@@ -149,7 +150,7 @@ export function gerarPdfLivroProtocolo(entry: any, condominioName?: string) {
     y = addImage(doc, entry.assinatura, 14, y, 50, 25);
   }
 
-  doc.save(`livro-protocolo-${entry.protocolo}.pdf`);
+  salvarPdf(doc, `livro-protocolo-${entry.protocolo}.pdf`);
 }
 
 // ─── Correspondencias ────────────────────────────────────
@@ -206,7 +207,7 @@ export function gerarPdfCorrespondencia(c: any, condominioName?: string) {
     y = addImage(doc, c.foto, 14, y, 60, 45);
   }
 
-  doc.save(`correspondencia-${c.protocolo}.pdf`);
+  salvarPdf(doc, `correspondencia-${c.protocolo}.pdf`);
 }
 
 // ─── Visitante ─────────────────────────────────────────
@@ -249,7 +250,7 @@ export function gerarPdfVisitante(v: any, condominioName?: string) {
     y = addImage(doc, v.foto, 14, y, 45, 45);
   }
 
-  doc.save(`visitante-${v.nome?.replace(/\s+/g, "_") || v.id}-${Date.now()}.pdf`);
+  salvarPdf(doc, `visitante-${v.nome?.replace(/\s+/g, "_") || v.id}-${Date.now()}.pdf`);
 }
 
 // ─── Delivery ────────────────────────────────────────────
@@ -303,7 +304,7 @@ export function gerarPdfDelivery(d: any, condominioName?: string) {
     y = addImage(doc, d.print_pedido, 14, y, 60, 45);
   }
 
-  doc.save(`delivery-${d.morador_name?.replace(/\s+/g, "_") || d.id}-${Date.now()}.pdf`);
+  salvarPdf(doc, `delivery-${d.morador_name?.replace(/\s+/g, "_") || d.id}-${Date.now()}.pdf`);
 }
 
 // ─── Veiculo ─────────────────────────────────────────────
@@ -348,7 +349,7 @@ export function gerarPdfVeiculo(v: any, condominioName?: string) {
   }
   y = addField(doc, "Registrado em", formatDate(v.created_at), 14, y);
 
-  doc.save(`veiculo-${v.placa || v.id}-${Date.now()}.pdf`);
+  salvarPdf(doc, `veiculo-${v.placa || v.id}-${Date.now()}.pdf`);
 }
 
 // ─── Autorizacao Previa ──────────────────────────────────
@@ -407,7 +408,7 @@ export function gerarPdfPreAuth(a: any, condominioName?: string) {
     y = addImage(doc, a.visitante_foto, 14, y, 45, 45);
   }
 
-  doc.save(`autorizacao-${a.visitante_nome?.replace(/\s+/g, "_") || a.id}-${Date.now()}.pdf`);
+  salvarPdf(doc, `autorizacao-${a.visitante_nome?.replace(/\s+/g, "_") || a.id}-${Date.now()}.pdf`);
 }
 
 
@@ -502,7 +503,7 @@ export function gerarRelatorioLivroProtocolo(entries: any[], dateFrom: string, d
     doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-livro-protocolo-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-livro-protocolo-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioCorrespondencias(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -539,7 +540,7 @@ export function gerarRelatorioCorrespondencias(items: any[], dateFrom: string, d
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-correspondencias-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-correspondencias-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 // ─── Relatorio de visitantes: colunas compartilhadas (com e sem graficos) ───
@@ -592,7 +593,7 @@ export function gerarRelatorioVisitantes(items: any[], dateFrom: string, dateTo:
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-visitantes-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-visitantes-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioDelivery(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -634,7 +635,7 @@ export function gerarRelatorioDelivery(items: any[], dateFrom: string, dateTo: s
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-deliveries-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-deliveries-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioVeiculos(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -673,7 +674,7 @@ export function gerarRelatorioVeiculos(items: any[], dateFrom: string, dateTo: s
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-veiculos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-veiculos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioPreAuths(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -712,7 +713,7 @@ export function gerarRelatorioPreAuths(items: any[], dateFrom: string, dateTo: s
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-autorizacoes-previas-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-autorizacoes-previas-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 // ─── Helper: draw a horizontal bar chart inside the PDF ─────
@@ -861,7 +862,7 @@ export function gerarRelatorioVisitantesComGraficos(items: any[], dateFrom: stri
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-visitantes-graficos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-visitantes-graficos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioPreAuthsComGraficos(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -925,7 +926,7 @@ export function gerarRelatorioPreAuthsComGraficos(items: any[], dateFrom: string
     y = addTableRow(doc, row, y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
-  doc.save(`relatorio-autorizacoes-graficos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-autorizacoes-graficos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioDeliveryComGraficos(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -992,7 +993,7 @@ export function gerarRelatorioDeliveryComGraficos(items: any[], dateFrom: string
     y = addTableRow(doc, row, y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
-  doc.save(`relatorio-deliveries-graficos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-deliveries-graficos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioVeiculosComGraficos(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -1056,7 +1057,7 @@ export function gerarRelatorioVeiculosComGraficos(items: any[], dateFrom: string
     y = addTableRow(doc, row, y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
-  doc.save(`relatorio-veiculos-graficos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-veiculos-graficos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioCorrespondenciasComGraficos(items: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -1119,7 +1120,7 @@ export function gerarRelatorioCorrespondenciasComGraficos(items: any[], dateFrom
     y = addTableRow(doc, row, y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
-  doc.save(`relatorio-correspondencias-graficos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-correspondencias-graficos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 export function gerarRelatorioLivroProtocoloComGraficos(entries: any[], dateFrom: string, dateTo: string, condominioName?: string) {
@@ -1180,7 +1181,7 @@ export function gerarRelatorioLivroProtocoloComGraficos(entries: any[], dateFrom
     y = addTableRow(doc, row, y);
     doc.setDrawColor(226, 232, 240); doc.line(14, y - 3, w - 14, y - 3);
   });
-  doc.save(`relatorio-livro-protocolo-graficos-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-livro-protocolo-graficos-${dateFrom}-a-${dateTo}.pdf`);
 }
 
 // ─── Relatorio de Rondas (with charts) ──────────────────
@@ -1326,5 +1327,5 @@ export function gerarRelatorioRondas(
     doc.line(14, y - 3, w - 14, y - 3);
   });
 
-  doc.save(`relatorio-rondas-${dateFrom}-a-${dateTo}.pdf`);
+  salvarPdf(doc, `relatorio-rondas-${dateFrom}-a-${dateTo}.pdf`);
 }

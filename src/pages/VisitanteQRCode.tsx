@@ -1,4 +1,4 @@
-﻿import { useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -17,8 +17,11 @@ import {
   Fingerprint,
   Globe,
   Cpu,
+  Loader2,
 } from "lucide-react";
+import QRCodeLib from "qrcode";
 import { APP_ORIGIN } from "@/lib/config";
+import { elementoParaPdfA4 } from "@/lib/printUtils";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -55,9 +58,47 @@ export default function VisitanteQRCode() {
   const [layout, setLayout] = useState<LayoutId>("classico");
 
   const selfRegisterUrl = `${APP_ORIGIN}/visitante/auto-cadastro${user?.condominioId ? `?condominio_id=${user.condominioId}` : ""}`;
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selfRegisterUrl)}`;
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [printing, setPrinting] = useState(false);
+  const [printError, setPrintError] = useState("");
 
-  const handlePrint = () => globalThis.print();
+  // QR gerado localmente: a folha vira imagem no PDF e um QR remoto
+  // contaminaria o canvas (CORS), alem de exigir internet na portaria.
+  useEffect(() => {
+    let vivo = true;
+    QRCodeLib.toDataURL(selfRegisterUrl, {
+      width: 600,
+      margin: 1,
+      color: { dark: "#000000", light: "#ffffff" },
+      errorCorrectionLevel: "M",
+    })
+      .then((url) => { if (vivo) setQrCodeUrl(url); })
+      .catch(() => {
+        if (vivo) setQrCodeUrl(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selfRegisterUrl)}`);
+      });
+    return () => { vivo = false; };
+  }, [selfRegisterUrl]);
+
+  const handlePrint = async () => {
+    if (printing) return;
+    const area = printRef.current ?? document.getElementById("qr-print-area");
+    if (!area) return;
+    setPrinting(true);
+    setPrintError("");
+    try {
+      const nome = condominioNome
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .toLowerCase();
+      await elementoParaPdfA4(area, `qrcode-autocadastro-${nome || "condominio"}.pdf`);
+    } catch (err) {
+      console.error("Erro ao gerar PDF do QR Code:", err);
+      setPrintError("Nao foi possivel gerar o PDF. Tente novamente.");
+    } finally {
+      setPrinting(false);
+    }
+  };
 
   /* ═══ RENDERERS POR LAYOUT ═══ */
 
@@ -651,7 +692,7 @@ export default function VisitanteQRCode() {
             <input
               value={condominioNome}
               onChange={(e) => setCondominioNome(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-border bg-white text-sm text-foreground focus:outline-none focus:ring-2"
+              className="w-full h-10 px-3 rounded-lg border border-border bg-card text-sm text-card-foreground focus:outline-none focus:ring-2"
               style={{ boxShadow: "0 0 0 2px rgba(0,53,128,0.15)" }}
             />
           </div>
@@ -686,12 +727,16 @@ export default function VisitanteQRCode() {
           {/* Print button */}
           <button
             onClick={handlePrint}
-            className="w-full h-12 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2"
+            disabled={printing || !qrCodeUrl}
+            className="w-full h-12 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-60"
             style={{ background: "linear-gradient(135deg, #0062d1 0%, #003d99 50%, #001d4a 100%)", border: isDark ? "2px solid rgba(255,255,255,0.5)" : "2px solid #cbd5e1" }}
           >
-            <Printer className="w-6 h-6" />
-            Imprimir A4
+            {printing ? <Loader2 className="w-6 h-6 animate-spin" /> : <Printer className="w-6 h-6" />}
+            {printing ? "Gerando PDF..." : "Imprimir A4 (PDF)"}
           </button>
+          {printError && (
+            <p className="text-xs text-center" style={{ color: "#dc2626" }}>{printError}</p>
+          )}
         </div>
       </div>
 

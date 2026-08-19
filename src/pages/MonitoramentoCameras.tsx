@@ -20,6 +20,7 @@ import {
   Clock,
 
   Monitor,
+  X,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import ComoFunciona from "@/components/ComoFunciona";
@@ -597,13 +598,14 @@ export default function MonitoramentoCameras() {
                   setSelectedCamera(null);
                   if (fullscreen) { document.exitFullscreen?.(); setFullscreen(false); }
                 }}
+                aria-label="Fechar"
                 style={{
-                  padding: "8px 16px", borderRadius: "10px", border: "none",
+                  padding: "8px", borderRadius: "10px", border: "none",
                   background: "rgba(255,255,255,0.1)", cursor: "pointer",
-                  color: "#fff", fontSize: "14px", fontWeight: 600,
+                  color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
                 }}
               >
-                Fechar
+                <X className="w-6 h-6" style={{ color: "#fff" }} />
               </button>
             </div>
           </div>

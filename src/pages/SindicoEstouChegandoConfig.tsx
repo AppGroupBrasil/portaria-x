@@ -9,7 +9,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
-import { DEFAULT_MAP_CENTER, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID } from "@/lib/googleMaps";
+import { DEFAULT_MAP_CENTER, useGoogleMapsConfig } from "@/lib/googleMaps";
 import TutorialButton, { TSection, TStep, TBullet } from "@/components/TutorialButton";
 import {
   ArrowLeft,
@@ -46,6 +46,7 @@ function hasConfiguredCoordinates(latitude: unknown, longitude: unknown): boolea
 
 export default function SindicoEstouChegandoConfig() {
   const { p } = useTheme();
+  const { apiKey: mapsApiKey, mapId: mapsMapId } = useGoogleMapsConfig();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -56,6 +57,9 @@ export default function SindicoEstouChegandoConfig() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [endereco, setEndereco] = useState("");
+  const [buscandoEndereco, setBuscandoEndereco] = useState(false);
+  const [erroEndereco, setErroEndereco] = useState("");
   const [horarioInicio, setHorarioInicio] = useState("22:00");
   const [horarioFim, setHorarioFim] = useState("06:00");
   const [radiusDefault, setRadiusDefault] = useState(200);
@@ -69,6 +73,7 @@ export default function SindicoEstouChegandoConfig() {
           setEnabled(cfg.enabled !== false);
           setLatitude(cfg.latitude);
           setLongitude(cfg.longitude);
+          setEndereco(cfg.endereco || "");
           setHorarioInicio(cfg.horario_inicio || "22:00");
           setHorarioFim(cfg.horario_fim || "06:00");
           setRadiusDefault(cfg.radius_default || 200);
@@ -78,6 +83,40 @@ export default function SindicoEstouChegandoConfig() {
       .catch(() => setLoading(false));
   }, []);
 
+  // Converte coordenadas em endereco legivel (rua, numero, bairro, cidade)
+  const preencherEnderecoPelaCoordenada = useCallback((lat: number, lng: number) => {
+    if (!globalThis.google?.maps?.Geocoder) return;
+    new globalThis.google.maps.Geocoder().geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results?.[0]) {
+        setEndereco(results[0].formatted_address);
+        setErroEndereco("");
+      }
+    });
+  }, []);
+
+  // Busca o endereco digitado e posiciona o marcador no mapa
+  const buscarEnderecoNoMapa = useCallback(() => {
+    const termo = endereco.trim();
+    if (!termo) return;
+    if (!globalThis.google?.maps?.Geocoder) {
+      setErroEndereco(mapsApiKey ? "O mapa ainda está carregando. Tente novamente em instantes." : "Mapa indisponível (chave do Google Maps não configurada). O endereço digitado será salvo mesmo assim.");
+      return;
+    }
+    setBuscandoEndereco(true);
+    setErroEndereco("");
+    new globalThis.google.maps.Geocoder().geocode({ address: termo, region: "br" }, (results, status) => {
+      setBuscandoEndereco(false);
+      if (status === "OK" && results?.[0]) {
+        const loc = results[0].geometry.location;
+        setLatitude(loc.lat());
+        setLongitude(loc.lng());
+        setEndereco(results[0].formatted_address);
+      } else {
+        setErroEndereco("Endereco nao encontrado. Confira o texto ou toque no ponto exato no mapa.");
+      }
+    });
+  }, [endereco, mapsApiKey]);
+
   // Use browser geolocation to set initial position
   const useCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) return;
@@ -85,11 +124,12 @@ export default function SindicoEstouChegandoConfig() {
       (pos) => {
         setLatitude(pos.coords.latitude);
         setLongitude(pos.coords.longitude);
+        preencherEnderecoPelaCoordenada(pos.coords.latitude, pos.coords.longitude);
       },
       () => {},
       { enableHighAccuracy: true }
     );
-  }, []);
+  }, [preencherEnderecoPelaCoordenada]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -102,6 +142,7 @@ export default function SindicoEstouChegandoConfig() {
           enabled,
           latitude,
           longitude,
+          endereco,
           horario_inicio: horarioInicio,
           horario_fim: horarioFim,
           radius_default: radiusDefault,
@@ -328,9 +369,39 @@ export default function SindicoEstouChegandoConfig() {
             Clique no mapa para definir a localização exata do condomínio.
           </p>
 
+          <label className="block text-xs font-semibold mb-2" style={{ color: p.text }}>
+            Endereço do condomínio
+          </label>
+          <div className="flex gap-2 mb-2">
+            <input
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); buscarEnderecoNoMapa(); } }}
+              placeholder="Rua, número, bairro, cidade"
+              className="flex-1 rounded-xl px-3 text-sm"
+              style={{ minWidth: 0, minHeight: "44px", background: p.cardBg, border: "1.5px solid rgba(255,255,255,0.3)", color: p.text }}
+            />
+            <button
+              onClick={buscarEnderecoNoMapa}
+              disabled={buscandoEndereco || !endereco.trim()}
+              className="rounded-xl px-4 text-xs font-bold flex items-center gap-2 disabled:opacity-50"
+              style={{ minHeight: "44px", background: p.accentBright, color: "#ffffff", whiteSpace: "nowrap" }}
+            >
+              {buscandoEndereco ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+              Localizar
+            </button>
+          </div>
+          <p className="text-xs mb-3" style={{ color: p.textSecondary }}>
+            Digite o endereço e toque em Localizar, ou ajuste o ponto exato tocando no mapa — o endereço é
+            preenchido automaticamente e é ele que a portaria vai ver.
+          </p>
+          {erroEndereco && (
+            <p className="text-xs mb-3" style={{ color: "#dc2626" }}>{erroEndereco}</p>
+          )}
+
           <div className="rounded-xl overflow-hidden border border-border" style={{ height: "300px" }}>
-            {GOOGLE_MAPS_API_KEY ? (
-              <LoadScriptNext googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+            {mapsApiKey ? (
+              <LoadScriptNext googleMapsApiKey={mapsApiKey}>
                 <GoogleMap
                   center={mapCenter}
                   zoom={15}
@@ -340,13 +411,19 @@ export default function SindicoEstouChegandoConfig() {
                     streetViewControl: false,
                     mapTypeControl: false,
                     fullscreenControl: false,
-                    mapId: GOOGLE_MAPS_MAP_ID || undefined,
+                    mapId: mapsMapId || undefined,
+                  }}
+                  onLoad={() => {
+                    if (!endereco && selectedCondoPosition) {
+                      preencherEnderecoPelaCoordenada(selectedCondoPosition.lat, selectedCondoPosition.lng);
+                    }
                   }}
                   onClick={(event) => {
                     const latLng = event.latLng;
                     if (!latLng) return;
                     setLatitude(latLng.lat());
                     setLongitude(latLng.lng());
+                    preencherEnderecoPelaCoordenada(latLng.lat(), latLng.lng());
                   }}
                 >
                   {selectedCondoPosition && (
@@ -373,15 +450,18 @@ export default function SindicoEstouChegandoConfig() {
               </LoadScriptNext>
             ) : (
               <div className="h-full flex items-center justify-center bg-muted text-center px-4 text-sm text-muted-foreground">
-                Configure a variável VITE_GOOGLE_MAPS_API_KEY para selecionar a localização do condomínio.
+                O mapa está indisponível porque a chave do Google Maps ainda não foi configurada no servidor. Você pode digitar o endereço do condomínio no campo acima e salvar normalmente.
               </div>
             )}
           </div>
 
           {selectedCondoPosition && (
-            <p className="text-xs mt-2" style={{ color: p.textSecondary }}>
-              📍 {selectedCondoPosition.lat.toFixed(6)}, {selectedCondoPosition.lng.toFixed(6)}
-            </p>
+            <div className="mt-2 flex items-start gap-2 rounded-xl p-3" style={{ background: p.btnBg, border: p.btnBorder }}>
+              <MapPin className="w-4 h-4 flex-shrink-0 mt-[2px]" style={{ color: p.accentBright }} />
+              <p className="text-xs" style={{ color: p.text, margin: 0, lineHeight: 1.5 }}>
+                {endereco || "Ponto marcado no mapa. Toque em Localizar para preencher o endereço."}
+              </p>
+            </div>
           )}
         </div>
       </main>
